@@ -1,0 +1,57 @@
+pin 'em up
+
+version 0.1
+
+Contents
+------------------------
+1. About
+2. Changelog
+3. Planned features
+4. Contact information
+
+
+1. About
+------------------------
+  pin 'em up enables you to place small notes on your desktop
+  and assign them to five user-defined categories. Due
+  platform-independence, those notes are available on different
+  systems using either a shared partition or the integrated 
+  FTP-functions.
+
+  Features:
+    - OS-independence
+    - Integrates into system-tray
+    - free placeable notes
+    - five user-defined categories
+    - fast switch between categories (e.g. "home" and "office")
+    - automatically save notes to file
+    - FTP-upload- and download functions
+
+
+
+2. Changelog
+------------------------
+  0.1:
+    - first release
+
+
+
+3. Planned features
+------------------------
+  - always on top function
+  - export into text-file
+  - priorities (maybe with different colors)
+  - option: assign all visible notes to one category
+  - schedule --> popup at a certain time
+  - user customizable fonts
+
+
+
+4. Contact information
+------------------------
+  Author: Mario Koedding
+  Email: mario.koedding@web.de
+  ICQ: 77590604
+
+  Project-Homepage:
+  http://pin-em-up.sourceforge.net
