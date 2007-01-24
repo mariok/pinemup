@@ -5,9 +5,10 @@ version 0.1
 Contents
 ------------------------
 1. About
-2. Changelog
-3. Planned features
-4. Contact information
+2. System requirements
+3. Changelog
+4. Planned features
+5. Contact information
 
 
 1. About
@@ -29,14 +30,19 @@ Contents
 
 
 
-2. Changelog
+2. System requirements
+------------------------
+  pin 'em up only runs with Java 6 (JRE) or higher
+
+
+3. Changelog
 ------------------------
   0.1:
     - first release
 
 
 
-3. Planned features
+4. Planned features
 ------------------------
   - always on top function
   - export into text-file
@@ -47,7 +53,7 @@ Contents
 
 
 
-4. Contact information
+5. Contact information
 ------------------------
   Author: Mario Koedding
   Email: mario.koedding@web.de
