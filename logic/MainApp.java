@@ -27,7 +27,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class MainApp {
-   private static final String VERSION = "0.1";
+   private static final String VERSION = "0.2-svn";
    
    public Note notes, failNote;
 
