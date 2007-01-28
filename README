@@ -40,6 +40,8 @@ Contents
   0.2:
     - double click on tray-icon adds new note
     - fixed activation of "Apply"-Button in Settings-Dialog
+    - fixed problem with resizing of note-windows when scrollbar appeared
+    - double clicking on top-panel of a note fits it's size to the content (vertically only)
     - some internal code improvements
 
   0.1:

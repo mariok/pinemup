@@ -98,7 +98,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       setLocation(parentNote.getXPos(),parentNote.getYPos());
       setSize(parentNote.getXSize(),parentNote.getYSize());
 
-      // menu
+      // menu and doubleclick
       topPanel.addMouseListener(this);
 
       // rezeize listener
@@ -165,7 +165,18 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void mouseClicked(MouseEvent e) {
-
+      if (e.getSource() == topPanel && e.getClickCount() == 2) { // doubleclick on topPanel
+         System.out.println("Doubleclick");
+         autoSizeY();
+      }
+   }
+   
+   private void autoSizeY() {
+      int sizeX = parentNote.getXSize();
+      int offset = parentNote.getYSize() - textPanel.getHeight();
+      int sizeY = textArea.getHeight();
+      System.out.println(sizeX+"/"+sizeY+" + "+offset);
+      setSize(sizeX,sizeY+offset);
    }
 
    public void mouseEntered(MouseEvent e) {
@@ -231,8 +242,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    public void mouseMoved(MouseEvent e) {
       if (e.getSource() == textArea && !resizing) {
-         if (e.getX() >= textArea.getWidth() - 10
-               && e.getY() >= textArea.getHeight() - 10) {
+         // if in lower right corner, start resizing or change cursor
+         if (e.getX() >= textArea.getWidth() - 10 && e.getY() >= textPanel.getHeight() - 10) { // height from panel because of vertical scrolling
             if (!resizeCursor) {
                resizeCursor = true;
                textArea.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));

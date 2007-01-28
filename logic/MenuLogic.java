@@ -51,7 +51,7 @@ public class MenuLogic implements ActionListener {
       } else if (cmd.equals("DownloadNotesFromFTP")) {
          new FTPThread(false);
       } else if (cmd.equals("ShowAboutDialog")) {
-         String msg = "pin 'em up\nversion " + MainApp.getVersion() + "\n\n(C) 2007 Mario Koedding\nmario.koedding@web.de\n\nThis program is licensed under the terms of the GNU GPL V2.\nRead COPYING file for details.\n\nvisit http://pin-em-up.sourceforge.net";
+         String msg = "pin 'em up\nversion " + MainApp.getVersion() + "\n\n(C) 2007 Mario Koedding\nmario.koedding@web.de\n\nThis program is licensed under the terms of the GNU GPL V2.\nRead \"COPYING\" file for details.\n\nvisit http://pin-em-up.sourceforge.net";
          JOptionPane.showMessageDialog(null, msg, "about pin 'em up", JOptionPane.INFORMATION_MESSAGE);
       } else if (cmd.equals("ShowOnlyCategory0")) {
          MainApp.getMainApp().getNotes().showOnlyCategory((byte)0);
