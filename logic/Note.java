@@ -134,12 +134,20 @@ public class Note implements Serializable {
       return prev;
    }
 
-   public void add(String s) {
-      if (next == null) {
-         setNext(new Note(s));
-         next.setPrev(this);
-      } else
-         next.add(s);
+   public static Note add(Note head, String s) {
+      Note newNote = new Note(s);
+      if (head == null) { // first note added
+         head = newNote;
+      }
+      else {
+         Note temp = head;
+         while (temp.getNext() != null) {
+            temp = temp.getNext();
+         }
+         temp.setNext(newNote);
+         newNote.setPrev(temp);
+      }
+      return head;
    }
 
    public static Note remove(Note all, Note n) {
@@ -159,7 +167,7 @@ public class Note implements Serializable {
          }
          // remove note
          all.hide();
-         all.getPrev().setNext(all.getNext());
+         all.getPrev().setNext(all.getNext());            
          if (all.getNext() != null) {
             all.getNext().setPrev(all.getPrev());
          }

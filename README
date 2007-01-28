@@ -37,6 +37,11 @@ Contents
 
 3. Changelog
 ------------------------
+  0.2:
+    - double click on tray-icon adds new note
+    - fixed activation of "Apply"-Button in Settings-Dialog
+    - some internal code improvements
+
   0.1:
     - first release
 

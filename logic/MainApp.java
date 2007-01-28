@@ -23,6 +23,7 @@
 package logic;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class MainApp {
@@ -100,6 +101,14 @@ public class MainApp {
          // create trayicon
          icon = new TrayIcon(img, "pin 'em up", menu);
          icon.setImageAutoSize(true);
+         
+         // add actionlistener for doubleclick on icon
+         icon.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               MainApp.getMainApp().setNotes(Note.add(MainApp.getMainApp().getNotes(), ""));
+               MainApp.getMainApp().getNotes().showAllVisible();
+            }
+         });
 
          // add trayicon
          try {

@@ -32,11 +32,7 @@ public class MenuLogic implements ActionListener {
       String cmd = e.getActionCommand();
 
       if (cmd.equals("AddNote")) {
-         if (MainApp.getMainApp().getNotes() == null) {
-            MainApp.getMainApp().setNotes(new Note(""));
-         } else {
-            MainApp.getMainApp().getNotes().add("");
-         }
+         MainApp.getMainApp().setNotes(Note.add(MainApp.getMainApp().getNotes(), ""));
          MainApp.getMainApp().getNotes().showAllVisible();
       } else if (cmd.equals("ShowAllNotes")) {
          if (MainApp.getMainApp().getNotes() != null) {

@@ -26,13 +26,10 @@ import logic.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import javax.swing.event.*;
 
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-
-public class SettingsDialog extends JFrame implements ActionListener, CaretListener {
+public class SettingsDialog extends JFrame implements ActionListener, DocumentListener {
    /**
     * 
     */
@@ -93,20 +90,20 @@ public class SettingsDialog extends JFrame implements ActionListener, CaretListe
       }
       guiSubPanel[0].add(new JLabel("Default Note Width:"));
       defaultWidthField = new JTextField(4);
-      defaultWidthField.addCaretListener(this);
+      defaultWidthField.getDocument().addDocumentListener(this);
       defaultWidthField.setMaximumSize(new Dimension(50, 20));
       guiSubPanel[1].add(defaultWidthField);
       guiSubPanel[2].add(new JLabel("Default Note Height:"));
       defaultHeightField = new JTextField(4);
-      defaultHeightField.addCaretListener(this);
+      defaultHeightField.getDocument().addDocumentListener(this);
       guiSubPanel[3].add(defaultHeightField);
       guiSubPanel[4].add(new JLabel("Default Note X Position:"));
       defaultXPositionField = new JTextField(4);
-      defaultXPositionField.addCaretListener(this);
+      defaultXPositionField.getDocument().addDocumentListener(this);
       guiSubPanel[5].add(defaultXPositionField);
       guiSubPanel[6].add(new JLabel("Default Note Y Position:"));
       defaultYPositionField = new JTextField(4);
-      defaultYPositionField.addCaretListener(this);
+      defaultYPositionField.getDocument().addDocumentListener(this);
       guiSubPanel[7].add(defaultYPositionField);
 
       // load/save settings panel
@@ -120,18 +117,22 @@ public class SettingsDialog extends JFrame implements ActionListener, CaretListe
       ftpServerLabel = new JLabel("FTP-Server:");
       lsSubPanel[2].add(ftpServerLabel);
       ftpServerField = new JTextField(20);
+      ftpServerField.getDocument().addDocumentListener(this);
       lsSubPanel[3].add(ftpServerField);
       ftpUserLabel = new JLabel("FTP-User:");
       lsSubPanel[4].add(ftpUserLabel);
       ftpUserField = new JTextField(20);
+      ftpUserField.getDocument().addDocumentListener(this);
       lsSubPanel[5].add(ftpUserField);
       ftpPasswdLabel = new JLabel("FTP-Password:");
       lsSubPanel[6].add(ftpPasswdLabel);
       ftpPasswdField = new JPasswordField(20);
+      ftpPasswdField.getDocument().addDocumentListener(this);
       lsSubPanel[7].add(ftpPasswdField);
       ftpDirLabel = new JLabel("FTP-Directory:");
       lsSubPanel[8].add(ftpDirLabel);
       ftpDirField = new JTextField(20);
+      ftpDirField.getDocument().addDocumentListener(this);
       lsSubPanel[9].add(ftpDirField);
 
       // category settings panel
@@ -144,23 +145,23 @@ public class SettingsDialog extends JFrame implements ActionListener, CaretListe
       categorySubPanel[0].add(new JLabel("Category names"));
       categorySubPanel[2].add(new JLabel("Category 1:"));
       cat1Field = new JTextField(20);
-      cat1Field.addCaretListener(this);
+      cat1Field.getDocument().addDocumentListener(this);
       categorySubPanel[3].add(cat1Field);
       categorySubPanel[4].add(new JLabel("Category 2:"));
       cat2Field = new JTextField(20);
-      cat2Field.addCaretListener(this);
+      cat2Field.getDocument().addDocumentListener(this);
       categorySubPanel[5].add(cat2Field);
       categorySubPanel[6].add(new JLabel("Category 3:"));
       cat3Field = new JTextField(20);
-      cat3Field.addCaretListener(this);
+      cat3Field.getDocument().addDocumentListener(this);
       categorySubPanel[7].add(cat3Field);
       categorySubPanel[8].add(new JLabel("Category 4:"));
       cat4Field = new JTextField(20);
-      cat4Field.addCaretListener(this);
+      cat4Field.getDocument().addDocumentListener(this);
       categorySubPanel[9].add(cat4Field);
       categorySubPanel[10].add(new JLabel("Category 5:"));
       cat5Field = new JTextField(20);
-      cat5Field.addCaretListener(this);
+      cat5Field.getDocument().addDocumentListener(this);
       categorySubPanel[11].add(cat5Field);
       
       // Load Settings Into Fields
@@ -266,13 +267,15 @@ public class SettingsDialog extends JFrame implements ActionListener, CaretListe
       UserSettings.saveSettings(MainApp.getUserSettings(), "config.dat");
    }
 
-   public void caretUpdate(CaretEvent e) {
-      Object src = e.getSource();
+   public void changedUpdate(DocumentEvent arg0) {
+      applyButton.setEnabled(true);
+   }
 
-      // textfield changed
-      if (src == defaultWidthField || src == defaultHeightField
-            || src == defaultXPositionField || src == defaultYPositionField) {
-         applyButton.setEnabled(true);
-      }
+   public void insertUpdate(DocumentEvent arg0) {
+      applyButton.setEnabled(true);      
+   }
+
+   public void removeUpdate(DocumentEvent arg0) {
+      applyButton.setEnabled(true);  
    }
 }
