@@ -166,17 +166,24 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    public void mouseClicked(MouseEvent e) {
       if (e.getSource() == topPanel && e.getClickCount() == 2) { // doubleclick on topPanel
-         System.out.println("Doubleclick");
          autoSizeY();
       }
    }
    
    private void autoSizeY() {
-      int sizeX = parentNote.getXSize();
-      int offset = parentNote.getYSize() - textPanel.getHeight();
-      int sizeY = textArea.getHeight();
-      System.out.println(sizeX+"/"+sizeY+" + "+offset);
-      setSize(sizeX,sizeY+offset);
+      setSize(getWidth(),30);
+      new Thread(new Runnable() {
+         public void run() {
+            try {
+               Thread.sleep(5); // must wait for new settings (size) to be applied
+            } catch (Exception e) {
+               // do nothing
+            }
+            int sizeX = getWidth();
+            int sizeY = textArea.getHeight();
+            setSize(sizeX,sizeY+20);
+         }
+      }).start();
    }
 
    public void mouseEntered(MouseEvent e) {

@@ -36,9 +36,15 @@ public class MainApp {
    private static UserSettings settings;
 
    private static MenuLogic menuListener;
+   
+   private static JFileChooser fileDialog;
 
    private TrayMenu menu;
 
+   public static JFileChooser getFileDialog() {
+      return fileDialog;
+   }
+   
    public TrayMenu getTrayMenu() {
       return menu;
    }
@@ -124,6 +130,12 @@ public class MainApp {
          if (notes != null) {
             notes.showAllVisible();
          }
+         
+         // create File-Dialog
+         fileDialog = new JFileChooser();
+         fileDialog.removeChoosableFileFilter(fileDialog.getChoosableFileFilters()[0]);
+         fileDialog.setFileFilter(new MyFileFilter("TXT"));
+         fileDialog.setMultiSelectionEnabled(false);
          
       } else {
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);

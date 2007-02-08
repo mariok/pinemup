@@ -31,7 +31,7 @@ public class TrayMenu extends PopupMenu {
     */
    private static final long serialVersionUID = 1L;
 
-   private MenuItem aboutItem, closeItem, addNoteItem, showAllItem, hideAllItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
+   private MenuItem exportItem, aboutItem, closeItem, addNoteItem, showAllItem, hideAllItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
 
    private Menu[] catMenu;
    
@@ -93,6 +93,12 @@ public class TrayMenu extends PopupMenu {
       ftpDownloadItem.addActionListener(MainApp.getMenuListener());
       ftpMenu.add(ftpDownloadItem);
       add(ftpMenu);
+      
+      // export-icon
+      exportItem = new MenuItem("export notes to textfile");
+      exportItem.setActionCommand("ExportToTextFile");
+      exportItem.addActionListener(MainApp.getMenuListener());
+      add(exportItem);
 
       // other items
       addSeparator();

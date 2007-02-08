@@ -25,6 +25,7 @@ package logic;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import javax.swing.*;
 
 import javax.swing.JOptionPane;
 
@@ -100,6 +101,32 @@ public class NoteIO {
       }
       if (uploaded) {
          JOptionPane.showMessageDialog(null, "Notes successfully uploaded to FTP server!", "pin 'em up - information", JOptionPane.INFORMATION_MESSAGE);
+      }
+   }
+   
+   public static void ExportNotesToTextFile(Note n) {
+      File f = null;
+      MainApp.getFileDialog().setDialogTitle("Export notes to text-file");
+      if (MainApp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+         f = MainApp.getFileDialog().getSelectedFile();
+      }
+      
+      if (f != null) {         
+         try {
+            PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
+            // write text of notes to file
+            while (n != null) {
+               ostream.println(n.getText());
+               ostream.println("------------------------------------------------------------");
+               n = n.getNext();
+            }            
+            ostream.flush();
+            ostream.close();
+         }
+         catch ( IOException e ) {
+            System.out.println("IOERROR: " + e.getMessage() + "\n");
+            e.printStackTrace();
+         }
       }
    }
 

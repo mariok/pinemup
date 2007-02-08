@@ -93,6 +93,8 @@ public class MenuLogic implements ActionListener {
          MainApp.getUserSettings().setTempDef((byte)3);
       } else if (cmd.equals("SetTempDef4")) {
          MainApp.getUserSettings().setTempDef((byte)4);
+      } else if (cmd.equals("ExportToTextFile")) {
+         NoteIO.ExportNotesToTextFile(MainApp.getMainApp().getNotes());
       }
       
       if (cmd.equals("ShowCategory0") || cmd.equals("ShowCategory1") || cmd.equals("ShowCategory2") || cmd.equals("ShowCategory3") || cmd.equals("ShowCategory4") || cmd.equals("HideCategory0") || cmd.equals("HideCategory1") || cmd.equals("HideCategory2") || cmd.equals("HideCategory3") || cmd.equals("HideCategory4") || cmd.equals("ShowOnlyCategory0") || cmd.equals("ShowOnlyCategory1") || cmd.equals("ShowOnlyCategory2") || cmd.equals("ShowOnlyCategory3") || cmd.equals("ShowOnlyCategory4") || cmd.equals("AddNote") || cmd.equals("ShowAllNotes") || cmd.equals("HideAllNotes") || cmd.equals("DownloadNotesFromFTP")) {
