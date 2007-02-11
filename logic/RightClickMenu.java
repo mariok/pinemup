@@ -36,7 +36,8 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
    private static final long serialVersionUID = 1L;
 
    private JMenuItem addNoteItem, showAllItem, hideAllItem, deleteNoteItem, setCategory1Item, setCategory2Item, setCategory3Item, setCategory4Item, setCategory5Item, hideCategoryItem, showOnlyCategoryItem, showCategoryItem;
-
+   private JMenuItem[] setFontSizeItem;
+   
    private NoteWindow parentWindow;
 
    public RightClickMenu(NoteWindow w) {
@@ -58,6 +59,19 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       hideAllItem.addActionListener(MainApp.getMenuListener());
       add(hideAllItem);
       addSeparator();
+      
+      // font-size menu
+      JMenu setFontSizeMenu = new JMenu("font size");
+      add(setFontSizeMenu);
+      addSeparator();
+      setFontSizeItem = new JMenuItem[26];
+      for (int i=0; i<26; i++) {
+         setFontSizeItem[i] = new JMenuItem(String.valueOf(i+5));
+         setFontSizeItem[i].setActionCommand("SetFontSize"+(i+5));
+         setFontSizeItem[i].addActionListener(this);
+         setFontSizeMenu.add(setFontSizeItem[i]);
+      }
+      
       
       // category menu
       JMenu categoryMenu = new JMenu("category");
@@ -118,6 +132,10 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          parentWindow.getParentNote().showOnlyCategory(parentWindow.getParentNote().getCategory());
       } else if (src == showCategoryItem) {
          parentWindow.getParentNote().showCategory(parentWindow.getParentNote().getCategory());
+      } else if (e.getActionCommand().substring(0, 11).equals("SetFontSize")) {
+         short s = Short.parseShort(e.getActionCommand().substring(11));
+         parentWindow.getParentNote().setFontSize(s);
+         parentWindow.refreshView();
       }
       
       // save notes to file after every change

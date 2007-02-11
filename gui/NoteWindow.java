@@ -67,7 +67,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       textArea.setBackground(java.awt.Color.yellow);
       textArea.setLineWrap(true);
       textArea.setWrapStyleWord(true);
-      textArea.setFont(new java.awt.Font("SERIF", 1, 14));
+      textArea.setFont(new java.awt.Font("SERIF", 1, parentNote.getFontSize()));
       textArea.addFocusListener(this);
       textArea.setMargin(new Insets(0, 3, 3, 3));
       textPanel.setViewportView(textArea);
@@ -262,5 +262,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             }
          }
       }
+   }
+   
+   public void refreshView() {
+      textArea.setFont(new java.awt.Font("SERIF", 1, parentNote.getFontSize()));
    }
 }

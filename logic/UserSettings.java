@@ -42,6 +42,8 @@ public class UserSettings implements Serializable {
    private short defaultWindowXPosition;
 
    private short defaultWindowYPosition;
+   
+   private short defaultFontSize;
 
    private String ftpServer;
 
@@ -54,6 +56,14 @@ public class UserSettings implements Serializable {
    private String[] category;
    
    private transient byte tempDef = 0;
+   
+   public short getDefaultFontSize() {
+      return defaultFontSize;
+   }
+   
+   public void setDefaultFontSize(short size) {
+      defaultFontSize = size;
+   }
    
    public byte getTempDef() {
       return tempDef;
@@ -183,6 +193,7 @@ public class UserSettings implements Serializable {
       defaultWindowHeight = 150;
       defaultWindowXPosition = 0;
       defaultWindowYPosition = 0;
+      defaultFontSize = 14;
       ftpServer = "ftp.example.com";
       ftpUser = "anonymous";
       ftpPasswd = null;

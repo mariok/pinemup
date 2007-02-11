@@ -39,9 +39,17 @@ public class Note implements Serializable {
 
    private Note next, prev;
 
-   private short xpos, ypos, xsize, ysize;
+   private short xpos, ypos, xsize, ysize, fontsize;
    
    private byte category;
+   
+   public void setFontSize(short size) {
+      fontsize = size;
+   }
+   
+   public short getFontSize() {
+      return fontsize;
+   }
 
    public void setCategory(byte catNr) {
       category = catNr;
@@ -72,6 +80,7 @@ public class Note implements Serializable {
       ypos = MainApp.getUserSettings().getDefaultWindowYPostition();
       xsize = MainApp.getUserSettings().getDefaultWindowWidth();
       ysize = MainApp.getUserSettings().getDefaultWindowHeight();
+      fontsize = MainApp.getUserSettings().getDefaultFontSize();
       category = MainApp.getUserSettings().getTempDef();
    }
 
