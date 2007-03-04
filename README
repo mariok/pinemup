@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.1
+version 0.2
 
 Contents
 ------------------------
@@ -9,6 +9,7 @@ Contents
 3. Changelog
 4. Planned features
 5. Contact information
+
 
 
 1. About
@@ -27,12 +28,14 @@ Contents
     - fast switch between categories (e.g. "home" and "office")
     - automatically save notes to file
     - FTP-upload- and download functions
+    - Export notes to a text-file
 
 
 
 2. System requirements
 ------------------------
   pin 'em up only runs with Java 6 (JRE) or higher
+
 
 
 3. Changelog
@@ -43,6 +46,8 @@ Contents
     - fixed problem with resizing of note-windows when scrollbar appeared
     - double clicking on top-panel of a note fits it's size to the content (vertically only)
     - some internal code improvements
+    - notes can be exported to textfile
+    - font size can be adjusted for each note
 
   0.1:
     - first release
@@ -52,11 +57,9 @@ Contents
 4. Planned features
 ------------------------
   - always on top function
-  - export into text-file
   - priorities (maybe with different colors)
   - option: assign all visible notes to one category
   - schedule --> popup at a certain time
-  - user customizable fonts
 
 
 

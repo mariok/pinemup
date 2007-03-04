@@ -115,11 +115,22 @@ public class NoteIO {
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
             // write text of notes to file
-            while (n != null) {
-               ostream.println(n.getText());
-               ostream.println("------------------------------------------------------------");
-               n = n.getNext();
-            }            
+            for (int i=0; i<4; i++) {
+               ostream.println("Category: "+MainApp.getUserSettings().getCategoryNames()[i]);
+               ostream.println();
+               while (n != null) {
+                  if (n.getCategory() == i) {
+                     ostream.println(n.getText());
+                     ostream.println();
+                     ostream.println("---------------------");
+                     ostream.println();
+                  }
+                  n = n.getNext();
+               }
+               ostream.println();
+               ostream.println("################################################################");
+               ostream.println();
+            }           
             ostream.flush();
             ostream.close();
          }
