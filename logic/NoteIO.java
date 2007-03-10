@@ -104,7 +104,7 @@ public class NoteIO {
       }
    }
    
-   public static void ExportNotesToTextFile(Note n) {
+   public static void ExportNotesToTextFile(Note n, boolean[] catExport) {
       File f = null;
       MainApp.getFileDialog().setDialogTitle("Export notes to text-file");
       if (MainApp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -115,22 +115,26 @@ public class NoteIO {
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
             // write text of notes to file
-            for (int i=0; i<4; i++) {
-               ostream.println("Category: "+MainApp.getUserSettings().getCategoryNames()[i]);
-               ostream.println();
-               while (n != null) {
-                  if (n.getCategory() == i) {
-                     ostream.println(n.getText());
-                     ostream.println();
-                     ostream.println("---------------------");
-                     ostream.println();
+            Note head = n;
+            for (int i=0; i<5; i++) {
+               n = head;
+               if (catExport[i]) {
+                  ostream.println("Category: "+MainApp.getUserSettings().getCategoryNames()[i]);
+                  ostream.println();
+                  while (n != null) {
+                     if (n.getCategory() == i) {
+                        ostream.println(n.getText());
+                        ostream.println();
+                        ostream.println("---------------------");
+                        ostream.println();
+                     }
+                     n = n.getNext();
                   }
-                  n = n.getNext();
+                  ostream.println();
+                  ostream.println("################################################################");
+                  ostream.println();
                }
-               ostream.println();
-               ostream.println("################################################################");
-               ostream.println();
-            }           
+            }
             ostream.flush();
             ostream.close();
          }
