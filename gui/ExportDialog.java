@@ -36,20 +36,32 @@ public class ExportDialog extends JDialog implements ActionListener {
    private static final long serialVersionUID = 1L;
    private JButton okButton, cancelButton;
    private JCheckBox[] catBox;
+   private JCheckBox allCatsBox;
    
    public ExportDialog() {
       super();
       setTitle("export notes");
       JPanel main = new JPanel(new BorderLayout());
-            
+      JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      topPanel.add(new JLabel("choose categories to export:"));
+      main.add(topPanel, BorderLayout.NORTH);
+      
       // Category Checkboxes
-      JPanel checkBoxPanel = new JPanel (new GridLayout(5,1));
+      final int ROWS = 5;
+      JPanel checkBoxPanel = new JPanel (new GridLayout(ROWS+1,1));
       String[] cats = MainApp.getUserSettings().getCategoryNames();
-      JPanel[] catPanel = new JPanel[5];
-      catBox = new JCheckBox[5];
-      for (int i=0; i<5; i++) {
+      JPanel[] catPanel = new JPanel[ROWS];
+      catBox = new JCheckBox[ROWS];
+      JPanel allCatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      allCatsBox = new JCheckBox("(all)");
+      allCatsBox.setSelected(true);
+      allCatsBox.addActionListener(this);
+      allCatsPanel.add(allCatsBox);
+      checkBoxPanel.add(allCatsPanel);
+      for (int i=0; i<ROWS; i++) {
          catPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
          catBox[i] = new JCheckBox((i+1)+": "+cats[i]);
+         catBox[i].setSelected(true);
          catPanel[i].add(catBox[i]);
          checkBoxPanel.add(catPanel[i]);
       }
@@ -65,8 +77,14 @@ public class ExportDialog extends JDialog implements ActionListener {
       main.add(buttonPanel, BorderLayout.SOUTH);
       
       setContentPane(main);
-      setSize(200,200);
-      this.setLocation(100, 100);
+      setSize(200,250);
+      
+      // center on screen
+      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
+      int x = (screenWidth - getWidth()) / 2;
+      int y = (screenHeight - getHeight()) / 2;
+      setLocation(x, y);
 
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       setVisible(true);
@@ -85,6 +103,10 @@ public class ExportDialog extends JDialog implements ActionListener {
          NoteIO.ExportNotesToTextFile(MainApp.getMainApp().getNotes(), catChecked);
          setVisible(false);
          dispose();
+      } else if (src == allCatsBox) {
+        for (int i=0; i<5; i++) {
+           catBox[i].setSelected(allCatsBox.isSelected());
+        }
       }
    }
    

@@ -136,7 +136,6 @@ public class MainApp {
          fileDialog.removeChoosableFileFilter(fileDialog.getChoosableFileFilters()[0]);
          fileDialog.setFileFilter(new MyFileFilter("TXT"));
          fileDialog.setMultiSelectionEnabled(false);
-         
       } else {
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          System.exit(1);

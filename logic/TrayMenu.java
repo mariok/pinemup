@@ -52,7 +52,7 @@ public class TrayMenu extends PopupMenu {
       add(hideAllItem);
       
       // categories menu
-      Menu categoriesMenu = new Menu("categories");
+      Menu categoriesMenu = new Menu("category actions");
       add(categoriesMenu);
       catMenu = new Menu[5];
       MenuItem[] showOnlyCategoryItem = new MenuItem[5];
@@ -81,25 +81,26 @@ public class TrayMenu extends PopupMenu {
          catMenu[i].add(setTempDefItem[i]);
       }
       
-      // ftp menu      
+      // im-/export menu      
       addSeparator();
-      Menu ftpMenu = new Menu("FTP");
-      ftpUploadItem = new MenuItem("upload notes to FTP");
+      Menu imExMenu = new Menu("notes im-/export");
+      Menu ftpMenu = new Menu("ftp");
+      ftpUploadItem = new MenuItem("upload to ftp server");
       ftpUploadItem.setActionCommand("UploadNotesToFTP");
       ftpUploadItem.addActionListener(MainApp.getMenuListener());
       ftpMenu.add(ftpUploadItem);
-      ftpDownloadItem = new MenuItem("download notes from FTP");
+      ftpDownloadItem = new MenuItem("download from ftp server");
       ftpDownloadItem.setActionCommand("DownloadNotesFromFTP");
       ftpDownloadItem.addActionListener(MainApp.getMenuListener());
       ftpMenu.add(ftpDownloadItem);
-      add(ftpMenu);
-      
-      // export-icon
-      exportItem = new MenuItem("export notes to textfile");
+      imExMenu.add(ftpMenu);
+      imExMenu.addSeparator();
+      exportItem = new MenuItem("export to textfile");
       exportItem.setActionCommand("ExportToTextFile");
       exportItem.addActionListener(MainApp.getMenuListener());
-      add(exportItem);
-
+      imExMenu.add(exportItem);
+      add(imExMenu);
+      
       // other items
       addSeparator();
       showSettingsDialogItem = new MenuItem("settings");

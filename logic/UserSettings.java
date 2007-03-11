@@ -55,7 +55,17 @@ public class UserSettings implements Serializable {
 
    private String[] category;
    
+   private boolean defaultAlwaysOnTop;
+   
    private transient byte tempDef = 0;
+   
+   public boolean getDefaultAlwaysOnTop() {
+      return defaultAlwaysOnTop;
+   }
+   
+   public void setDefaultAlwaysOnTop(boolean b) {
+      defaultAlwaysOnTop = b;
+   }
    
    public short getDefaultFontSize() {
       return defaultFontSize;
@@ -194,6 +204,7 @@ public class UserSettings implements Serializable {
       defaultWindowXPosition = 0;
       defaultWindowYPosition = 0;
       defaultFontSize = 14;
+      defaultAlwaysOnTop = false;
       ftpServer = "ftp.example.com";
       ftpUser = "anonymous";
       ftpPasswd = null;
@@ -201,8 +212,8 @@ public class UserSettings implements Serializable {
       category = new String[5];
       category[0] = "home";
       category[1] = "office";
-      category[2] = "";
-      category[3] = "";
-      category[4] = "";
+      category[2] = "category3";
+      category[3] = "category4";
+      category[4] = "category5";
    }
 }

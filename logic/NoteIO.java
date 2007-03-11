@@ -110,7 +110,6 @@ public class NoteIO {
       if (MainApp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
          f = MainApp.getFileDialog().getSelectedFile();
       }
-      
       if (f != null) {         
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));

@@ -35,7 +35,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
     */
    private static final long serialVersionUID = 1L;
 
-   private JMenuItem addNoteItem, showAllItem, hideAllItem, deleteNoteItem, setCategory1Item, setCategory2Item, setCategory3Item, setCategory4Item, setCategory5Item, hideCategoryItem, showOnlyCategoryItem, showCategoryItem;
+   private JMenuItem addNoteItem, showAllItem, hideAllItem, deleteNoteItem, setCategory1Item, setCategory2Item, setCategory3Item, setCategory4Item, setCategory5Item, hideCategoryItem, showOnlyCategoryItem, showCategoryItem, alwaysOnTopOnItem, alwaysOnTopOffItem;
    private JMenuItem[] setFontSizeItem;
    
    private NoteWindow parentWindow;
@@ -59,27 +59,23 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       hideAllItem.addActionListener(MainApp.getMenuListener());
       add(hideAllItem);
       addSeparator();
-      
-      // font-size menu
+
+      // settings menu
+      JMenu settingsMenu = new JMenu("note settings");
       JMenu setFontSizeMenu = new JMenu("font size");
-      add(setFontSizeMenu);
-      addSeparator();
       setFontSizeItem = new JMenuItem[26];
       for (int i=0; i<26; i++) {
          setFontSizeItem[i] = new JMenuItem(String.valueOf(i+5));
+         if (i+5 == parentWindow.getParentNote().getFontSize()) {
+            setFontSizeItem[i].setText("# "+setFontSizeItem[i].getText());
+         } else {
+            setFontSizeItem[i].setText("  "+setFontSizeItem[i].getText());
+         }
          setFontSizeItem[i].setActionCommand("SetFontSize"+(i+5));
          setFontSizeItem[i].addActionListener(this);
          setFontSizeMenu.add(setFontSizeItem[i]);
       }
-      
-      
-      // category menu
-      JMenu categoryMenu = new JMenu("category");
-      add(categoryMenu);
-      
-      // set-category menu
-      JMenu setCategoryMenu = new JMenu("set category");
-      categoryMenu.add(setCategoryMenu);
+      JMenu setCategoryMenu = new JMenu("category");
       String[] active = {"  ","  ","  ","  ","  "};
       active[parentWindow.getParentNote().getCategory()] = "# ";
       setCategory1Item = new JMenuItem(active[0] + "1 " + MainApp.getUserSettings().getCategoryNames()[0]);
@@ -97,9 +93,33 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       setCategoryMenu.add(setCategory3Item);
       setCategoryMenu.add(setCategory4Item);
       setCategoryMenu.add(setCategory5Item);
+      JMenu alwaysOnTopMenu = new JMenu("always on top");
+      String[] aot = {"  ","  "};
+      if(parentWindow.getParentNote().isAlwaysOnTop()) {
+         aot[0] = "# ";
+      } else {
+         aot[1] = "# ";
+      }
+      alwaysOnTopOnItem = new JMenuItem(aot[0]+"enabled");
+      alwaysOnTopOffItem = new JMenuItem(aot[1]+"disabled");
+      alwaysOnTopOnItem.addActionListener(this);
+      alwaysOnTopOffItem.addActionListener(this);
+      alwaysOnTopMenu.add(alwaysOnTopOnItem);
+      alwaysOnTopMenu.add(alwaysOnTopOffItem);
+      
+      
+            
+      settingsMenu.add(alwaysOnTopMenu);
+      settingsMenu.add(setCategoryMenu);
+      settingsMenu.add(setFontSizeMenu);
+      add(settingsMenu);
+      addSeparator();
+      
+      // category menu
+      JMenu categoryMenu = new JMenu("category actions");
+      add(categoryMenu);
       
       // other category actions
-      categoryMenu.addSeparator();
       hideCategoryItem = new JMenuItem("hide notes of this category");
       showCategoryItem = new JMenuItem("show all notes of this category");
       showOnlyCategoryItem = new JMenuItem("show only notes of this category");
@@ -132,6 +152,10 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          parentWindow.getParentNote().showOnlyCategory(parentWindow.getParentNote().getCategory());
       } else if (src == showCategoryItem) {
          parentWindow.getParentNote().showCategory(parentWindow.getParentNote().getCategory());
+      } else if (src == alwaysOnTopOnItem) {
+         parentWindow.getParentNote().setAlwaysOnTop(true);
+      } else if (src == alwaysOnTopOffItem) {
+         parentWindow.getParentNote().setAlwaysOnTop(false);
       } else if (e.getActionCommand().substring(0, 11).equals("SetFontSize")) {
          short s = Short.parseShort(e.getActionCommand().substring(11));
          parentWindow.getParentNote().setFontSize(s);

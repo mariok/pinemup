@@ -33,7 +33,7 @@ public class Note implements Serializable {
 
    private String text;
 
-   private boolean visible;
+   private boolean visible, alwaysOnTop;
 
    private transient NoteWindow window;
 
@@ -42,6 +42,17 @@ public class Note implements Serializable {
    private short xpos, ypos, xsize, ysize, fontsize;
    
    private byte category;
+   
+   public void setAlwaysOnTop(boolean b) {
+      alwaysOnTop = b;
+      if (window != null) {
+         window.setAlwaysOnTop(alwaysOnTop);
+      }
+   }
+   
+   public boolean isAlwaysOnTop() {
+      return alwaysOnTop;
+   }
    
    public void setFontSize(short size) {
       fontsize = size;
@@ -82,6 +93,7 @@ public class Note implements Serializable {
       ysize = MainApp.getUserSettings().getDefaultWindowHeight();
       fontsize = MainApp.getUserSettings().getDefaultFontSize();
       category = MainApp.getUserSettings().getTempDef();
+      alwaysOnTop = MainApp.getUserSettings().getDefaultAlwaysOnTop();
    }
 
    public void setVisible(boolean b) {

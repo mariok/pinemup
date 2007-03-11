@@ -106,7 +106,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       resizeCursor = false;
       textArea.addMouseListener(this);
       textArea.addMouseMotionListener(this);
-
+      
+      setAlwaysOnTop(parentNote.isAlwaysOnTop());
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       addWindowListener(this);

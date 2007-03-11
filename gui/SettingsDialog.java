@@ -46,7 +46,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private JPasswordField ftpPasswdField;
 
    private JLabel ftpServerLabel, ftpUserLabel, ftpPasswdLabel, ftpDirLabel;
+   
+   private JCheckBox alwaysOnTopBox;
 
+   private JSpinner defaultFontSizeSpinner;
+   
    public SettingsDialog() {
       super("Settings");
 
@@ -81,10 +85,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       buttonPanel.add(applyButton);
       mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-      // GUI settings panel
-      guiPanel.setLayout(new GridLayout(4, 2));
-      JPanel[] guiSubPanel = new JPanel[8];
-      for (int i=0;i<8;i++) {
+      // notes default settings panel
+      final int ROWS = 6;
+      guiPanel.setLayout(new GridLayout(ROWS, 2));
+      JPanel[] guiSubPanel = new JPanel[ROWS*2];
+      for (int i=0;i<ROWS*2;i++) {
          guiSubPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
          guiPanel.add(guiSubPanel[i]);
       }
@@ -105,6 +110,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       defaultYPositionField = new JTextField(4);
       defaultYPositionField.getDocument().addDocumentListener(this);
       guiSubPanel[7].add(defaultYPositionField);
+      guiSubPanel[8].add(new JLabel("Default Font Size:"));
+      defaultFontSizeSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
+      guiSubPanel[9].add(defaultFontSizeSpinner);
+      alwaysOnTopBox = new JCheckBox("Always On Top By Default");
+      guiSubPanel[10].add(alwaysOnTopBox);
 
       // load/save settings panel
       lsPanel.setLayout(new GridLayout(8, 2)); // Save-Method-Panel
@@ -166,11 +176,19 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       
       // Load Settings Into Fields
       loadSettings();
-
+      
       applyButton.setEnabled(false);
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       pack();
+      
+      // center on screen
+      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
+      int x = (screenWidth - getWidth()) / 2;
+      int y = (screenHeight - getHeight()) / 2;
+      setLocation(x, y);
+      
       setVisible(true);
    }
 
@@ -194,11 +212,13 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private void loadSettings() {
       // write settings from object into fields
       
-      // GUI panel
+      // default note settings panel
       defaultWidthField.setText(String.valueOf(MainApp.getUserSettings().getDefaultWindowWidth()));
       defaultHeightField.setText(String.valueOf(MainApp.getUserSettings().getDefaultWindowHeight()));
       defaultXPositionField.setText(String.valueOf(MainApp.getUserSettings().getDefaultWindowXPostition()));
       defaultYPositionField.setText(String.valueOf(MainApp.getUserSettings().getDefaultWindowYPostition()));
+      defaultFontSizeSpinner.getModel().setValue(new Integer(MainApp.getUserSettings().getDefaultFontSize()));
+      alwaysOnTopBox.setSelected(MainApp.getUserSettings().getDefaultAlwaysOnTop());
       
       // load/save panel
       ftpServerField.setText(MainApp.getUserSettings().getFtpServer());
@@ -225,6 +245,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       short defaultHeight = Short.parseShort(defaultHeightField.getText());
       short defaultXPosition = Short.parseShort(defaultXPositionField.getText());
       short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
+      short defaultFontSize = ((Integer)((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
+      boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
       String ftpServer = ftpServerField.getText();
       String ftpUser = ftpUserField.getText();
       char[] ftpPasswd = ftpPasswdField.getPassword();
@@ -240,6 +262,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       MainApp.getUserSettings().setDefaultWindowWidth(defaultWidth);
       MainApp.getUserSettings().setDefaultWindowXPosition(defaultXPosition);
       MainApp.getUserSettings().setDefaultWindowYPosition(defaultYPosition);
+      MainApp.getUserSettings().setDefaultFontSize(defaultFontSize);
+      MainApp.getUserSettings().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
       MainApp.getUserSettings().setFtpServer(ftpServer);
       MainApp.getUserSettings().setFtpUser(ftpUser);
       MainApp.getUserSettings().setFtpPasswd(ftpPasswd);
