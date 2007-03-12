@@ -25,11 +25,7 @@ package gui;
 import logic.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Image;
-import java.awt.Insets;
+import java.awt.*;
 
 public class NoteWindow extends JDialog implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener {
    /**
@@ -53,31 +49,36 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private boolean resizeCursor, resizing; // required to make window resizable
    
-   private final Color MYCOLOR = new Color(255, 255, 140);
+   private JLabel bgLabel;
+   
 
    public NoteWindow(Note pn) {
       super();
       parentNote = pn;
       textPanel = new JScrollPane();
+      textPanel.setOpaque(false);
       mainPanel = new JPanel(new BorderLayout());
+      mainPanel.setOpaque(false);
       topPanel = new JPanel(new BorderLayout());
+      topPanel.setOpaque(false);
       mainPanel.add(textPanel, BorderLayout.CENTER);
       mainPanel.add(topPanel, BorderLayout.NORTH);
       dragging = false;
 
       // create and adjust TextArea
       textArea = new JTextArea(parentNote.getText(), 1, 1);
-      textArea.setBackground(MYCOLOR);
+      textArea.setOpaque(false);
       textArea.setLineWrap(true);
       textArea.setWrapStyleWord(true);
       textArea.setFont(new java.awt.Font("SERIF", 1, parentNote.getFontSize()));
       textArea.addFocusListener(this);
       textArea.setMargin(new Insets(0, 3, 3, 3));
       textPanel.setViewportView(textArea);
+      textPanel.getViewport().setOpaque(false);      
       textPanel.setBorder(null);
-
+      mainPanel.add(textPanel, BorderLayout.CENTER);
+      
       // adjust and add buttons to the topPanel
-      topPanel.setBackground(MYCOLOR);
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       topPanel.addFocusListener(this);
@@ -85,7 +86,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       ImageIcon closeIcon = null;
       closeIcon = new ImageIcon(img);
       closeButton = new JButton(closeIcon);
-      closeButton.setBackground(MYCOLOR);
+      closeButton.setOpaque(true);
+      closeButton.setBackground(new Color(255,255,255,0));
+      
       closeButton.setToolTipText("hide note");
       closeButton.addActionListener(this);
       closeButton.setFocusable(false);
@@ -96,7 +99,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       topPanel.add(closeButton, BorderLayout.EAST);
       updateToolTip();
       
-      setBackground(MYCOLOR);
       setUndecorated(true);
       setLocation(parentNote.getXPos(),parentNote.getYPos());
       setSize(parentNote.getXSize(),parentNote.getYSize());
@@ -114,6 +116,10 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       addWindowListener(this);
+      
+      bgLabel = new BackgroundLabel(this);
+     
+      getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
       setVisible(true);
    }
 
