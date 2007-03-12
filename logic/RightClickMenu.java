@@ -48,15 +48,15 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       addSeparator();
       addNoteItem = new JMenuItem("add note");
       addNoteItem.setActionCommand("AddNote");
-      addNoteItem.addActionListener(MainApp.getMenuListener());
+      addNoteItem.addActionListener(PinEmUp.getMenuListener());
       add(addNoteItem);
       showAllItem = new JMenuItem("show all notes");
       showAllItem.setActionCommand("ShowAllNotes");
-      showAllItem.addActionListener(MainApp.getMenuListener());
+      showAllItem.addActionListener(PinEmUp.getMenuListener());
       add(showAllItem);
       hideAllItem = new JMenuItem("hide all notes");
       hideAllItem.setActionCommand("HideAllNotes");
-      hideAllItem.addActionListener(MainApp.getMenuListener());
+      hideAllItem.addActionListener(PinEmUp.getMenuListener());
       add(hideAllItem);
       addSeparator();
 
@@ -78,11 +78,11 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       JMenu setCategoryMenu = new JMenu("category");
       String[] active = {"  ","  ","  ","  ","  "};
       active[parentWindow.getParentNote().getCategory()] = "# ";
-      setCategory1Item = new JMenuItem(active[0] + "1 " + MainApp.getUserSettings().getCategoryNames()[0]);
-      setCategory2Item = new JMenuItem(active[1] + "2 " + MainApp.getUserSettings().getCategoryNames()[1]);
-      setCategory3Item = new JMenuItem(active[2] + "3 " + MainApp.getUserSettings().getCategoryNames()[2]);
-      setCategory4Item = new JMenuItem(active[3] + "4 " + MainApp.getUserSettings().getCategoryNames()[3]);
-      setCategory5Item = new JMenuItem(active[4] + "5 " + MainApp.getUserSettings().getCategoryNames()[4]);
+      setCategory1Item = new JMenuItem(active[0] + "1 " + PinEmUp.getUserSettings().getCategoryNames()[0]);
+      setCategory2Item = new JMenuItem(active[1] + "2 " + PinEmUp.getUserSettings().getCategoryNames()[1]);
+      setCategory3Item = new JMenuItem(active[2] + "3 " + PinEmUp.getUserSettings().getCategoryNames()[2]);
+      setCategory4Item = new JMenuItem(active[3] + "4 " + PinEmUp.getUserSettings().getCategoryNames()[3]);
+      setCategory5Item = new JMenuItem(active[4] + "5 " + PinEmUp.getUserSettings().getCategoryNames()[4]);
       setCategory1Item.addActionListener(this);
       setCategory2Item.addActionListener(this);
       setCategory3Item.addActionListener(this);
@@ -135,7 +135,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
    public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
       if (src == deleteNoteItem) {
-         MainApp.getMainApp().setNotes(Note.remove(MainApp.getMainApp().getNotes(), parentWindow.getParentNote()));
+         PinEmUp.getMainApp().setNotes(Note.remove(PinEmUp.getMainApp().getNotes(), parentWindow.getParentNote()));
       } else if (src == setCategory1Item) {
          parentWindow.getParentNote().setCategory((byte)0);
       } else if (src == setCategory2Item) {
@@ -163,7 +163,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       }
       
       // save notes to file after every change
-      NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), MainApp.getUserSettings().getNotesFile());
+      NoteIO.writeNotesToFile(PinEmUp.getMainApp().getNotes(), PinEmUp.getUserSettings().getNotesFile());
    }
 
 }

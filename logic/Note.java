@@ -87,13 +87,13 @@ public class Note implements Serializable {
       prev = null;
       visible = true;
       window = null;
-      xpos = MainApp.getUserSettings().getDefaultWindowXPostition();
-      ypos = MainApp.getUserSettings().getDefaultWindowYPostition();
-      xsize = MainApp.getUserSettings().getDefaultWindowWidth();
-      ysize = MainApp.getUserSettings().getDefaultWindowHeight();
-      fontsize = MainApp.getUserSettings().getDefaultFontSize();
-      category = MainApp.getUserSettings().getTempDef();
-      alwaysOnTop = MainApp.getUserSettings().getDefaultAlwaysOnTop();
+      xpos = PinEmUp.getUserSettings().getDefaultWindowXPostition();
+      ypos = PinEmUp.getUserSettings().getDefaultWindowYPostition();
+      xsize = PinEmUp.getUserSettings().getDefaultWindowWidth();
+      ysize = PinEmUp.getUserSettings().getDefaultWindowHeight();
+      fontsize = PinEmUp.getUserSettings().getDefaultFontSize();
+      category = PinEmUp.getUserSettings().getTempDef();
+      alwaysOnTop = PinEmUp.getUserSettings().getDefaultAlwaysOnTop();
    }
 
    public void setVisible(boolean b) {
@@ -237,7 +237,16 @@ public class Note implements Serializable {
    public short getYSize() {
       return ysize;
    }
-
+   
+   public void tempHide() {
+      if (window != null) {
+         window.setVisible(false);
+         window.dispose();
+         window = null;   
+      }
+   }
+   
+   
    public void hide() {
       if (window != null) {
          window.setVisible(false);
@@ -245,6 +254,19 @@ public class Note implements Serializable {
          window = null;   
       }
       visible = false;
+   }
+   
+   public void tempHideAll() {
+      Note n = this;
+      // back to the beginning
+      while (n.getPrev() != null) {
+         n = n.getPrev();
+      }
+
+      while (n != null) {
+         n.tempHide();
+         n = n.getNext();
+      }
    }
 
    public void hideAll() {

@@ -30,7 +30,7 @@ public class ResourceLoader {
    
    private static InputStream getResourceStream(String pkg, String filename) {
       String name = "/" + pkg.replace('.', '/') + "/" + filename;
-      InputStream is = MainApp.getMainApp().getClass().getResourceAsStream(name);
+      InputStream is = PinEmUp.getMainApp().getClass().getResourceAsStream(name);
       return is;
    }
    

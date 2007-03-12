@@ -133,7 +133,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       parentNote.setSize((short)getWidth(), (short)getHeight());
       
       // write notes to file after every change
-      NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), MainApp.getUserSettings().getNotesFile());
+      NoteIO.writeNotesToFile(PinEmUp.getMainApp().getNotes(), PinEmUp.getUserSettings().getNotesFile());
    }
 
    public void windowActivated(WindowEvent arg0) {
@@ -169,7 +169,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          parentNote.hide();
          
          // write notes to file after every change
-         NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), MainApp.getUserSettings().getNotesFile());
+         NoteIO.writeNotesToFile(PinEmUp.getMainApp().getNotes(), PinEmUp.getUserSettings().getNotesFile());
       }
 
    }
@@ -257,7 +257,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
    
    public void updateToolTip() {
-      topPanel.setToolTipText("Category: " + (parentNote.getCategory()+1) + " " + MainApp.getUserSettings().getCategoryNames()[parentNote.getCategory()]);
+      topPanel.setToolTipText("Category: " + (parentNote.getCategory()+1) + " " + PinEmUp.getUserSettings().getCategoryNames()[parentNote.getCategory()]);
    }
 
    public void mouseMoved(MouseEvent e) {

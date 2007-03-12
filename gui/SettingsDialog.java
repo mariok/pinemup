@@ -124,6 +124,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       savePanel.setBorder(new TitledBorder("notes-file"));
       notesFileField = new JTextField(20);
+      notesFileField.getDocument().addDocumentListener(this);
       savePanel.add(notesFileField);
       browseButton = new JButton("browse");
       browseButton.addActionListener(this);
@@ -220,47 +221,46 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          dispose();
       } else if (src == browseButton) {
          File f = null;
-         MainApp.getFileDialog().setDialogTitle("select notes file");
-         MainApp.getFileDialog().setFileFilter(new MyFileFilter("DAT"));
-         if (MainApp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            f = MainApp.getFileDialog().getSelectedFile();
+         PinEmUp.getFileDialog().setDialogTitle("select notes file");
+         PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("DAT"));
+         if (PinEmUp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            f = PinEmUp.getFileDialog().getSelectedFile();
          }
          if (f != null) {
             notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(),".dat"));
          }
       }
-
    }
 
    private void loadSettings() {
       // write settings from object into fields
       
       // default note settings panel
-      defaultWidthField.setText(String.valueOf(MainApp.getUserSettings().getDefaultWindowWidth()));
-      defaultHeightField.setText(String.valueOf(MainApp.getUserSettings().getDefaultWindowHeight()));
-      defaultXPositionField.setText(String.valueOf(MainApp.getUserSettings().getDefaultWindowXPostition()));
-      defaultYPositionField.setText(String.valueOf(MainApp.getUserSettings().getDefaultWindowYPostition()));
-      defaultFontSizeSpinner.getModel().setValue(new Integer(MainApp.getUserSettings().getDefaultFontSize()));
-      alwaysOnTopBox.setSelected(MainApp.getUserSettings().getDefaultAlwaysOnTop());
+      defaultWidthField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowWidth()));
+      defaultHeightField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowHeight()));
+      defaultXPositionField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowXPostition()));
+      defaultYPositionField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowYPostition()));
+      defaultFontSizeSpinner.getModel().setValue(new Integer(PinEmUp.getUserSettings().getDefaultFontSize()));
+      alwaysOnTopBox.setSelected(PinEmUp.getUserSettings().getDefaultAlwaysOnTop());
       
       // load/save panel
-      notesFileField.setText(MainApp.getUserSettings().getNotesFile());
-      ftpServerField.setText(MainApp.getUserSettings().getFtpServer());
-      ftpUserField.setText(MainApp.getUserSettings().getFtpUser());
-      if (MainApp.getUserSettings().getFtpPasswd() != null) {
-         ftpPasswdField.setText(String.copyValueOf(MainApp.getUserSettings()
+      notesFileField.setText(PinEmUp.getUserSettings().getNotesFile());
+      ftpServerField.setText(PinEmUp.getUserSettings().getFtpServer());
+      ftpUserField.setText(PinEmUp.getUserSettings().getFtpUser());
+      if (PinEmUp.getUserSettings().getFtpPasswd() != null) {
+         ftpPasswdField.setText(String.copyValueOf(PinEmUp.getUserSettings()
                .getFtpPasswd()));
       } else {
          ftpPasswdField.setText("");
       }
-      ftpDirField.setText(MainApp.getUserSettings().getFtpDir());
+      ftpDirField.setText(PinEmUp.getUserSettings().getFtpDir());
       
       // category panel
-      cat1Field.setText(MainApp.getUserSettings().getCategoryNames()[0]);
-      cat2Field.setText(MainApp.getUserSettings().getCategoryNames()[1]);
-      cat3Field.setText(MainApp.getUserSettings().getCategoryNames()[2]);
-      cat4Field.setText(MainApp.getUserSettings().getCategoryNames()[3]);
-      cat5Field.setText(MainApp.getUserSettings().getCategoryNames()[4]);
+      cat1Field.setText(PinEmUp.getUserSettings().getCategoryNames()[0]);
+      cat2Field.setText(PinEmUp.getUserSettings().getCategoryNames()[1]);
+      cat3Field.setText(PinEmUp.getUserSettings().getCategoryNames()[2]);
+      cat4Field.setText(PinEmUp.getUserSettings().getCategoryNames()[3]);
+      cat5Field.setText(PinEmUp.getUserSettings().getCategoryNames()[4]);
    }
 
    private void saveSettings() {
@@ -283,24 +283,24 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       String cat5 = cat5Field.getText();
       
       // write settings into object
-      MainApp.getUserSettings().setDefaultWindowHeight(defaultHeight);
-      MainApp.getUserSettings().setDefaultWindowWidth(defaultWidth);
-      MainApp.getUserSettings().setDefaultWindowXPosition(defaultXPosition);
-      MainApp.getUserSettings().setDefaultWindowYPosition(defaultYPosition);
-      MainApp.getUserSettings().setDefaultFontSize(defaultFontSize);
-      MainApp.getUserSettings().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
-      MainApp.getUserSettings().setNotesFile(notesFile);
-      MainApp.getUserSettings().setFtpServer(ftpServer);
-      MainApp.getUserSettings().setFtpUser(ftpUser);
-      MainApp.getUserSettings().setFtpPasswd(ftpPasswd);
-      MainApp.getUserSettings().setFtpDir(ftpDir);
-      MainApp.getUserSettings().setCategoryName((byte)0, cat1);
-      MainApp.getUserSettings().setCategoryName((byte)1, cat2);
-      MainApp.getUserSettings().setCategoryName((byte)2, cat3);
-      MainApp.getUserSettings().setCategoryName((byte)3, cat4);
-      MainApp.getUserSettings().setCategoryName((byte)4, cat5);
+      PinEmUp.getUserSettings().setDefaultWindowHeight(defaultHeight);
+      PinEmUp.getUserSettings().setDefaultWindowWidth(defaultWidth);
+      PinEmUp.getUserSettings().setDefaultWindowXPosition(defaultXPosition);
+      PinEmUp.getUserSettings().setDefaultWindowYPosition(defaultYPosition);
+      PinEmUp.getUserSettings().setDefaultFontSize(defaultFontSize);
+      PinEmUp.getUserSettings().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
+      PinEmUp.getUserSettings().setNotesFile(notesFile);
+      PinEmUp.getUserSettings().setFtpServer(ftpServer);
+      PinEmUp.getUserSettings().setFtpUser(ftpUser);
+      PinEmUp.getUserSettings().setFtpPasswd(ftpPasswd);
+      PinEmUp.getUserSettings().setFtpDir(ftpDir);
+      PinEmUp.getUserSettings().setCategoryName((byte)0, cat1);
+      PinEmUp.getUserSettings().setCategoryName((byte)1, cat2);
+      PinEmUp.getUserSettings().setCategoryName((byte)2, cat3);
+      PinEmUp.getUserSettings().setCategoryName((byte)3, cat4);
+      PinEmUp.getUserSettings().setCategoryName((byte)4, cat5);
       // update all tooltips with new category names
-      Note n = MainApp.getMainApp().getNotes();
+      Note n = PinEmUp.getMainApp().getNotes();
       while (n!=null && n.getPrev() != null) { // Back to the Beginning
          n = n.getPrev();
       }
@@ -311,10 +311,19 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          n = n.getNext();
       }
       // update categories in traymenu
-      MainApp.getMainApp().getTrayMenu().updateCategories();
+      PinEmUp.getMainApp().getTrayMenu().updateCategories();
       
-      // save object to disk
-      UserSettings.saveSettings(MainApp.getUserSettings(), "config.dat");
+      // load new notes from file
+      PinEmUp.getMainApp().getNotes().tempHideAll();
+      PinEmUp.getMainApp().setNotes(NoteIO.readNotesFromFile(notesFile));
+      
+      // show all visible notes
+      if (PinEmUp.getMainApp().getNotes() != null) {
+         PinEmUp.getMainApp().getNotes().showAllVisible();
+      }
+      
+      // save settings permanentely
+      PinEmUp.getUserSettings().saveSettings();
    }
 
    public void changedUpdate(DocumentEvent arg0) {

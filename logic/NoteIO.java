@@ -37,7 +37,7 @@ public class NoteIO {
          os.writeObject(n);
          os.close();
       } catch (IOException e) {
-         System.err.println(e.toString());
+         JOptionPane.showMessageDialog(null, "Could save notes to file! Please check file-settings and free disk-space!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
       }
    }
 
@@ -59,7 +59,7 @@ public class NoteIO {
    public static Note getNotesFileFromFTP(String filename) {
       Note n = null;
       try {
-         UserSettings us = MainApp.getUserSettings();
+         UserSettings us = PinEmUp.getUserSettings();
          String ftpString = "ftp://" + us.getFtpUser() + ":"
                + us.getFtpPasswdString() + "@" + us.getFtpServer()
                + us.getFtpDir() + filename + ";type=i";
@@ -70,7 +70,7 @@ public class NoteIO {
          n = (Note) ois.readObject();
          ois.close();
       } catch (Exception e) {
-         n = MainApp.getMainApp().getFailNote();
+         n = PinEmUp.getMainApp().getFailNote();
          JOptionPane.showMessageDialog(null, "Could not download file from FTP server!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
       }
       return n;
@@ -79,7 +79,7 @@ public class NoteIO {
    public static void writeNotesToFTP(Note n, String filename) {
       boolean uploaded = true;
       try {
-         UserSettings us = MainApp.getUserSettings();
+         UserSettings us = PinEmUp.getUserSettings();
          String ftpString = "ftp://" + us.getFtpUser() + ":"
                + us.getFtpPasswdString() + "@" + us.getFtpServer()
                + us.getFtpDir() + filename + ";type=i";
@@ -100,11 +100,11 @@ public class NoteIO {
    
    public static void ExportNotesToTextFile(Note n, boolean[] catExport) {
       File f = null;
-      MainApp.getFileDialog().setDialogTitle("Export notes to text-file");
-      MainApp.getFileDialog().setFileFilter(new MyFileFilter("TXT"));
-      if (MainApp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         //f = MainApp.getFileDialog().getSelectedFile();
-         String name = NoteIO.checkAndAddExtension(MainApp.getFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
+      PinEmUp.getFileDialog().setDialogTitle("Export notes to text-file");
+      PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("TXT"));
+      if (PinEmUp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+         //f = PinEmUp.getFileDialog().getSelectedFile();
+         String name = NoteIO.checkAndAddExtension(PinEmUp.getFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
          f = new File(name);
       }
       if (f != null) {
@@ -115,7 +115,7 @@ public class NoteIO {
             for (int i=0; i<5; i++) {
                n = head;
                if (catExport[i]) {
-                  ostream.println("Category: "+MainApp.getUserSettings().getCategoryNames()[i]);
+                  ostream.println("Category: "+PinEmUp.getUserSettings().getCategoryNames()[i]);
                   ostream.println();
                   while (n != null) {
                      if (n.getCategory() == i) {

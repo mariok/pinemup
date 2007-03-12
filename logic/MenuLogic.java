@@ -33,74 +33,74 @@ public class MenuLogic implements ActionListener {
       String cmd = e.getActionCommand();
 
       if (cmd.equals("AddNote")) {
-         MainApp.getMainApp().setNotes(Note.add(MainApp.getMainApp().getNotes(), ""));
-         MainApp.getMainApp().getNotes().showAllVisible();
+         PinEmUp.getMainApp().setNotes(Note.add(PinEmUp.getMainApp().getNotes(), ""));
+         PinEmUp.getMainApp().getNotes().showAllVisible();
       } else if (cmd.equals("ShowAllNotes")) {
-         if (MainApp.getMainApp().getNotes() != null) {
-            MainApp.getMainApp().getNotes().showAll();
+         if (PinEmUp.getMainApp().getNotes() != null) {
+            PinEmUp.getMainApp().getNotes().showAll();
          }
       } else if (cmd.equals("HideAllNotes")) {
-         if (MainApp.getMainApp().getNotes() != null) {
-            MainApp.getMainApp().getNotes().hideAll();
+         if (PinEmUp.getMainApp().getNotes() != null) {
+            PinEmUp.getMainApp().getNotes().hideAll();
          }
       } else if (cmd.equals("ShowSettings")) {
          new SettingsDialog();
       } else if (cmd.equals("Exit")) {
-         MainApp.getMainApp().exit();
+         PinEmUp.getMainApp().exit();
       } else if (cmd.equals("UploadNotesToFTP")) {
          new FTPThread(true);
       } else if (cmd.equals("DownloadNotesFromFTP")) {
          new FTPThread(false);
       } else if (cmd.equals("ShowAboutDialog")) {
-         String msg = "pin 'em up\nversion " + MainApp.getVersion() + "\n\n(C) 2007 Mario Koedding\nmario.koedding@web.de\n\nThis program is licensed under the terms of the GNU GPL V2.\nRead \"COPYING\" file for details.\n\nvisit http://pin-em-up.sourceforge.net";
+         String msg = "pin 'em up\nversion " + PinEmUp.getVersion() + "\n\n(C) 2007 Mario Koedding\nmario.koedding@web.de\n\nThis program is licensed under the terms of the GNU GPL V2.\nRead \"COPYING\" file for details.\n\nvisit http://pin-em-up.sourceforge.net";
          JOptionPane.showMessageDialog(null, msg, "about pin 'em up", JOptionPane.INFORMATION_MESSAGE);
       } else if (cmd.equals("ShowOnlyCategory0")) {
-         MainApp.getMainApp().getNotes().showOnlyCategory((byte)0);
+         PinEmUp.getMainApp().getNotes().showOnlyCategory((byte)0);
       } else if (cmd.equals("ShowOnlyCategory1")) {
-         MainApp.getMainApp().getNotes().showOnlyCategory((byte)1);
+         PinEmUp.getMainApp().getNotes().showOnlyCategory((byte)1);
       } else if (cmd.equals("ShowOnlyCategory2")) {
-         MainApp.getMainApp().getNotes().showOnlyCategory((byte)2);
+         PinEmUp.getMainApp().getNotes().showOnlyCategory((byte)2);
       } else if (cmd.equals("ShowOnlyCategory3")) {
-         MainApp.getMainApp().getNotes().showOnlyCategory((byte)3);
+         PinEmUp.getMainApp().getNotes().showOnlyCategory((byte)3);
       } else if (cmd.equals("ShowOnlyCategory4")) {
-         MainApp.getMainApp().getNotes().showOnlyCategory((byte)4);
+         PinEmUp.getMainApp().getNotes().showOnlyCategory((byte)4);
       } else if (cmd.equals("HideCategory0")) {
-         MainApp.getMainApp().getNotes().hideCategory((byte)0);
+         PinEmUp.getMainApp().getNotes().hideCategory((byte)0);
       } else if (cmd.equals("HideCategory1")) {
-         MainApp.getMainApp().getNotes().hideCategory((byte)1);
+         PinEmUp.getMainApp().getNotes().hideCategory((byte)1);
       } else if (cmd.equals("HideCategory2")) {
-         MainApp.getMainApp().getNotes().hideCategory((byte)2);
+         PinEmUp.getMainApp().getNotes().hideCategory((byte)2);
       } else if (cmd.equals("HideCategory3")) {
-         MainApp.getMainApp().getNotes().hideCategory((byte)3);
+         PinEmUp.getMainApp().getNotes().hideCategory((byte)3);
       } else if (cmd.equals("HideCategory4")) {
-         MainApp.getMainApp().getNotes().hideCategory((byte)4);
+         PinEmUp.getMainApp().getNotes().hideCategory((byte)4);
       } else if (cmd.equals("ShowCategory0")) {
-         MainApp.getMainApp().getNotes().showCategory((byte)0);
+         PinEmUp.getMainApp().getNotes().showCategory((byte)0);
       } else if (cmd.equals("ShowCategory1")) {
-         MainApp.getMainApp().getNotes().showCategory((byte)1);
+         PinEmUp.getMainApp().getNotes().showCategory((byte)1);
       } else if (cmd.equals("ShowCategory2")) {
-         MainApp.getMainApp().getNotes().showCategory((byte)2);
+         PinEmUp.getMainApp().getNotes().showCategory((byte)2);
       } else if (cmd.equals("ShowCategory3")) {
-         MainApp.getMainApp().getNotes().showCategory((byte)3);
+         PinEmUp.getMainApp().getNotes().showCategory((byte)3);
       } else if (cmd.equals("ShowCategory4")) {
-         MainApp.getMainApp().getNotes().showCategory((byte)4);
+         PinEmUp.getMainApp().getNotes().showCategory((byte)4);
       } else if (cmd.equals("SetTempDef0")) {
-         MainApp.getUserSettings().setTempDef((byte)0);
+         PinEmUp.getUserSettings().setTempDef((byte)0);
       } else if (cmd.equals("SetTempDef1")) {
-         MainApp.getUserSettings().setTempDef((byte)1);
+         PinEmUp.getUserSettings().setTempDef((byte)1);
       } else if (cmd.equals("SetTempDef2")) {
-         MainApp.getUserSettings().setTempDef((byte)2);
+         PinEmUp.getUserSettings().setTempDef((byte)2);
       } else if (cmd.equals("SetTempDef3")) {
-         MainApp.getUserSettings().setTempDef((byte)3);
+         PinEmUp.getUserSettings().setTempDef((byte)3);
       } else if (cmd.equals("SetTempDef4")) {
-         MainApp.getUserSettings().setTempDef((byte)4);
+         PinEmUp.getUserSettings().setTempDef((byte)4);
       } else if (cmd.equals("ExportToTextFile")) {
          new ExportDialog();
       }
       
       if (cmd.equals("ShowCategory0") || cmd.equals("ShowCategory1") || cmd.equals("ShowCategory2") || cmd.equals("ShowCategory3") || cmd.equals("ShowCategory4") || cmd.equals("HideCategory0") || cmd.equals("HideCategory1") || cmd.equals("HideCategory2") || cmd.equals("HideCategory3") || cmd.equals("HideCategory4") || cmd.equals("ShowOnlyCategory0") || cmd.equals("ShowOnlyCategory1") || cmd.equals("ShowOnlyCategory2") || cmd.equals("ShowOnlyCategory3") || cmd.equals("ShowOnlyCategory4") || cmd.equals("AddNote") || cmd.equals("ShowAllNotes") || cmd.equals("HideAllNotes") || cmd.equals("DownloadNotesFromFTP")) {
          // save notes to file after every change
-         NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), MainApp.getUserSettings().getNotesFile());  
+         NoteIO.writeNotesToFile(PinEmUp.getMainApp().getNotes(), PinEmUp.getUserSettings().getNotesFile());  
       }
    }
 

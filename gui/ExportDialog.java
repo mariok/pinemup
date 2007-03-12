@@ -49,7 +49,7 @@ public class ExportDialog extends JDialog implements ActionListener {
       // Category Checkboxes
       final int ROWS = 5;
       JPanel checkBoxPanel = new JPanel (new GridLayout(ROWS+1,1));
-      String[] cats = MainApp.getUserSettings().getCategoryNames();
+      String[] cats = PinEmUp.getUserSettings().getCategoryNames();
       JPanel[] catPanel = new JPanel[ROWS];
       catBox = new JCheckBox[ROWS];
       JPanel allCatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -100,7 +100,7 @@ public class ExportDialog extends JDialog implements ActionListener {
          for (int i=0; i<5; i++) {
             catChecked[i] = catBox[i].isSelected();
          }
-         NoteIO.ExportNotesToTextFile(MainApp.getMainApp().getNotes(), catChecked);
+         NoteIO.ExportNotesToTextFile(PinEmUp.getMainApp().getNotes(), catChecked);
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {

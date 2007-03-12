@@ -22,44 +22,30 @@
 
 package logic;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.util.prefs.Preferences;
 
-public class UserSettings implements Serializable {
+public class UserSettings {
    /**
     * 
     */
+   
+   private Preferences prefs;
+   
    private static final long serialVersionUID = 1L;
 
    private short defaultWindowWidth;
-
    private short defaultWindowHeight;
-
    private short defaultWindowXPosition;
-
    private short defaultWindowYPosition;
-   
    private short defaultFontSize;
-   
    private String notesFile;
-
    private String ftpServer;
-
    private String ftpUser;
-
    private char[] ftpPasswd;
-
    private String ftpDir;
-
    private String[] category;
-   
    private boolean defaultAlwaysOnTop;
-   
-   private transient byte tempDef = 0;
+   private byte tempDef = 0;
    
    public String getNotesFile() {
       return notesFile;
@@ -175,55 +161,51 @@ public class UserSettings implements Serializable {
       ftpDir = d;
    }
 
-   public static UserSettings loadSettings(String filename) {
-      UserSettings s = null;
-      try {
-         FileInputStream fs = new FileInputStream(filename);
-         ObjectInputStream is = new ObjectInputStream(fs);
-         s = (UserSettings) is.readObject();
-         is.close();
-      } catch (ClassNotFoundException e) {
-         // Do Nothing
-      } catch (IOException e) {
-         // Do Nothing
-      }
-
-      if (s == null) {
-         s = new UserSettings();
-         UserSettings.saveSettings(s, "config.dat");
-      }
-
-      return s;
-   }
-
-   public static void saveSettings(UserSettings s, String filename) {
-      try {
-         FileOutputStream fs = new FileOutputStream(filename);
-         ObjectOutputStream os = new ObjectOutputStream(fs);
-         os.writeObject(s);
-         os.close();
-      } catch (IOException e) {
-         System.err.println(e.toString());
-      }
+   public void saveSettings() {
+      // save preferences
+      prefs.putInt("peu_defaultWindowWidth", defaultWindowWidth);
+      prefs.putInt("peu_defaultWindowHeight", defaultWindowHeight);
+      prefs.putInt("peu_defaultWindowXPosition", defaultWindowXPosition);
+      prefs.putInt("peu_defaultWindowYPosition", defaultWindowYPosition);
+      prefs.putInt("peu_defaultFontSize", defaultFontSize);
+      prefs.putBoolean("peu_defaultAlwaysOnTop", defaultAlwaysOnTop);
+      prefs.put("peu_notesFile", notesFile);
+      prefs.put("peu_ftpServer", ftpServer);
+      prefs.put("peu_ftpUser", ftpUser);
+      prefs.put("peu_ftpPasswd", getFtpPasswdString());
+      prefs.put("peu_ftpDir", ftpDir);
+      prefs.put("peu_cat1", category[0]);
+      prefs.put("peu_cat2", category[1]);
+      prefs.put("peu_cat3", category[2]);
+      prefs.put("peu_cat4", category[3]);
+      prefs.put("peu_cat5", category[4]);
    }
 
    public UserSettings() {
-      // default values
-      defaultWindowWidth = 170;
-      defaultWindowHeight = 150;
-      defaultWindowXPosition = 0;
-      defaultWindowYPosition = 0;
-      defaultFontSize = 14;
-      defaultAlwaysOnTop = false;
-      ftpServer = "ftp.example.com";
-      ftpUser = "anonymous";
-      ftpPasswd = null;
-      ftpDir = "/";
+      prefs = Preferences.userNodeForPackage(PinEmUp.class);
+
+      String homeDir = System.getProperty("user.home");
+      if (homeDir.charAt(homeDir.length()-1) != '\\' && homeDir.charAt(homeDir.length()-1) != '/') {
+         homeDir = homeDir + "/";
+      }
+      //System.exit(0);
+      
+      defaultWindowWidth = Short.parseShort(prefs.get("peu_defaultWindowWidth", "170"));
+      defaultWindowHeight = Short.parseShort(prefs.get("peu_defaultWindowHeight", "150"));
+      defaultWindowXPosition = Short.parseShort(prefs.get("peu_defaultWindowXPosition", "0"));
+      defaultWindowYPosition = Short.parseShort(prefs.get("peu_defaultWindowYPosition", "0"));
+      defaultFontSize = Short.parseShort(prefs.get("peu_defaultFontSize", "14"));
+      defaultAlwaysOnTop = prefs.getBoolean("peu_defaultAlwaysOnTop", false);
+      notesFile = prefs.get("peu_notesFile", homeDir + "pinemup.dat");
+      ftpServer = prefs.get("peu_ftpServer", "ftp.example.com");
+      ftpUser = prefs.get("peu_ftpUser", "anonymous");
+      ftpPasswd = prefs.get("peu_ftpPasswd", "").toCharArray();
+      ftpDir = prefs.get("peu_ftpDir", "/");
       category = new String[5];
-      category[0] = "home";
-      category[1] = "office";
-      category[2] = "category3";
-      category[3] = "category4";
-      category[4] = "category5";
+      category[0] = prefs.get("peu_cat1", "home");
+      category[1] = prefs.get("peu_cat2", "office");
+      category[2] = prefs.get("peu_cat3", "category3");
+      category[3] = prefs.get("peu_cat4", "category4");
+      category[4] = prefs.get("peu_cat5", "category5");
    }
 }
