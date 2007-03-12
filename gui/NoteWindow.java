@@ -86,11 +86,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       ImageIcon closeIcon = null;
       closeIcon = new ImageIcon(img);
       closeButton = new JButton(closeIcon);
-      closeButton.setOpaque(true);
       closeButton.setBackground(new Color(255,255,255,0));
       
       closeButton.setToolTipText("hide note");
       closeButton.addActionListener(this);
+      closeButton.addMouseListener(this);
       closeButton.setFocusable(false);
       closeButton.setBorderPainted(false);
       closeButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -133,7 +133,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       parentNote.setSize((short)getWidth(), (short)getHeight());
       
       // write notes to file after every change
-      NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), NoteIO.getFileName());
+      NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), MainApp.getUserSettings().getNotesFile());
    }
 
    public void windowActivated(WindowEvent arg0) {
@@ -169,7 +169,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          parentNote.hide();
          
          // write notes to file after every change
-         NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), NoteIO.getFileName());
+         NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), MainApp.getUserSettings().getNotesFile());
       }
 
    }
@@ -231,6 +231,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          dragging = false;
       } else if (resizing && e.getButton() == MouseEvent.BUTTON1) {
          resizing = false;
+      } else if (e.getSource() == closeButton) {
+         // restore button backgorund if not pressed
+         repaint();
       }
    }
 

@@ -30,12 +30,6 @@ import javax.swing.*;
 import javax.swing.JOptionPane;
 
 public class NoteIO {
-   private static final String FILENAME = "notes.dat";
-   
-   public static String getFileName() {
-      return FILENAME;
-   }
-   
    public static void writeNotesToFile(Note n, String filename) {
       try {
          FileOutputStream fs = new FileOutputStream(filename);
@@ -68,7 +62,7 @@ public class NoteIO {
          UserSettings us = MainApp.getUserSettings();
          String ftpString = "ftp://" + us.getFtpUser() + ":"
                + us.getFtpPasswdString() + "@" + us.getFtpServer()
-               + us.getFtpDir() + "notes.dat;type=i";
+               + us.getFtpDir() + filename + ";type=i";
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
          InputStream is = urlc.getInputStream(); // to download
@@ -107,10 +101,13 @@ public class NoteIO {
    public static void ExportNotesToTextFile(Note n, boolean[] catExport) {
       File f = null;
       MainApp.getFileDialog().setDialogTitle("Export notes to text-file");
+      MainApp.getFileDialog().setFileFilter(new MyFileFilter("TXT"));
       if (MainApp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         f = MainApp.getFileDialog().getSelectedFile();
+         //f = MainApp.getFileDialog().getSelectedFile();
+         String name = NoteIO.checkAndAddExtension(MainApp.getFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
+         f = new File(name);
       }
-      if (f != null) {         
+      if (f != null) {
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
             // write text of notes to file
@@ -142,6 +139,15 @@ public class NoteIO {
             e.printStackTrace();
          }
       }
+   }
+   
+   public static String checkAndAddExtension(String s, String xt) {
+      int len = s.length();
+      String ext = s.substring(len-4, len);
+      if (!ext.toLowerCase().equals(xt.toLowerCase())) {
+         s = s + xt.toLowerCase();
+      }
+      return s;
    }
 
 }

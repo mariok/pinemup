@@ -221,11 +221,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       } else if (src == browseButton) {
          File f = null;
          MainApp.getFileDialog().setDialogTitle("select notes file");
-         if (MainApp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+         MainApp.getFileDialog().setFileFilter(new MyFileFilter("DAT"));
+         if (MainApp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             f = MainApp.getFileDialog().getSelectedFile();
          }
          if (f != null) {
-            notesFileField.setText(f.getAbsolutePath());
+            notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(),".dat"));
          }
       }
 
@@ -243,6 +244,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       alwaysOnTopBox.setSelected(MainApp.getUserSettings().getDefaultAlwaysOnTop());
       
       // load/save panel
+      notesFileField.setText(MainApp.getUserSettings().getNotesFile());
       ftpServerField.setText(MainApp.getUserSettings().getFtpServer());
       ftpUserField.setText(MainApp.getUserSettings().getFtpUser());
       if (MainApp.getUserSettings().getFtpPasswd() != null) {
@@ -269,6 +271,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
       short defaultFontSize = ((Integer)((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
       boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
+      String notesFile = notesFileField.getText();
       String ftpServer = ftpServerField.getText();
       String ftpUser = ftpUserField.getText();
       char[] ftpPasswd = ftpPasswdField.getPassword();
@@ -286,6 +289,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       MainApp.getUserSettings().setDefaultWindowYPosition(defaultYPosition);
       MainApp.getUserSettings().setDefaultFontSize(defaultFontSize);
       MainApp.getUserSettings().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
+      MainApp.getUserSettings().setNotesFile(notesFile);
       MainApp.getUserSettings().setFtpServer(ftpServer);
       MainApp.getUserSettings().setFtpUser(ftpUser);
       MainApp.getUserSettings().setFtpPasswd(ftpPasswd);

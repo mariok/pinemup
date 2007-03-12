@@ -79,7 +79,7 @@ public class MainApp {
 
    public void exit() {
       // save notes to file
-      NoteIO.writeNotesToFile(getNotes(), NoteIO.getFileName());
+      NoteIO.writeNotesToFile(getNotes(), MainApp.getUserSettings().getNotesFile());
       
       System.exit(0);
    }
@@ -124,7 +124,7 @@ public class MainApp {
          }
 
          // load notes from file
-         notes = NoteIO.readNotesFromFile(NoteIO.getFileName());
+         notes = NoteIO.readNotesFromFile(MainApp.getUserSettings().getNotesFile());
 
          // show all visible notes
          if (notes != null) {

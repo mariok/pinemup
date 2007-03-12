@@ -44,6 +44,8 @@ public class UserSettings implements Serializable {
    private short defaultWindowYPosition;
    
    private short defaultFontSize;
+   
+   private String notesFile;
 
    private String ftpServer;
 
@@ -58,6 +60,14 @@ public class UserSettings implements Serializable {
    private boolean defaultAlwaysOnTop;
    
    private transient byte tempDef = 0;
+   
+   public String getNotesFile() {
+      return notesFile;
+   }
+   
+   public void setNotesFile(String s) {
+      notesFile = s;
+   }
    
    public boolean getDefaultAlwaysOnTop() {
       return defaultAlwaysOnTop;

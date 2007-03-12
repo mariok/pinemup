@@ -163,7 +163,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       }
       
       // save notes to file after every change
-      NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), NoteIO.getFileName());
+      NoteIO.writeNotesToFile(MainApp.getMainApp().getNotes(), MainApp.getUserSettings().getNotesFile());
    }
 
 }
