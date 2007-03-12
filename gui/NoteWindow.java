@@ -26,6 +26,7 @@ import logic.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Insets;
@@ -51,6 +52,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private boolean dragging; // required to make the window movable
 
    private boolean resizeCursor, resizing; // required to make window resizable
+   
+   private final Color MYCOLOR = new Color(255, 255, 140);
 
    public NoteWindow(Note pn) {
       super();
@@ -64,7 +67,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
       // create and adjust TextArea
       textArea = new JTextArea(parentNote.getText(), 1, 1);
-      textArea.setBackground(java.awt.Color.yellow);
+      textArea.setBackground(MYCOLOR);
       textArea.setLineWrap(true);
       textArea.setWrapStyleWord(true);
       textArea.setFont(new java.awt.Font("SERIF", 1, parentNote.getFontSize()));
@@ -74,7 +77,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       textPanel.setBorder(null);
 
       // adjust and add buttons to the topPanel
-      topPanel.setBackground(java.awt.Color.yellow);
+      topPanel.setBackground(MYCOLOR);
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       topPanel.addFocusListener(this);
@@ -82,7 +85,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       ImageIcon closeIcon = null;
       closeIcon = new ImageIcon(img);
       closeButton = new JButton(closeIcon);
-      closeButton.setBackground(java.awt.Color.yellow);
+      closeButton.setBackground(MYCOLOR);
       closeButton.setToolTipText("hide note");
       closeButton.addActionListener(this);
       closeButton.setFocusable(false);
@@ -93,7 +96,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       topPanel.add(closeButton, BorderLayout.EAST);
       updateToolTip();
       
-      setBackground(java.awt.Color.yellow);
+      setBackground(MYCOLOR);
       setUndecorated(true);
       setLocation(parentNote.getXPos(),parentNote.getYPos());
       setSize(parentNote.getXSize(),parentNote.getYSize());

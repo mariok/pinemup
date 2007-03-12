@@ -25,8 +25,12 @@ package gui;
 import logic.*;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+
+import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 
 public class SettingsDialog extends JFrame implements ActionListener, DocumentListener {
@@ -35,13 +39,13 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
     */
    private static final long serialVersionUID = 1L;
 
-   private JButton okButton, cancelButton, applyButton;
+   private JButton okButton, cancelButton, applyButton, browseButton;
 
    private JPanel guiPanel, buttonPanel, lsPanel, mainPanel, categoryPanel;
 
    private JTabbedPane tpane;
 
-   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, ftpServerField, ftpUserField, ftpDirField, cat1Field, cat2Field, cat3Field, cat4Field, cat5Field;
+   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, ftpServerField, ftpUserField, ftpDirField, cat1Field, cat2Field, cat3Field, cat4Field, cat5Field, notesFileField;
 
    private JPasswordField ftpPasswdField;
 
@@ -58,7 +62,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       mainPanel = new JPanel();
       mainPanel.setLayout(new BorderLayout());
       guiPanel = new JPanel();
-      lsPanel = new JPanel();
+      lsPanel = new JPanel(new BorderLayout());
       categoryPanel = new JPanel();
       tpane = new JTabbedPane();
       tpane.addTab("GUI", null, guiPanel, "GUI Settings");
@@ -117,33 +121,42 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       guiSubPanel[10].add(alwaysOnTopBox);
 
       // load/save settings panel
-      lsPanel.setLayout(new GridLayout(8, 2)); // Save-Method-Panel
-      JPanel[] lsSubPanel = new JPanel[16];
-      for (int i=0; i<16; i++) {
-         lsSubPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
-         lsPanel.add(lsSubPanel[i]);
+      JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      savePanel.setBorder(new TitledBorder("notes-file"));
+      notesFileField = new JTextField(20);
+      savePanel.add(notesFileField);
+      browseButton = new JButton("browse");
+      browseButton.addActionListener(this);
+      savePanel.add(browseButton);
+      lsPanel.add(savePanel);
+      JPanel[] ftpSubPanel = new JPanel[8];
+      JPanel ftpPanel = new JPanel(new GridLayout(4,2));
+      ftpPanel.setBorder(new TitledBorder("FTP settings"));
+      lsPanel.add(ftpPanel,BorderLayout.SOUTH);
+      for (int i=0; i<8; i++) {
+         ftpSubPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
+         ftpPanel.add(ftpSubPanel[i]);
       }
-      lsSubPanel[0].add(new JLabel("FTP-Settings"));
       ftpServerLabel = new JLabel("FTP-Server:");
-      lsSubPanel[2].add(ftpServerLabel);
+      ftpSubPanel[0].add(ftpServerLabel);
       ftpServerField = new JTextField(20);
       ftpServerField.getDocument().addDocumentListener(this);
-      lsSubPanel[3].add(ftpServerField);
+      ftpSubPanel[1].add(ftpServerField);
       ftpUserLabel = new JLabel("FTP-User:");
-      lsSubPanel[4].add(ftpUserLabel);
+      ftpSubPanel[2].add(ftpUserLabel);
       ftpUserField = new JTextField(20);
       ftpUserField.getDocument().addDocumentListener(this);
-      lsSubPanel[5].add(ftpUserField);
+      ftpSubPanel[3].add(ftpUserField);
       ftpPasswdLabel = new JLabel("FTP-Password:");
-      lsSubPanel[6].add(ftpPasswdLabel);
+      ftpSubPanel[4].add(ftpPasswdLabel);
       ftpPasswdField = new JPasswordField(20);
       ftpPasswdField.getDocument().addDocumentListener(this);
-      lsSubPanel[7].add(ftpPasswdField);
+      ftpSubPanel[5].add(ftpPasswdField);
       ftpDirLabel = new JLabel("FTP-Directory:");
-      lsSubPanel[8].add(ftpDirLabel);
+      ftpSubPanel[6].add(ftpDirLabel);
       ftpDirField = new JTextField(20);
       ftpDirField.getDocument().addDocumentListener(this);
-      lsSubPanel[9].add(ftpDirField);
+      ftpSubPanel[7].add(ftpDirField);
 
       // category settings panel
       categoryPanel.setLayout(new GridLayout(6, 2));
@@ -205,6 +218,15 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       } else if (src == cancelButton) {
          setVisible(false);
          dispose();
+      } else if (src == browseButton) {
+         File f = null;
+         MainApp.getFileDialog().setDialogTitle("select notes file");
+         if (MainApp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            f = MainApp.getFileDialog().getSelectedFile();
+         }
+         if (f != null) {
+            notesFileField.setText(f.getAbsolutePath());
+         }
       }
 
    }
