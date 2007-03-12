@@ -48,6 +48,11 @@ Contents
     - some internal code improvements
     - notes can be exported to textfile
     - font size can be adjusted for each note
+    - new note-design
+    - settings are stored in Users Preferences-Object instead of config-file (old file can be removed)
+    - notes-file can be chosen by user
+    - always-on-top-function added
+    
 
   0.1:
     - first release
@@ -56,7 +61,6 @@ Contents
 
 4. Planned features
 ------------------------
-  - always on top function
   - priorities (maybe with different colors)
   - option: assign all visible notes to one category
   - schedule --> popup at a certain time

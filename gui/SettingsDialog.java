@@ -314,7 +314,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       PinEmUp.getMainApp().getTrayMenu().updateCategories();
       
       // load new notes from file
-      PinEmUp.getMainApp().getNotes().tempHideAll();
+      if (PinEmUp.getMainApp().getNotes() != null) {
+         PinEmUp.getMainApp().getNotes().tempHideAll();
+      }
       PinEmUp.getMainApp().setNotes(NoteIO.readNotesFromFile(notesFile));
       
       // show all visible notes

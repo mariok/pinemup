@@ -53,7 +53,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    
 
    public NoteWindow(Note pn) {
-      super();
+      super(new JFrame());
       parentNote = pn;
       textPanel = new JScrollPane();
       textPanel.setOpaque(false);
