@@ -27,7 +27,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class PinEmUp {
-   private static final String VERSION = "0.2-svn";
+   private static final String VERSION = "0.2";
    
    public Note notes, failNote;
 
