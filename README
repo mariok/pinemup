@@ -43,7 +43,7 @@ Contents
 ------------------------
   0.3:
     - changed default font to sans-serif
-    - added new closeicon
+    - added new closeicon (can be chosen in settings-dialog)
     
     
   0.2:

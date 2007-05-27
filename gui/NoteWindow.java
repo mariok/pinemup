@@ -82,7 +82,12 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       topPanel.addFocusListener(this);
-      Image img = ResourceLoader.loadImage("resources", "closeicon2.png");
+      Image img = null;
+      if (PinEmUp.getUserSettings().getCloseIcon() == 1) {
+         img = ResourceLoader.loadImage("resources", "closeicon.png");
+      } else if (PinEmUp.getUserSettings().getCloseIcon() == 2) {
+         img = ResourceLoader.loadImage("resources", "closeicon2.png");
+      }
       ImageIcon closeIcon = new ImageIcon(img);
       closeButton = new JButton(closeIcon);
       closeButton.setBackground(new Color(255,255,255,0));

@@ -46,6 +46,15 @@ public class UserSettings {
    private String[] category;
    private boolean defaultAlwaysOnTop;
    private byte tempDef = 0;
+   private byte closeicon;
+   
+   public byte getCloseIcon() {
+      return closeicon;
+   }
+   
+   public void setCloseIcon(byte ci) {
+      closeicon = ci;
+   }
    
    public String getNotesFile() {
       return notesFile;
@@ -179,6 +188,7 @@ public class UserSettings {
       prefs.put("peu_cat3", category[2]);
       prefs.put("peu_cat4", category[3]);
       prefs.put("peu_cat5", category[4]);
+      prefs.putInt("peu_closeicon", closeicon);
    }
 
    public UserSettings() {
@@ -207,5 +217,6 @@ public class UserSettings {
       category[2] = prefs.get("peu_cat3", "category3");
       category[3] = prefs.get("peu_cat4", "category4");
       category[4] = prefs.get("peu_cat5", "category5");
+      closeicon = Byte.parseByte(prefs.get("peu_closeicon", "1"));
    }
 }

@@ -41,7 +41,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private JButton okButton, cancelButton, applyButton, browseButton;
 
-   private JPanel guiPanel, buttonPanel, lsPanel, mainPanel, categoryPanel;
+   private JPanel guiPanel, buttonPanel, lsPanel, mainPanel, categoryPanel, closeIconPanel, closeIcon1Panel, closeIcon2Panel;
 
    private JTabbedPane tpane;
 
@@ -54,6 +54,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private JCheckBox alwaysOnTopBox;
 
    private JSpinner defaultFontSizeSpinner;
+   
+   private JRadioButton closeIcon1Button, closeIcon2Button;
+   
+   private ButtonGroup closeIconGroup;
    
    public SettingsDialog() {
       super("Settings");
@@ -89,8 +93,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       buttonPanel.add(applyButton);
       mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-      // notes default settings panel
-      final int ROWS = 6;
+      // gui panel
+      final int ROWS = 7;
       guiPanel.setLayout(new GridLayout(ROWS, 2));
       JPanel[] guiSubPanel = new JPanel[ROWS*2];
       for (int i=0;i<ROWS*2;i++) {
@@ -114,11 +118,33 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       defaultYPositionField = new JTextField(4);
       defaultYPositionField.getDocument().addDocumentListener(this);
       guiSubPanel[7].add(defaultYPositionField);
-      guiSubPanel[8].add(new JLabel("Default Font Size:"));
+      guiSubPanel[8].add(new JLabel("Closeicon:"));
+      closeIconGroup = new ButtonGroup();
+      closeIconPanel = new JPanel(new GridLayout(2,1));
+      Image img1 = ResourceLoader.loadImage("resources", "closeicon.png");
+      Image img2 = ResourceLoader.loadImage("resources", "closeicon2.png");
+      closeIcon1Panel = new JPanel();
+      closeIcon2Panel = new JPanel();
+      ImageIcon closeIcon1 = new ImageIcon(img1);
+      ImageIcon closeIcon2 = new ImageIcon(img2);
+      closeIcon1Button = new JRadioButton();
+      closeIcon1Button.addActionListener(this);
+      closeIcon2Button = new JRadioButton();
+      closeIcon2Button.addActionListener(this);
+      closeIconGroup.add(closeIcon1Button);
+      closeIconGroup.add(closeIcon2Button);
+      closeIcon1Panel.add(closeIcon1Button);
+      closeIcon2Panel.add(closeIcon2Button);
+      closeIcon1Panel.add(new JLabel(closeIcon1));
+      closeIcon2Panel.add(new JLabel(closeIcon2));
+      closeIconPanel.add(closeIcon1Panel);
+      closeIconPanel.add(closeIcon2Panel);
+      guiSubPanel[9].add(closeIconPanel);
+      guiSubPanel[10].add(new JLabel("Default Font Size:"));
       defaultFontSizeSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
-      guiSubPanel[9].add(defaultFontSizeSpinner);
+      guiSubPanel[11].add(defaultFontSizeSpinner);
       alwaysOnTopBox = new JCheckBox("Always On Top By Default");
-      guiSubPanel[10].add(alwaysOnTopBox);
+      guiSubPanel[12].add(alwaysOnTopBox);
 
       // load/save settings panel
       JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -229,6 +255,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          if (f != null) {
             notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(),".dat"));
          }
+      } else if (src == closeIcon1Button || src == closeIcon2Button) {
+         applyButton.setEnabled(true);
       }
    }
 
@@ -241,8 +269,13 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       defaultXPositionField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowXPostition()));
       defaultYPositionField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowYPostition()));
       defaultFontSizeSpinner.getModel().setValue(new Integer(PinEmUp.getUserSettings().getDefaultFontSize()));
+      if (PinEmUp.getUserSettings().getCloseIcon() == 1) {
+         closeIcon1Button.setSelected(true);
+      } else if (PinEmUp.getUserSettings().getCloseIcon() == 2) {
+         closeIcon2Button.setSelected(true);
+      }
       alwaysOnTopBox.setSelected(PinEmUp.getUserSettings().getDefaultAlwaysOnTop());
-      
+            
       // load/save panel
       notesFileField.setText(PinEmUp.getUserSettings().getNotesFile());
       ftpServerField.setText(PinEmUp.getUserSettings().getFtpServer());
@@ -271,6 +304,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
       short defaultFontSize = ((Integer)((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
       boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
+      byte ci = 1;
+      if (closeIcon1Button.isSelected()) {
+         ci = 1;
+      } else if (closeIcon2Button.isSelected()) {
+         ci = 2;
+      }
       String notesFile = notesFileField.getText();
       String ftpServer = ftpServerField.getText();
       String ftpUser = ftpUserField.getText();
@@ -289,6 +328,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       PinEmUp.getUserSettings().setDefaultWindowYPosition(defaultYPosition);
       PinEmUp.getUserSettings().setDefaultFontSize(defaultFontSize);
       PinEmUp.getUserSettings().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
+      PinEmUp.getUserSettings().setCloseIcon(ci);
       PinEmUp.getUserSettings().setNotesFile(notesFile);
       PinEmUp.getUserSettings().setFtpServer(ftpServer);
       PinEmUp.getUserSettings().setFtpUser(ftpUser);
