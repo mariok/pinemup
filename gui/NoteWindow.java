@@ -70,7 +70,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       textArea.setOpaque(false);
       textArea.setLineWrap(true);
       textArea.setWrapStyleWord(true);
-      textArea.setFont(new java.awt.Font("SERIF", 1, parentNote.getFontSize()));
+      textArea.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, 1, parentNote.getFontSize()));
       textArea.addFocusListener(this);
       textArea.setMargin(new Insets(0, 3, 3, 3));
       textPanel.setViewportView(textArea);
@@ -82,11 +82,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       topPanel.addFocusListener(this);
-      Image img = ResourceLoader.loadImage("resources", "closeicon.gif");
-      ImageIcon closeIcon = null;
-      closeIcon = new ImageIcon(img);
+      Image img = ResourceLoader.loadImage("resources", "closeicon2.png");
+      ImageIcon closeIcon = new ImageIcon(img);
       closeButton = new JButton(closeIcon);
       closeButton.setBackground(new Color(255,255,255,0));
+      closeButton.setRolloverEnabled(false);
       
       closeButton.setToolTipText("hide note");
       closeButton.addActionListener(this);

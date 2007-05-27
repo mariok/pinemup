@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.2
+version 0.3-svn
 
 Contents
 ------------------------
@@ -9,6 +9,7 @@ Contents
 3. Changelog
 4. Planned features
 5. Contact information
+6. Thanks
 
 
 
@@ -40,6 +41,11 @@ Contents
 
 3. Changelog
 ------------------------
+  0.3:
+    - changed default font to sans-serif
+    - added new closeicon
+    
+    
   0.2:
     - double click on tray-icon adds new note
     - fixed activation of "Apply"-Button in Settings-Dialog
@@ -75,3 +81,12 @@ Contents
 
   Project-Homepage:
   http://pin-em-up.sourceforge.net
+
+
+
+6. Thanks
+------------------------
+  Special Thanks go to:
+  - Jan Laczay for his contributions to the project website
+  - Andreas Kwiatkowski for redisigning the closeicon
+  
