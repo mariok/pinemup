@@ -44,6 +44,10 @@ Contents
   0.3:
     - changed default font to sans-serif
     - added new closeicon (can be chosen in settings-dialog)
+    - category can be displayed in title-bar of each note
+    - new package names
+    - new website-URL: pinemup.sourceforge.net
+    - some internal code improvements
     
     
   0.2:
