@@ -99,7 +99,7 @@ public class PinEmUp {
 
          SystemTray tray = SystemTray.getSystemTray();
 
-         Image img = ResourceLoader.loadImage("net.sourceforge.pinemup.resources", "icon.gif");
+         Image img = ResourceLoader.getTrayIcon();
 
          // create popup menu
          menu = new TrayMenu();

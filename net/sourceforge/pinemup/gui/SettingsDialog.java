@@ -42,17 +42,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private JButton okButton, cancelButton, applyButton, browseButton;
 
-   private JPanel guiPanel, buttonPanel, lsPanel, mainPanel, categoryPanel, closeIconPanel, closeIcon1Panel, closeIcon2Panel;
-
-   private JTabbedPane tpane;
-
    private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, ftpServerField, ftpUserField, ftpDirField, cat1Field, cat2Field, cat3Field, cat4Field, cat5Field, notesFileField;
 
    private JPasswordField ftpPasswdField;
 
-   private JLabel ftpServerLabel, ftpUserLabel, ftpPasswdLabel, ftpDirLabel;
-   
-   private JCheckBox alwaysOnTopBox;
+   private JCheckBox alwaysOnTopBox, showCatBox;
 
    private JSpinner defaultFontSizeSpinner;
    
@@ -60,22 +54,650 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    
    private ButtonGroup closeIconGroup;
    
-   public SettingsDialog() {
-      super("Settings");
+   private JPanel makeLookAndFeelTab() {
+      JPanel lookAndFeelPanel = new JPanel();
+      // TAB WITH LOOK AND FEEL SETTINGS
+      GridBagLayout gbl = new GridBagLayout();
+      lookAndFeelPanel.setLayout(gbl);
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
 
-      // prepare panels
-      mainPanel = new JPanel();
-      mainPanel.setLayout(new BorderLayout());
-      guiPanel = new JPanel();
-      lsPanel = new JPanel(new BorderLayout());
-      categoryPanel = new JPanel();
-      tpane = new JTabbedPane();
-      tpane.addTab("GUI", null, guiPanel, "GUI Settings");
-      tpane.addTab("Load/Save", null, lsPanel, "Load / Save Settings");
-      tpane.addTab("Categories", null, categoryPanel, "Names of the categories");
+      //Add Panel for size and Position
+      JPanel titleBarPanel = makeTitleBarPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(titleBarPanel, gbc);
+      lookAndFeelPanel.add(titleBarPanel);
+      
+      //Add empty panel to tab
+      JPanel emptyPanel = new JPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 100;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(emptyPanel, gbc);
+      lookAndFeelPanel.add(emptyPanel); 
+      
+      return lookAndFeelPanel;
+   }
+   
+   private JPanel makeDefaultsTab() {
+      // TAB WITH DEFAULT SETTINGS
+      JPanel defaultsPanel = new JPanel();
+      GridBagLayout gbl = new GridBagLayout();
+      defaultsPanel.setLayout(gbl);
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+
+      //Add Panel for size and Position
+      JPanel sizePosPanel = makeSizePosPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(sizePosPanel, gbc);
+      defaultsPanel.add(sizePosPanel);
+      
+      //Add Panel for Font
+      JPanel fontPanel = makeFontPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(fontPanel, gbc);
+      defaultsPanel.add(fontPanel);
+      
+      //Add Panel for Visibility Settings
+      JPanel visibilityPanel = makeVisibilityPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 2;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(visibilityPanel, gbc);
+      defaultsPanel.add(visibilityPanel);
+      
+      //Add empty panel to tab
+      JPanel emptyPanel = new JPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 3;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 100;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(emptyPanel, gbc);
+      defaultsPanel.add(emptyPanel); 
+      
+      return defaultsPanel;
+   }
+   
+   private JPanel makeLoadSaveTab() {
+      JPanel loadSavePanel = new JPanel();
+      
+      GridBagLayout gbl = new GridBagLayout();
+      loadSavePanel.setLayout(gbl);
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+
+      //Add Panel for notes file settings
+      JPanel notesFilePanel = makeNotesFilePanel();
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(notesFilePanel, gbc);
+      loadSavePanel.add(notesFilePanel);
+
+      //Add Panel for FTP settings
+      JPanel ftpPanel = makeFtpPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(ftpPanel, gbc);
+      loadSavePanel.add(ftpPanel);
+      
+      //Add empty panel to tab
+      JPanel emptyPanel = new JPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 2;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 100;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(emptyPanel, gbc);
+      loadSavePanel.add(emptyPanel); 
+      
+      return loadSavePanel;
+   }
+   
+   private JPanel makeCategoryTab() {
+      JPanel categoryPanel = new JPanel();
+      GridBagLayout gbl = new GridBagLayout();
+      categoryPanel.setLayout(gbl);
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+
+      //Add Panel for category names
+      JPanel catNamesPanel = makeCatNamesPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(catNamesPanel, gbc);
+      categoryPanel.add(catNamesPanel);
+      
+      //Add empty panel to tab
+      JPanel emptyPanel = new JPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 100;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(emptyPanel, gbc);
+      categoryPanel.add(emptyPanel); 
+      
+      return categoryPanel;
+   }
+      
+   
+   private JPanel makeTitleBarPanel() {
+      // PANEL FOR SIZE AND POSITIONS
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.WEST;
+      JPanel titleBarPanel = new JPanel(gbl);
+      titleBarPanel.setBorder(new TitledBorder("Titlebar"));
+      //Add all Labels
+      JLabel closeIconLabel = new JLabel("Close-Icon: ");
+      JLabel showCatLabel = new JLabel("Show category in titlebar: ");
+      JLabel emptyLabel = new JLabel(" ");
+      JLabel emptyLabel2 = new JLabel(" ");
+      //Set settings for all Labels
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;      
+      //Add Labels with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(closeIconLabel, gbc);
+      titleBarPanel.add(closeIconLabel);
+      gbc.weightx = 100;
+      gbc.gridx = 3;
+      gbc.gridy = 0;
+      gbl.setConstraints(emptyLabel, gbc);
+      titleBarPanel.add(emptyLabel);
+      gbc.gridx = 3;
+      gbc.gridy = 1;
+      gbl.setConstraints(emptyLabel, gbc);
+      titleBarPanel.add(emptyLabel);
+      gbc.weightx = 0;
+      gbc.gridx = 0;
+      gbc.gridy = 2;
+      gbl.setConstraints(emptyLabel2, gbc);
+      titleBarPanel.add(emptyLabel2);
+      gbc.gridwidth = 3;
+      gbc.gridx = 0;
+      gbc.gridy = 3;
+      gbl.setConstraints(showCatLabel, gbc);
+      titleBarPanel.add(showCatLabel);
+      
+      //Add fields
+      closeIconGroup = new ButtonGroup();
+      ImageIcon closeIcon1 = new ImageIcon(ResourceLoader.getCloseIcon(1));
+      ImageIcon closeIcon2 = new ImageIcon(ResourceLoader.getCloseIcon(2));
+      closeIcon1Button = new JRadioButton();
+      closeIcon1Button.addActionListener(this);
+      closeIcon2Button = new JRadioButton();
+      closeIcon2Button.addActionListener(this);
+      closeIconGroup.add(closeIcon1Button);
+      closeIconGroup.add(closeIcon2Button);
+      JLabel closeIcon1Label = new JLabel(closeIcon1);
+      JLabel closeIcon2Label = new JLabel(closeIcon2);
+      showCatBox = new JCheckBox("");
+      
+      //Set settings for all fields
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;
+      //Add fields with their positions
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(closeIcon1Button, gbc);
+      titleBarPanel.add(closeIcon1Button);
+      gbc.gridx = 1;
+      gbc.gridy = 1;
+      gbl.setConstraints(closeIcon2Button, gbc);
+      titleBarPanel.add(closeIcon2Button);
+      gbc.gridx = 2;
+      gbc.gridy = 0;
+      gbl.setConstraints(closeIcon1Label, gbc);
+      titleBarPanel.add(closeIcon1Label);
+      gbc.gridx = 2;
+      gbc.gridy = 1;
+      gbl.setConstraints(closeIcon2Label, gbc);
+      titleBarPanel.add(closeIcon2Label);
+      gbc.weightx = 100;
+      gbc.gridx = 3;
+      gbc.gridy = 3;
+      gbl.setConstraints(showCatBox, gbc);
+      titleBarPanel.add(showCatBox);
+      
+      return titleBarPanel;
+   }
+   
+   private JPanel makeSizePosPanel() {
+      // PANEL FOR SIZE AND POSITIONS
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+      JPanel sizePanel = new JPanel(gbl);
+      sizePanel.setBorder(new TitledBorder("Size and Position"));
+      //Add all Labels
+      JLabel defaultWidthLabel = new JLabel("Default Note Width: ");
+      JLabel defaultHeightLabel = new JLabel("Default Note Height: ");
+      JLabel defaultXPositionLabel = new JLabel("Default Note X Position: ");
+      JLabel defaultYPositionLabel = new JLabel("Default Note Y Position: ");
+      //Set settings for all Labels
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;      
+      //Add Labels with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(defaultWidthLabel, gbc);
+      sizePanel.add(defaultWidthLabel);
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbl.setConstraints(defaultHeightLabel, gbc);
+      sizePanel.add(defaultHeightLabel);
+      gbc.gridx = 3;
+      gbc.gridy = 0;
+      gbl.setConstraints(defaultXPositionLabel, gbc);
+      sizePanel.add(defaultXPositionLabel);
+      gbc.gridx = 3;
+      gbc.gridy = 1;
+      gbl.setConstraints(defaultYPositionLabel, gbc);
+      sizePanel.add(defaultYPositionLabel);
+      
+      //Add textfields      
+      defaultWidthField = new JTextField(4);
+      defaultWidthField.getDocument().addDocumentListener(this);
+      defaultHeightField = new JTextField(4);
+      defaultHeightField.getDocument().addDocumentListener(this);
+      defaultXPositionField = new JTextField(4);
+      defaultXPositionField.getDocument().addDocumentListener(this);
+      defaultYPositionField = new JTextField(4);
+      defaultYPositionField.getDocument().addDocumentListener(this);
+      //Set settings for all textfields
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE; 
+      //Add fields with their positions
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(defaultWidthField, gbc);
+      sizePanel.add(defaultWidthField);
+      gbc.gridx = 1;
+      gbc.gridy = 1;
+      gbl.setConstraints(defaultHeightField, gbc);
+      sizePanel.add(defaultHeightField);
+      gbc.gridx = 4;
+      gbc.gridy = 0;
+      gbl.setConstraints(defaultXPositionField, gbc);
+      sizePanel.add(defaultXPositionField);
+      gbc.gridx = 4;
+      gbc.gridy = 1;
+      gbl.setConstraints(defaultYPositionField, gbc);
+      sizePanel.add(defaultYPositionField);
+      return sizePanel;
+   }
+   
+   private JPanel makeFontPanel() {
+      // PANEL FOR FONT SETTINGS
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+      JPanel fontPanel = new JPanel(gbl);
+      fontPanel.setBorder(new TitledBorder("Font"));
+      //Add all Labels
+      JLabel defaultFontSizeLabel = new JLabel("Default Font Size: ");
+
+      //Set settings for all Labels
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;      
+
+      //Add Labels with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(defaultFontSizeLabel, gbc);
+      fontPanel.add(defaultFontSizeLabel);
+      
+      //Add fields      
+      defaultFontSizeSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
+
+      //Set settings for all fields
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE; 
+      //Add fields with their positions
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(defaultFontSizeSpinner, gbc);
+      fontPanel.add(defaultFontSizeSpinner);
+
+      return fontPanel;
+   }
+
+   private JPanel makeVisibilityPanel() {
+      // PANEL FOR VISIBILITY SETTINGS
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+      JPanel visibilityPanel = new JPanel(gbl);
+      visibilityPanel.setBorder(new TitledBorder("Visibility"));
+      //Add all Labels
+      JLabel alwaysOnTopLabel = new JLabel("Always On Top By Default: ");
+
+      //Set settings for all Labels
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;      
+
+      //Add Labels with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(alwaysOnTopLabel, gbc);
+      visibilityPanel.add(alwaysOnTopLabel);
+      
+      //Add fields
+      alwaysOnTopBox = new JCheckBox("");
+
+      //Set settings for all fields
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;
+      //Add fields with their positions
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(alwaysOnTopBox, gbc);
+      visibilityPanel.add(alwaysOnTopBox);
+
+      return visibilityPanel;
+   }
+   
+   private JPanel makeNotesFilePanel() {
+      // PANEL FOR NOTES FILE SETTINGS
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+      JPanel notesFilePanel = new JPanel(gbl);
+      notesFilePanel.setBorder(new TitledBorder("Notes File"));
+      //Add fields
+      notesFileField = new JTextField(20);
+      notesFileField.getDocument().addDocumentListener(this);
+      browseButton = new JButton("browse");
+      browseButton.addActionListener(this);
+      //Set settings for all fields
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;
+      //Add fields with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(notesFileField, gbc);
+      notesFilePanel.add(notesFileField);
+      gbc.weightx = 100;
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(browseButton, gbc);
+      notesFilePanel.add(browseButton);
+
+      return notesFilePanel;
+   }
+   
+   private JPanel makeFtpPanel() {
+      // PANEL FOR CATEGORY NAMES
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+      JPanel ftpPanel = new JPanel(gbl);
+      ftpPanel.setBorder(new TitledBorder("FTP settings"));
+      //Add all Labels
+      JLabel ftpServerLabel = new JLabel("FTP-Server:");
+      JLabel ftpUserLabel = new JLabel("FTP-User:");
+      JLabel ftpPasswdLabel = new JLabel("FTP-Password:");
+      JLabel ftpDirLabel = new JLabel("FTP-Directory:");
+
+      //Set settings for all Labels
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;      
+
+      //Add Labels with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(ftpServerLabel, gbc);
+      ftpPanel.add(ftpServerLabel);
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbl.setConstraints(ftpUserLabel, gbc);
+      ftpPanel.add(ftpUserLabel);
+      gbc.gridx = 0;
+      gbc.gridy = 2;
+      gbl.setConstraints(ftpPasswdLabel, gbc);
+      ftpPanel.add(ftpPasswdLabel);
+      gbc.gridx = 0;
+      gbc.gridy = 3;
+      gbl.setConstraints(ftpDirLabel, gbc);
+      ftpPanel.add(ftpDirLabel);
+
+      
+      //Add fields
+      ftpServerField = new JTextField(20);
+      ftpServerField.getDocument().addDocumentListener(this);
+      ftpUserField = new JTextField(20);
+      ftpUserField.getDocument().addDocumentListener(this);
+      ftpPasswdField = new JPasswordField(20);
+      ftpPasswdField.getDocument().addDocumentListener(this);
+      ftpDirField = new JTextField(20);
+      ftpDirField.getDocument().addDocumentListener(this);
+      
+      //Set settings for all fields
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;
+      //Add fields with their positions
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(ftpServerField, gbc);
+      ftpPanel.add(ftpServerField);
+      gbc.gridx = 1;
+      gbc.gridy = 1;
+      gbl.setConstraints(ftpUserField, gbc);
+      ftpPanel.add(ftpUserField);
+      gbc.gridx = 1;
+      gbc.gridy = 2;
+      gbl.setConstraints(ftpPasswdField, gbc);
+      ftpPanel.add(ftpPasswdField);
+      gbc.gridx = 1;
+      gbc.gridy = 3;
+      gbl.setConstraints(ftpDirField, gbc);
+      ftpPanel.add(ftpDirField);
+
+      return ftpPanel;
+   }
+   
+   private JPanel makeCatNamesPanel() {
+      // PANEL FOR CATEGORY NAMES
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+      JPanel catNamesPanel = new JPanel(gbl);
+      catNamesPanel.setBorder(new TitledBorder("Category Names"));
+      //Add all Labels
+      JLabel cat1Label = new JLabel("Category 1: ");
+      JLabel cat2Label = new JLabel("Category 2: ");
+      JLabel cat3Label = new JLabel("Category 3: ");
+      JLabel cat4Label = new JLabel("Category 4: ");
+      JLabel cat5Label = new JLabel("Category 5: ");
+
+      //Set settings for all Labels
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;      
+
+      //Add Labels with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(cat1Label, gbc);
+      catNamesPanel.add(cat1Label);
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbl.setConstraints(cat2Label, gbc);
+      catNamesPanel.add(cat2Label);
+      gbc.gridx = 0;
+      gbc.gridy = 2;
+      gbl.setConstraints(cat3Label, gbc);
+      catNamesPanel.add(cat3Label);
+      gbc.gridx = 0;
+      gbc.gridy = 3;
+      gbl.setConstraints(cat4Label, gbc);
+      catNamesPanel.add(cat4Label);
+      gbc.gridx = 0;
+      gbc.gridy = 4;
+      gbl.setConstraints(cat5Label, gbc);
+      catNamesPanel.add(cat5Label);
+      
+      //Add fields
+      cat1Field = new JTextField(20);
+      cat1Field.getDocument().addDocumentListener(this);
+      cat2Field = new JTextField(20);
+      cat2Field.getDocument().addDocumentListener(this);
+      cat3Field = new JTextField(20);
+      cat3Field.getDocument().addDocumentListener(this);
+      cat4Field = new JTextField(20);
+      cat4Field.getDocument().addDocumentListener(this);
+      cat5Field = new JTextField(20);
+      cat5Field.getDocument().addDocumentListener(this);
+      //Set settings for all fields
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;
+      //Add fields with their positions
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(cat1Field, gbc);
+      catNamesPanel.add(cat1Field);
+      gbc.gridx = 1;
+      gbc.gridy = 1;
+      gbl.setConstraints(cat2Field, gbc);
+      catNamesPanel.add(cat2Field);
+      gbc.gridx = 1;
+      gbc.gridy = 2;
+      gbl.setConstraints(cat3Field, gbc);
+      catNamesPanel.add(cat3Field);
+      gbc.gridx = 1;
+      gbc.gridy = 3;
+      gbl.setConstraints(cat4Field, gbc);
+      catNamesPanel.add(cat4Field);
+      gbc.gridx = 1;
+      gbc.gridy = 4;
+      gbl.setConstraints(cat5Field, gbc);
+      catNamesPanel.add(cat5Field);
+
+      return catNamesPanel;
+   }
+   
+   
+   public SettingsDialog() {
+      super("Settings - pin 'em up");
+      setSize(new Dimension(640,480));
+
+      // PREPARE ALL PANELS
+      // ---------------------
+      JPanel mainPanel = new JPanel(new BorderLayout());
+      
+      //tabbed pane and tabs
+      JTabbedPane tpane = new JTabbedPane();
+      JPanel lookAndFeelTab = makeLookAndFeelTab();
+      JPanel defaultsTab = makeDefaultsTab();
+      JPanel loadSaveTab = makeLoadSaveTab();
+      JPanel categoryTab = makeCategoryTab();
+      tpane.addTab("Notes Look&Feel", null, lookAndFeelTab, "Look&Feel of the Notes");
+      tpane.addTab("Notes Default Settings", null, defaultsTab, "Default Settings for new Notes");
+      tpane.addTab("Load/Save", null, loadSaveTab, "Load / Save Settings");
+      tpane.addTab("Categories", null, categoryTab, "Names of the categories");
       mainPanel.add(tpane, BorderLayout.CENTER);
 
-      // panel with buttons
+      // PANEL WITH BUTTONS
       okButton = new JButton("OK");
       okButton.addActionListener(this);
       cancelButton = new JButton("Cancel");
@@ -87,143 +709,19 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       applyButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
       okButton.setEnabled(true);
       cancelButton.setEnabled(true);
-      buttonPanel = new JPanel();
+      JPanel buttonPanel = new JPanel();
       buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
       buttonPanel.add(okButton);
       buttonPanel.add(cancelButton);
       buttonPanel.add(applyButton);
       mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-      // PANEL WITH DEFAULT SETTINGS
-      final int ROWS = 7;
-      guiPanel.setLayout(new GridLayout(ROWS, 2));
-      JPanel[] guiSubPanel = new JPanel[ROWS*2];
-      for (int i=0;i<ROWS*2;i++) {
-         guiSubPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
-         guiPanel.add(guiSubPanel[i]);
-      }
-      guiSubPanel[0].add(new JLabel("Default Note Width:"));
-      defaultWidthField = new JTextField(4);
-      defaultWidthField.getDocument().addDocumentListener(this);
-      defaultWidthField.setMaximumSize(new Dimension(50, 20));
-      guiSubPanel[1].add(defaultWidthField);
-      guiSubPanel[2].add(new JLabel("Default Note Height:"));
-      defaultHeightField = new JTextField(4);
-      defaultHeightField.getDocument().addDocumentListener(this);
-      guiSubPanel[3].add(defaultHeightField);
-      guiSubPanel[4].add(new JLabel("Default Note X Position:"));
-      defaultXPositionField = new JTextField(4);
-      defaultXPositionField.getDocument().addDocumentListener(this);
-      guiSubPanel[5].add(defaultXPositionField);
-      guiSubPanel[6].add(new JLabel("Default Note Y Position:"));
-      defaultYPositionField = new JTextField(4);
-      defaultYPositionField.getDocument().addDocumentListener(this);
-      guiSubPanel[7].add(defaultYPositionField);
-      guiSubPanel[8].add(new JLabel("Closeicon:"));
-      closeIconGroup = new ButtonGroup();
-      closeIconPanel = new JPanel(new GridLayout(2,1));
-      Image img1 = ResourceLoader.loadImage("resources", "closeicon.png");
-      Image img2 = ResourceLoader.loadImage("resources", "closeicon2.png");
-      closeIcon1Panel = new JPanel();
-      closeIcon2Panel = new JPanel();
-      ImageIcon closeIcon1 = new ImageIcon(img1);
-      ImageIcon closeIcon2 = new ImageIcon(img2);
-      closeIcon1Button = new JRadioButton();
-      closeIcon1Button.addActionListener(this);
-      closeIcon2Button = new JRadioButton();
-      closeIcon2Button.addActionListener(this);
-      closeIconGroup.add(closeIcon1Button);
-      closeIconGroup.add(closeIcon2Button);
-      closeIcon1Panel.add(closeIcon1Button);
-      closeIcon2Panel.add(closeIcon2Button);
-      closeIcon1Panel.add(new JLabel(closeIcon1));
-      closeIcon2Panel.add(new JLabel(closeIcon2));
-      closeIconPanel.add(closeIcon1Panel);
-      closeIconPanel.add(closeIcon2Panel);
-      guiSubPanel[9].add(closeIconPanel);
-      guiSubPanel[10].add(new JLabel("Default Font Size:"));
-      defaultFontSizeSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
-      guiSubPanel[11].add(defaultFontSizeSpinner);
-      alwaysOnTopBox = new JCheckBox("Always On Top By Default");
-      guiSubPanel[12].add(alwaysOnTopBox);
-      
-      // PANEL WITH LOOK AND FEEL
-
-      // LOAD/SAVE SETTINGS
-      JPanel savePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      savePanel.setBorder(new TitledBorder("notes-file"));
-      notesFileField = new JTextField(20);
-      notesFileField.getDocument().addDocumentListener(this);
-      savePanel.add(notesFileField);
-      browseButton = new JButton("browse");
-      browseButton.addActionListener(this);
-      savePanel.add(browseButton);
-      lsPanel.add(savePanel);
-      JPanel[] ftpSubPanel = new JPanel[8];
-      JPanel ftpPanel = new JPanel(new GridLayout(4,2));
-      ftpPanel.setBorder(new TitledBorder("FTP settings"));
-      lsPanel.add(ftpPanel,BorderLayout.SOUTH);
-      for (int i=0; i<8; i++) {
-         ftpSubPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
-         ftpPanel.add(ftpSubPanel[i]);
-      }
-      ftpServerLabel = new JLabel("FTP-Server:");
-      ftpSubPanel[0].add(ftpServerLabel);
-      ftpServerField = new JTextField(20);
-      ftpServerField.getDocument().addDocumentListener(this);
-      ftpSubPanel[1].add(ftpServerField);
-      ftpUserLabel = new JLabel("FTP-User:");
-      ftpSubPanel[2].add(ftpUserLabel);
-      ftpUserField = new JTextField(20);
-      ftpUserField.getDocument().addDocumentListener(this);
-      ftpSubPanel[3].add(ftpUserField);
-      ftpPasswdLabel = new JLabel("FTP-Password:");
-      ftpSubPanel[4].add(ftpPasswdLabel);
-      ftpPasswdField = new JPasswordField(20);
-      ftpPasswdField.getDocument().addDocumentListener(this);
-      ftpSubPanel[5].add(ftpPasswdField);
-      ftpDirLabel = new JLabel("FTP-Directory:");
-      ftpSubPanel[6].add(ftpDirLabel);
-      ftpDirField = new JTextField(20);
-      ftpDirField.getDocument().addDocumentListener(this);
-      ftpSubPanel[7].add(ftpDirField);
-
-      // CATEGORY SETTINGS
-      categoryPanel.setLayout(new GridLayout(6, 2));
-      JPanel[] categorySubPanel = new JPanel[12];
-      for (int i=0; i<12; i++) {
-         categorySubPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
-         categoryPanel.add(categorySubPanel[i]);
-      }
-      categorySubPanel[0].add(new JLabel("Category names"));
-      categorySubPanel[2].add(new JLabel("Category 1:"));
-      cat1Field = new JTextField(20);
-      cat1Field.getDocument().addDocumentListener(this);
-      categorySubPanel[3].add(cat1Field);
-      categorySubPanel[4].add(new JLabel("Category 2:"));
-      cat2Field = new JTextField(20);
-      cat2Field.getDocument().addDocumentListener(this);
-      categorySubPanel[5].add(cat2Field);
-      categorySubPanel[6].add(new JLabel("Category 3:"));
-      cat3Field = new JTextField(20);
-      cat3Field.getDocument().addDocumentListener(this);
-      categorySubPanel[7].add(cat3Field);
-      categorySubPanel[8].add(new JLabel("Category 4:"));
-      cat4Field = new JTextField(20);
-      cat4Field.getDocument().addDocumentListener(this);
-      categorySubPanel[9].add(cat4Field);
-      categorySubPanel[10].add(new JLabel("Category 5:"));
-      cat5Field = new JTextField(20);
-      cat5Field.getDocument().addDocumentListener(this);
-      categorySubPanel[11].add(cat5Field);
-      
+    
       // Load Settings Into Fields
       loadSettings();
-      
+
       applyButton.setEnabled(false);
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-      pack();
       
       // center on screen
       int screenHeight = (int)getToolkit().getScreenSize().getHeight();
@@ -231,7 +729,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
-      
+
       setVisible(true);
    }
 
@@ -278,6 +776,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          closeIcon2Button.setSelected(true);
       }
       alwaysOnTopBox.setSelected(PinEmUp.getUserSettings().getDefaultAlwaysOnTop());
+      showCatBox.setSelected(PinEmUp.getUserSettings().getShowCategory());
             
       // load/save panel
       notesFileField.setText(PinEmUp.getUserSettings().getNotesFile());
@@ -307,6 +806,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
       short defaultFontSize = ((Integer)((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
       boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
+      boolean showCat = showCatBox.isSelected();
       byte ci = 1;
       if (closeIcon1Button.isSelected()) {
          ci = 1;
@@ -332,6 +832,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       PinEmUp.getUserSettings().setDefaultFontSize(defaultFontSize);
       PinEmUp.getUserSettings().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
       PinEmUp.getUserSettings().setCloseIcon(ci);
+      PinEmUp.getUserSettings().setShowCategory(showCat);
       PinEmUp.getUserSettings().setNotesFile(notesFile);
       PinEmUp.getUserSettings().setFtpServer(ftpServer);
       PinEmUp.getUserSettings().setFtpUser(ftpUser);

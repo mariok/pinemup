@@ -67,6 +67,7 @@ public class Note implements Serializable {
       category = catNr;
       if (window != null) {
          window.updateToolTip();
+         window.updateCatTitle();
       }
    }
 

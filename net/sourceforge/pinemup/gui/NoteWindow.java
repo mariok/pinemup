@@ -81,6 +81,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          catPanel = new JPanel(new FlowLayout());
          catPanel.add(catButton);
          catPanel.setOpaque(false);
+         catButton.addMouseListener(this);
+         catButton.addMouseMotionListener(this);
+         catButton.addFocusListener(this);
          topPanel.add(catPanel, BorderLayout.CENTER);
       }
 
@@ -101,13 +104,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       topPanel.addFocusListener(this);
-      Image img = null;
-      if (PinEmUp.getUserSettings().getCloseIcon() == 1) {
-         img = ResourceLoader.loadImage("resources", "closeicon.png");
-      } else if (PinEmUp.getUserSettings().getCloseIcon() == 2) {
-         img = ResourceLoader.loadImage("resources", "closeicon2.png");
-      }
-      ImageIcon closeIcon = new ImageIcon(img);
+      
+      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getCloseIcon(PinEmUp.getUserSettings().getCloseIcon()));
       closeButton = new JButton(closeIcon);
       closeButton.setBackground(new Color(255,255,255,0));
       closeButton.setRolloverEnabled(false);
@@ -199,7 +197,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void mouseClicked(MouseEvent e) {
-      if (e.getSource() == topPanel && e.getClickCount() == 2) { // doubleclick on topPanel
+      if ((e.getSource() == topPanel || e.getSource() == catButton) && e.getClickCount() == 2) { // doubleclick on topPanel
          autoSizeY();
       }
    }
@@ -215,7 +213,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             }
             int sizeX = getWidth();
             int sizeY = textArea.getHeight();
-            setSize(sizeX,sizeY+20);
+            setSize(sizeX,sizeY+25);
          }
       }).start();
    }
@@ -231,7 +229,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    public void mousePressed(MouseEvent e) {
       checkPopupMenu(e);
-      if (e.getSource() == topPanel && e.getButton() == MouseEvent.BUTTON1) {
+      if ((e.getSource() == topPanel || e.getSource() == catButton) && e.getButton() == MouseEvent.BUTTON1) {
          // Position on Panel
          dx = e.getXOnScreen() - getX();
          dy = e.getYOnScreen() - getY();
@@ -282,6 +280,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    
    public void updateToolTip() {
       topPanel.setToolTipText("Category: " + (parentNote.getCategory()+1) + " " + PinEmUp.getUserSettings().getCategoryNames()[parentNote.getCategory()]);
+   }
+   
+   public void updateCatTitle() {
+      catButton.setText(PinEmUp.getUserSettings().getCategoryNames()[parentNote.getCategory()]);
+      repaint();
    }
 
    public void mouseMoved(MouseEvent e) {

@@ -28,13 +28,17 @@ import java.awt.*;
 
 public class ResourceLoader {
    
+   private static Image closeIcon1 = loadImage("net.sourceforge.pinemup.resources","closeicon.png");
+   private static Image closeIcon2 = loadImage("net.sourceforge.pinemup.resources","closeicon2.png");
+   private static Image trayIcon = loadImage("net.sourceforge.pinemup.resources","icon.gif");
+   
    private static InputStream getResourceStream(String pkg, String filename) {
       String name = "/" + pkg.replace('.', '/') + "/" + filename;
       InputStream is = PinEmUp.getMainApp().getClass().getResourceAsStream(name);
       return is;
    }
    
-   public static Image loadImage(String pkg, String filename) {
+   private static Image loadImage(String pkg, String filename) {
       Image img = null;
       try {
          InputStream is = getResourceStream(pkg, filename);
@@ -60,5 +64,17 @@ public class ResourceLoader {
       }
 
       return img;
+   }
+   
+   public static Image getCloseIcon(int nr) {
+      switch(nr) {
+      case 1: return closeIcon1;
+      case 2: return closeIcon2;
+      default: return closeIcon1;
+      }
+   }
+   
+   public static Image getTrayIcon() {
+      return trayIcon;
    }
 }
