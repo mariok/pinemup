@@ -35,8 +35,6 @@ public class PinEmUp {
 
    private static UserSettings settings;
 
-   private static MenuLogic menuListener;
-   
    private static JFileChooser fileDialog;
 
    private TrayMenu menu;
@@ -69,14 +67,6 @@ public class PinEmUp {
       return settings;
    }
 
-   public static MenuLogic getMenuListener() {
-      return menuListener;
-   }
-
-   public static void setMenuListener(MenuLogic m) {
-      menuListener = m;
-   }
-
    public void exit() {
       // save notes to file
       NoteIO.writeNotesToFile(getNotes(), PinEmUp.getUserSettings().getNotesFile());
@@ -92,7 +82,6 @@ public class PinEmUp {
          failNote = new Note();
          
          PinEmUp.setPinEmUp(this);
-         PinEmUp.setMenuListener(new MenuLogic());
 
          // load user settings
          PinEmUp.setUserSettings(new UserSettings());
@@ -102,7 +91,7 @@ public class PinEmUp {
          Image img = ResourceLoader.getTrayIcon();
 
          // create popup menu
-         menu = new TrayMenu();
+         menu = new TrayMenu(new TrayMenuLogic());
 
          // create trayicon
          icon = new TrayIcon(img, "pin 'em up", menu);

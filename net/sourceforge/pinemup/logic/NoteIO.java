@@ -49,9 +49,9 @@ public class NoteIO {
          n = (Note) is.readObject();
          is.close();
       } catch (ClassNotFoundException e) {
-         // do nothing
+         System.out.println("ERROR1");// do nothing
       } catch (IOException e) {
-         // do nothing
+         System.out.println("ERROR2");// do nothing
       }
       return n;
    }

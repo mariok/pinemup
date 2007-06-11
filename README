@@ -48,6 +48,7 @@ Contents
     - new package names
     - new website-URL: pinemup.sourceforge.net
     - redesign of settings dialog
+    - height and width of a note cannot be less than 30 pixels anymore
     - some internal code improvements
     
     

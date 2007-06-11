@@ -24,15 +24,15 @@ package net.sourceforge.pinemup.logic;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
 
-import net.sourceforge.pinemup.gui.*;
-
-public class MenuLogic implements ActionListener {
+public abstract class MenuLogic implements ActionListener {
 
    public void actionPerformed(ActionEvent e) {
       String cmd = e.getActionCommand();
-
+      checkCommand(cmd);
+   }
+   
+   public void checkCommand(String cmd) {
       if (cmd.equals("AddNote")) {
          PinEmUp.getMainApp().setNotes(Note.add(PinEmUp.getMainApp().getNotes(), ""));
          PinEmUp.getMainApp().getNotes().showAllVisible();
@@ -44,24 +44,6 @@ public class MenuLogic implements ActionListener {
          if (PinEmUp.getMainApp().getNotes() != null) {
             PinEmUp.getMainApp().getNotes().hideAll();
          }
-      } else if (cmd.equals("ShowSettings")) {
-         new SettingsDialog();
-      } else if (cmd.equals("Exit")) {
-         PinEmUp.getMainApp().exit();
-      } else if (cmd.equals("UploadNotesToFTP")) {
-         new FTPThread(true);
-      } else if (cmd.equals("DownloadNotesFromFTP")) {
-         new FTPThread(false);
-      } else if (cmd.equals("ShowAboutDialog")) {
-         String msg = "";
-         msg += "pin 'em up\n";
-         msg += "version " + PinEmUp.getVersion() + "\n\n";
-         msg += "(C) 2007 Mario Koedding\n";
-         msg += "mario.koedding@web.de\n\n";
-         msg += "This program is licensed under the terms of the GNU GPL V2.\n";
-         msg += "Read \"COPYING\" file for details.\n\n";
-         msg += "visit http://pinemup.sourceforge.net";
-         JOptionPane.showMessageDialog(null, msg, "about pin 'em up", JOptionPane.INFORMATION_MESSAGE);
       } else if (cmd.equals("ShowOnlyCategory0")) {
          PinEmUp.getMainApp().getNotes().showOnlyCategory((byte)0);
       } else if (cmd.equals("ShowOnlyCategory1")) {
@@ -102,8 +84,6 @@ public class MenuLogic implements ActionListener {
          PinEmUp.getUserSettings().setTempDef((byte)3);
       } else if (cmd.equals("SetTempDef4")) {
          PinEmUp.getUserSettings().setTempDef((byte)4);
-      } else if (cmd.equals("ExportToTextFile")) {
-         new ExportDialog();
       }
       
       if (cmd.equals("ShowCategory0") || cmd.equals("ShowCategory1") || cmd.equals("ShowCategory2") || cmd.equals("ShowCategory3") || cmd.equals("ShowCategory4") || cmd.equals("HideCategory0") || cmd.equals("HideCategory1") || cmd.equals("HideCategory2") || cmd.equals("HideCategory3") || cmd.equals("HideCategory4") || cmd.equals("ShowOnlyCategory0") || cmd.equals("ShowOnlyCategory1") || cmd.equals("ShowOnlyCategory2") || cmd.equals("ShowOnlyCategory3") || cmd.equals("ShowOnlyCategory4") || cmd.equals("AddNote") || cmd.equals("ShowAllNotes") || cmd.equals("HideAllNotes") || cmd.equals("DownloadNotesFromFTP")) {

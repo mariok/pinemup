@@ -112,6 +112,9 @@ public class UserSettings {
    }
 
    public void setDefaultWindowWidth(short x) {
+      if (x < 30) {
+         x = 30;
+      }
       defaultWindowWidth = x;
    }
 
@@ -120,6 +123,9 @@ public class UserSettings {
    }
 
    public void setDefaultWindowHeight(short y) {
+      if (y < 30) {
+         y = 30;
+      }
       defaultWindowHeight = y;
    }
 

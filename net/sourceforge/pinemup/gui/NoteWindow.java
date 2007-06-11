@@ -164,6 +164,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    public void windowClosed(WindowEvent arg0) {
       parentNote.setWindow(null);
+      parentNote.setVisible(false);
    }
 
    public void windowClosing(WindowEvent arg0) {
@@ -261,7 +262,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private void checkPopupMenu(MouseEvent event) {
       if (event.isPopupTrigger()) {
-         RightClickMenu popup = new RightClickMenu(this);
+         RightClickMenu popup = new RightClickMenu(this, new RightClickMenuLogic(this));
          popup.show(event.getComponent(), event.getX(), event.getY());
       }
    }
@@ -274,7 +275,15 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       if (dragging) {
          setLocation(e.getXOnScreen() - dx, e.getYOnScreen() - dy);
       } else if (resizing) {
-         setSize(e.getXOnScreen() - getX() + dx, e.getYOnScreen() - getY() + dy);
+         int sx = e.getXOnScreen() - getX() + dx;
+         int sy = e.getYOnScreen() - getY() + dy;
+         if (sx < 30) {
+            sx = 30;
+         }
+         if (sy < 30) {
+            sy = 30;
+         }
+         setSize(sx, sy);
       }
    }
    

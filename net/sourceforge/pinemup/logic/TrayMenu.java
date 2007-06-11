@@ -35,20 +35,23 @@ public class TrayMenu extends PopupMenu {
 
    private Menu[] catMenu;
    
-   public TrayMenu() {
+   private MenuLogic menuListener;
+   
+   public TrayMenu(TrayMenuLogic ml) {
       // title and notes actions
       super("pin 'em up");
+      menuListener = ml;
       addNoteItem = new MenuItem("add note");
       addNoteItem.setActionCommand("AddNote");
-      addNoteItem.addActionListener(PinEmUp.getMenuListener());
+      addNoteItem.addActionListener(menuListener);
       add(addNoteItem);
       showAllItem = new MenuItem("show all notes");
       showAllItem.setActionCommand("ShowAllNotes");
-      showAllItem.addActionListener(PinEmUp.getMenuListener());
+      showAllItem.addActionListener(menuListener);
       add(showAllItem);
       hideAllItem = new MenuItem("hide all notes");
       hideAllItem.setActionCommand("HideAllNotes");
-      hideAllItem.addActionListener(PinEmUp.getMenuListener());
+      hideAllItem.addActionListener(menuListener);
       add(hideAllItem);
       
       // categories menu
@@ -64,20 +67,20 @@ public class TrayMenu extends PopupMenu {
          categoriesMenu.add(catMenu[i]);
          hideCategoryItem[i] = new MenuItem("hide all notes of this category");
          hideCategoryItem[i].setActionCommand("HideCategory"+i);
-         hideCategoryItem[i].addActionListener(PinEmUp.getMenuListener());
+         hideCategoryItem[i].addActionListener(menuListener);
          catMenu[i].add(hideCategoryItem[i]);
          showCategoryItem[i] = new MenuItem("show all notes of this category");
          showCategoryItem[i].setActionCommand("ShowCategory"+i);
-         showCategoryItem[i].addActionListener(PinEmUp.getMenuListener());
+         showCategoryItem[i].addActionListener(menuListener);
          catMenu[i].add(showCategoryItem[i]);
          showOnlyCategoryItem[i] = new MenuItem("show only notes of this category");
          showOnlyCategoryItem[i].setActionCommand("ShowOnlyCategory"+i);
-         showOnlyCategoryItem[i].addActionListener(PinEmUp.getMenuListener());
+         showOnlyCategoryItem[i].addActionListener(menuListener);
          catMenu[i].add(showOnlyCategoryItem[i]);
          catMenu[i].addSeparator();
          setTempDefItem[i] = new MenuItem("set temporarily as default");
          setTempDefItem[i].setActionCommand("SetTempDef"+i);
-         setTempDefItem[i].addActionListener(PinEmUp.getMenuListener());
+         setTempDefItem[i].addActionListener(menuListener);
          catMenu[i].add(setTempDefItem[i]);
       }
       
@@ -87,17 +90,17 @@ public class TrayMenu extends PopupMenu {
       Menu ftpMenu = new Menu("ftp");
       ftpUploadItem = new MenuItem("upload to ftp server");
       ftpUploadItem.setActionCommand("UploadNotesToFTP");
-      ftpUploadItem.addActionListener(PinEmUp.getMenuListener());
+      ftpUploadItem.addActionListener(menuListener);
       ftpMenu.add(ftpUploadItem);
       ftpDownloadItem = new MenuItem("download from ftp server");
       ftpDownloadItem.setActionCommand("DownloadNotesFromFTP");
-      ftpDownloadItem.addActionListener(PinEmUp.getMenuListener());
+      ftpDownloadItem.addActionListener(menuListener);
       ftpMenu.add(ftpDownloadItem);
       imExMenu.add(ftpMenu);
       imExMenu.addSeparator();
       exportItem = new MenuItem("export to textfile");
       exportItem.setActionCommand("ExportToTextFile");
-      exportItem.addActionListener(PinEmUp.getMenuListener());
+      exportItem.addActionListener(menuListener);
       imExMenu.add(exportItem);
       add(imExMenu);
       
@@ -105,18 +108,18 @@ public class TrayMenu extends PopupMenu {
       addSeparator();
       showSettingsDialogItem = new MenuItem("settings");
       showSettingsDialogItem.setActionCommand("ShowSettings");
-      showSettingsDialogItem.addActionListener(PinEmUp.getMenuListener());
+      showSettingsDialogItem.addActionListener(menuListener);
       add(showSettingsDialogItem);
       Menu helpMenu = new Menu("help");
       aboutItem = new MenuItem("about pin 'em up");
       aboutItem.setActionCommand("ShowAboutDialog");
-      aboutItem.addActionListener(PinEmUp.getMenuListener());
+      aboutItem.addActionListener(menuListener);
       helpMenu.add(aboutItem);
       add(helpMenu);
       addSeparator();
       closeItem = new MenuItem("exit");
       closeItem.setActionCommand("Exit");
-      closeItem.addActionListener(PinEmUp.getMenuListener());
+      closeItem.addActionListener(menuListener);
       add(closeItem);
    }
    

@@ -29,7 +29,7 @@ import net.sourceforge.pinemup.gui.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RightClickMenu extends JPopupMenu implements ActionListener {
+public class RightClickMenu extends JPopupMenu {
 
    /**
     * 
@@ -40,27 +40,31 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
    private JMenuItem[] setFontSizeItem;
    
    private NoteWindow parentWindow;
+   
+   private RightClickMenuLogic menuListener;
 
-   public RightClickMenu(NoteWindow w) {
+   public RightClickMenu(NoteWindow w, RightClickMenuLogic ml) {
       parentWindow = w;
-      deleteNoteItem = new JMenuItem("delete this note");
-      deleteNoteItem.addActionListener(this);
-      add(deleteNoteItem);
-      addSeparator();
+      menuListener = ml;
       addNoteItem = new JMenuItem("add note");
       addNoteItem.setActionCommand("AddNote");
-      addNoteItem.addActionListener(PinEmUp.getMenuListener());
+      addNoteItem.addActionListener(menuListener);
       add(addNoteItem);
       showAllItem = new JMenuItem("show all notes");
       showAllItem.setActionCommand("ShowAllNotes");
-      showAllItem.addActionListener(PinEmUp.getMenuListener());
+      showAllItem.addActionListener(menuListener);
       add(showAllItem);
       hideAllItem = new JMenuItem("hide all notes");
       hideAllItem.setActionCommand("HideAllNotes");
-      hideAllItem.addActionListener(PinEmUp.getMenuListener());
+      hideAllItem.addActionListener(menuListener);
       add(hideAllItem);
       addSeparator();
-
+      deleteNoteItem = new JMenuItem("delete this note");
+      deleteNoteItem.setActionCommand("DeleteThisNote");
+      deleteNoteItem.addActionListener(menuListener);
+      add(deleteNoteItem);
+      addSeparator();
+      
       // settings menu
       JMenu settingsMenu = new JMenu("note settings");
       JMenu setFontSizeMenu = new JMenu("font size");
@@ -73,11 +77,11 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
             setFontSizeItem[i].setText("  "+setFontSizeItem[i].getText());
          }
          setFontSizeItem[i].setActionCommand("SetFontSize"+(i+5));
-         setFontSizeItem[i].addActionListener(this);
+         setFontSizeItem[i].addActionListener(menuListener);
          setFontSizeMenu.add(setFontSizeItem[i]);
       }
       JMenu setCategoryMenu = new JMenu("category");
-      String[] active = {"  ","  ","  ","  ","  "};
+      String[] active = new String[];
       active[parentWindow.getParentNote().getCategory()] = "# ";
       setCategory1Item = new JMenuItem(active[0] + "1 " + PinEmUp.getUserSettings().getCategoryNames()[0]);
       setCategory2Item = new JMenuItem(active[1] + "2 " + PinEmUp.getUserSettings().getCategoryNames()[1]);
@@ -131,40 +135,6 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       categoryMenu.add(hideCategoryItem);
       categoryMenu.add(showCategoryItem);
       categoryMenu.add(showOnlyCategoryItem);
-   }
-
-   public void actionPerformed(ActionEvent e) {
-      Object src = e.getSource();
-      if (src == deleteNoteItem) {
-         PinEmUp.getMainApp().setNotes(Note.remove(PinEmUp.getMainApp().getNotes(), parentWindow.getParentNote()));
-      } else if (src == setCategory1Item) {
-         parentWindow.getParentNote().setCategory((byte)0);
-      } else if (src == setCategory2Item) {
-         parentWindow.getParentNote().setCategory((byte)1);
-      } else if (src == setCategory3Item) {
-         parentWindow.getParentNote().setCategory((byte)2);
-      } else if (src == setCategory4Item) {
-         parentWindow.getParentNote().setCategory((byte)3);
-      } else if (src == setCategory5Item) {
-         parentWindow.getParentNote().setCategory((byte)4);
-      } else if (src == hideCategoryItem) {
-         parentWindow.getParentNote().hideCategory(parentWindow.getParentNote().getCategory());
-      } else if (src == showOnlyCategoryItem) {
-         parentWindow.getParentNote().showOnlyCategory(parentWindow.getParentNote().getCategory());
-      } else if (src == showCategoryItem) {
-         parentWindow.getParentNote().showCategory(parentWindow.getParentNote().getCategory());
-      } else if (src == alwaysOnTopOnItem) {
-         parentWindow.getParentNote().setAlwaysOnTop(true);
-      } else if (src == alwaysOnTopOffItem) {
-         parentWindow.getParentNote().setAlwaysOnTop(false);
-      } else if (e.getActionCommand().substring(0, 11).equals("SetFontSize")) {
-         short s = Short.parseShort(e.getActionCommand().substring(11));
-         parentWindow.getParentNote().setFontSize(s);
-         parentWindow.refreshView();
-      }
-      
-      // save notes to file after every change
-      NoteIO.writeNotesToFile(PinEmUp.getMainApp().getNotes(), PinEmUp.getUserSettings().getNotesFile());
    }
 
 }
