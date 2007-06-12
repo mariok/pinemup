@@ -48,6 +48,15 @@ public class UserSettings {
    private byte tempDef = 0;
    private byte closeicon;
    private boolean showCategory;
+   private byte numberOfCategories;
+   
+   public byte getNumberOfCategories() {
+      return numberOfCategories;
+   }
+   
+   public void setNumberOfCategories(byte n) {
+      numberOfCategories = n;
+   }
    
    public void setShowCategory(boolean sc) {
       showCategory = sc;
@@ -203,8 +212,14 @@ public class UserSettings {
       prefs.put("peu_cat3", category[2]);
       prefs.put("peu_cat4", category[3]);
       prefs.put("peu_cat5", category[4]);
+      prefs.put("peu_cat6", category[0]);
+      prefs.put("peu_cat7", category[1]);
+      prefs.put("peu_cat8", category[2]);
+      prefs.put("peu_cat9", category[3]);
+      prefs.put("peu_cat10", category[4]);
       prefs.putInt("peu_closeicon", closeicon);
       prefs.putBoolean("peu_showCategory", showCategory);
+      prefs.putInt("peu_numberOfCategories",numberOfCategories);
    }
 
    public UserSettings() {
@@ -227,13 +242,19 @@ public class UserSettings {
       ftpUser = prefs.get("peu_ftpUser", "anonymous");
       ftpPasswd = prefs.get("peu_ftpPasswd", "").toCharArray();
       ftpDir = prefs.get("peu_ftpDir", "/");
-      category = new String[5];
+      category = new String[10];
       category[0] = prefs.get("peu_cat1", "home");
       category[1] = prefs.get("peu_cat2", "office");
       category[2] = prefs.get("peu_cat3", "category3");
       category[3] = prefs.get("peu_cat4", "category4");
       category[4] = prefs.get("peu_cat5", "category5");
+      category[5] = prefs.get("peu_cat6", "category6");
+      category[6] = prefs.get("peu_cat7", "category7");
+      category[7] = prefs.get("peu_cat8", "category8");
+      category[8] = prefs.get("peu_cat9", "category9");
+      category[9] = prefs.get("peu_cat10", "category10");
       closeicon = Byte.parseByte(prefs.get("peu_closeicon", "1"));
       showCategory = prefs.getBoolean("peu_showCategory", false);
+      numberOfCategories = Byte.parseByte(prefs.get("peu_numberOfCategories", "5"));
    }
 }

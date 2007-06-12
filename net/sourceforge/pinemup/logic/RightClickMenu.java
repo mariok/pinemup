@@ -26,9 +26,6 @@ import javax.swing.*;
 
 import net.sourceforge.pinemup.gui.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class RightClickMenu extends JPopupMenu {
 
    /**
@@ -36,8 +33,8 @@ public class RightClickMenu extends JPopupMenu {
     */
    private static final long serialVersionUID = 1L;
 
-   private JMenuItem addNoteItem, showAllItem, hideAllItem, deleteNoteItem, setCategory1Item, setCategory2Item, setCategory3Item, setCategory4Item, setCategory5Item, hideCategoryItem, showOnlyCategoryItem, showCategoryItem, alwaysOnTopOnItem, alwaysOnTopOffItem;
-   private JMenuItem[] setFontSizeItem;
+   private JMenuItem addNoteItem, showAllItem, hideAllItem, deleteNoteItem, hideCategoryItem, showOnlyCategoryItem, showCategoryItem, alwaysOnTopOnItem, alwaysOnTopOffItem;
+   private JMenuItem[] setFontSizeItem, setCategoryItem;
    
    private NoteWindow parentWindow;
    
@@ -81,23 +78,20 @@ public class RightClickMenu extends JPopupMenu {
          setFontSizeMenu.add(setFontSizeItem[i]);
       }
       JMenu setCategoryMenu = new JMenu("category");
-      String[] active = new String[];
+      String[] active = new String[PinEmUp.getUserSettings().getNumberOfCategories()];
+      for (int i=0; i<active.length; i++) {
+         active[i] = "  ";
+      }
       active[parentWindow.getParentNote().getCategory()] = "# ";
-      setCategory1Item = new JMenuItem(active[0] + "1 " + PinEmUp.getUserSettings().getCategoryNames()[0]);
-      setCategory2Item = new JMenuItem(active[1] + "2 " + PinEmUp.getUserSettings().getCategoryNames()[1]);
-      setCategory3Item = new JMenuItem(active[2] + "3 " + PinEmUp.getUserSettings().getCategoryNames()[2]);
-      setCategory4Item = new JMenuItem(active[3] + "4 " + PinEmUp.getUserSettings().getCategoryNames()[3]);
-      setCategory5Item = new JMenuItem(active[4] + "5 " + PinEmUp.getUserSettings().getCategoryNames()[4]);
-      setCategory1Item.addActionListener(this);
-      setCategory2Item.addActionListener(this);
-      setCategory3Item.addActionListener(this);
-      setCategory4Item.addActionListener(this);
-      setCategory5Item.addActionListener(this);
-      setCategoryMenu.add(setCategory1Item);
-      setCategoryMenu.add(setCategory2Item);
-      setCategoryMenu.add(setCategory3Item);
-      setCategoryMenu.add(setCategory4Item);
-      setCategoryMenu.add(setCategory5Item);
+      
+      setCategoryItem = new JMenuItem[PinEmUp.getUserSettings().getNumberOfCategories()];
+      for (int i=0; i<setCategoryItem.length; i++) {
+         setCategoryItem[i] = new JMenuItem(active[i] + i + " " + PinEmUp.getUserSettings().getCategoryNames()[i]);
+         setCategoryItem[i].addActionListener(menuListener);
+         setCategoryItem[i].setActionCommand("SetCategory"+(i+1));
+         setCategoryMenu.add(setCategoryItem[i]);
+      }
+
       JMenu alwaysOnTopMenu = new JMenu("always on top");
       String[] aot = {"  ","  "};
       if(parentWindow.getParentNote().isAlwaysOnTop()) {
@@ -107,8 +101,8 @@ public class RightClickMenu extends JPopupMenu {
       }
       alwaysOnTopOnItem = new JMenuItem(aot[0]+"enabled");
       alwaysOnTopOffItem = new JMenuItem(aot[1]+"disabled");
-      alwaysOnTopOnItem.addActionListener(this);
-      alwaysOnTopOffItem.addActionListener(this);
+      alwaysOnTopOnItem.addActionListener(menuListener);
+      alwaysOnTopOffItem.addActionListener(menuListener);
       alwaysOnTopMenu.add(alwaysOnTopOnItem);
       alwaysOnTopMenu.add(alwaysOnTopOffItem);
       
@@ -128,9 +122,9 @@ public class RightClickMenu extends JPopupMenu {
       hideCategoryItem = new JMenuItem("hide notes of this category");
       showCategoryItem = new JMenuItem("show all notes of this category");
       showOnlyCategoryItem = new JMenuItem("show only notes of this category");
-      hideCategoryItem.addActionListener(this);
-      showOnlyCategoryItem.addActionListener(this);
-      showCategoryItem.addActionListener(this);
+      hideCategoryItem.addActionListener(menuListener);
+      showOnlyCategoryItem.addActionListener(menuListener);
+      showCategoryItem.addActionListener(menuListener);
       
       categoryMenu.add(hideCategoryItem);
       categoryMenu.add(showCategoryItem);
