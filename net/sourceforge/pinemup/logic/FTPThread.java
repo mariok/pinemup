@@ -4,19 +4,18 @@
  * Copyright (C) 2007 by Mario Koedding
  *
  *
- * pin 'em up is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * pin 'em up is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with pin 'em up; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -24,30 +23,37 @@ package net.sourceforge.pinemup.logic;
 
 public class FTPThread extends Thread {
    private boolean upload;
+   private CategoryList categories;
+   private UserSettings settings;
    
-   public FTPThread(boolean upload) {
+   public FTPThread(boolean upload, CategoryList c, UserSettings s) {
       super("FTP-Up-/Download Thread");
       this.upload = upload;      
+      this.categories = c;
+      this.settings = s;
       this.start();
    }
    
    public void run() {
       if (upload) { // upload notes
-         NoteIO.writeNotesToFTP(PinEmUp.getMainApp().getNotes(), "notes.dat");
+         NoteIO.writeCategoriesToFTP(categories, settings.getNotesFile());
       } else { // download notes
          // download Notes
-         Note newNotes = NoteIO.getNotesFileFromFTP("notes.dat");
+         //TODO: Dateiname übergeben
+         CategoryList newCats = NoteIO.getCategoriesFromFTP(settings.getNotesFile());
          // If successfull downloaded, replace:
          // hide notes
-         if (PinEmUp.getMainApp().getNotes() != null) {
-            PinEmUp.getMainApp().getNotes().hideAll();
-         }
+         categories.hideAllNotes();
+         
          // link and save new notes
-         PinEmUp.getMainApp().setNotes(newNotes);
-         // show all visible notes
-         if (PinEmUp.getMainApp().getNotes() != null) {
-            PinEmUp.getMainApp().getNotes().showAllVisible();
-         }         
+         categories.removeAll();
+         categories.attach(newCats);
+         
+         // show all notes which are not hidden
+         categories.showAllNotesNotHidden();
+         
+         //save to file
+         NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
       }
    }
 

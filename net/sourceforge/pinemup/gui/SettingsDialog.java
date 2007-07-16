@@ -4,19 +4,18 @@
  * Copyright (C) 2007 by Mario Koedding
  *
  *
- * pin 'em up is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * pin 'em up is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with pin 'em up; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -42,7 +41,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private JButton okButton, cancelButton, applyButton, browseButton;
 
-   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, ftpServerField, ftpUserField, ftpDirField, cat1Field, cat2Field, cat3Field, cat4Field, cat5Field, notesFileField;
+   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, ftpServerField, ftpUserField, ftpDirField, notesFileField;
 
    private JPasswordField ftpPasswdField;
 
@@ -53,6 +52,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private JRadioButton closeIcon1Button, closeIcon2Button;
    
    private ButtonGroup closeIconGroup;
+   
+   private UserSettings settings;
+   
+   private CategoryList categories;
    
    private JPanel makeLookAndFeelTab() {
       JPanel lookAndFeelPanel = new JPanel();
@@ -197,42 +200,6 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       
       return loadSavePanel;
    }
-   
-   private JPanel makeCategoryTab() {
-      JPanel categoryPanel = new JPanel();
-      GridBagLayout gbl = new GridBagLayout();
-      categoryPanel.setLayout(gbl);
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(1,1,1,1);
-      gbc.anchor = GridBagConstraints.NORTHWEST;
-
-      //Add Panel for category names
-      JPanel catNamesPanel = makeCatNamesPanel();
-      gbc.gridx = 0;
-      gbc.gridy = 0;
-      gbc.gridwidth = 1;
-      gbc.gridheight = 1;
-      gbc.weightx = 100;
-      gbc.weighty = 0;
-      gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(catNamesPanel, gbc);
-      categoryPanel.add(catNamesPanel);
-      
-      //Add empty panel to tab
-      JPanel emptyPanel = new JPanel();
-      gbc.gridx = 0;
-      gbc.gridy = 1;
-      gbc.gridwidth = 1;
-      gbc.gridheight = 1;
-      gbc.weightx = 100;
-      gbc.weighty = 100;
-      gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(emptyPanel, gbc);
-      categoryPanel.add(emptyPanel); 
-      
-      return categoryPanel;
-   }
-      
    
    private JPanel makeTitleBarPanel() {
       // PANEL FOR SIZE AND POSITIONS
@@ -590,96 +557,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       return ftpPanel;
    }
    
-   private JPanel makeCatNamesPanel() {
-      // PANEL FOR CATEGORY NAMES
-      GridBagLayout gbl = new GridBagLayout();
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(1,1,1,1);
-      gbc.anchor = GridBagConstraints.NORTHWEST;
-      JPanel catNamesPanel = new JPanel(gbl);
-      catNamesPanel.setBorder(new TitledBorder("Category Names"));
-      //Add all Labels
-      JLabel cat1Label = new JLabel("Category 1: ");
-      JLabel cat2Label = new JLabel("Category 2: ");
-      JLabel cat3Label = new JLabel("Category 3: ");
-      JLabel cat4Label = new JLabel("Category 4: ");
-      JLabel cat5Label = new JLabel("Category 5: ");
-
-      //Set settings for all Labels
-      gbc.weightx = 0;
-      gbc.weighty = 0;
-      gbc.gridwidth = 1;
-      gbc.gridheight = 1;
-      gbc.fill = GridBagConstraints.NONE;      
-
-      //Add Labels with their positions
-      gbc.gridx = 0;
-      gbc.gridy = 0;
-      gbl.setConstraints(cat1Label, gbc);
-      catNamesPanel.add(cat1Label);
-      gbc.gridx = 0;
-      gbc.gridy = 1;
-      gbl.setConstraints(cat2Label, gbc);
-      catNamesPanel.add(cat2Label);
-      gbc.gridx = 0;
-      gbc.gridy = 2;
-      gbl.setConstraints(cat3Label, gbc);
-      catNamesPanel.add(cat3Label);
-      gbc.gridx = 0;
-      gbc.gridy = 3;
-      gbl.setConstraints(cat4Label, gbc);
-      catNamesPanel.add(cat4Label);
-      gbc.gridx = 0;
-      gbc.gridy = 4;
-      gbl.setConstraints(cat5Label, gbc);
-      catNamesPanel.add(cat5Label);
-      
-      //Add fields
-      cat1Field = new JTextField(20);
-      cat1Field.getDocument().addDocumentListener(this);
-      cat2Field = new JTextField(20);
-      cat2Field.getDocument().addDocumentListener(this);
-      cat3Field = new JTextField(20);
-      cat3Field.getDocument().addDocumentListener(this);
-      cat4Field = new JTextField(20);
-      cat4Field.getDocument().addDocumentListener(this);
-      cat5Field = new JTextField(20);
-      cat5Field.getDocument().addDocumentListener(this);
-      //Set settings for all fields
-      gbc.weightx = 100;
-      gbc.weighty = 0;
-      gbc.gridwidth = 1;
-      gbc.gridheight = 1;
-      gbc.fill = GridBagConstraints.NONE;
-      //Add fields with their positions
-      gbc.gridx = 1;
-      gbc.gridy = 0;
-      gbl.setConstraints(cat1Field, gbc);
-      catNamesPanel.add(cat1Field);
-      gbc.gridx = 1;
-      gbc.gridy = 1;
-      gbl.setConstraints(cat2Field, gbc);
-      catNamesPanel.add(cat2Field);
-      gbc.gridx = 1;
-      gbc.gridy = 2;
-      gbl.setConstraints(cat3Field, gbc);
-      catNamesPanel.add(cat3Field);
-      gbc.gridx = 1;
-      gbc.gridy = 3;
-      gbl.setConstraints(cat4Field, gbc);
-      catNamesPanel.add(cat4Field);
-      gbc.gridx = 1;
-      gbc.gridy = 4;
-      gbl.setConstraints(cat5Field, gbc);
-      catNamesPanel.add(cat5Field);
-
-      return catNamesPanel;
-   }
-   
-   
-   public SettingsDialog() {
+   public SettingsDialog(UserSettings s, CategoryList c) {
       super("Settings - pin 'em up");
       setSize(new Dimension(640,480));
+      settings = s;
+      categories = c;
 
       // PREPARE ALL PANELS
       // ---------------------
@@ -690,11 +572,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JPanel lookAndFeelTab = makeLookAndFeelTab();
       JPanel defaultsTab = makeDefaultsTab();
       JPanel loadSaveTab = makeLoadSaveTab();
-      JPanel categoryTab = makeCategoryTab();
       tpane.addTab("Notes Look&Feel", null, lookAndFeelTab, "Look&Feel of the Notes");
       tpane.addTab("Notes Default Settings", null, defaultsTab, "Default Settings for new Notes");
       tpane.addTab("Load/Save", null, loadSaveTab, "Load / Save Settings");
-      tpane.addTab("Categories", null, categoryTab, "Names of the categories");
       mainPanel.add(tpane, BorderLayout.CENTER);
 
       // PANEL WITH BUTTONS
@@ -762,40 +642,35 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    }
 
    private void loadSettings() {
-      // write settings from object into fields
-      
-      // default note settings panel
-      defaultWidthField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowWidth()));
-      defaultHeightField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowHeight()));
-      defaultXPositionField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowXPostition()));
-      defaultYPositionField.setText(String.valueOf(PinEmUp.getUserSettings().getDefaultWindowYPostition()));
-      defaultFontSizeSpinner.getModel().setValue(new Integer(PinEmUp.getUserSettings().getDefaultFontSize()));
-      if (PinEmUp.getUserSettings().getCloseIcon() == 1) {
-         closeIcon1Button.setSelected(true);
-      } else if (PinEmUp.getUserSettings().getCloseIcon() == 2) {
-         closeIcon2Button.setSelected(true);
-      }
-      alwaysOnTopBox.setSelected(PinEmUp.getUserSettings().getDefaultAlwaysOnTop());
-      showCatBox.setSelected(PinEmUp.getUserSettings().getShowCategory());
+      if (settings != null) {
             
-      // load/save panel
-      notesFileField.setText(PinEmUp.getUserSettings().getNotesFile());
-      ftpServerField.setText(PinEmUp.getUserSettings().getFtpServer());
-      ftpUserField.setText(PinEmUp.getUserSettings().getFtpUser());
-      if (PinEmUp.getUserSettings().getFtpPasswd() != null) {
-         ftpPasswdField.setText(String.copyValueOf(PinEmUp.getUserSettings()
-               .getFtpPasswd()));
-      } else {
-         ftpPasswdField.setText("");
+         // write settings from object into fields
+         
+         // default note settings panel
+         defaultWidthField.setText(String.valueOf(settings.getDefaultWindowWidth()));
+         defaultHeightField.setText(String.valueOf(settings.getDefaultWindowHeight()));
+         defaultXPositionField.setText(String.valueOf(settings.getDefaultWindowXPostition()));
+         defaultYPositionField.setText(String.valueOf(settings.getDefaultWindowYPostition()));
+         defaultFontSizeSpinner.getModel().setValue(new Integer(settings.getDefaultFontSize()));
+         if (settings.getCloseIcon() == 1) {
+            closeIcon1Button.setSelected(true);
+         } else if (settings.getCloseIcon() == 2) {
+            closeIcon2Button.setSelected(true);
+         }
+         alwaysOnTopBox.setSelected(settings.getDefaultAlwaysOnTop());
+         showCatBox.setSelected(settings.getShowCategory());
+               
+         // load/save panel
+         notesFileField.setText(settings.getNotesFile());
+         ftpServerField.setText(settings.getFtpServer());
+         ftpUserField.setText(settings.getFtpUser());
+         if (settings.getFtpPasswd() != null) {
+            ftpPasswdField.setText(String.copyValueOf(settings.getFtpPasswd()));
+         } else {
+            ftpPasswdField.setText("");
+         }
+         ftpDirField.setText(settings.getFtpDir());
       }
-      ftpDirField.setText(PinEmUp.getUserSettings().getFtpDir());
-      
-      // category panel
-      cat1Field.setText(PinEmUp.getUserSettings().getCategoryNames()[0]);
-      cat2Field.setText(PinEmUp.getUserSettings().getCategoryNames()[1]);
-      cat3Field.setText(PinEmUp.getUserSettings().getCategoryNames()[2]);
-      cat4Field.setText(PinEmUp.getUserSettings().getCategoryNames()[3]);
-      cat5Field.setText(PinEmUp.getUserSettings().getCategoryNames()[4]);
    }
 
    private void saveSettings() {
@@ -818,58 +693,33 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       String ftpUser = ftpUserField.getText();
       char[] ftpPasswd = ftpPasswdField.getPassword();
       String ftpDir = ftpDirField.getText();
-      String cat1 = cat1Field.getText();
-      String cat2 = cat2Field.getText();
-      String cat3 = cat3Field.getText();
-      String cat4 = cat4Field.getText();
-      String cat5 = cat5Field.getText();
       
       // write settings into object
-      PinEmUp.getUserSettings().setDefaultWindowHeight(defaultHeight);
-      PinEmUp.getUserSettings().setDefaultWindowWidth(defaultWidth);
-      PinEmUp.getUserSettings().setDefaultWindowXPosition(defaultXPosition);
-      PinEmUp.getUserSettings().setDefaultWindowYPosition(defaultYPosition);
-      PinEmUp.getUserSettings().setDefaultFontSize(defaultFontSize);
-      PinEmUp.getUserSettings().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
-      PinEmUp.getUserSettings().setCloseIcon(ci);
-      PinEmUp.getUserSettings().setShowCategory(showCat);
-      PinEmUp.getUserSettings().setNotesFile(notesFile);
-      PinEmUp.getUserSettings().setFtpServer(ftpServer);
-      PinEmUp.getUserSettings().setFtpUser(ftpUser);
-      PinEmUp.getUserSettings().setFtpPasswd(ftpPasswd);
-      PinEmUp.getUserSettings().setFtpDir(ftpDir);
-      PinEmUp.getUserSettings().setCategoryName((byte)0, cat1);
-      PinEmUp.getUserSettings().setCategoryName((byte)1, cat2);
-      PinEmUp.getUserSettings().setCategoryName((byte)2, cat3);
-      PinEmUp.getUserSettings().setCategoryName((byte)3, cat4);
-      PinEmUp.getUserSettings().setCategoryName((byte)4, cat5);
-      // update all tooltips with new category names
-      Note n = PinEmUp.getMainApp().getNotes();
-      while (n!=null && n.getPrev() != null) { // Back to the Beginning
-         n = n.getPrev();
-      }
-      while (n != null) {
-         if (n.getWindow() != null) {
-            n.getWindow().updateToolTip();
-         }
-         n = n.getNext();
-      }
-      // update categories in traymenu
-      PinEmUp.getMainApp().getTrayMenu().updateCategories();
+      settings.setDefaultWindowHeight(defaultHeight);
+      settings.setDefaultWindowWidth(defaultWidth);
+      settings.setDefaultWindowXPosition(defaultXPosition);
+      settings.setDefaultWindowYPosition(defaultYPosition);
+      settings.setDefaultFontSize(defaultFontSize);
+      settings.setDefaultAlwaysOnTop(defaultAlwaysOnTop);
+      settings.setCloseIcon(ci);
+      settings.setShowCategory(showCat);
+      settings.setNotesFile(notesFile);
+      settings.setFtpServer(ftpServer);
+      settings.setFtpUser(ftpUser);
+      settings.setFtpPasswd(ftpPasswd);
+      settings.setFtpDir(ftpDir);
       
       // load new notes from file
-      if (PinEmUp.getMainApp().getNotes() != null) {
-         PinEmUp.getMainApp().getNotes().tempHideAll();
-      }
-      PinEmUp.getMainApp().setNotes(NoteIO.readNotesFromFile(notesFile));
+      categories.hideAllNotes();
+      categories.removeAll();
+      CategoryList cl = NoteIO.readCategoriesFromFile(notesFile);
+      categories.attach(cl);
       
       // show all visible notes
-      if (PinEmUp.getMainApp().getNotes() != null) {
-         PinEmUp.getMainApp().getNotes().showAllVisible();
-      }
+      categories.showAllNotesNotHidden();
       
       // save settings permanentely
-      PinEmUp.getUserSettings().saveSettings();
+      settings.saveSettings();
    }
 
    public void changedUpdate(DocumentEvent arg0) {

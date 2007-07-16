@@ -48,8 +48,10 @@ Contents
     - new package names
     - new website-URL: pinemup.sourceforge.net
     - redesign of settings dialog
-    - height and width of a note cannot be less than 30 pixels anymore
-    - some internal code improvements
+    - height and width of a note cannot be less than 30 pixels anymore (makes sure a note can be resized at anytime)
+    - automatically jump into the textarea of a note when it is added
+    - traymenu is now a JPopupMenu instead of PopupMenu -> new look&feel
+    - some major internal code improvements
     
     
   0.2:

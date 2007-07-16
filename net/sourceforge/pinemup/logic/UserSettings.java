@@ -4,19 +4,18 @@
  * Copyright (C) 2007 by Mario Koedding
  *
  *
- * pin 'em up is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * pin 'em up is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with pin 'em up; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -43,20 +42,10 @@ public class UserSettings {
    private String ftpUser;
    private char[] ftpPasswd;
    private String ftpDir;
-   private String[] category;
    private boolean defaultAlwaysOnTop;
    private byte tempDef = 0;
    private byte closeicon;
    private boolean showCategory;
-   private byte numberOfCategories;
-   
-   public byte getNumberOfCategories() {
-      return numberOfCategories;
-   }
-   
-   public void setNumberOfCategories(byte n) {
-      numberOfCategories = n;
-   }
    
    public void setShowCategory(boolean sc) {
       showCategory = sc;
@@ -104,16 +93,6 @@ public class UserSettings {
    
    public void setTempDef(byte td) {
       tempDef = td;
-   }
-
-   public String[] getCategoryNames() {
-      return category;
-   }
-
-   public void setCategoryName(short n, String name) {
-      if (n >= 0 && n <= 4) {
-         category[n] = name;
-      }
    }
 
    public short getDefaultWindowWidth() {
@@ -207,19 +186,8 @@ public class UserSettings {
       prefs.put("peu_ftpUser", ftpUser);
       prefs.put("peu_ftpPasswd", getFtpPasswdString());
       prefs.put("peu_ftpDir", ftpDir);
-      prefs.put("peu_cat1", category[0]);
-      prefs.put("peu_cat2", category[1]);
-      prefs.put("peu_cat3", category[2]);
-      prefs.put("peu_cat4", category[3]);
-      prefs.put("peu_cat5", category[4]);
-      prefs.put("peu_cat6", category[0]);
-      prefs.put("peu_cat7", category[1]);
-      prefs.put("peu_cat8", category[2]);
-      prefs.put("peu_cat9", category[3]);
-      prefs.put("peu_cat10", category[4]);
       prefs.putInt("peu_closeicon", closeicon);
       prefs.putBoolean("peu_showCategory", showCategory);
-      prefs.putInt("peu_numberOfCategories",numberOfCategories);
    }
 
    public UserSettings() {
@@ -229,7 +197,6 @@ public class UserSettings {
       if (homeDir.charAt(homeDir.length()-1) != '\\' && homeDir.charAt(homeDir.length()-1) != '/') {
          homeDir = homeDir + "/";
       }
-      //System.exit(0);
       
       defaultWindowWidth = Short.parseShort(prefs.get("peu_defaultWindowWidth", "170"));
       defaultWindowHeight = Short.parseShort(prefs.get("peu_defaultWindowHeight", "150"));
@@ -242,19 +209,7 @@ public class UserSettings {
       ftpUser = prefs.get("peu_ftpUser", "anonymous");
       ftpPasswd = prefs.get("peu_ftpPasswd", "").toCharArray();
       ftpDir = prefs.get("peu_ftpDir", "/");
-      category = new String[10];
-      category[0] = prefs.get("peu_cat1", "home");
-      category[1] = prefs.get("peu_cat2", "office");
-      category[2] = prefs.get("peu_cat3", "category3");
-      category[3] = prefs.get("peu_cat4", "category4");
-      category[4] = prefs.get("peu_cat5", "category5");
-      category[5] = prefs.get("peu_cat6", "category6");
-      category[6] = prefs.get("peu_cat7", "category7");
-      category[7] = prefs.get("peu_cat8", "category8");
-      category[8] = prefs.get("peu_cat9", "category9");
-      category[9] = prefs.get("peu_cat10", "category10");
       closeicon = Byte.parseByte(prefs.get("peu_closeicon", "1"));
       showCategory = prefs.getBoolean("peu_showCategory", false);
-      numberOfCategories = Byte.parseByte(prefs.get("peu_numberOfCategories", "5"));
    }
 }

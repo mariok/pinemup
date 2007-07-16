@@ -4,40 +4,41 @@
  * Copyright (C) 2007 by Mario Koedding
  *
  *
- * pin 'em up is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * pin 'em up is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with pin 'em up; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 package net.sourceforge.pinemup.logic;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import net.sourceforge.pinemup.menus.TrayMenu;
 
 public class PinEmUp {
    private static final String VERSION = "0.3-svn";
    
-   public Note notes, failNote;
-
+   private Note failNote;
+   
    private static PinEmUp main;
 
-   private static UserSettings settings;
-
    private static JFileChooser fileDialog;
+   
+   private UserSettings settings;
 
    private TrayMenu menu;
+   
+   private CategoryList categories;
 
    public static JFileChooser getFileDialog() {
       return fileDialog;
@@ -59,17 +60,9 @@ public class PinEmUp {
       return failNote;
    }
 
-   public static void setUserSettings(UserSettings s) {
-      settings = s;
-   }
-
-   public static UserSettings getUserSettings() {
-      return settings;
-   }
-
    public void exit() {
-      // save notes to file
-      NoteIO.writeNotesToFile(getNotes(), PinEmUp.getUserSettings().getNotesFile());
+      //save notes to file
+      NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
       
       System.exit(0);
    }
@@ -84,26 +77,24 @@ public class PinEmUp {
          PinEmUp.setPinEmUp(this);
 
          // load user settings
-         PinEmUp.setUserSettings(new UserSettings());
+         settings = new UserSettings();
 
          SystemTray tray = SystemTray.getSystemTray();
 
          Image img = ResourceLoader.getTrayIcon();
 
-         // create popup menu
-         menu = new TrayMenu(new TrayMenuLogic());
+         //load notes from file
+         categories = NoteIO.readCategoriesFromFile(settings.getNotesFile());
 
          // create trayicon
-         icon = new TrayIcon(img, "pin 'em up", menu);
+         icon = new TrayIcon(img, "pin 'em up", null);
          icon.setImageAutoSize(true);
          
+         IconClickLogic myIconListener = new IconClickLogic(categories,settings);
          // add actionlistener for doubleclick on icon
-         icon.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-               PinEmUp.getMainApp().setNotes(Note.add(PinEmUp.getMainApp().getNotes(), ""));
-               PinEmUp.getMainApp().getNotes().showAllVisible();
-            }
-         });
+         icon.addActionListener(myIconListener);
+         // add mouselistener for traymenu
+         icon.addMouseListener(myIconListener);
 
          // add trayicon
          try {
@@ -112,13 +103,8 @@ public class PinEmUp {
             System.err.println(e);
          }
 
-         // load notes from file
-         notes = NoteIO.readNotesFromFile(PinEmUp.getUserSettings().getNotesFile());
-
-         // show all visible notes
-         if (notes != null) {
-            notes.showAllVisible();
-         }
+         //show all visible notes
+         categories.showAllNotesNotHidden();
          
          // create File-Dialog
          fileDialog = new JFileChooser();
@@ -129,14 +115,6 @@ public class PinEmUp {
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          System.exit(1);
       }
-   }
-
-   public Note getNotes() {
-      return notes;
-   }
-
-   public void setNotes(Note n) {
-      notes = n;
    }
 
    public static void main(String args[]) {

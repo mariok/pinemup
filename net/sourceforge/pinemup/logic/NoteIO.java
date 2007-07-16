@@ -4,19 +4,18 @@
  * Copyright (C) 2007 by Mario Koedding
  *
  *
- * pin 'em up is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * pin 'em up is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with pin 'em up; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -30,35 +29,29 @@ import javax.swing.*;
 import javax.swing.JOptionPane;
 
 public class NoteIO {
-   public static void writeNotesToFile(Note n, String filename) {
-      try {
+   public static void writeCategoriesToFile(CategoryList c, String filename) {
+      //TODO: write to file
+      /*try {
          FileOutputStream fs = new FileOutputStream(filename);
          ObjectOutputStream os = new ObjectOutputStream(fs);
          os.writeObject(n);
          os.close();
       } catch (IOException e) {
          JOptionPane.showMessageDialog(null, "Could save notes to file! Please check file-settings and free disk-space!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
-      }
+      }*/
    }
 
-   public static Note readNotesFromFile(String filename) {
-      Note n = null;
-      try {
-         FileInputStream fs = new FileInputStream(filename);
-         ObjectInputStream is = new ObjectInputStream(fs);
-         n = (Note) is.readObject();
-         is.close();
-      } catch (ClassNotFoundException e) {
-         System.out.println("ERROR1");// do nothing
-      } catch (IOException e) {
-         System.out.println("ERROR2");// do nothing
-      }
-      return n;
+   public static CategoryList readCategoriesFromFile(String filename) {
+      CategoryList c = new CategoryList();
+      c.add(new Category("TEST1",new NoteList(),true));
+      //TODO:read from file
+      return c;
    }
 
-   public static Note getNotesFileFromFTP(String filename) {
-      Note n = null;
-      try {
+   public static CategoryList getCategoriesFromFTP(String filename) {
+      CategoryList c = new CategoryList();
+      //TODO: load from FTP
+      /*try {
          UserSettings us = PinEmUp.getUserSettings();
          String ftpString = "ftp://" + us.getFtpUser() + ":"
                + us.getFtpPasswdString() + "@" + us.getFtpServer()
@@ -72,13 +65,14 @@ public class NoteIO {
       } catch (Exception e) {
          n = PinEmUp.getMainApp().getFailNote();
          JOptionPane.showMessageDialog(null, "Could not download file from FTP server!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
-      }
-      return n;
+      }*/
+      return c;
    }
 
-   public static void writeNotesToFTP(Note n, String filename) {
+   public static void writeCategoriesToFTP(CategoryList c, String filename) {
       boolean uploaded = true;
-      try {
+      //TODO: upload
+      /*try {
          UserSettings us = PinEmUp.getUserSettings();
          String ftpString = "ftp://" + us.getFtpUser() + ":"
                + us.getFtpPasswdString() + "@" + us.getFtpServer()
@@ -95,10 +89,12 @@ public class NoteIO {
       }
       if (uploaded) {
          JOptionPane.showMessageDialog(null, "Notes successfully uploaded to FTP server!", "pin 'em up - information", JOptionPane.INFORMATION_MESSAGE);
-      }
+      }*/
    }
    
-   public static void exportNotesToTextFile(Note n, boolean[] catExport) {
+   public static void exportCategoriesToTextFile(CategoryList c, boolean[] catExport) {
+      //TODO: rewrite function
+      /*
       File f = null;
       PinEmUp.getFileDialog().setDialogTitle("Export notes to text-file");
       PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("TXT"));
@@ -139,6 +135,7 @@ public class NoteIO {
             e.printStackTrace();
          }
       }
+      */
    }
    
    public static String checkAndAddExtension(String s, String xt) {

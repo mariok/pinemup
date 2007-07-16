@@ -4,19 +4,18 @@
  * Copyright (C) 2007 by Mario Koedding
  *
  *
- * pin 'em up is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * pin 'em up is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with pin 'em up; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,9 +38,14 @@ public class ExportDialog extends JDialog implements ActionListener {
    private JCheckBox[] catBox;
    private JCheckBox allCatsBox;
    
-   public ExportDialog() {
+   private CategoryList categories;
+   
+   public ExportDialog(CategoryList c) {
       super();
       setTitle("export notes");
+      categories = c;
+      
+      /*TODO
       JPanel main = new JPanel(new BorderLayout());
       JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       topPanel.add(new JLabel("choose categories to export:"));
@@ -86,6 +90,7 @@ public class ExportDialog extends JDialog implements ActionListener {
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
+      */
 
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       setVisible(true);
@@ -101,7 +106,7 @@ public class ExportDialog extends JDialog implements ActionListener {
          for (int i=0; i<5; i++) {
             catChecked[i] = catBox[i].isSelected();
          }
-         NoteIO.exportNotesToTextFile(PinEmUp.getMainApp().getNotes(), catChecked);
+         NoteIO.exportCategoriesToTextFile(categories, catChecked); //TODO: neue liste erstellen und übergeben
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {

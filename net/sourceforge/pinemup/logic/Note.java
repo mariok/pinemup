@@ -4,19 +4,18 @@
  * Copyright (C) 2007 by Mario Koedding
  *
  *
- * pin 'em up is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * pin 'em up is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with pin 'em up; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -34,15 +33,15 @@ public class Note implements Serializable {
 
    private String text;
 
-   private boolean visible, alwaysOnTop;
+   private boolean hidden, alwaysOnTop;
 
    private transient NoteWindow window;
 
-   private Note next, prev;
-
    private short xpos, ypos, xsize, ysize, fontsize;
    
-   private byte category;
+   private transient CategoryList categories;
+   
+   private transient UserSettings settings;
    
    public void setAlwaysOnTop(boolean b) {
       alwaysOnTop = b;
@@ -63,139 +62,46 @@ public class Note implements Serializable {
       return fontsize;
    }
 
-   public void setCategory(byte catNr) {
-      category = catNr;
-      if (window != null) {
-         window.updateToolTip();
-         window.updateCatTitle();
-      }
-   }
-
-   public byte getCategory() {
-      return category;
-   }
-
    public Note() { // for failnote
-      next = null;
-      prev = null;
       window = null;
-      visible = false;
+      hidden = true;
       text = "";
    }
 
-   public Note(String text) {
+   public Note(String text, UserSettings s, CategoryList cl) {
       this.text = text;
-      next = null;
-      prev = null;
-      visible = true;
+      hidden = false;
       window = null;
-      xpos = PinEmUp.getUserSettings().getDefaultWindowXPostition();
-      ypos = PinEmUp.getUserSettings().getDefaultWindowYPostition();
-      xsize = PinEmUp.getUserSettings().getDefaultWindowWidth();
-      ysize = PinEmUp.getUserSettings().getDefaultWindowHeight();
-      fontsize = PinEmUp.getUserSettings().getDefaultFontSize();
-      category = PinEmUp.getUserSettings().getTempDef();
-      alwaysOnTop = PinEmUp.getUserSettings().getDefaultAlwaysOnTop();
+      settings = s;
+      xpos = settings.getDefaultWindowXPostition();
+      ypos = settings.getDefaultWindowYPostition();
+      xsize = settings.getDefaultWindowWidth();
+      ysize = settings.getDefaultWindowHeight();
+      fontsize = settings.getDefaultFontSize();
+      alwaysOnTop = settings.getDefaultAlwaysOnTop();
+      categories = cl;
    }
 
-   public void setVisible(boolean b) {
-      visible = b;
-   }
-
-   public void showVisibleNote() {
-      if (visible == true && window == null) {
-         window = new NoteWindow(this);
+   public void showIfNotHidden() {
+      if (hidden == false && window == null) {
+         window = new NoteWindow(this, categories, settings);
       }
    }
-
-   public void showNote() {
+   
+   public void unhideAndShow() {
       if (window == null) {
-         window = new NoteWindow(this);
-         visible = true;
+         window = new NoteWindow(this, categories, settings);
       }
+      hidden = false;
    }
-
-   public void showAll() {
-      Note n = this;
-      // back to the beginning
-      while (n.getPrev() != null) {
-         n = n.getPrev();
+   
+   public void hide() {
+      if (window != null) {
+         window.setVisible(false);
+         window.dispose();
+         window = null;
       }
-
-      while (n != null) {
-         n.showNote();
-         n = n.getNext();
-      }
-   }
-
-   public void showAllVisible() {
-      Note n = this;
-      // back to the beginning
-      while (n.getPrev() != null) {
-         n = n.getPrev();
-      }
-
-      while (n != null) {
-         n.showVisibleNote();
-         n = n.getNext();
-      }
-   }
-
-   public void setNext(Note n) {
-      next = n;
-   }
-
-   public void setPrev(Note n) {
-      prev = n;
-   }
-
-   public Note getNext() {
-      return next;
-   }
-
-   public Note getPrev() {
-      return prev;
-   }
-
-   public static Note add(Note head, String s) {
-      Note newNote = new Note(s);
-      if (head == null) { // first note added
-         head = newNote;
-      }
-      else {
-         Note temp = head;
-         while (temp.getNext() != null) {
-            temp = temp.getNext();
-         }
-         temp.setNext(newNote);
-         newNote.setPrev(temp);
-      }
-      return head;
-   }
-
-   public static Note remove(Note all, Note n) {
-      net.sourceforge.pinemup.logic.Note head = all;
-      if (head == n) { // first note
-         head.hide();
-         head = head.getNext();
-         if (head != null) {
-            head.setPrev(null);
-         }
-      } else {
-         // search note
-         while (all != n) {
-            if (all != null) {
-               all = all.getNext();
-            }
-         }
-         // remove note
-         all.hide();
-         all.getPrev().setNext(all.getNext());            
-         if (all.getNext() != null) {
-            all.getNext().setPrev(all.getPrev());
-         }
-      }
-      return head;
+      hidden = true;
    }
 
    public void setText(String t) {
@@ -204,14 +110,6 @@ public class Note implements Serializable {
    
    public String getText() {
       return text;
-   }
-
-   public void setWindow(NoteWindow w) {
-      window = w;
-   }
-   
-   public NoteWindow getWindow() {
-      return window;
    }
 
    public void setPosition(short x, short y) {
@@ -240,94 +138,29 @@ public class Note implements Serializable {
       return ysize;
    }
    
-   public void tempHide() {
+   public void jumpInto() {
       if (window != null) {
-         window.setVisible(false);
-         window.dispose();
-         window = null;   
+         window.jumpIntoTextArea();
       }
    }
    
-   
-   public void hide() {
-      if (window != null) {
-         window.setVisible(false);
-         window.dispose();
-         window = null;   
-      }
-      visible = false;
-   }
-   
-   public void tempHideAll() {
-      Note n = this;
-      // back to the beginning
-      while (n.getPrev() != null) {
-         n = n.getPrev();
-      }
-
-      while (n != null) {
-         n.tempHide();
-         n = n.getNext();
-      }
-   }
-
-   public void hideAll() {
-      Note n = this;
-      // back to the beginning
-      while (n.getPrev() != null) {
-         n = n.getPrev();
-      }
-
-      while (n != null) {
-         n.hide();
-         n = n.getNext();
-      }
-   }
-   
-   public void showOnlyCategory(byte nr) {
-      Note n = this;
-      // back to the beginning
-      while (n.getPrev() != null) {
-         n = n.getPrev();
-      }
-
-      while (n != null) {
-         if (n.getCategory() != nr) {
-            n.hide();            
-         } else {
-            n.showNote();
+   public void moveToCategory(Category newCat) {
+      if (newCat != null) {
+         //add to new category
+         newCat.getNotes().add(this);
+         Category myCategory = categories.getCategoryForNote(this);
+         if (myCategory != null) {
+            //remove from current Category
+            myCategory.getNotes().removeWithoutHiding(this);
          }
-         n = n.getNext();
+         //update Category Name in Window
+         updateCategoryNameInWindow();
       }
    }
    
-   public void showCategory(byte nr) {
-      Note n = this;
-      // back to the beginning
-      while (n.getPrev() != null) {
-         n = n.getPrev();
-      }
-
-      while (n != null) {
-         if (n.getCategory() == nr) {
-            n.showNote();            
-         }
-         n = n.getNext();
-      }
-   }
-   
-   public void hideCategory(byte nr) {
-      Note n = this;
-      // back to the beginning
-      while (n.getPrev() != null) {
-         n = n.getPrev();
-      }
-
-      while (n != null) {
-         if (n.getCategory() == nr) {
-            n.hide();            
-         }
-         n = n.getNext();
+   public void updateCategoryNameInWindow() {
+      if (!hidden && window != null) {
+         window.updateCategory();
       }
    }
 

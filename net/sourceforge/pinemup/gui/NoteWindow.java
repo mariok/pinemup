@@ -4,19 +4,18 @@
  * Copyright (C) 2007 by Mario Koedding
  *
  *
- * pin 'em up is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * pin 'em up is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with pin 'em up; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,6 +24,7 @@ package net.sourceforge.pinemup.gui;
 import javax.swing.*;
 
 import net.sourceforge.pinemup.logic.*;
+import net.sourceforge.pinemup.menus.*;
 
 import java.awt.event.*;
 import java.awt.*;
@@ -53,10 +53,16 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    
    private JLabel bgLabel;
    
+   private UserSettings settings;
+   
+   private CategoryList categories;
+   
 
-   public NoteWindow(Note pn) {
+   public NoteWindow(Note pn, CategoryList c, UserSettings s) {
       super(new JFrame());
       parentNote = pn;
+      categories = c;
+      settings = s;
       textPanel = new JScrollPane();
       textPanel.setOpaque(false);
       mainPanel = new JPanel(new BorderLayout());
@@ -66,25 +72,29 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       mainPanel.add(textPanel, BorderLayout.CENTER);
       mainPanel.add(topPanel, BorderLayout.NORTH);
       dragging = false;
+      catButton = null;
       
       //create category-label, if option is enabled
-      if (PinEmUp.getUserSettings().getShowCategory()) {
-         catButton = new JButton(PinEmUp.getUserSettings().getCategoryNames()[parentNote.getCategory()]);
-         //catButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
-         catButton.setRolloverEnabled(false);
-         catButton.setEnabled(false);
-         catButton.setFocusable(false);
-         catButton.setPreferredSize(new Dimension(100,15));
-         catButton.setMargin(new Insets(0, 0, 0, 0));
-         catButton.setBackground(new Color(255,255,255,0));
-         
-         catPanel = new JPanel(new FlowLayout());
-         catPanel.add(catButton);
-         catPanel.setOpaque(false);
-         catButton.addMouseListener(this);
-         catButton.addMouseMotionListener(this);
-         catButton.addFocusListener(this);
-         topPanel.add(catPanel, BorderLayout.CENTER);
+      if (settings.getShowCategory()) {
+         Category cat = categories.getCategoryForNote(parentNote);
+         if (cat != null) {
+            catButton = new JButton(cat.getName());
+            //catButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
+            catButton.setRolloverEnabled(false);
+            catButton.setEnabled(false);
+            catButton.setFocusable(false);
+            catButton.setPreferredSize(new Dimension(100,15));
+            catButton.setMargin(new Insets(0, 0, 0, 0));
+            catButton.setBackground(new Color(255,255,255,0));
+            
+            catPanel = new JPanel(new FlowLayout());
+            catPanel.add(catButton);
+            catPanel.setOpaque(false);
+            catButton.addMouseListener(this);
+            catButton.addMouseMotionListener(this);
+            catButton.addFocusListener(this);
+            topPanel.add(catPanel, BorderLayout.CENTER);
+         }
       }
 
       // create and adjust TextArea
@@ -105,7 +115,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       topPanel.addMouseMotionListener(this);
       topPanel.addFocusListener(this);
       
-      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getCloseIcon(PinEmUp.getUserSettings().getCloseIcon()));
+      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getCloseIcon(settings.getCloseIcon()));
       closeButton = new JButton(closeIcon);
       closeButton.setBackground(new Color(255,255,255,0));
       closeButton.setRolloverEnabled(false);
@@ -119,7 +129,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       closeButton.setPreferredSize(new java.awt.Dimension(20, 20));
       closeButton.setMargin(new Insets(4, 0, 0, 3));
       topPanel.add(closeButton, BorderLayout.EAST);
-      updateToolTip();
+      updateCategory();
       
       setUndecorated(true);
       setLocation(parentNote.getXPos(),parentNote.getYPos());
@@ -146,7 +156,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void focusGained(FocusEvent arg0) {
-      // do nothing
+      //do nothing
    }
 
    public void focusLost(FocusEvent arg0) {
@@ -155,7 +165,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       parentNote.setSize((short)getWidth(), (short)getHeight());
       
       // write notes to file after every change
-      NoteIO.writeNotesToFile(PinEmUp.getMainApp().getNotes(), PinEmUp.getUserSettings().getNotesFile());
+      NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
    }
 
    public void windowActivated(WindowEvent arg0) {
@@ -163,8 +173,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void windowClosed(WindowEvent arg0) {
-      parentNote.setWindow(null);
-      parentNote.setVisible(false);
+      parentNote.hide();
    }
 
    public void windowClosing(WindowEvent arg0) {
@@ -192,7 +201,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          parentNote.hide();
          
          // write notes to file after every change
-         NoteIO.writeNotesToFile(PinEmUp.getMainApp().getNotes(), PinEmUp.getUserSettings().getNotesFile());
+         NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
       }
 
    }
@@ -262,7 +271,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private void checkPopupMenu(MouseEvent event) {
       if (event.isPopupTrigger()) {
-         RightClickMenu popup = new RightClickMenu(this, new RightClickMenuLogic(this));
+         RightClickMenu popup = new RightClickMenu(this, categories, settings);
          popup.show(event.getComponent(), event.getX(), event.getY());
       }
    }
@@ -287,13 +296,15 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       }
    }
    
-   public void updateToolTip() {
-      topPanel.setToolTipText("Category: " + (parentNote.getCategory()+1) + " " + PinEmUp.getUserSettings().getCategoryNames()[parentNote.getCategory()]);
-   }
-   
-   public void updateCatTitle() {
-      catButton.setText(PinEmUp.getUserSettings().getCategoryNames()[parentNote.getCategory()]);
-      repaint();
+   public void updateCategory() {
+      Category cat = categories.getCategoryForNote(parentNote);
+      if (cat != null) {
+         topPanel.setToolTipText("Category: " + cat.getName());
+         if (catButton != null) {
+            catButton.setText(cat.getName());
+            repaint();
+         }
+      }
    }
 
    public void mouseMoved(MouseEvent e) {
@@ -315,5 +326,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    
    public void refreshView() {
       textArea.setFont(new java.awt.Font("SERIF", 1, parentNote.getFontSize()));
+   }
+   
+   public void jumpIntoTextArea() {
+      textArea.requestFocus();
    }
 }
