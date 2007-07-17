@@ -25,11 +25,11 @@ public class NoteList {
   private Note note;
   private NoteList next;
   
-  private Note getNote() {
+  public Note getNote() {
      return note;
   }
   
-  private NoteList getNext() {
+  public NoteList getNext() {
      return next;
   }
   

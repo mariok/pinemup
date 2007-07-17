@@ -53,7 +53,7 @@ public class FTPThread extends Thread {
          categories.showAllNotesNotHidden();
          
          //save to file
-         NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
+         NoteIO.writeCategoriesToFile(categories, settings);
       }
    }
 

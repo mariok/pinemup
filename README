@@ -45,12 +45,15 @@ Contents
     - changed default font to sans-serif
     - added new closeicon (can be chosen in settings-dialog)
     - category can be displayed in title-bar of each note
+    - variable number of categories (can be added / removed)
     - new package names
     - new website-URL: pinemup.sourceforge.net
     - redesign of settings dialog
     - height and width of a note cannot be less than 30 pixels anymore (makes sure a note can be resized at anytime)
     - automatically jump into the textarea of a note when it is added
     - traymenu is now a JPopupMenu instead of PopupMenu -> new look&feel
+    - notes are now stored in XML format (-> files incompatible to 0.2)
+    - categories are now stored in the notesfile and not in the settings anymore
     - some major internal code improvements
     
     

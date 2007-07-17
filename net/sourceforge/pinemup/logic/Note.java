@@ -67,6 +67,10 @@ public class Note implements Serializable {
       hidden = true;
       text = "";
    }
+   
+   public void setHidden(boolean b) {
+      hidden = b;
+   }
 
    public Note(String text, UserSettings s, CategoryList cl) {
       this.text = text;
@@ -162,6 +166,10 @@ public class Note implements Serializable {
       if (!hidden && window != null) {
          window.updateCategory();
       }
+   }
+   
+   public boolean isHidden() {
+      return hidden;
    }
 
 }

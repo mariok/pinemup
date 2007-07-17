@@ -204,7 +204,7 @@ public class UserSettings {
       defaultWindowYPosition = Short.parseShort(prefs.get("peu_defaultWindowYPosition", "0"));
       defaultFontSize = Short.parseShort(prefs.get("peu_defaultFontSize", "14"));
       defaultAlwaysOnTop = prefs.getBoolean("peu_defaultAlwaysOnTop", false);
-      notesFile = prefs.get("peu_notesFile", homeDir + "pinemup.dat");
+      notesFile = prefs.get("peu_notesFile", homeDir + "pinemup.xml");
       ftpServer = prefs.get("peu_ftpServer", "ftp.example.com");
       ftpUser = prefs.get("peu_ftpUser", "anonymous");
       ftpPasswd = prefs.get("peu_ftpPasswd", "").toCharArray();

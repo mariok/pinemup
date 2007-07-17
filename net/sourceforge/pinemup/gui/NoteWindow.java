@@ -165,7 +165,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       parentNote.setSize((short)getWidth(), (short)getHeight());
       
       // write notes to file after every change
-      NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
+      NoteIO.writeCategoriesToFile(categories, settings);
    }
 
    public void windowActivated(WindowEvent arg0) {
@@ -201,7 +201,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          parentNote.hide();
          
          // write notes to file after every change
-         NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
+         NoteIO.writeCategoriesToFile(categories, settings);
       }
 
    }

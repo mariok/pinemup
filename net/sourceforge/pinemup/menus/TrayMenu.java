@@ -131,7 +131,7 @@ public class TrayMenu extends BasicMenu implements FocusListener {
          }
          
          // save notes to file after every change
-         NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
+         NoteIO.writeCategoriesToFile(categories, settings);
       }
       return actionFound;
    }

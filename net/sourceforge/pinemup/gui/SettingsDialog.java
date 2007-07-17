@@ -629,12 +629,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       } else if (src == browseButton) {
          File f = null;
          PinEmUp.getFileDialog().setDialogTitle("select notes file");
-         PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("DAT"));
+         PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("XML"));
          if (PinEmUp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             f = PinEmUp.getFileDialog().getSelectedFile();
          }
          if (f != null) {
-            notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(),".dat"));
+            notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(),".xml"));
          }
       } else if (src == closeIcon1Button || src == closeIcon2Button) {
          applyButton.setEnabled(true);
@@ -712,7 +712,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       // load new notes from file
       categories.hideAllNotes();
       categories.removeAll();
-      CategoryList cl = NoteIO.readCategoriesFromFile(notesFile);
+      CategoryList cl = NoteIO.readCategoriesFromFile(settings);
       categories.attach(cl);
       
       // show all visible notes

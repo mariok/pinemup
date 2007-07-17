@@ -62,7 +62,7 @@ public class PinEmUp {
 
    public void exit() {
       //save notes to file
-      NoteIO.writeCategoriesToFile(categories, settings.getNotesFile());
+      NoteIO.writeCategoriesToFile(categories, settings);
       
       System.exit(0);
    }
@@ -84,7 +84,7 @@ public class PinEmUp {
          Image img = ResourceLoader.getTrayIcon();
 
          //load notes from file
-         categories = NoteIO.readCategoriesFromFile(settings.getNotesFile());
+         categories = NoteIO.readCategoriesFromFile(settings);
 
          // create trayicon
          icon = new TrayIcon(img, "pin 'em up", null);
