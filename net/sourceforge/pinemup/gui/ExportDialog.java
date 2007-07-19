@@ -44,33 +44,35 @@ public class ExportDialog extends JDialog implements ActionListener {
       super();
       setTitle("export notes");
       categories = c;
-      
-      /*TODO
+      JScrollPane sp = new JScrollPane();
+      sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+      sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
       JPanel main = new JPanel(new BorderLayout());
       JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       topPanel.add(new JLabel("choose categories to export:"));
       main.add(topPanel, BorderLayout.NORTH);
-      
+      main.add(sp, BorderLayout.CENTER);
+            
       // Category Checkboxes
-      final int ROWS = 5;
-      JPanel checkBoxPanel = new JPanel (new GridLayout(ROWS+1,1));
-      String[] cats = PinEmUp.getUserSettings().getCategoryNames();
-      JPanel[] catPanel = new JPanel[ROWS];
-      catBox = new JCheckBox[ROWS];
+      int rows = c.getNumberOfCategories();
+      JPanel checkBoxPanel = new JPanel (new GridLayout(rows+2,1));
+      String[] cats = c.getNames();
+      JPanel[] catPanel = new JPanel[rows];
+      catBox = new JCheckBox[rows];
       JPanel allCatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       allCatsBox = new JCheckBox("(all)");
       allCatsBox.setSelected(true);
       allCatsBox.addActionListener(this);
       allCatsPanel.add(allCatsBox);
       checkBoxPanel.add(allCatsPanel);
-      for (int i=0; i<ROWS; i++) {
+      for (int i=0; i<rows; i++) {
          catPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
          catBox[i] = new JCheckBox((i+1)+": "+cats[i]);
          catBox[i].setSelected(true);
          catPanel[i].add(catBox[i]);
          checkBoxPanel.add(catPanel[i]);
       }
-      main.add(checkBoxPanel, BorderLayout.CENTER);
+      sp.setViewportView(checkBoxPanel);
       
       JPanel buttonPanel = new JPanel();
       okButton = new JButton("OK");
@@ -82,7 +84,7 @@ public class ExportDialog extends JDialog implements ActionListener {
       main.add(buttonPanel, BorderLayout.SOUTH);
       
       setContentPane(main);
-      setSize(200,250);
+      setSize(250,300);
       
       // center on screen
       int screenHeight = (int)getToolkit().getScreenSize().getHeight();
@@ -90,7 +92,6 @@ public class ExportDialog extends JDialog implements ActionListener {
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
-      */
 
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       setVisible(true);
@@ -102,15 +103,20 @@ public class ExportDialog extends JDialog implements ActionListener {
          setVisible(false);
          dispose();
       } else if (src == okButton) {
-         boolean[] catChecked = new boolean[5];
-         for (int i=0; i<5; i++) {
-            catChecked[i] = catBox[i].isSelected();
+         CategoryList c = categories;
+         CategoryList catsToExport = new CategoryList();
+         for (int i=0; i<catBox.length; i++) {
+            if(catBox[i].isSelected()) {
+               catsToExport.add(c.getCategory());
+            }
+            c = c.getNext();
          }
-         NoteIO.exportCategoriesToTextFile(categories, catChecked); //TODO: neue liste erstellen und übergeben
+         
+         NoteIO.exportCategoriesToTextFile(catsToExport);
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {
-        for (int i=0; i<5; i++) {
+        for (int i=0; i<catBox.length; i++) {
            catBox[i].setSelected(allCatsBox.isSelected());
         }
       }

@@ -114,7 +114,7 @@ public class NoteIO {
                      if (parser.getAttributeLocalName(i).equals("name")) {
                         name = parser.getAttributeValue(i);
                      } else if (parser.getAttributeLocalName(i).equals("default")) {
-                        def = (parser.getAttributeValue(i) == "true") && defaultNotAdded;
+                        def = (parser.getAttributeValue(i).equals("true")) && defaultNotAdded;
                         if (def) {
                            defaultNotAdded = false;
                         }
@@ -182,58 +182,67 @@ public class NoteIO {
       return c;
    }
 
-   public static CategoryList getCategoriesFromFTP(String filename) {
-      CategoryList c = new CategoryList();
-      //TODO: load from FTP
-      /*try {
-         UserSettings us = PinEmUp.getUserSettings();
+   public static void getCategoriesFromFTP(UserSettings us) {
+      boolean downloaded = true;
+      try {
+         File f = new File(us.getNotesFile());
+         FileOutputStream fos = new FileOutputStream(f);
+         String filename = f.getName();
          String ftpString = "ftp://" + us.getFtpUser() + ":"
                + us.getFtpPasswdString() + "@" + us.getFtpServer()
                + us.getFtpDir() + filename + ";type=i";
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
-         InputStream is = urlc.getInputStream(); // to download
-         ObjectInputStream ois = new ObjectInputStream(is);
-         n = (Note) ois.readObject();
-         ois.close();
+         InputStream is = urlc.getInputStream();
+         int nextByte = is.read();
+         while(nextByte != -1) {
+            fos.write(nextByte);
+            nextByte = is.read();
+         }
+         fos.close();
       } catch (Exception e) {
-         n = PinEmUp.getMainApp().getFailNote();
+         downloaded = false;
          JOptionPane.showMessageDialog(null, "Could not download file from FTP server!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
-      }*/
-      return c;
+      }
+      if (downloaded) {
+         JOptionPane.showMessageDialog(null, "Notes successfully downloaded from FTP server!", "pin 'em up - information", JOptionPane.INFORMATION_MESSAGE);
+      }
    }
 
-   public static void writeCategoriesToFTP(CategoryList c, String filename) {
+   public static void writeCategoriesToFTP(UserSettings us) {
       boolean uploaded = true;
-      //TODO: upload
-      /*try {
-         UserSettings us = PinEmUp.getUserSettings();
+      try {
+         String completeFilename = us.getNotesFile();
+         File f = new File(completeFilename);
+         String filename = f.getName();
+         FileInputStream fis = new FileInputStream(f);
          String ftpString = "ftp://" + us.getFtpUser() + ":"
-               + us.getFtpPasswdString() + "@" + us.getFtpServer()
-               + us.getFtpDir() + filename + ";type=i";
+         + us.getFtpPasswdString() + "@" + us.getFtpServer()
+         + us.getFtpDir() + filename + ";type=i";
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
-         OutputStream os = urlc.getOutputStream(); // To upload
-         ObjectOutputStream oos = new ObjectOutputStream(os);
-         oos.writeObject(n);
-         oos.close();
+         OutputStream  os = urlc.getOutputStream();
+         
+         int nextByte = fis.read();
+         while (nextByte != -1) {
+            os.write(nextByte);
+            nextByte = fis.read();
+         }
+         os.close();
       } catch (Exception e) {
          uploaded = false;
          JOptionPane.showMessageDialog(null, "Error! Notes could not be uploaded to FTP server!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
       }
       if (uploaded) {
          JOptionPane.showMessageDialog(null, "Notes successfully uploaded to FTP server!", "pin 'em up - information", JOptionPane.INFORMATION_MESSAGE);
-      }*/
+      }
    }
    
-   public static void exportCategoriesToTextFile(CategoryList c, boolean[] catExport) {
-      //TODO: rewrite function
-      /*
+   public static void exportCategoriesToTextFile(CategoryList c) {
       File f = null;
       PinEmUp.getFileDialog().setDialogTitle("Export notes to text-file");
       PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("TXT"));
       if (PinEmUp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         //f = PinEmUp.getFileDialog().getSelectedFile();
          String name = NoteIO.checkAndAddExtension(PinEmUp.getFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
          f = new File(name);
       }
@@ -241,25 +250,23 @@ public class NoteIO {
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
             // write text of notes to file
-            Note head = n;
-            for (int i=0; i<5; i++) {
-               n = head;
-               if (catExport[i]) {
-                  ostream.println("Category: "+PinEmUp.getUserSettings().getCategoryNames()[i]);
-                  ostream.println();
-                  while (n != null) {
-                     if (n.getCategory() == i) {
-                        ostream.println(n.getText());
-                        ostream.println();
-                        ostream.println("---------------------");
-                        ostream.println();
-                     }
-                     n = n.getNext();
+            while (c != null) {
+               ostream.println("Category: " + c.getCategory().getName());
+               ostream.println();
+               NoteList n = c.getCategory().getNotes();
+               while (n != null) {
+                  if (n.getNote() != null) {
+                     ostream.println(n.getNote().getText());
+                     ostream.println();
+                     ostream.println("---------------------");
+                     ostream.println();
                   }
-                  ostream.println();
-                  ostream.println("################################################################");
-                  ostream.println();
+                  n = n.getNext();
                }
+               ostream.println();
+               ostream.println("################################################################");
+               ostream.println();
+               c = c.getNext();
             }
             ostream.flush();
             ostream.close();
@@ -269,7 +276,6 @@ public class NoteIO {
             e.printStackTrace();
          }
       }
-      */
    }
    
    public static String checkAndAddExtension(String s, String xt) {

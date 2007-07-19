@@ -54,6 +54,7 @@ Contents
     - traymenu is now a JPopupMenu instead of PopupMenu -> new look&feel
     - notes are now stored in XML format (-> files incompatible to 0.2)
     - categories are now stored in the notesfile and not in the settings anymore
+    - file on FTP server now has the same name as the local file
     - some major internal code improvements
     
     
@@ -91,7 +92,7 @@ Contents
   ICQ: 77590604
 
   Project-Homepage:
-  http://pin-em-up.sourceforge.net
+  http://pinemup.sourceforge.net
 
 
 

@@ -116,9 +116,16 @@ public class TrayMenu extends BasicMenu implements FocusListener {
          } else if (src == closeItem) {
             PinEmUp.getMainApp().exit();
          } else if (src == ftpUploadItem) {
-            new FTPThread(true,categories,settings);
+            if (JOptionPane.showConfirmDialog(this, "Notesfile on server will be replaced, if it already exists! Proceed?","Upload Notesfile",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+               //save notes to file
+               NoteIO.writeCategoriesToFile(categories, settings);
+               //copy file to ftp
+               new FTPThread(true,categories,settings);
+            }
          } else if (src == ftpDownloadItem) {
-            new FTPThread(false,categories, settings);
+            if (JOptionPane.showConfirmDialog(this, "Your current notesfile will be replaced by the version on the FTP server! Proceed?","Download Notesfile",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+               new FTPThread(false,categories, settings);
+            }
          } else if (src == exportItem) {
             new ExportDialog(categories);
          } else if (src == addCategoryItem) {

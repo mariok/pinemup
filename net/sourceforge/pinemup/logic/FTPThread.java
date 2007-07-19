@@ -36,11 +36,12 @@ public class FTPThread extends Thread {
    
    public void run() {
       if (upload) { // upload notes
-         NoteIO.writeCategoriesToFTP(categories, settings.getNotesFile());
+         NoteIO.writeCategoriesToFTP(settings);
       } else { // download notes
          // download Notes
-         //TODO: Dateiname übergeben
-         CategoryList newCats = NoteIO.getCategoriesFromFTP(settings.getNotesFile());
+         NoteIO.getCategoriesFromFTP(settings);
+         //load new file
+         CategoryList newCats = NoteIO.readCategoriesFromFile(settings);
          // If successfull downloaded, replace:
          // hide notes
          categories.hideAllNotes();
