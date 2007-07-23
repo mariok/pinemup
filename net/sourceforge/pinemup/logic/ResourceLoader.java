@@ -80,7 +80,7 @@ public class ResourceLoader {
       String s = "";
       try {
          String pkg = "net.sourceforge.pinemup.resources";
-         String filename = "COPYING";
+         String filename = "gplv3";
          String name = "/" + pkg.replace('.', '/') + "/" + filename;
          File f = new File(PinEmUp.getMainApp().getClass().getResource(name).getFile());
          BufferedReader br = new BufferedReader(new FileReader(f));
