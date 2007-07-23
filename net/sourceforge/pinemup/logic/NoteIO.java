@@ -130,16 +130,16 @@ public class NoteIO {
                         boolean h = parser.getAttributeValue(i).equals("true");
                         currentNote.setHidden(h);
                      } else if (parser.getAttributeLocalName(i).equals("xposition")) {
-                        Short x = Short.parseShort(parser.getAttributeValue(i));
+                        short x = Short.parseShort(parser.getAttributeValue(i));
                         currentNote.setPosition(x, currentNote.getYPos());
                      } else if (parser.getAttributeLocalName(i).equals("yposition")) {
-                        Short y = Short.parseShort(parser.getAttributeValue(i));
+                        short y = Short.parseShort(parser.getAttributeValue(i));
                         currentNote.setPosition(currentNote.getXPos(), y);
                      } else if (parser.getAttributeLocalName(i).equals("width")) {
-                        Short w = Short.parseShort(parser.getAttributeValue(i));
+                        short w = Short.parseShort(parser.getAttributeValue(i));
                         currentNote.setSize(w, currentNote.getYSize());
                      } else if (parser.getAttributeLocalName(i).equals("height")) {
-                        Short h = Short.parseShort(parser.getAttributeValue(i));
+                        short h = Short.parseShort(parser.getAttributeValue(i));
                         currentNote.setSize(currentNote.getXSize(), h);
                      } else if (parser.getAttributeLocalName(i).equals("alwaysontop")) {
                         boolean a = parser.getAttributeValue(i).equals("true");
