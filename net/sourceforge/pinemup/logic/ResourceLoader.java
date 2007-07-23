@@ -80,9 +80,10 @@ public class ResourceLoader {
       String s = "";
       try {
          String pkg = "net.sourceforge.pinemup.resources";
-         String filename = "gplv3";
+         String filename = "gplv3.txt";
          String name = "/" + pkg.replace('.', '/') + "/" + filename;
          File f = new File(PinEmUp.getMainApp().getClass().getResource(name).getFile());
+         System.out.println(f);
          BufferedReader br = new BufferedReader(new FileReader(f));
          String nextLine = br.readLine();
          while (nextLine != null) {
