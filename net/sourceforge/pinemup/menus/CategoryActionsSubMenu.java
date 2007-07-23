@@ -93,7 +93,7 @@ public class CategoryActionsSubMenu extends JMenu implements ActionListener {
             confirmed = false;
             JOptionPane.showMessageDialog(this, "The last remaining category cannot be removed!","pin 'em up - error",JOptionPane.WARNING_MESSAGE);
          } else if (myCategory.getNotes().getNumberOfNotes() > 0) {
-            confirmed = JOptionPane.showConfirmDialog(this, "all " + myCategory.getNotes().getNumberOfNotes() + " notes in this category will be deleted! Proceed?","Remove Category",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            confirmed = JOptionPane.showConfirmDialog(this, "All " + myCategory.getNotes().getNumberOfNotes() + " notes in this category will be deleted! Proceed?","Remove category",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
          
          if (confirmed) {

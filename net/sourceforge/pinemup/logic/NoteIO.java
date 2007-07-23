@@ -39,6 +39,7 @@ public class NoteIO {
          writer.writeStartDocument();
          writer.writeStartElement("notesfile");
          writer.writeAttribute("version","0.1");
+         writer.writeAttribute("encoding","UTF-8");
          
          CategoryList cl = c;
          while (cl != null) {
@@ -89,7 +90,7 @@ public class NoteIO {
          InputStream in = new FileInputStream(s.getNotesFile());
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
          XMLStreamReader parser = myFactory.createXMLStreamReader(in);
-         
+        
          int event;
          while(parser.hasNext()) {
             event = parser.next();

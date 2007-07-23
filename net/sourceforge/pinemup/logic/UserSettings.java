@@ -46,6 +46,15 @@ public class UserSettings {
    private byte tempDef = 0;
    private byte closeicon;
    private boolean showCategory;
+   private boolean confirmDeletion;
+   
+   public void setConfirmDeletion(boolean b) {
+      confirmDeletion = b;
+   }
+   
+   public boolean getConfirmDeletion() {
+      return confirmDeletion;
+   }
    
    public void setShowCategory(boolean sc) {
       showCategory = sc;
@@ -188,6 +197,7 @@ public class UserSettings {
       prefs.put("peu_ftpDir", ftpDir);
       prefs.putInt("peu_closeicon", closeicon);
       prefs.putBoolean("peu_showCategory", showCategory);
+      prefs.putBoolean("peu_confirmDeletion", confirmDeletion);
    }
 
    public UserSettings() {
@@ -211,5 +221,6 @@ public class UserSettings {
       ftpDir = prefs.get("peu_ftpDir", "/");
       closeicon = Byte.parseByte(prefs.get("peu_closeicon", "1"));
       showCategory = prefs.getBoolean("peu_showCategory", false);
+      confirmDeletion = prefs.getBoolean("peu_confirmDeletion", true);
    }
 }

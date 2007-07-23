@@ -107,7 +107,11 @@ public class RightClickMenu extends BasicMenu {
          Object src = e.getSource();
          if (src == deleteNoteItem) {
             actionFound = true;
-            if (myCat != null) {
+            boolean confirmed = true;
+            if (settings.getConfirmDeletion()) {
+               confirmed = JOptionPane.showConfirmDialog(this, "Are you sure to irrevocably delete this note?","Remove note",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            }
+            if (confirmed && myCat != null) {
                myCat.getNotes().remove(parentWindow.getParentNote());
             }
          } else if (src == alwaysOnTopOnItem) {

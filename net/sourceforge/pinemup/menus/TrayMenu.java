@@ -102,15 +102,7 @@ public class TrayMenu extends BasicMenu implements FocusListener {
       if (!actionFound) {
          Object src = e.getSource();
          if (src == aboutItem) {
-            String msg = "";
-            msg += "pin 'em up\n";
-            msg += "version " + PinEmUp.getVersion() + "\n\n";
-            msg += "(C) 2007 Mario Koedding\n";
-            msg += "mario.koedding@web.de\n\n";
-            msg += "This program is licensed under the terms of the GNU GPL V3 or any later version.\n";
-            msg += "Read \"COPYING\" file for details.\n\n";
-            msg += "visit http://pinemup.sourceforge.net";
-            JOptionPane.showMessageDialog(null, msg, "about pin 'em up", JOptionPane.INFORMATION_MESSAGE);
+            new AboutDialog();
          } else if (src == showSettingsDialogItem) {
             new SettingsDialog(settings,categories);
          } else if (src == closeItem) {

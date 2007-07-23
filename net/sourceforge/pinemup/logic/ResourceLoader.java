@@ -75,4 +75,25 @@ public class ResourceLoader {
    public static Image getTrayIcon() {
       return trayIcon;
    }
+   
+   public static String getLicense() {
+      String s = "";
+      try {
+         String pkg = "net.sourceforge.pinemup.resources";
+         String filename = "COPYING";
+         String name = "/" + pkg.replace('.', '/') + "/" + filename;
+         File f = new File(PinEmUp.getMainApp().getClass().getResource(name).getFile());
+         BufferedReader br = new BufferedReader(new FileReader(f));
+         String nextLine = br.readLine();
+         while (nextLine != null) {
+            s += nextLine + "\r\n";
+            nextLine = br.readLine();
+         }
+         br.close();
+      } catch (IOException e) {
+         // do nothing
+      }
+
+      return s;
+   }
 }

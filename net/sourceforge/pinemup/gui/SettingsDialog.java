@@ -33,7 +33,7 @@ import javax.swing.event.*;
 
 import net.sourceforge.pinemup.logic.*;
 
-public class SettingsDialog extends JFrame implements ActionListener, DocumentListener {
+public class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
    /**
     * 
     */
@@ -45,7 +45,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private JPasswordField ftpPasswdField;
 
-   private JCheckBox alwaysOnTopBox, showCatBox;
+   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox;
 
    private JSpinner defaultFontSizeSpinner;
    
@@ -77,11 +77,23 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       gbl.setConstraints(titleBarPanel, gbc);
       lookAndFeelPanel.add(titleBarPanel);
+
+      //Add Panel for behavior
+      JPanel behaviorPanel = makeBehaviorPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(behaviorPanel, gbc);
+      lookAndFeelPanel.add(behaviorPanel);
       
       //Add empty panel to tab
       JPanel emptyPanel = new JPanel();
       gbc.gridx = 0;
-      gbc.gridy = 1;
+      gbc.gridy = 2;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.weightx = 100;
@@ -258,6 +270,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JLabel closeIcon1Label = new JLabel(closeIcon1);
       JLabel closeIcon2Label = new JLabel(closeIcon2);
       showCatBox = new JCheckBox("");
+      showCatBox.addActionListener(this);
       
       //Set settings for all fields
       gbc.weightx = 0;
@@ -289,6 +302,54 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       titleBarPanel.add(showCatBox);
       
       return titleBarPanel;
+   }
+
+   private JPanel makeBehaviorPanel() {
+      // PANEL FOR SIZE AND POSITIONS
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.WEST;
+      JPanel behaviorPanel = new JPanel(gbl);
+      behaviorPanel.setBorder(new TitledBorder("Behavior"));
+      //Add all Labels
+      JLabel confirmDeleteLabel = new JLabel("Confirm deletion of a note: ");
+      JLabel emptyLabel = new JLabel(" ");
+      //Set settings for all Labels
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;      
+      //Add Labels with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(confirmDeleteLabel, gbc);
+      behaviorPanel.add(confirmDeleteLabel);
+      gbc.weightx = 100;
+      gbc.gridx = 2;
+      gbc.gridy = 0;
+      gbl.setConstraints(emptyLabel, gbc);
+      behaviorPanel.add(emptyLabel);
+      
+      //Add fields
+      confirmDeleteBox = new JCheckBox("");
+      confirmDeleteBox.addActionListener(this);
+      
+      //Set settings for all fields
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;
+      //Add fields with their positions
+      gbc.weightx = 100;
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(confirmDeleteBox, gbc);
+      behaviorPanel.add(confirmDeleteBox);
+      
+      return behaviorPanel;
    }
    
    private JPanel makeSizePosPanel() {
@@ -389,6 +450,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       
       //Add fields      
       defaultFontSizeSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
+      defaultFontSizeSpinner.addChangeListener(this);
 
       //Set settings for all fields
       gbc.weightx = 100;
@@ -431,6 +493,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       
       //Add fields
       alwaysOnTopBox = new JCheckBox("");
+      alwaysOnTopBox.addActionListener(this);
 
       //Set settings for all fields
       gbc.weightx = 100;
@@ -636,7 +699,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          if (f != null) {
             notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(),".xml"));
          }
-      } else if (src == closeIcon1Button || src == closeIcon2Button) {
+      } else if (src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox) {
          applyButton.setEnabled(true);
       }
    }
@@ -659,6 +722,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          }
          alwaysOnTopBox.setSelected(settings.getDefaultAlwaysOnTop());
          showCatBox.setSelected(settings.getShowCategory());
+         confirmDeleteBox.setSelected(settings.getConfirmDeletion());
                
          // load/save panel
          notesFileField.setText(settings.getNotesFile());
@@ -682,6 +746,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       short defaultFontSize = ((Integer)((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
       boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
       boolean showCat = showCatBox.isSelected();
+      boolean confirmDel = confirmDeleteBox.isSelected();
       byte ci = 1;
       if (closeIcon1Button.isSelected()) {
          ci = 1;
@@ -703,6 +768,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       settings.setDefaultAlwaysOnTop(defaultAlwaysOnTop);
       settings.setCloseIcon(ci);
       settings.setShowCategory(showCat);
+      settings.setConfirmDeletion(confirmDel);
       settings.setNotesFile(notesFile);
       settings.setFtpServer(ftpServer);
       settings.setFtpUser(ftpUser);
@@ -732,5 +798,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    public void removeUpdate(DocumentEvent arg0) {
       applyButton.setEnabled(true);  
+   }
+
+   public void stateChanged(ChangeEvent arg0) {
+      applyButton.setEnabled(true);
+      
    }
 }

@@ -148,6 +148,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       addWindowListener(this);
+      textArea.setFocusable(false);
       
       bgLabel = new BackgroundLabel(this);
      
@@ -163,6 +164,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       parentNote.setText(textArea.getText());
       parentNote.setPosition((short)getX(), (short)getY());
       parentNote.setSize((short)getWidth(), (short)getHeight());
+      textArea.setFocusable(false);
       
       // write notes to file after every change
       NoteIO.writeCategoriesToFile(categories, settings);
@@ -207,8 +209,14 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void mouseClicked(MouseEvent e) {
-      if ((e.getSource() == topPanel || e.getSource() == catButton) && e.getClickCount() == 2) { // doubleclick on topPanel
-         autoSizeY();
+      if (e.getSource() == topPanel || e.getSource() == catButton) {
+         if (e.getClickCount() == 2) { // doubleclick on topPanel
+            autoSizeY();
+         }
+         textArea.setFocusable(false);
+      } else if (e.getSource() == textArea) {
+         textArea.setFocusable(true);
+         textArea.requestFocus();
       }
    }
    
@@ -238,7 +246,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void mousePressed(MouseEvent e) {
-      checkPopupMenu(e);
+      if (e.getSource() == topPanel || e.getSource() == catButton) {
+         checkPopupMenu(e);
+      }
       if ((e.getSource() == topPanel || e.getSource() == catButton) && e.getButton() == MouseEvent.BUTTON1) {
          // Position on Panel
          dx = e.getXOnScreen() - getX();
@@ -257,7 +267,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void mouseReleased(MouseEvent e) {
-      checkPopupMenu(e);
+      if (e.getSource() == topPanel || e.getSource() == catButton) {
+         checkPopupMenu(e);
+      }
 
       if (dragging && e.getButton() == MouseEvent.BUTTON1) {
          dragging = false;
@@ -329,6 +341,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
    
    public void jumpIntoTextArea() {
+      textArea.setFocusable(true);
       textArea.requestFocus();
    }
 }

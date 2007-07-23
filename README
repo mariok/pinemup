@@ -55,6 +55,8 @@ Contents
     - notes are now stored in XML format (-> files incompatible to 0.2)
     - categories are now stored in the notesfile and not in the settings anymore
     - file on FTP server now has the same name as the local file
+    - focus not in note on program start
+    - deletion of a note must now be confirmed by default (can be turned off)
     - some major internal code improvements
     
     

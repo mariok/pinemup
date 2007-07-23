@@ -105,12 +105,15 @@ public class PinEmUp {
 
          //show all visible notes
          categories.showAllNotesNotHidden();
-         
+                  
          // create File-Dialog
          fileDialog = new JFileChooser();
          fileDialog.removeChoosableFileFilter(fileDialog.getChoosableFileFilters()[0]);
          fileDialog.setFileFilter(new MyFileFilter("TXT"));
          fileDialog.setMultiSelectionEnabled(false);
+         
+         //set focus to icon
+         
       } else {
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          System.exit(1);
