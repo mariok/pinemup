@@ -3,5 +3,6 @@
 <!ELEMENT category (note)*>
 <!ATTLIST category name CDATA #REQUIRED default CDATA #REQUIRED>
 <!ELEMENT note (text)+>
-<!ELEMENT text (#PCDATA)> 
+<!ELEMENT text (newline*, #PCDATA)> 
 <!ATTLIST text size CDATA #REQUIRED>
+<!ELEMENT newline>

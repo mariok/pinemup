@@ -34,12 +34,11 @@ public class NoteIO {
       //write notes to xml file
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
-         XMLStreamWriter writer = myFactory.createXMLStreamWriter(new FileOutputStream(s.getNotesFile()));
+         XMLStreamWriter writer = myFactory.createXMLStreamWriter(new FileOutputStream(s.getNotesFile()),"UTF-8");
          
-         writer.writeStartDocument();
+         writer.writeStartDocument("UTF-8","1.0");
          writer.writeStartElement("notesfile");
          writer.writeAttribute("version","0.1");
-         writer.writeAttribute("encoding","UTF-8");
          
          CategoryList cl = c;
          while (cl != null) {
@@ -60,9 +59,14 @@ public class NoteIO {
                      writer.writeAttribute("height", String.valueOf(nl.getNote().getYSize()));
                      writer.writeStartElement("text");
                      writer.writeAttribute("size", String.valueOf(nl.getNote().getFontSize()));
-                     writer.writeCharacters(nl.getNote().getText());
+                     String noteText = nl.getNote().getText(); 
+                     String[] textParts = noteText.split("\n");
+                     for (int i = 0; i<textParts.length; i++) {
+                        writer.writeCharacters(textParts[i]);
+                        writer.writeEmptyElement("newline");
+                     }
                      writer.writeEndElement();
-                     writer.writeEndElement();                     
+                     writer.writeEndElement();
                   }
                   nl = nl.getNext();
                }
@@ -89,7 +93,7 @@ public class NoteIO {
       try {
          InputStream in = new FileInputStream(s.getNotesFile());
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         XMLStreamReader parser = myFactory.createXMLStreamReader(in);
+         XMLStreamReader parser = myFactory.createXMLStreamReader(in,"UTF-8");
         
          int event;
          while(parser.hasNext()) {
@@ -156,12 +160,15 @@ public class NoteIO {
                         currentNote.setFontSize(fontSize);
                      }
                   }
+               } else if (ename.equals("newline")) {
+                  currentNote.setText(currentNote.getText()+"\n");
                }
                break;
             case XMLStreamConstants.CHARACTERS:
                if(!parser.isWhiteSpace()) {
                   if (currentNote != null) {
-                     currentNote.setText(parser.getText());
+                     String str = parser.getText();
+                     currentNote.setText(currentNote.getText() + str);
                   }
                }
                break;
