@@ -93,8 +93,6 @@ public class NoteIO {
       try {
          InputStream in = new FileInputStream(s.getNotesFile());
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         myFactory.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.TRUE);
-         myFactory.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.TRUE);
          XMLStreamReader parser = myFactory.createXMLStreamReader(in,"UTF-8");
         
          int event;
