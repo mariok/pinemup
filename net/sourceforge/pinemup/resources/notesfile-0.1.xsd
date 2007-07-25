@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <xsd:complexType name="notesfileType">
+      <xsd:sequence>
+         <xsd:element name="category" type="categoryType" />
+      </xsd:sequence>
+      <xsd:attribute name="version" type="xsd:float" />
+   </xsd:complexType>
+   <xsd:complexType name="categoryType">
+      <xsd:sequence>
+         <xsd:element name="note" type="noteType" />
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" />
+      <xsd:attribute name="default" type="xsd:boolean" />
+   </xsd:complexType>
+   <xsd:complexType name="noteType">
+      <xsd:sequence>
+         <xsd:element name="text" type="textType" />
+      </xsd:sequence>
+      <xsd:attribute name="hidden" type="xsd:boolean" />
+      <xsd:attribute name="alwaysontop" type="xsd:boolean" />
+      <xsd:attribute name="xposition" type="xsd:positiveInteger" />
+      <xsd:attribute name="yposition" type="xsd:positiveInteger" />
+      <xsd:attribute name="width" type="xsd:positiveInteger" />
+      <xsd:attribute name="height" type="xsd:positiveInteger" />
+   </xsd:complexType>
+   <xsd:complexType name="textType">
+      <xsd:sequence>
+         <xsd:element name="newline" type="newlineType" />
+      </xsd:sequence>
+      <xsd:attribute name="size" type="xsd:positiveInteger" />
+   </xsd:complexType>
+   <xsd:simpleType name="newlineType" />
+</xsd:schema>
