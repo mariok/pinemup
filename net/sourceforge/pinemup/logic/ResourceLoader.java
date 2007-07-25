@@ -80,11 +80,10 @@ public class ResourceLoader {
       String s = "";
       try {
          String pkg = "net.sourceforge.pinemup.resources";
-         String filename = "gplv3.txt";
+         String filename = "COPYING";
          String name = "/" + pkg.replace('.', '/') + "/" + filename;
-         File f = new File(PinEmUp.getMainApp().getClass().getResource(name).getFile());
-         System.out.println(f);
-         BufferedReader br = new BufferedReader(new FileReader(f));
+         InputStream is = PinEmUp.getMainApp().getClass().getResourceAsStream(name);
+         BufferedReader br = new BufferedReader(new InputStreamReader(is));         
          String nextLine = br.readLine();
          while (nextLine != null) {
             s += nextLine + "\r\n";
@@ -92,7 +91,7 @@ public class ResourceLoader {
          }
          br.close();
       } catch (IOException e) {
-         // do nothing
+         e.printStackTrace();
       }
 
       return s;
