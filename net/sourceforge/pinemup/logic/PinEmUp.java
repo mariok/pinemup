@@ -36,7 +36,7 @@ public class PinEmUp {
    
    private UserSettings settings;
 
-   private TrayMenu menu;
+   private TrayIcon icon;
    
    private CategoryList categories;
 
@@ -44,8 +44,8 @@ public class PinEmUp {
       return fileDialog;
    }
    
-   public TrayMenu getTrayMenu() {
-      return menu;
+   public TrayIcon getTrayIcon() {
+      return icon;
    }
 
    public static void setPinEmUp(PinEmUp m) {
@@ -68,8 +68,6 @@ public class PinEmUp {
    }
 
    public PinEmUp() {
-      TrayIcon icon = null;
-
       if (SystemTray.isSupported()) {
          // for FTP issues
          failNote = new Note();
