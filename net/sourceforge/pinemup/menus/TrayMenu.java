@@ -21,6 +21,7 @@
 
 package net.sourceforge.pinemup.menus;
 
+import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -28,23 +29,38 @@ import javax.swing.*;
 import net.sourceforge.pinemup.gui.*;
 import net.sourceforge.pinemup.logic.*;
 
-public class TrayMenu extends BasicMenu implements FocusListener {
+public class TrayMenu extends PopupMenu {
 
    /**
     * 
     */
    private static final long serialVersionUID = 1L;
 
-   private JMenuItem addCategoryItem, exportItem, aboutItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
+   private MenuItem addCategoryItem, exportItem, aboutItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
+   
+   private UserSettings settings;
+   
+   private CategoryList categories;
 
    public TrayMenu(CategoryList c, UserSettings s) {
       // title and notes actions
-      super(c,s);
+      categories = c;
+      settings = s;
+      
+      //create MenuCreator
+      MenuCreator myMenuCreator = new MenuCreator(categories,settings);
+      
+      //add basic items
+      MenuItem[] basicItems = myMenuCreator.getBasicMenuItems();
+      for (int i=0; i<basicItems.length;i++) {
+         add(basicItems[i]);
+      }
+      addSeparator();
       
       // categories menus
-      JMenu categoriesMenu = new JMenu("category actions");
+      Menu categoriesMenu = new Menu("category actions");
       add(categoriesMenu);
-      CategoryActionsSubMenu[] catMenu = new CategoryActionsSubMenu[categories.getNumberOfCategories()];
+      Menu[] catMenu = new Menu[categories.getNumberOfCategories()];
       
       //Category menu items
       CategoryList tempCL = categories;
@@ -54,7 +70,7 @@ public class TrayMenu extends BasicMenu implements FocusListener {
             myCat = tempCL.getCategory();
             tempCL = tempCL.getNext();
          }
-         catMenu[i] = new CategoryActionsSubMenu((i+1) + " " + categories.getNames()[i],myCat,categories);
+         catMenu[i] = myMenuCreator.getCategoryActionsMenu((i+1) + " " + categories.getNames()[i]);
          categoriesMenu.add(catMenu[i]);
       }
       

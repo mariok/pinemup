@@ -22,13 +22,14 @@
 package net.sourceforge.pinemup.menus;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 import net.sourceforge.pinemup.gui.NoteWindow;
 import net.sourceforge.pinemup.logic.*;
 
-public class RightClickMenu extends BasicMenu {
+public class RightClickMenu extends JPopupMenu implements ActionListener {
 
    /**
     * 
@@ -43,11 +44,28 @@ public class RightClickMenu extends BasicMenu {
    
    private JMenuItem[] setFontSizeItem, setCategoryItem;
    
+   private CategoryList categories;
+   
+   private UserSettings settings;
+   
    public RightClickMenu(NoteWindow w, CategoryList c, UserSettings s) {
-      super(c,s);
+      super();
+      categories = c;
+      settings = s;      
       parentWindow = w;
       myCat = categories.getCategoryForNote(parentWindow.getParentNote());
 
+      //create MenuCreator
+      MenuCreator myMenuCreator = new MenuCreator(categories,settings);      
+      
+      //add basic items
+      JMenuItem[] basicItems = myMenuCreator.getBasicJMenuItems();
+      for (int i=0; i<basicItems.length;i++) {
+         add(basicItems[i]);
+      }
+      addSeparator();
+      
+      //add additional items
       deleteNoteItem = new JMenuItem("delete this note");
       deleteNoteItem.addActionListener(this);
       add(deleteNoteItem);
@@ -97,53 +115,42 @@ public class RightClickMenu extends BasicMenu {
       addSeparator();
       
       // category menu
-      CategoryActionsSubMenu categoryMenu = new CategoryActionsSubMenu("category actions",myCat,categories);
-      add(categoryMenu);
+      add(myMenuCreator.getCategoryActionsJMenu("category actions"));
    }
-   
-   public boolean checkActionEvent(ActionEvent e) {
-      boolean actionFound = super.checkActionEvent(e);
-      if (!actionFound) {
-         Object src = e.getSource();
-         if (src == deleteNoteItem) {
-            actionFound = true;
-            boolean confirmed = true;
-            if (settings.getConfirmDeletion()) {
-               confirmed = JOptionPane.showConfirmDialog(this, "Are you sure to irrevocably delete this note?","Remove note",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+
+   public void actionPerformed(ActionEvent e) {
+      Object src = e.getSource();
+      if (src == deleteNoteItem) {
+         boolean confirmed = true;
+         if (settings.getConfirmDeletion()) {
+            confirmed = JOptionPane.showConfirmDialog(this, "Are you sure to irrevocably delete this note?","Remove note",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+         }
+         if (confirmed && myCat != null) {
+            myCat.getNotes().remove(parentWindow.getParentNote());
+         }
+      } else if (src == alwaysOnTopOnItem) {
+         parentWindow.getParentNote().setAlwaysOnTop(true);
+      } else if (src == alwaysOnTopOffItem) {
+         parentWindow.getParentNote().setAlwaysOnTop(false);
+      } else {
+         CategoryList tempCat = categories;
+         for (int i=0; i<setCategoryItem.length; i++) {
+            if (src == setCategoryItem[i]) {
+               parentWindow.getParentNote().moveToCategory(tempCat.getCategory());
             }
-            if (confirmed && myCat != null) {
-               myCat.getNotes().remove(parentWindow.getParentNote());
-            }
-         } else if (src == alwaysOnTopOnItem) {
-            actionFound = true;
-            parentWindow.getParentNote().setAlwaysOnTop(true);
-         } else if (src == alwaysOnTopOffItem) {
-            actionFound = true;
-            parentWindow.getParentNote().setAlwaysOnTop(false);
-         } else {
-            CategoryList tempCat = categories;
-            for (int i=0; i<setCategoryItem.length; i++) {
-               if (src == setCategoryItem[i]) {
-                  actionFound = true;
-                  parentWindow.getParentNote().moveToCategory(tempCat.getCategory());
-               }
-               tempCat = tempCat.getNext();
-            }
-            if (!actionFound) {
-               for (int i=0; i<setFontSizeItem.length; i++) {
-                  if (src == setFontSizeItem[i]) {
-                     actionFound = true;
-                     parentWindow.getParentNote().setFontSize((short)(i+5));
-                     parentWindow.refreshView();
-                  }
-               }
+            tempCat = tempCat.getNext();
+         }
+         for (int i=0; i<setFontSizeItem.length; i++) {
+            if (src == setFontSizeItem[i]) {
+               parentWindow.getParentNote().setFontSize((short)(i+5));
+               parentWindow.refreshView();
             }
          }
-         
+      }
+      
          // save notes to file after every change
          NoteIO.writeCategoriesToFile(categories, settings);
-      }
-      return actionFound;
+      
    }
 
 }

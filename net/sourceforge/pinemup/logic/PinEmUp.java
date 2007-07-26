@@ -87,7 +87,7 @@ public class PinEmUp {
          categories = NoteIO.readCategoriesFromFile(settings);
 
          // create trayicon
-         icon = new TrayIcon(img, "pin 'em up", null);
+         icon = new TrayIcon(img, "pin 'em up", new TrayMenu(categories,settings));
          icon.setImageAutoSize(true);
          
          IconClickLogic myIconListener = new IconClickLogic(categories,settings);
