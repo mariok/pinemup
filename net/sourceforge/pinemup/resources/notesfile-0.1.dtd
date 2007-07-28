@@ -1,8 +1,0 @@
-<!ELEMENT notesfile (category)+>
-<!ATTLIST notesfile version CDATA #REQUIRED>
-<!ELEMENT category (note)*>
-<!ATTLIST category name CDATA #REQUIRED default CDATA #REQUIRED>
-<!ELEMENT note (text)+>
-<!ELEMENT text (newline*, #PCDATA)> 
-<!ATTLIST text size CDATA #REQUIRED>
-<!ELEMENT newline>
