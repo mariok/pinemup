@@ -69,6 +69,7 @@ public class PinEmUp {
 
    public PinEmUp() {
       if (SystemTray.isSupported()) {
+         
          // for FTP issues
          failNote = new Note();
          
@@ -83,7 +84,7 @@ public class PinEmUp {
 
          //load notes from file
          categories = NoteIO.readCategoriesFromFile(settings);
-
+         
          // create trayicon
          icon = new TrayIcon(img, "pin 'em up", new TrayMenu(categories,settings));
          icon.setImageAutoSize(true);
@@ -109,9 +110,6 @@ public class PinEmUp {
          fileDialog.removeChoosableFileFilter(fileDialog.getChoosableFileFilters()[0]);
          fileDialog.setFileFilter(new MyFileFilter("TXT"));
          fileDialog.setMultiSelectionEnabled(false);
-         
-         //set focus to icon
-         
       } else {
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          System.exit(1);

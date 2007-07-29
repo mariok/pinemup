@@ -22,6 +22,7 @@
 package net.sourceforge.pinemup.logic;
 
 import java.io.*;
+import java.net.URL;
 import java.awt.*;
 
 public class ResourceLoader {
@@ -95,5 +96,13 @@ public class ResourceLoader {
       }
 
       return s;
+   }
+   
+   public static URL getSchemaFile() {
+      String pkg = "net.sourceforge.pinemup.resources";
+      String filename = "notesfile-0.1.xsd";
+      String name = "/" + pkg.replace('.', '/') + "/" + filename;
+      URL u = PinEmUp.getMainApp().getClass().getResource(name);
+      return u;
    }
 }

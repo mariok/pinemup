@@ -28,6 +28,10 @@ import javax.swing.*;
 
 import javax.swing.JOptionPane;
 import javax.xml.stream.*;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.*;
+import org.xml.sax.SAXException;
 
 public class NoteIO {
    public static void writeCategoriesToFile(CategoryList c, UserSettings s) {
@@ -90,6 +94,17 @@ public class NoteIO {
       Category currentCategory = null;
       Note currentNote = null;
       boolean defaultNotAdded = true;
+      if (!fileIsValid(s.getNotesFile())) {
+         String homeDir = System.getProperty("user.home");
+         if (homeDir.charAt(homeDir.length()-1) != '\\' && homeDir.charAt(homeDir.length()-1) != '/') {
+            homeDir = homeDir + "/";
+         }
+         JOptionPane.showMessageDialog(null, "Error! Notesfile is not valid! Creating new file: " + homeDir + "pinemup-failsave.xml", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
+         
+         s.setNotesFile(homeDir + "pinemup-failsave.xml");
+         c.add(new Category("Home",new NoteList(),true));
+         c.add(new Category("Office",new NoteList(),false));         
+      }
       try {
          InputStream in = new FileInputStream(s.getNotesFile());
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
@@ -293,6 +308,39 @@ public class NoteIO {
          s = s + xt.toLowerCase();
       }
       return s;
+   }
+   
+   public static boolean fileIsValid(String filename) {
+      try {
+      // 1. Lookup a factory for the W3C XML Schema language
+      SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+      
+      // 2. Compile the schema. 
+      // Here the schema is loaded from a java.io.File, but you could use 
+      // a java.net.URL or a javax.xml.transform.Source instead.
+      //File schemaLocation = ResourceLoader.getSchemaFile();
+      URL schemaLocation = ResourceLoader.getSchemaFile();
+      Schema schema;
+      schema = factory.newSchema(schemaLocation);
+ 
+      // 3. Get a validator from the schema.
+      Validator validator = schema.newValidator();
+      
+      // 4. Parse the document you want to check.
+      Source source = new StreamSource(new FileInputStream(filename));
+      
+      // 5. Check the document
+      validator.validate(source);
+      
+      return true;
+      } catch (IOException e) {
+         //e.printStackTrace();
+         return false;
+      } catch (SAXException e) {
+         //System.out.println(filename + " is not valid!");
+         //System.out.println(e.getMessage());
+         return false;
+      }
    }
 
 }
