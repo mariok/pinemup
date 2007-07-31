@@ -92,6 +92,7 @@ public class CategoryList {
       if (category == null) { //list is empty
          if (cl != null) {
             category = cl.getCategory();
+            next = cl.getNext();
          }
       } else if (next == null) {
          next = cl;

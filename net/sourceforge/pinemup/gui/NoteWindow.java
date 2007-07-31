@@ -79,7 +79,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          Category cat = categories.getCategoryForNote(parentNote);
          if (cat != null) {
             catButton = new JButton(cat.getName());
-            //catButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
             catButton.setRolloverEnabled(false);
             catButton.setEnabled(false);
             catButton.setFocusable(false);
@@ -104,7 +103,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       textArea.setWrapStyleWord(true);
       textArea.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, 1, parentNote.getFontSize()));
       textArea.addFocusListener(this);
-      textArea.setMargin(new Insets(0, 3, 3, 3));
+      textArea.setMargin(new Insets(0, 10, 3, 10));
       textPanel.setViewportView(textArea);
       textPanel.getViewport().setOpaque(false);      
       textPanel.setBorder(null);
@@ -283,6 +282,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          repaint();
       }
       parentNote.setSize((short)getWidth(), (short)getHeight());
+      parentNote.setPosition((short)getX(), (short)getY());
    }
 
    private void checkPopupMenu(MouseEvent event) {

@@ -32,6 +32,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 
 import net.sourceforge.pinemup.logic.*;
+import net.sourceforge.pinemup.menus.TrayMenu;
 
 public class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
    /**
@@ -738,6 +739,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    }
 
    private void saveSettings() {
+      //save old notesfile
+      NoteIO.writeCategoriesToFile(categories, settings);
+      
       // load settings from fields
       short defaultWidth = Short.parseShort(defaultWidthField.getText());
       short defaultHeight = Short.parseShort(defaultHeightField.getText());
@@ -784,6 +788,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       // show all visible notes
       categories.showAllNotesNotHidden();
       
+      // replace Traymenu (because of new categories)
+      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
+      
       // save settings permanentely
       settings.saveSettings();
    }
@@ -802,6 +809,5 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    public void stateChanged(ChangeEvent arg0) {
       applyButton.setEnabled(true);
-      
    }
 }
