@@ -31,6 +31,7 @@ import javax.xml.stream.*;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.*;
+
 import org.xml.sax.SAXException;
 
 public class NoteIO {
@@ -67,7 +68,14 @@ public class NoteIO {
                      String[] textParts = noteText.split("\n");
                      for (int i = 0; i<textParts.length; i++) {
                         writer.writeCharacters(textParts[i]);
+                        if (i < textParts.length-1) {
+                           writer.writeEmptyElement("newline");
+                        }
+                     }
+                     //newlines at the end
+                     while (noteText.endsWith("\n")) {
                         writer.writeEmptyElement("newline");
+                        noteText = noteText.substring(0, noteText.length()-1);
                      }
                      writer.writeEndElement();
                      writer.writeEndElement();
@@ -94,17 +102,25 @@ public class NoteIO {
       Category currentCategory = null;
       Note currentNote = null;
       boolean defaultNotAdded = true;
-      if (!fileIsValid(s.getNotesFile())) {
-         String homeDir = System.getProperty("user.home");
-         if (homeDir.charAt(homeDir.length()-1) != '\\' && homeDir.charAt(homeDir.length()-1) != '/') {
-            homeDir = homeDir + "/";
+      File nfile = new File(s.getNotesFile());
+      while (nfile.exists() && !fileIsValid(s.getNotesFile())) {
+         if (JOptionPane.showConfirmDialog(null, "Notefile is not valid. Do you want to select a new one? (Click NO to exit)","Invalid notesfile",JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+            System.exit(0);
          }
-         JOptionPane.showMessageDialog(null, "Error! Notesfile is not valid! Creating new file: " + homeDir + "pinemup-failsave.xml", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          
-         s.setNotesFile(homeDir + "pinemup-failsave.xml");
-         c.add(new Category("Home",new NoteList(),true));
-         c.add(new Category("Office",new NoteList(),false));         
+         File f = null;
+         PinEmUp.getFileDialog().setDialogTitle("select notes file");
+         PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("XML"));
+         if (PinEmUp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            f = PinEmUp.getFileDialog().getSelectedFile();
+         }
+         if (f != null) {
+            s.setNotesFile((NoteIO.checkAndAddExtension(f.getAbsolutePath(),".xml")));
+         }
+         nfile = new File(s.getNotesFile());
       }
+      s.saveSettings();
+      
       try {
          InputStream in = new FileInputStream(s.getNotesFile());
          XMLInputFactory myFactory = XMLInputFactory.newInstance();

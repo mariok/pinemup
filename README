@@ -48,13 +48,14 @@ Contents
     - added new closeicon (can be chosen in settings-dialog)
     - category can be displayed in title-bar of each note
     - variable number of categories (can be added / removed)
+    - categories are now stored in the notesfile and not in the settings anymore
     - new package names
     - new website-URL: pinemup.sourceforge.net
+    - licensed under GPLv3 (or later) now
     - redesign of settings dialog
     - height and width of a note cannot be less than 30 pixels anymore (makes sure a note can be resized at anytime)
     - automatically jump into the textarea of a note when it is added
     - notes are now stored in XML format (-> files incompatible to 0.2)
-    - categories are now stored in the notesfile and not in the settings anymore
     - file on FTP server now has the same name as the local file
     - focus not in note on program start
     - deletion of a note must now be confirmed by default (can be turned off)

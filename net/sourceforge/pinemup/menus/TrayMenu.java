@@ -47,11 +47,8 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       categories = c;
       settings = s;
       
-      //create MenuCreator
-      MenuCreator myMenuCreator = new MenuCreator(categories,settings);
-      
       //add basic items
-      MenuItem[] basicItems = myMenuCreator.getBasicMenuItems();
+      MenuItem[] basicItems = (new MenuCreator(categories,settings)).getBasicMenuItems();
       for (int i=0; i<basicItems.length;i++) {
          add(basicItems[i]);
       }
@@ -70,7 +67,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
             myCat = tempCL.getCategory();
             tempCL = tempCL.getNext();
          }
-         catMenu[i] = myMenuCreator.getCategoryActionsMenu((i+1) + " " + categories.getNames()[i],myCat);
+         catMenu[i] = (new MenuCreator(categories,settings)).getCategoryActionsMenu((i+1) + " " + categories.getNames()[i],myCat);
          categoriesMenu.add(catMenu[i]);
       }
       
@@ -136,10 +133,11 @@ public class TrayMenu extends PopupMenu implements ActionListener {
          new ExportDialog(categories);
       } else if (src == addCategoryItem) {
          if (categories.getNumberOfCategories()<1000) {
-            String cname = JOptionPane.showInputDialog(this, "Category name:");
+            String cname = JOptionPane.showInputDialog(null, "Category name:");
             if (cname != null) {
                categories.add(new Category(cname,new NoteList(),false));
-            }               
+               PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
+            }
          }
       }
       

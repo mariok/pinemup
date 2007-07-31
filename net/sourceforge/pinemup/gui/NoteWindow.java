@@ -212,6 +212,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       if (e.getSource() == topPanel || e.getSource() == catButton) {
          if (e.getClickCount() == 2) { // doubleclick on topPanel
             autoSizeY();
+            // write notes to file after every change
+            NoteIO.writeCategoriesToFile(categories, settings);
          }
          textArea.setFocusable(false);
       } else if (e.getSource() == textArea) {
@@ -232,6 +234,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             int sizeX = getWidth();
             int sizeY = textArea.getHeight();
             setSize(sizeX,sizeY+25);
+            parentNote.setSize((short)sizeX, (short)(sizeY+25));
          }
       }).start();
    }
@@ -279,6 +282,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          // restore button backgorund if not pressed
          repaint();
       }
+      parentNote.setSize((short)getWidth(), (short)getHeight());
    }
 
    private void checkPopupMenu(MouseEvent event) {

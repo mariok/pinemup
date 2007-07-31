@@ -81,6 +81,12 @@ public class PinEmUp {
          SystemTray tray = SystemTray.getSystemTray();
 
          Image img = ResourceLoader.getTrayIcon();
+         
+         // create File-Dialog
+         fileDialog = new JFileChooser();
+         fileDialog.removeChoosableFileFilter(fileDialog.getChoosableFileFilters()[0]);
+         fileDialog.setFileFilter(new MyFileFilter("TXT"));
+         fileDialog.setMultiSelectionEnabled(false);
 
          //load notes from file
          categories = NoteIO.readCategoriesFromFile(settings);
@@ -104,12 +110,6 @@ public class PinEmUp {
 
          //show all visible notes
          categories.showAllNotesNotHidden();
-                  
-         // create File-Dialog
-         fileDialog = new JFileChooser();
-         fileDialog.removeChoosableFileFilter(fileDialog.getChoosableFileFilters()[0]);
-         fileDialog.setFileFilter(new MyFileFilter("TXT"));
-         fileDialog.setMultiSelectionEnabled(false);
       } else {
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          System.exit(1);
