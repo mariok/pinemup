@@ -16,7 +16,7 @@ Contents
 1. About
 ------------------------
   pin 'em up enables you to place small notes on your desktop
-  and assign them to five user-defined categories. Due
+  and assign them to different user-defined categories. Due
   platform-independence, those notes are available on different
   systems using either a shared partition or the integrated 
   FTP-functions.
@@ -25,9 +25,10 @@ Contents
     - OS-independence
     - Integrates into system-tray
     - free placeable notes
-    - five user-defined categories
+    - user-defined categories
     - fast switch between categories (e.g. "home" and "office")
     - automatically save notes to file
+    - open file format (xml)
     - FTP-upload- and download functions
     - Export notes to a text-file
 
@@ -105,4 +106,5 @@ Contents
   Special Thanks go to:
   - Jan Laczay for his contributions to the project website
   - Andreas Kwiatkowski for redisigning the closeicon
+  - Natalie Noering and Michael Mrose for testing the new version
   

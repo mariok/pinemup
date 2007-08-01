@@ -60,7 +60,8 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       String msg = "";
       msg += "<html>";
       msg += "<p><strong>Mario Koedding</strong><br />";
-      msg += "<a href=\"mailto:mario.koedding@web.de\">mario.koedding@web.de</a></p>";
+      msg += "<a href=\"mailto:mario.koedding@web.de\">mario.koedding@web.de</a><br />";
+      msg += "developer &amp; founder of the project</p>";
       msg += "</html>";
       JEditorPane p = new JEditorPane("text/html",msg);
       p.addHyperlinkListener(this);

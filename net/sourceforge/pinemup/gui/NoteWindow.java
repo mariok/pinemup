@@ -64,10 +64,13 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       categories = c;
       settings = s;
       textPanel = new JScrollPane();
+      textPanel.setBorder(null);
       textPanel.setOpaque(false);
       mainPanel = new JPanel(new BorderLayout());
       mainPanel.setOpaque(false);
       topPanel = new JPanel(new BorderLayout());
+      topPanel.setPreferredSize(new Dimension(settings.getDefaultWindowWidth(),26));
+      topPanel.setBorder(null);
       topPanel.setOpaque(false);
       mainPanel.add(textPanel, BorderLayout.CENTER);
       mainPanel.add(topPanel, BorderLayout.NORTH);
@@ -125,8 +128,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       closeButton.setFocusable(false);
       closeButton.setBorderPainted(false);
       closeButton.setHorizontalAlignment(SwingConstants.CENTER);
-      closeButton.setPreferredSize(new java.awt.Dimension(20, 20));
-      closeButton.setMargin(new Insets(4, 0, 0, 3));
+      closeButton.setPreferredSize(new Dimension(20, 20));
+      closeButton.setMargin(new Insets(3, 0, 0, 3));
       topPanel.add(closeButton, BorderLayout.EAST);
       updateCategory();
       
@@ -213,8 +216,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             autoSizeY();
             // write notes to file after every change
             NoteIO.writeCategoriesToFile(categories, settings);
+         } else {
+            textArea.setFocusable(false);
          }
-         textArea.setFocusable(false);
       } else if (e.getSource() == textArea) {
          textArea.setFocusable(true);
          textArea.requestFocus();
@@ -222,20 +226,13 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
    
    private void autoSizeY() {
-      setSize(getWidth(),30);
-      new Thread(new Runnable() {
-         public void run() {
-            try {
-               Thread.sleep(5); // must wait for new settings (size) to be applied
-            } catch (Exception e) {
-               // do nothing
-            }
-            int sizeX = getWidth();
-            int sizeY = textArea.getHeight();
-            setSize(sizeX,sizeY+25);
-            parentNote.setSize((short)sizeX, (short)(sizeY+25));
-         }
-      }).start();
+      int sizeX = getWidth();
+      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+      pack();
+      int sizeY = textArea.getHeight()+26;
+      setSize(sizeX,sizeY);
+      parentNote.setSize((short)sizeX,(short)sizeY);
+      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
    }
 
    public void mouseEntered(MouseEvent e) {
@@ -345,7 +342,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
    
    public void jumpIntoTextArea() {
+      toFront();
+      requestFocus();
       textArea.setFocusable(true);
-      textArea.requestFocus();
+      textArea.requestFocusInWindow();
    }
 }

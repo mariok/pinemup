@@ -150,9 +150,11 @@ public class Note implements Serializable {
    
    public void moveToCategory(Category newCat) {
       if (newCat != null) {
+         //get old category
+         Category myCategory = categories.getCategoryForNote(this);
          //add to new category
          newCat.getNotes().add(this);
-         Category myCategory = categories.getCategoryForNote(this);
+         //remove from old category
          if (myCategory != null) {
             //remove from current Category
             myCategory.getNotes().removeWithoutHiding(this);
@@ -170,6 +172,10 @@ public class Note implements Serializable {
    
    public boolean isHidden() {
       return hidden;
+   }
+   
+   public void setWindow(NoteWindow w) {
+      window = w;
    }
 
 }

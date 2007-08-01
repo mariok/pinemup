@@ -43,7 +43,6 @@ public class TrayMenu extends PopupMenu implements ActionListener {
    private CategoryList categories;
 
    public TrayMenu(CategoryList c, UserSettings s) {
-      // title and notes actions
       categories = c;
       settings = s;
       
