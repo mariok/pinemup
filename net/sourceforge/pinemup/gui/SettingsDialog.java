@@ -783,6 +783,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       categories.hideAllNotes();
       categories.removeAll();
       CategoryList cl = NoteIO.readCategoriesFromFile(settings);
+      notesFileField.setText(settings.getNotesFile()); //if file has not been valid and new one has been selected
       categories.attach(cl);
       
       // show all visible notes
