@@ -692,8 +692,6 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          dispose();
       } else if (src == browseButton) {
          File f = null;
-         PinEmUp.getFileDialog().setDialogTitle("select notes file");
-         PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("XML"));
          if (PinEmUp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             f = PinEmUp.getFileDialog().getSelectedFile();
          }

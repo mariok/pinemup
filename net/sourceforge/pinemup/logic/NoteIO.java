@@ -109,8 +109,6 @@ public class NoteIO {
          }
          
          File f = null;
-         PinEmUp.getFileDialog().setDialogTitle("select notes file");
-         PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("XML"));
          if (PinEmUp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             f = PinEmUp.getFileDialog().getSelectedFile();
          }
@@ -279,10 +277,8 @@ public class NoteIO {
    
    public static void exportCategoriesToTextFile(CategoryList c) {
       File f = null;
-      PinEmUp.getFileDialog().setDialogTitle("Export notes to text-file");
-      PinEmUp.getFileDialog().setFileFilter(new MyFileFilter("TXT"));
-      if (PinEmUp.getFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         String name = NoteIO.checkAndAddExtension(PinEmUp.getFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
+      if (PinEmUp.getExportFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+         String name = NoteIO.checkAndAddExtension(PinEmUp.getExportFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
          f = new File(name);
       }
       if (f != null) {

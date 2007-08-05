@@ -69,6 +69,7 @@ public class ExportDialog extends JDialog implements ActionListener {
          catPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
          catBox[i] = new JCheckBox((i+1)+": "+cats[i]);
          catBox[i].setSelected(true);
+         catBox[i].addActionListener(this);
          catPanel[i].add(catBox[i]);
          checkBoxPanel.add(catPanel[i]);
       }
@@ -119,6 +120,12 @@ public class ExportDialog extends JDialog implements ActionListener {
         for (int i=0; i<catBox.length; i++) {
            catBox[i].setSelected(allCatsBox.isSelected());
         }
+      } else {
+         for (int i=0; i<catBox.length; i++) {
+            if (src == catBox[i] && allCatsBox.isSelected() && !catBox[i].isSelected()) {
+               allCatsBox.setSelected(false);
+            }
+         }
       }
    }
    
