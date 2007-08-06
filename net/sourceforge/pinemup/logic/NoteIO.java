@@ -39,7 +39,8 @@ public class NoteIO {
       //write notes to xml file
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
-         XMLStreamWriter writer = myFactory.createXMLStreamWriter(new FileOutputStream(s.getNotesFile()),"UTF-8");
+         FileOutputStream f = new FileOutputStream(s.getNotesFile());
+         XMLStreamWriter writer = myFactory.createXMLStreamWriter(f,"UTF-8");
          
          writer.writeStartDocument("UTF-8","1.0");
          writer.writeStartElement("notesfile");
@@ -90,10 +91,13 @@ public class NoteIO {
          writer.writeEndElement();
          writer.writeEndDocument();
          writer.close();
+         f.close();
       } catch (XMLStreamException e) {
          JOptionPane.showMessageDialog(null, "Could save notes to file! Please check file-settings and free disk-space!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
       } catch (FileNotFoundException e) {
          JOptionPane.showMessageDialog(null, "Could save notes to file! Please check file-settings and free disk-space!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
+      } catch (IOException e) {
+         System.out.println("IO Error");
       }
    }
 
@@ -208,6 +212,8 @@ public class NoteIO {
                break;
             }
          }
+         parser.close();
+         in.close();
       } catch (FileNotFoundException e) {
          //neu erstellen
          c.add(new Category("Home",new NoteList(),true));
@@ -215,6 +221,8 @@ public class NoteIO {
       } catch (XMLStreamException e) {
          //Meldung ausgeben
          System.out.println("XML Error");
+      } catch (IOException e) {
+         System.out.println("IO Error");
       }
       return c;
    }
