@@ -738,8 +738,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          ftpUserField.setText(settings.getFtpUser());
          storeFTPPassBox.setSelected(settings.getStoreFTPPass());
          if (settings.getStoreFTPPass() && settings.getFtpPasswd() != null) {
-            ftpPasswdField.setText(String.copyValueOf(settings.getFtpPasswd()));
+               ftpPasswdField.setText(String.copyValueOf(settings.getFtpPasswd()));
          }
+         ftpPasswdField.setEnabled(settings.getStoreFTPPass());
          ftpDirField.setText(settings.getFtpDir());
       }
    }
