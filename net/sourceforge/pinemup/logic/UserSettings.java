@@ -22,6 +22,7 @@
 package net.sourceforge.pinemup.logic;
 
 import java.util.prefs.Preferences;
+import javax.swing.*;
 
 public class UserSettings {
    /**
@@ -47,6 +48,7 @@ public class UserSettings {
    private byte closeicon;
    private boolean showCategory;
    private boolean confirmDeletion;
+   private boolean storeFTPPass;
    
    public void setConfirmDeletion(boolean b) {
       confirmDeletion = b;
@@ -164,9 +166,17 @@ public class UserSettings {
 
    public String getFtpPasswdString() {
       String tempString = "";
-      for (int i = 0; i < ftpPasswd.length; i++) {
-         tempString += ftpPasswd[i];
+      if (storeFTPPass) {
+         for (int i = 0; i < ftpPasswd.length; i++) {
+            tempString += ftpPasswd[i];
+         }         
+      } else {
+         
+         JPasswordField p = new JPasswordField(12);
+         JOptionPane.showMessageDialog(null,p,"Enter FTP-Password",JOptionPane.PLAIN_MESSAGE);
+         tempString = String.copyValueOf(p.getPassword());
       }
+
       return tempString;
    }
 
@@ -181,6 +191,14 @@ public class UserSettings {
    public void setFtpDir(String d) {
       ftpDir = d;
    }
+   
+   public void setStoreFTPPass(boolean b) {
+      storeFTPPass = b;
+   }
+   
+   public boolean getStoreFTPPass() {
+      return storeFTPPass;
+   }
 
    public void saveSettings() {
       // save preferences
@@ -193,11 +211,16 @@ public class UserSettings {
       prefs.put("peu_notesFile", notesFile);
       prefs.put("peu_ftpServer", ftpServer);
       prefs.put("peu_ftpUser", ftpUser);
-      prefs.put("peu_ftpPasswd", getFtpPasswdString());
+      if (storeFTPPass) {
+         prefs.put("peu_ftpPasswd", getFtpPasswdString());         
+      } else {
+         prefs.put("peu_ftpPasswd", "");
+      }
       prefs.put("peu_ftpDir", ftpDir);
       prefs.putInt("peu_closeicon", closeicon);
       prefs.putBoolean("peu_showCategory", showCategory);
       prefs.putBoolean("peu_confirmDeletion", confirmDeletion);
+      prefs.putBoolean("peu_storeFTPPass", storeFTPPass);
    }
 
    public UserSettings() {
@@ -222,5 +245,6 @@ public class UserSettings {
       closeicon = Byte.parseByte(prefs.get("peu_closeicon", "1"));
       showCategory = prefs.getBoolean("peu_showCategory", false);
       confirmDeletion = prefs.getBoolean("peu_confirmDeletion", true);
+      storeFTPPass = prefs.getBoolean("peu_storeFTPPass", false);
    }
 }

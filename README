@@ -58,6 +58,7 @@ Contents
     - automatically jump into the textarea of a note when it is added
     - notes are now stored in XML format (-> files incompatible to 0.2)
     - file on FTP server now has the same name as the local file
+    - user can now decide, if the ftp-password shall be stored on disk or not
     - focus not in note on program start
     - deletion of a note must now be confirmed by default (can be turned off)
     - some major internal code improvements

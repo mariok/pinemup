@@ -46,7 +46,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private JPasswordField ftpPasswdField;
 
-   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox;
+   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeFTPPassBox;
 
    private JSpinner defaultFontSizeSpinner;
    
@@ -579,7 +579,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbl.setConstraints(ftpPasswdLabel, gbc);
       ftpPanel.add(ftpPasswdLabel);
       gbc.gridx = 0;
-      gbc.gridy = 3;
+      gbc.gridy = 4;
       gbl.setConstraints(ftpDirLabel, gbc);
       ftpPanel.add(ftpDirLabel);
 
@@ -591,6 +591,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       ftpUserField.getDocument().addDocumentListener(this);
       ftpPasswdField = new JPasswordField(20);
       ftpPasswdField.getDocument().addDocumentListener(this);
+      storeFTPPassBox = new JCheckBox("Store FTP-Password on disk");
+      storeFTPPassBox.addActionListener(this);
       ftpDirField = new JTextField(20);
       ftpDirField.getDocument().addDocumentListener(this);
       
@@ -615,6 +617,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       ftpPanel.add(ftpPasswdField);
       gbc.gridx = 1;
       gbc.gridy = 3;
+      gbl.setConstraints(storeFTPPassBox, gbc);
+      ftpPanel.add(storeFTPPassBox);
+      gbc.gridx = 1;
+      gbc.gridy = 4;
       gbl.setConstraints(ftpDirField, gbc);
       ftpPanel.add(ftpDirField);
 
@@ -700,6 +706,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          }
       } else if (src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox) {
          applyButton.setEnabled(true);
+      } else if (src == storeFTPPassBox) {
+         applyButton.setEnabled(true);
+         ftpPasswdField.setEnabled(storeFTPPassBox.isSelected());
       }
    }
 
@@ -727,10 +736,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          notesFileField.setText(settings.getNotesFile());
          ftpServerField.setText(settings.getFtpServer());
          ftpUserField.setText(settings.getFtpUser());
-         if (settings.getFtpPasswd() != null) {
+         storeFTPPassBox.setSelected(settings.getStoreFTPPass());
+         if (settings.getStoreFTPPass() && settings.getFtpPasswd() != null) {
             ftpPasswdField.setText(String.copyValueOf(settings.getFtpPasswd()));
-         } else {
-            ftpPasswdField.setText("");
          }
          ftpDirField.setText(settings.getFtpDir());
       }
@@ -759,6 +767,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       String ftpServer = ftpServerField.getText();
       String ftpUser = ftpUserField.getText();
       char[] ftpPasswd = ftpPasswdField.getPassword();
+      boolean storeFTPPass = storeFTPPassBox.isSelected();
       String ftpDir = ftpDirField.getText();
       
       // write settings into object
@@ -774,7 +783,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       settings.setNotesFile(notesFile);
       settings.setFtpServer(ftpServer);
       settings.setFtpUser(ftpUser);
-      settings.setFtpPasswd(ftpPasswd);
+      settings.setStoreFTPPass(storeFTPPass);
+      if (storeFTPPass) {
+         settings.setFtpPasswd(ftpPasswd);
+      } else {
+         settings.setFtpPasswd(null);
+      }
       settings.setFtpDir(ftpDir);
       
       // load new notes from file
