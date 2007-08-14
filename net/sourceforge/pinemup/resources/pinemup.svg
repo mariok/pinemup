@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="702.80914"
+   height="503.21396"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45"
+   version="1.0"
+   sodipodi:docname="icon.svg"
+   sodipodi:docbase="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+   inkscape:export-xdpi="6.1384196"
+   inkscape:export-ydpi="6.1384196"
+   sodipodi:modified="TRUE">
+  <defs
+     id="defs4">
+    <filter
+       inkscape:collect="always"
+       id="filter4153">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="81.084917"
+         id="feGaussianBlur4155" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.71890394"
+     inkscape:cx="372.04724"
+     inkscape:cy="373.97126"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="744.09448px"
+     height="525.41px"
+     inkscape:window-width="1392"
+     inkscape:window-height="980"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     showborder="true" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-24.081535,-7.2793736)">
+    <rect
+       style="opacity:1;fill:#c8c4b7;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4153)"
+       id="rect3152"
+       width="5602.9243"
+       height="3419.2888"
+       x="-2512.4524"
+       y="56.33197"
+       transform="matrix(0.1104659,-3.3313812e-2,2.2163258e-2,0.144781,300.37335,126.6768)"
+       inkscape:transform-center-y="205.64765"
+       inkscape:transform-center-x="-31.480785"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <rect
+       inkscape:transform-center-x="-31.48077"
+       inkscape:transform-center-y="205.64774"
+       transform="matrix(0.9574101,-0.2887314,0.1513185,0.9884851,0,0)"
+       y="196.91893"
+       x="2.4843383"
+       height="500.81512"
+       width="646.4649"
+       id="rect3162"
+       style="opacity:1;fill:#ffe680;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <text
+       xml:space="preserve"
+       style="font-size:250px;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:3.5999999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:Bullpen"
+       x="363.52359"
+       y="560.98895"
+       id="text2205"
+       transform="matrix(0.8082199,-0.3416342,0.243402,1.1344011,0,0)"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"><tspan
+         sodipodi:role="line"
+         id="tspan2207"
+         x="363.52359"
+         y="560.98895"
+         style="stroke-width:3.5999999">up</tspan></text>
+    <path
+       transform="matrix(0.4358179,-0.1117925,7.5102582e-2,0.5767906,131.93486,-5.3115053)"
+       d="M 527.8214 393.1416 A 123.43465 123.43465 0 1 1  280.9521,393.1416 A 123.43465 123.43465 0 1 1  527.8214 393.1416 z"
+       sodipodi:ry="123.43465"
+       sodipodi:rx="123.43465"
+       sodipodi:cy="393.1416"
+       sodipodi:cx="404.38675"
+       id="path4171"
+       style="fill:#ecca3e;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0804934;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       sodipodi:type="arc"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <text
+       xml:space="preserve"
+       style="font-size:250px;font-family:Bullpen;stroke:#ffffff;stroke-opacity:1;stroke-width:4.00000002;stroke-miterlimit:4;stroke-dasharray:none"
+       x="4.5170131"
+       y="453.01953"
+       id="text2171"
+       transform="matrix(0.8082199,-0.3416342,0.243402,1.1344011,0,0)"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"><tspan
+         sodipodi:role="line"
+         id="tspan2173"
+         x="4.5170131"
+         y="453.01953">pin</tspan></text>
+    <path
+       sodipodi:type="arc"
+       style="fill:#d40000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0804934;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path2164"
+       sodipodi:cx="404.38675"
+       sodipodi:cy="393.1416"
+       sodipodi:rx="123.43465"
+       sodipodi:ry="123.43465"
+       d="M 527.8214 393.1416 A 123.43465 123.43465 0 1 1  280.9521,393.1416 A 123.43465 123.43465 0 1 1  527.8214 393.1416 z"
+       transform="matrix(0.4358179,-0.1117925,7.5102582e-2,0.5767906,140.95141,-20.363127)"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <path
+       style="fill:#ee0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 403.47421,143.73496 L 350.80595,157.25303 L 339.77884,227.18245 C 345.89838,228.49117 352.28792,228.51117 358.77058,226.84829 C 387.9899,219.35319 407.72339,182.35986 403.47421,143.73496 z "
+       id="path2179"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <path
+       style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 351.26046,83.116294 C 347.63602,83.065405 343.9452,83.500773 340.23335,84.452912 C 310.53849,92.070001 290.5965,130.1495 295.71368,169.44966 C 299.71374,200.17024 317.86688,222.49637 339.77884,227.18245 L 350.80595,157.25303 L 403.47421,143.73496 C 403.40506,143.10634 403.38301,142.4809 403.30107,141.85154 C 398.82353,107.4639 376.6315,83.47253 351.26046,83.116294 z "
+       id="path2162"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <path
+       style="fill:#aa0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.09999999;stroke-linecap:butt;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 328.97619,122.3827 L 325.02261,126.48521 L 317.72995,134.13972 C 314.75288,143.02214 315.16803,152.44674 317.03164,162.45866 C 321.86655,188.43322 335.63035,201.12994 355.05141,198.03303 C 364.99285,196.44775 374.10017,191.75524 379.68533,181.78462 L 389.81362,163.95822 L 328.97619,122.3827 z "
+       id="path2166"
+       sodipodi:nodetypes="cccssccc"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#d40000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.10298239;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path2160"
+       sodipodi:cx="404.38675"
+       sodipodi:cy="393.1416"
+       sodipodi:rx="123.43465"
+       sodipodi:ry="123.43465"
+       d="M 527.8214 393.1416 A 123.43465 123.43465 0 1 1  280.9521,393.1416 A 123.43465 123.43465 0 1 1  527.8214 393.1416 z"
+       transform="matrix(0.3406461,-8.7380161e-2,5.8701547e-2,0.4508317,200.07922,-15.026395)"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <path
+       transform="matrix(0.3406461,-8.7380161e-2,5.8701547e-2,0.4508317,203.09445,-18.895826)"
+       d="M 527.8214 393.1416 A 123.43465 123.43465 0 1 1  280.9521,393.1416 A 123.43465 123.43465 0 1 1  527.8214 393.1416 z"
+       sodipodi:ry="123.43465"
+       sodipodi:rx="123.43465"
+       sodipodi:cy="393.1416"
+       sodipodi:cx="404.38675"
+       id="path2174"
+       style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.10298239;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       sodipodi:type="arc"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614" />
+    <text
+       xml:space="preserve"
+       style="font-size:144px;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:3.5999999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:Bullpen"
+       x="431.34924"
+       y="386.95065"
+       id="text3187"
+       transform="matrix(0.8082199,-0.3416342,0.243402,1.1344011,0,0)"
+       inkscape:export-xdpi="6.1467614"
+       inkscape:export-ydpi="6.1467614"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"><tspan
+         sodipodi:role="line"
+         id="tspan3189"
+         x="431.34924"
+         y="386.95065"
+         style="font-size:144px;stroke-width:3.5999999">'em</tspan></text>
+  </g>
+</svg>
