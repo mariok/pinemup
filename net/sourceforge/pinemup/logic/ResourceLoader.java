@@ -30,6 +30,7 @@ public class ResourceLoader {
    private static Image closeIcon1 = loadImage("net.sourceforge.pinemup.resources","closeicon.png");
    private static Image closeIcon2 = loadImage("net.sourceforge.pinemup.resources","closeicon2.png");
    private static Image trayIcon = loadImage("net.sourceforge.pinemup.resources","icon.png");
+   private static Image scrollImage = loadImage("net.sourceforge.pinemup.resources","scroll.png");
    
    private static InputStream getResourceStream(String pkg, String filename) {
       String name = "/" + pkg.replace('.', '/') + "/" + filename;
@@ -75,6 +76,10 @@ public class ResourceLoader {
    
    public static Image getTrayIcon() {
       return trayIcon;
+   }
+   
+   public static Image getScrollImage() {
+      return scrollImage;
    }
    
    public static String getLicense() {

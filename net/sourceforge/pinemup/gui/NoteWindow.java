@@ -35,6 +35,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
     */
    private static final long serialVersionUID = 1L;
 
+   private static final int OFFSET = 35;
+   
    private JScrollPane textPanel;
 
    private JPanel topPanel, mainPanel, catPanel;
@@ -43,7 +45,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private Note parentNote;
 
-   private JButton closeButton, catButton;
+   private JButton closeButton, catButton, scrollButton;
 
    private int dx, dy;
 
@@ -106,11 +108,24 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       textArea.setWrapStyleWord(true);
       textArea.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, 1, parentNote.getFontSize()));
       textArea.addFocusListener(this);
-      textArea.setMargin(new Insets(0, 10, 3, 10));
+      textArea.setMargin(new Insets(0, 10, 3, 0));
       textPanel.setViewportView(textArea);
-      textPanel.getViewport().setOpaque(false);      
+      textPanel.getViewport().setOpaque(false);
       textPanel.setBorder(null);
       mainPanel.add(textPanel, BorderLayout.CENTER);
+      
+      //add area to show if note is scrollable
+      ImageIcon scrollImage = new ImageIcon(ResourceLoader.getScrollImage());
+      scrollButton = new JButton(scrollImage);
+      mainPanel.add(scrollButton,BorderLayout.SOUTH);
+      scrollButton.setRolloverEnabled(false);
+      scrollButton.setEnabled(false);
+      scrollButton.setFocusable(false);
+      scrollButton.setMargin(new Insets(0, 0, 0, 0));
+      scrollButton.setPreferredSize(new Dimension(10,5));
+      scrollButton.setBorder(null);
+      scrollButton.setBackground(new Color(255,255,255,0));
+      scrollButton.setVisible(false);
       
       // adjust and add buttons to the topPanel
       topPanel.addMouseListener(this);
@@ -155,14 +170,17 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       bgLabel = new BackgroundLabel(this);
      
       getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
+      
+      hideScrollBar();
       setVisible(true);
    }
 
    public void focusGained(FocusEvent arg0) {
-      //do nothing
+      showScrollBar();
    }
 
    public void focusLost(FocusEvent arg0) {
+      hideScrollBar();
       parentNote.setText(textArea.getText());
       parentNote.setPosition((short)getX(), (short)getY());
       parentNote.setSize((short)getWidth(), (short)getHeight());
@@ -228,11 +246,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private void autoSizeY() {
       int sizeX = getWidth();
       textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+      scrollButton.setVisible(false);
       pack();
-      int sizeY = textArea.getHeight()+26;
+      int sizeY = textArea.getHeight() + OFFSET;
       setSize(sizeX,sizeY);
       parentNote.setSize((short)sizeX,(short)sizeY);
-      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
    }
 
    public void mouseEntered(MouseEvent e) {
@@ -258,9 +276,14 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
       else if (e.getButton() == MouseEvent.BUTTON1 && resizeCursor
             && e.getSource() == textArea) {
+         textArea.setFocusable(false);
          dx = getX() + getWidth() - e.getXOnScreen();
          dy = getY() + getHeight() - e.getYOnScreen();
          resizing = true;
+         textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);         
+      } else if (e.getSource() == textArea) {
+         textArea.setFocusable(true);
+         textArea.requestFocus();
       }
 
    }
@@ -274,9 +297,13 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          dragging = false;
       } else if (resizing && e.getButton() == MouseEvent.BUTTON1) {
          resizing = false;
+         hideScrollBar();
       } else if (e.getSource() == closeButton) {
          // restore button backgorund if not pressed
          repaint();
+      } else if (e.getSource() == textArea) {
+         textArea.setFocusable(true);
+         textArea.requestFocus();
       }
       parentNote.setSize((short)getWidth(), (short)getHeight());
       parentNote.setPosition((short)getX(), (short)getY());
@@ -346,5 +373,21 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       requestFocus();
       textArea.setFocusable(true);
       textArea.requestFocusInWindow();
+   }
+
+   private void checkShowScrollButton() {
+      if (textPanel.getVerticalScrollBar().isShowing()) {
+         scrollButton.setVisible(true);
+      }
+   }
+   
+   public void hideScrollBar() {
+      checkShowScrollButton();
+      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);      
+   }
+
+   public void showScrollBar() {
+      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+      scrollButton.setVisible(false);
    }
 }
