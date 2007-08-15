@@ -54,7 +54,7 @@ Contents
     - new website-URL: pinemup.sourceforge.net
     - licensed under GPLv3 (or later) now
     - redesign of settings dialog
-    - height and width of a note cannot be less than 30 pixels anymore (makes sure a note can be resized at anytime)
+    - size of a note cannot be less than 30x40 pixels anymore (makes sure a note can be resized at anytime)
     - automatically jump into the textarea of a note when it is added
     - notes are now stored in XML format (-> files incompatible to 0.2)
     - file on FTP server now has the same name as the local file
@@ -63,6 +63,7 @@ Contents
     - deletion of a note must now be confirmed by default (can be turned off)
     - new trayicon
     - added icon for executable
+    - scrollbar is now hidden when note does not have focus
     - some major internal code improvements
     
     

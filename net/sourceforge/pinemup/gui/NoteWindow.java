@@ -126,6 +126,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       scrollButton.setBorder(null);
       scrollButton.setBackground(new Color(255,255,255,0));
       scrollButton.setVisible(false);
+      scrollButton.setDisabledIcon(new ImageIcon(ResourceLoader.getScrollImage()));
       
       // adjust and add buttons to the topPanel
       topPanel.addMouseListener(this);
@@ -180,7 +181,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void focusLost(FocusEvent arg0) {
-      hideScrollBar();
+      if (!resizing) {
+         hideScrollBar();
+      }
       parentNote.setText(textArea.getText());
       parentNote.setPosition((short)getX(), (short)getY());
       parentNote.setSize((short)getWidth(), (short)getHeight());
@@ -329,8 +332,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          if (sx < 30) {
             sx = 30;
          }
-         if (sy < 30) {
-            sy = 30;
+         if (sy < 40) {
+            sy = 40;
          }
          setSize(sx, sy);
       }
@@ -348,9 +351,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    public void mouseMoved(MouseEvent e) {
-      if (e.getSource() == textArea && !resizing) {
+      if (!resizing) {
          // if in lower right corner, start resizing or change cursor
-         if (e.getX() >= textArea.getWidth() - 10 && e.getY() >= textPanel.getHeight() - 10) { // height from panel because of vertical scrolling
+         if (e.getSource() == textArea && (e.getX() >= textArea.getWidth() - 10 && e.getY() >= textPanel.getHeight() - 10) || e.getSource() == scrollButton && (e.getX() >= scrollButton.getWidth() - 10)) { // height from panel because of vertical scrolling
             if (!resizeCursor) {
                resizeCursor = true;
                textArea.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
