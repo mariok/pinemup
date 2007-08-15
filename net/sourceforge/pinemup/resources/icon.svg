@@ -14,8 +14,8 @@
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.45"
-   sodipodi:docname="pinemup.svg"
-   sodipodi:docbase="/home/mario"
+   sodipodi:docname="icon.svg"
+   sodipodi:docbase="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    sodipodi:modified="TRUE">
   <defs
@@ -51,7 +51,7 @@
        x2="-1388.5714"
        y2="-507.63782"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.6449628,0,0,1.1660105,-450.65315,395.46942)" />
+       gradientTransform="matrix(0.6436146,0,0,1.1635794,-351.45275,595.1266)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient6066"
@@ -70,7 +70,7 @@
        x2="769.5094"
        y2="1104.578"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0031779,-2.8868041e-8,-1.3604561e-7,1.0032315,35.37334,48.113475)" />
+       gradientTransform="matrix(1.0010671,-1.6211327e-7,1.0686002e-8,1.0011293,134.02956,248.80805)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3480"
@@ -80,7 +80,7 @@
        x2="470.15997"
        y2="1077.0009"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0031802,0,0,1.0032348,35.397497,48.125406)" />
+       gradientTransform="matrix(1.0010679,0,0,1.0011305,134.15403,248.85304)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3480"
@@ -108,6 +108,65 @@
        x2="106.97182"
        y2="1995.6624"
        gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6066"
+       id="linearGradient3429"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.5278389,0,0,2.7458857,3313.3988,-3415.7779)"
+       x1="-1382.8572"
+       y1="-56.209259"
+       x2="-1388.5714"
+       y2="-507.63782" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6066"
+       id="linearGradient3433"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.4799634,0,0,0.8668275,-1008.3817,401.72602)"
+       x1="-1382.8572"
+       y1="-56.209259"
+       x2="-1388.5714"
+       y2="-507.63782" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6066"
+       id="linearGradient3437"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5854117,2.6430924e-8,-2.5635655e-8,1.0580541,-714.37187,315.83673)"
+       x1="-1382.8572"
+       y1="-56.209259"
+       x2="-1388.5714"
+       y2="-507.63782" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6066"
+       id="linearGradient3441"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.6158083,0,0,0.8629952,-2065.6765,1295.0135)"
+       x1="-1382.8572"
+       y1="-56.209259"
+       x2="-1388.5714"
+       y2="-507.63782" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6066"
+       id="linearGradient3447"
+       gradientUnits="userSpaceOnUse"
+       x1="-2230.0002"
+       y1="-807.5976"
+       x2="-2230.0002"
+       y2="-1213.3923" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6066"
+       id="linearGradient3449"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5978261,-9.5748618e-8,-1.6905655e-8,1.1734817,-416.37417,605.36129)"
+       x1="-1382.8572"
+       y1="-56.209259"
+       x2="-1388.5714"
+       y2="-507.63782" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -120,8 +179,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.12374369"
-     inkscape:cx="375"
-     inkscape:cy="-141.42676"
+     inkscape:cx="-16.33333"
+     inkscape:cy="988.49276"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:window-width="1392"
@@ -145,7 +204,37 @@
      id="layer1">
     <path
        sodipodi:type="star"
-       style="fill:url(#linearGradient6092);fill-opacity:1;stroke:none;stroke-opacity:1"
+       style="fill:url(#linearGradient3447);fill-opacity:1;stroke:#000000;stroke-width:95.20137024;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path3443"
+       sodipodi:sides="3"
+       sodipodi:cx="-2171.4287"
+       sodipodi:cy="-1010.495"
+       sodipodi:r1="234.28571"
+       sodipodi:r2="108.57143"
+       sodipodi:arg1="-3.1415926"
+       sodipodi:arg2="-2.0943951"
+       inkscape:flatsided="true"
+       inkscape:rounded="4.6837534e-16"
+       inkscape:randomized="9.5062846e-16"
+       d="M -2405.7144,-1010.495 L -2054.2858,-1213.3924 L -2054.2859,-807.59762 L -2405.7144,-1010.495 z "
+       transform="matrix(1.0736038,1.1043438,-0.9105553,0.9356049,-131.94092,2182.2894)"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
+    <rect
+       style="fill:url(#linearGradient3449);fill-opacity:1;stroke:#000000;stroke-width:135.21838379;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3445"
+       width="994.09924"
+       height="529.74329"
+       x="-1676.9288"
+       y="9.6578627"
+       transform="matrix(0.7070111,0.7072024,-0.7060047,0.7082071,0,0)"
+       inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
+    <path
+       sodipodi:type="star"
+       style="fill:url(#linearGradient6092);fill-opacity:1;stroke:none;stroke-width:95.20137024;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path6084"
        sodipodi:sides="3"
        sodipodi:cx="-2171.4287"
@@ -158,21 +247,21 @@
        inkscape:rounded="4.6837534e-16"
        inkscape:randomized="9.5062846e-16"
        d="M -2405.7144,-1010.495 L -2054.2858,-1213.3924 L -2054.2859,-807.59762 L -2405.7144,-1010.495 z "
-       transform="matrix(1.1921898,1.1953758,-0.9118017,0.8997074,201.62952,2136.7518)"
+       transform="matrix(1.0736038,1.1043438,-0.9105553,0.9356049,-107.7652,2198.5376)"
        inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
-       inkscape:export-xdpi="7.0675273"
-       inkscape:export-ydpi="7.0675273" />
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
     <rect
-       style="fill:url(#linearGradient6074);fill-opacity:1;stroke:none;stroke-opacity:1"
+       style="fill:url(#linearGradient6074);fill-opacity:1;stroke:none;stroke-width:140.00021362;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect5095"
-       width="1072.481"
-       height="526.37054"
-       x="-1810.598"
-       y="-196.44121"
-       transform="matrix(0.7048616,0.7093448,-0.7111113,0.7030795,0,0)"
+       width="1070.2391"
+       height="525.27301"
+       x="-1708.5549"
+       y="4.4501615"
+       transform="matrix(0.7068826,0.7073309,-0.7060264,0.7081856,0,0)"
        inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
-       inkscape:export-xdpi="7.0675273"
-       inkscape:export-ydpi="7.0675273" />
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
     <path
        sodipodi:type="arc"
        style="fill:url(#linearGradient3524);fill-opacity:1;stroke:#000000;stroke-width:109.04148865;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -182,21 +271,21 @@
        sodipodi:rx="422.85715"
        sodipodi:ry="1108.5714"
        d="M 488.57143 -93.352104 A 422.85715 1108.5714 0 1 1  -357.14286,-93.352104 A 422.85715 1108.5714 0 1 1  488.57143 -93.352104 z"
-       transform="matrix(1.2162423,1.2177719,-0.8967026,0.8837347,-249.02836,5.9436661)"
+       transform="matrix(1.2171486,1.2117452,-0.8884485,0.8883111,-320.02375,218.67618)"
        inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
-       inkscape:export-xdpi="7.0675273"
-       inkscape:export-ydpi="7.0675273" />
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
     <rect
-       style="fill:url(#linearGradient3478);fill-opacity:1;stroke:#000000;stroke-width:149.1272583;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:url(#linearGradient3478);fill-opacity:1;stroke:#000000;stroke-width:148.81413269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3145"
-       width="1565.3501"
-       height="1493.1893"
-       x="167.02783"
-       y="-698.69"
-       transform="matrix(0.7071138,0.7070997,-0.7127632,0.7014048,0,0)"
+       width="1562.0564"
+       height="1490.0603"
+       x="265.40698"
+       y="-496.43051"
+       transform="matrix(0.7091285,0.7050793,-0.7076903,0.7065228,0,0)"
        inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
-       inkscape:export-xdpi="7.0675273"
-       inkscape:export-ydpi="7.0675273" />
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
     <path
        sodipodi:type="arc"
        style="fill:url(#linearGradient3508);fill-opacity:1;stroke:#000000;stroke-width:137.31004333;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -206,10 +295,10 @@
        sodipodi:rx="275.71429"
        sodipodi:ry="871.42859"
        d="M 477.14287 -170.49496 A 275.71429 871.42859 0 1 1  -74.285721,-170.49496 A 275.71429 871.42859 0 1 1  477.14287 -170.49496 z"
-       transform="matrix(0.972013,0.9719934,-0.6116063,0.6018603,-238.73864,34.416035)"
+       transform="matrix(0.9727311,0.9671768,-0.6059811,0.6049817,-309.63538,247.09892)"
        inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
-       inkscape:export-xdpi="7.0675273"
-       inkscape:export-ydpi="7.0675273" />
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
     <path
        sodipodi:type="arc"
        style="fill:url(#linearGradient3516);fill-opacity:1;stroke:#000000;stroke-width:45.277565;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -219,34 +308,34 @@
        sodipodi:rx="111.42857"
        sodipodi:ry="234.28572"
        d="M -291.42857 512.36218 A 111.42857 234.28572 0 1 1  -514.28572,512.36218 A 111.42857 234.28572 0 1 1  -291.42857 512.36218 z"
-       transform="matrix(3.0809789,3.0837804,-3.271876,3.223391,4051.4521,830.08195)"
+       transform="matrix(3.0832694,3.0685138,-3.2417645,3.2400893,3966.2243,1021.245)"
        inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
-       inkscape:export-xdpi="7.0675273"
-       inkscape:export-ydpi="7.0675273" />
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
     <rect
        style="fill:url(#linearGradient3492);fill-opacity:1;stroke:none;stroke-opacity:1"
        id="rect5089"
-       width="700.51654"
-       height="1355.4662"
-       x="150.75124"
-       y="-628.58295"
-       transform="matrix(0.7073482,0.7068653,-0.7131134,0.7010487,0,0)"
+       width="699.04156"
+       height="1352.623"
+       x="249.26489"
+       y="-426.43588"
+       transform="matrix(0.7093621,0.7048442,-0.7080431,0.7061692,0,0)"
        inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
-       inkscape:export-xdpi="7.0675273"
-       inkscape:export-ydpi="7.0675273" />
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176" />
     <text
        xml:space="preserve"
-       style="font-size:11.18436337px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="328.19916"
-       y="-422.80432"
+       style="font-size:11.16102219px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="417.77072"
+       y="-204.16037"
        id="text9001"
-       transform="matrix(0.7683468,0.7626476,-0.6550932,0.6512616,0,0)"
+       transform="matrix(0.7704939,0.7604269,-0.6503923,0.6559743,0,0)"
        inkscape:export-filename="/home/mario/workspace/pinemup/net/sourceforge/pinemup/resources/icon.png"
-       inkscape:export-xdpi="7.0675273"
-       inkscape:export-ydpi="7.0675273"><tspan
+       inkscape:export-xdpi="6.9947176"
+       inkscape:export-ydpi="6.9947176"><tspan
          sodipodi:role="line"
          id="tspan9003"
-         x="328.19916"
-         y="-422.80432">P</tspan></text>
+         x="417.77072"
+         y="-204.16037">P</tspan></text>
   </g>
 </svg>
