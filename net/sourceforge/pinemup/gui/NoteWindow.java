@@ -172,8 +172,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
       
       textPanel.getVerticalScrollBar().setOpaque(false);
-      showScrollButtonIfNeeded();
       setVisible(true);
+      showScrollButtonIfNeeded();
    }
 
    public void focusGained(FocusEvent e) {
@@ -184,7 +184,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    public void focusLost(FocusEvent e) {
       if (e.getSource() == textArea) {
-         showScrollButtonIfNeeded();
+         if (!resizing) { //resizing would call showScrollBarIfNeeded() and thus revert the effect
+            showScrollButtonIfNeeded();
+         }
          parentNote.setText(textArea.getText());
          textArea.setFocusable(false);
          
@@ -245,7 +247,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          textArea.requestFocus();
       }
    }
-      
+   
    private void autoSizeY() {
       int sizeX = getWidth();
       int sizeY = OFFSET;
@@ -278,6 +280,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       Object src = e.getSource();
       if (src == topPanel || src == catButton) {
          checkPopupMenu(e);
+         textArea.setFocusable(false);
          if (e.getButton() == MouseEvent.BUTTON1) {
             // Position on Panel
             dx = e.getXOnScreen() - getX();
@@ -286,10 +289,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          }
       } else if (src == textArea) {
          if (e.getButton() == MouseEvent.BUTTON1 && resizeCursor) {
-            textArea.setFocusable(false);
             dx = getX() + getWidth() - e.getXOnScreen();
             dy = getY() + getHeight() - e.getYOnScreen();
             resizing = true;
+            textArea.setFocusable(false);
+            showScrollBarIfNeeded();            
          } else {
             textArea.setFocusable(true);
             textArea.requestFocus();
@@ -312,7 +316,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          // stop reseizing and save size
          resizing = false;
          parentNote.setSize((short)getWidth(), (short)getHeight());
-         changeMade = true;         
+         showScrollButtonIfNeeded();
+         changeMade = true;
       } else if (e.getSource() == closeButton) {
          // restore button backgorund if not pressed
          repaint();
