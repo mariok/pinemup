@@ -143,13 +143,13 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          for (int i=0; i<setFontSizeItem.length; i++) {
             if (src == setFontSizeItem[i]) {
                parentWindow.getParentNote().setFontSize((short)(i+5));
-               parentWindow.refreshView();
+               parentWindow.updateFontSize();
             }
          }
       }
       
-         // save notes to file after every change
-         NoteIO.writeCategoriesToFile(categories, settings);
+      // save notes to file after every change
+      NoteIO.writeCategoriesToFile(categories, settings);
       
    }
 
