@@ -15,9 +15,9 @@ Contents
 
 1. About
 ------------------------
-  pin 'em up enables you to place small notes on your desktop
-  and assign them to different user-defined categories. Due
-  platform-independence, those notes are available on different
+  pin 'em up enables you to place small notes (TODOs, Reminders, ...)
+  on your desktop and assign them to different user-defined categories.
+  Due to platform-independence, those notes are available on different
   systems using either a shared partition or the integrated 
   FTP-functions.
 
@@ -25,7 +25,8 @@ Contents
     - OS-independence
     - Integrates into system-tray
     - free placeable notes
-    - user-defined categories
+    - many possibilities to customize the note-design
+    - (nearly) unlimited user-defined categories
     - fast switch between categories (e.g. "home" and "office")
     - automatically save notes to file
     - open file format (xml)
@@ -61,12 +62,13 @@ Contents
     - user can now decide, if the ftp-password shall be stored on disk or not
     - focus not in note on program start
     - deletion of a note must now be confirmed by default (can be turned off)
-    - new trayicon
-    - added icon for executable
+    - new trayicon(s)
+    - added icon for windows executable
     - scrollbar is now hidden when note does not have focus
+    - autosize function works properly now
     - some major internal code improvements
-    
-    
+
+
   0.2:
     - double click on tray-icon adds new note
     - fixed activation of "Apply"-Button in Settings-Dialog
@@ -79,7 +81,7 @@ Contents
     - settings are stored in Users Preferences-Object instead of config-file (old file can be removed)
     - notes-file can be chosen by user
     - always-on-top-function added
-    
+
 
   0.1:
     - first release
@@ -91,6 +93,11 @@ Contents
   - priorities (maybe with different colors)
   - option: assign all visible notes to one category
   - schedule --> popup at a certain time
+  - special TODO notes
+  - easier category organization
+  - rightclickmenu in textarea (cut, copy, paste, ...)
+  - different languages
+  - more freedom with fonts / notes look & feel
 
 
 
@@ -108,7 +115,7 @@ Contents
 6. Thanks
 ------------------------
   Special Thanks go to:
-  - Jan Laczay for his contributions to the project website
+  - Jan Laczay and Michael Mrose for their contributions to the project website
   - Andreas Kwiatkowski for redisigning the closeicon
-  - Natalie Noering and Michael Mrose for testing the new version
+  - Natalie Noering for testing the new version
   
