@@ -22,6 +22,7 @@
 package net.sourceforge.pinemup.gui;
 
 import javax.swing.*;
+import javax.swing.text.View;
 
 import net.sourceforge.pinemup.logic.*;
 import net.sourceforge.pinemup.menus.*;
@@ -172,6 +173,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
      
       getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
       
+      textPanel.getVerticalScrollBar().setOpaque(false);
       hideScrollBar();
       setVisible(true);
    }
@@ -245,15 +247,24 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          textArea.requestFocus();
       }
    }
-   
+      
    private void autoSizeY() {
       int sizeX = getWidth();
-      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-      scrollButton.setVisible(false);
-      pack();
-      int sizeY = textArea.getHeight() + OFFSET;
+      int sizeY = OFFSET;
+            
+      //get number of lines (incl. wrapped lines)
+      int lineHeight = textArea.getFontMetrics(textArea.getFont()).getHeight();
+      View view = textArea.getUI().getRootView(textArea).getView(0);
+      int prefHeight = (int)view.getPreferredSpan(View.Y_AXIS);
+      int lines = prefHeight / lineHeight;
+      
+      //calculate new height
+      sizeY += lineHeight*lines;
+      
+      //apply new size
       setSize(sizeX,sizeY);
       parentNote.setSize((short)sizeX,(short)sizeY);
+      scrollButton.setVisible(false);
    }
 
    public void mouseEntered(MouseEvent e) {
@@ -283,7 +294,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          dx = getX() + getWidth() - e.getXOnScreen();
          dy = getY() + getHeight() - e.getYOnScreen();
          resizing = true;
-         textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);         
       } else if (e.getSource() == textArea) {
          textArea.setFocusable(true);
          textArea.requestFocus();
@@ -379,18 +389,20 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
 
    private void checkShowScrollButton() {
-      if (textPanel.getVerticalScrollBar().isShowing()) {
+      if (textPanel.getHeight() != textArea.getHeight()) {
          scrollButton.setVisible(true);
       }
    }
    
    public void hideScrollBar() {
+      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
       checkShowScrollButton();
-      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);      
    }
 
    public void showScrollBar() {
-      textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-      scrollButton.setVisible(false);
+      if (textPanel.getHeight() != textArea.getHeight()) {
+         textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+         scrollButton.setVisible(false);
+      }
    }
 }
