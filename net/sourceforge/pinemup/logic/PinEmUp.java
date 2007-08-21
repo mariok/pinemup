@@ -22,6 +22,7 @@
 package net.sourceforge.pinemup.logic;
 
 import java.awt.*;
+
 import javax.swing.*;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
@@ -105,7 +106,7 @@ public class PinEmUp {
          
          // create trayicon
          icon = new TrayIcon(img, "pin 'em up", new TrayMenu(categories,settings));
-         icon.setImageAutoSize(true);
+         icon.setImageAutoSize(false);
          
          IconClickLogic myIconListener = new IconClickLogic(categories,settings);
          // add actionlistener for doubleclick on icon
