@@ -49,6 +49,15 @@ public class UserSettings {
    private boolean showCategory;
    private boolean confirmDeletion;
    private boolean storeFTPPass;
+   private boolean updateCheckEnabled;
+   
+   public void setUpdateCheckEnabled(boolean b) {
+      updateCheckEnabled = b;
+   }
+   
+   public boolean isUpdateCheckEnabled() {
+      return updateCheckEnabled;
+   }
    
    public void setConfirmDeletion(boolean b) {
       confirmDeletion = b;
@@ -221,6 +230,7 @@ public class UserSettings {
       prefs.putBoolean("peu_showCategory", showCategory);
       prefs.putBoolean("peu_confirmDeletion", confirmDeletion);
       prefs.putBoolean("peu_storeFTPPass", storeFTPPass);
+      prefs.putBoolean("peu_updateCheckEnabled", updateCheckEnabled);
    }
 
    public UserSettings() {
@@ -246,5 +256,6 @@ public class UserSettings {
       showCategory = prefs.getBoolean("peu_showCategory", false);
       confirmDeletion = prefs.getBoolean("peu_confirmDeletion", true);
       storeFTPPass = prefs.getBoolean("peu_storeFTPPass", false);
+      updateCheckEnabled = prefs.getBoolean("peu_updateCheckEnabled", true);
    }
 }

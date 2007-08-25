@@ -46,7 +46,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private JPasswordField ftpPasswdField;
 
-   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeFTPPassBox;
+   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeFTPPassBox, checkForUpdatesBox;
 
    private JSpinner defaultFontSizeSpinner;
    
@@ -54,9 +54,48 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    
    private ButtonGroup closeIconGroup;
    
+   private JButton checkForUpdatesButton;
+   
    private UserSettings settings;
    
    private CategoryList categories;
+   
+   private JPanel makeGeneralTab() {
+      JPanel generalPanel = new JPanel();
+
+      // GENERAL SETTINGS
+      GridBagLayout gbl = new GridBagLayout();
+      generalPanel.setLayout(gbl);
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.NORTHWEST;
+
+      //Add Panel for update check
+      JPanel updateCheckPanel = makeUpdateCheckPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 0;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(updateCheckPanel, gbc);
+      generalPanel.add(updateCheckPanel);
+      
+      //Add empty panel to tab
+      JPanel emptyPanel = new JPanel();
+      gbc.gridx = 0;
+      gbc.gridy = 2;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.weightx = 100;
+      gbc.weighty = 100;
+      gbc.fill = GridBagConstraints.BOTH;
+      gbl.setConstraints(emptyPanel, gbc);
+      generalPanel.add(emptyPanel); 
+      
+      return generalPanel;
+   }
    
    private JPanel makeLookAndFeelTab() {
       JPanel lookAndFeelPanel = new JPanel();
@@ -212,6 +251,86 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       loadSavePanel.add(emptyPanel); 
       
       return loadSavePanel;
+   }
+
+   private JPanel makeUpdateCheckPanel() {
+      // PANEL FOR SIZE AND POSITIONS
+      GridBagLayout gbl = new GridBagLayout();
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(1,1,1,1);
+      gbc.anchor = GridBagConstraints.WEST;
+      JPanel updateCheckPanel = new JPanel(gbl);
+      updateCheckPanel.setBorder(new TitledBorder("Update-Check"));
+      //Add all Labels
+      JLabel checkForUpdatesLabel = new JLabel("Check for update at startup: ");
+      JLabel emptyLabel1 = new JLabel(" ");
+      JLabel emptyLabel2 = new JLabel(" ");
+      JLabel emptyLabel3 = new JLabel(" ");
+      JLabel emptyLabel4 = new JLabel(" ");
+      JLabel emptyLabel5 = new JLabel(" ");
+      //Set settings for all Labels
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;      
+      //Add Labels with their positions
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbl.setConstraints(checkForUpdatesLabel, gbc);
+      updateCheckPanel.add(checkForUpdatesLabel);
+      gbc.weightx = 100;
+      gbc.gridx = 2;
+      gbc.gridy = 0;
+      gbl.setConstraints(emptyLabel1, gbc);
+      updateCheckPanel.add(emptyLabel1);
+      gbc.weightx = 0;
+      gbc.gridx = 0;
+      gbc.gridy = 1;
+      gbl.setConstraints(emptyLabel2, gbc);
+      updateCheckPanel.add(emptyLabel2);
+      gbc.weightx = 0;
+      gbc.gridx = 1;
+      gbc.gridy = 1;
+      gbl.setConstraints(emptyLabel3, gbc);
+      updateCheckPanel.add(emptyLabel3);
+      gbc.weightx = 100;
+      gbc.gridx = 2;
+      gbc.gridy = 1;
+      gbl.setConstraints(emptyLabel4, gbc);
+      updateCheckPanel.add(emptyLabel4);
+      gbc.weightx = 100;
+      gbc.gridx = 1;
+      gbc.gridy = 2;
+      gbl.setConstraints(emptyLabel5, gbc);
+      updateCheckPanel.add(emptyLabel5);      
+      //Add fields
+      checkForUpdatesBox = new JCheckBox("");
+      checkForUpdatesBox.addActionListener(this);
+      checkForUpdatesButton = new JButton("check now");
+      checkForUpdatesButton.addActionListener(this);
+
+      
+      //Set settings for all fields
+      gbc.weightx = 0;
+      gbc.weighty = 0;
+      gbc.gridwidth = 1;
+      gbc.gridheight = 1;
+      gbc.fill = GridBagConstraints.NONE;
+      //Add fields with their positions
+      gbc.weightx = 0;
+      gbc.gridx = 1;
+      gbc.gridy = 0;
+      gbl.setConstraints(checkForUpdatesBox, gbc);
+      updateCheckPanel.add(checkForUpdatesBox);
+
+      gbc.weightx = 0;
+      gbc.gridx = 0;
+      gbc.gridy = 2;
+      gbl.setConstraints(checkForUpdatesButton, gbc);
+      updateCheckPanel.add(checkForUpdatesButton);
+
+      return updateCheckPanel;
    }
    
    private JPanel makeTitleBarPanel() {
@@ -639,12 +758,14 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       
       //tabbed pane and tabs
       JTabbedPane tpane = new JTabbedPane();
+      JPanel generalTab = makeGeneralTab();
       JPanel lookAndFeelTab = makeLookAndFeelTab();
       JPanel defaultsTab = makeDefaultsTab();
       JPanel loadSaveTab = makeLoadSaveTab();
-      tpane.addTab("Notes Look&Feel", null, lookAndFeelTab, "Look&Feel of the Notes");
-      tpane.addTab("Notes Default Settings", null, defaultsTab, "Default Settings for new Notes");
-      tpane.addTab("Load/Save", null, loadSaveTab, "Load / Save Settings");
+      tpane.addTab("General", null, generalTab, "General settings");
+      tpane.addTab("Notes Look&Feel", null, lookAndFeelTab, "Look&Feel of the notes");
+      tpane.addTab("Notes Default Settings", null, defaultsTab, "Default settings for new notes");
+      tpane.addTab("Load/Save", null, loadSaveTab, "Load / Save settings");
       mainPanel.add(tpane, BorderLayout.CENTER);
 
       // PANEL WITH BUTTONS
@@ -704,7 +825,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          if (f != null) {
             notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(),".xml"));
          }
-      } else if (src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox) {
+      } else if (src == checkForUpdatesButton) {
+         new UpdateCheckThread(true);
+      } else if (src == checkForUpdatesBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox) {
          applyButton.setEnabled(true);
       } else if (src == storeFTPPassBox) {
          applyButton.setEnabled(true);
@@ -713,11 +836,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    }
 
    private void loadSettings() {
-      if (settings != null) {
-            
+      if (settings != null) {            
          // write settings from object into fields
          
-         // default note settings panel
+         checkForUpdatesBox.setSelected(settings.isUpdateCheckEnabled());
+         
          defaultWidthField.setText(String.valueOf(settings.getDefaultWindowWidth()));
          defaultHeightField.setText(String.valueOf(settings.getDefaultWindowHeight()));
          defaultXPositionField.setText(String.valueOf(settings.getDefaultWindowXPostition()));
@@ -732,7 +855,6 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          showCatBox.setSelected(settings.getShowCategory());
          confirmDeleteBox.setSelected(settings.getConfirmDeletion());
                
-         // load/save panel
          notesFileField.setText(settings.getNotesFile());
          ftpServerField.setText(settings.getFtpServer());
          ftpUserField.setText(settings.getFtpUser());
@@ -750,6 +872,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       NoteIO.writeCategoriesToFile(categories, settings);
       
       // load settings from fields
+      boolean updateCheckEnabled = checkForUpdatesBox.isSelected(); 
       short defaultWidth = Short.parseShort(defaultWidthField.getText());
       short defaultHeight = Short.parseShort(defaultHeightField.getText());
       short defaultXPosition = Short.parseShort(defaultXPositionField.getText());
@@ -772,6 +895,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       String ftpDir = ftpDirField.getText();
       
       // write settings into object
+      settings.setUpdateCheckEnabled(updateCheckEnabled);
       settings.setDefaultWindowHeight(defaultHeight);
       settings.setDefaultWindowWidth(defaultWidth);
       settings.setDefaultWindowXPosition(defaultXPosition);

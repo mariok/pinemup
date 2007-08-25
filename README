@@ -15,11 +15,9 @@ Contents
 
 1. About
 ------------------------
-  pin 'em up enables you to place small notes (TODOs, Reminders, ...)
-  on your desktop and assign them to different user-defined categories.
-  Due to platform-independence, those notes are available on different
-  systems using either a shared partition or the integrated 
-  FTP-functions.
+  pin 'em up is a tool for placing small notes/post-its (e.g. TODOs/Reminders)
+  on your desktop and organize them in various ways (categorize,hide,upload,export,...).
+  Due to platform independence, the notes can also be shared on different operating systems.
 
   Features:
     - OS-independence
@@ -30,7 +28,7 @@ Contents
     - fast switch between categories (e.g. "home" and "office")
     - automatically save notes to file
     - open file format (xml)
-    - FTP-upload- and download functions
+    - FTP upload- and download functions
     - Export notes to a text-file
 
 
@@ -54,6 +52,7 @@ Contents
     - new package names
     - new website-URL: pinemup.sourceforge.net
     - licensed under GPLv3 (or later) now
+    - update check available
     - redesign of settings dialog
     - size of a note cannot be less than 30x40 pixels anymore (makes sure a note can be resized at anytime)
     - automatically jump into the textarea of a note when it is added

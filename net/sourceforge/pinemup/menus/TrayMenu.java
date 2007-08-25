@@ -36,7 +36,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
     */
    private static final long serialVersionUID = 1L;
 
-   private MenuItem addCategoryItem, exportItem, aboutItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
+   private MenuItem addCategoryItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
    
    private UserSettings settings;
    
@@ -99,12 +99,20 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       showSettingsDialogItem = new MenuItem("settings");
       showSettingsDialogItem.addActionListener(this);
       add(showSettingsDialogItem);
+      
+      // help menu
       Menu helpMenu = new Menu("help");
+      updateItem = new MenuItem("check for updates");
+      updateItem.addActionListener(this);
+      helpMenu.add(updateItem);
+      helpMenu.addSeparator();
       aboutItem = new MenuItem("about pin 'em up");
       aboutItem.addActionListener(this);
       helpMenu.add(aboutItem);
       add(helpMenu);
       addSeparator();
+      
+      //close item
       closeItem = new MenuItem("exit");
       closeItem.addActionListener(this);
       add(closeItem);
@@ -139,6 +147,8 @@ public class TrayMenu extends PopupMenu implements ActionListener {
                PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
             }
          }
+      } else if (src == updateItem) {
+         new UpdateCheckThread(true);
       }
       
       // save notes to file after every change

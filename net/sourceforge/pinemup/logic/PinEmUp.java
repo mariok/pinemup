@@ -123,6 +123,11 @@ public class PinEmUp {
 
          //show all visible notes
          categories.showAllNotesNotHidden();
+         
+         //udate check
+         if (settings.isUpdateCheckEnabled()) {
+            new UpdateCheckThread(false);
+         }          
       } else {
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          System.exit(1);

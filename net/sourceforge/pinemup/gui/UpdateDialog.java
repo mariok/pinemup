@@ -32,79 +32,36 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import net.sourceforge.pinemup.logic.*;
-
-public class AboutDialog extends JFrame implements ActionListener, HyperlinkListener {
+public class UpdateDialog extends JFrame implements ActionListener, HyperlinkListener {
    /**
     * 
     */
    private static final long serialVersionUID = 1L;
 
-   private JButton okButton;
-   
-   private JEditorPane makeAboutTab() {
-      String msg = "";
-      msg += "<html>";
-      msg += "<p>pin 'em up</p>";
-      msg += "<p>version " + PinEmUp.getVersion() + "</p>";
-      msg += "<p>(C) 2007 Mario Koedding</p>";
-      msg += "<p><a href=\"http://pinemup.sourceforge.net\" target=\"blank\">http://pinemup.sourceforge.net</a></p>";
-      msg += "</html>";
-      JEditorPane p = new JEditorPane("text/html",msg);
-      p.addHyperlinkListener(this);
-      p.setEditable(false);
-      return p;
-   }
-
-   private JEditorPane makeAuthorsTab() {
-      String msg = "";
-      msg += "<html>";
-      msg += "<p><strong>Mario Koedding</strong><br />";
-      msg += "<a href=\"mailto:mario@koedding.net\">mario@koedding.net</a><br />";
-      msg += "developer &amp; founder of the project</p>";
-      msg += "</html>";
-      JEditorPane p = new JEditorPane("text/html",msg);
-      p.addHyperlinkListener(this);
-      p.setEditable(false);
-      return p;
-   }
-
-   private JScrollPane makeLicenseTab() {
-      String msg = "";
-      msg += "(C) 2007 Mario Koedding\r\n\r\n";
-      msg += "This program is licensed under the terms of the GNU GPL V3 or any later version.\r\n\r\n\r\n";
-      msg += ResourceLoader.getLicense();
-      JEditorPane p = new JEditorPane("text/plain",msg);
-      p.setEditable(false);
-      p.addHyperlinkListener(this);
-      JScrollPane myScrollPane = new JScrollPane(p);
-      p.setCaretPosition(0); //scroll back to the top
-      return myScrollPane;
-   }
-   
-   public AboutDialog() {
-      super("About pin 'em up");
-      setSize(new Dimension(600,350));
+   private JButton closeButton;
+      public UpdateDialog(String updateText) {
+      super("Update available for pin 'em up");
+      setSize(new Dimension(400,350));
 
       // PREPARE ALL PANELS
       // ---------------------
       JPanel mainPanel = new JPanel(new BorderLayout());
+      JEditorPane p = new JEditorPane("text/html",updateText);
+      p.setEditable(false);
+      p.addHyperlinkListener(this);
+      JScrollPane myScrollPane = new JScrollPane(p);
+      p.setCaretPosition(0); //scroll back to the top
       
-      //tabbed pane and tabs
-      JTabbedPane tpane = new JTabbedPane();
-      tpane.addTab("about", null, makeAboutTab(), "about");
-      tpane.addTab("authors", null, makeAuthorsTab(), "authors");
-      tpane.addTab("license", null, makeLicenseTab(), "license");
-      mainPanel.add(tpane, BorderLayout.CENTER);
+      mainPanel.add(myScrollPane, BorderLayout.CENTER);
 
       // PANEL WITH BUTTONS
-      okButton = new JButton("close");
-      okButton.addActionListener(this);
-      okButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-      okButton.setEnabled(true);
+      closeButton = new JButton("close");
+      closeButton.addActionListener(this);
+      closeButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+      closeButton.setEnabled(true);
       JPanel buttonPanel = new JPanel();
       buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-      buttonPanel.add(okButton);
+      buttonPanel.add(closeButton);
       mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     
       setContentPane(mainPanel);
@@ -122,7 +79,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
 
    public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
-      if (src == okButton) {
+      if (src == closeButton) {
          setVisible(false);
          dispose();
       }
