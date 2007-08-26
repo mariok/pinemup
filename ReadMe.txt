@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.3-svn
+version 0.3
 
 Contents
 ------------------------
