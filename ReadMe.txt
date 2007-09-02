@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.3
+version 0.4-svn
 
 Contents
 ------------------------
@@ -43,6 +43,12 @@ Contents
 
 3. Changelog
 ------------------------
+  0.4:
+    - BUGFIX: font type was changed to SERIF on change of font-size
+    - BUGFIX: notesfile now allows negative note-positions
+    - notecolor can be changed
+    - some internal code improvements
+
   0.3:
     - changed default font to sans-serif
     - added new closeicon (can be chosen in settings-dialog)

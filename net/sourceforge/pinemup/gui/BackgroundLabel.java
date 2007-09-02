@@ -30,9 +30,24 @@ public class BackgroundLabel extends JLabel {
     */
    private static final long serialVersionUID = 1L;
    
-   private static final Color MYSTARTCOLOR = new Color(255, 255, 185);
-   private static final Color MYENDCOLOR = new Color(255, 235, 70);
+   //color-arrays
+   private static final String[] COLORNAME = {
+      "yellow",
+      "green"
+   };
+   
+   private static final Color[] MYSTARTCOLOR = {
+      new Color(255, 255, 185),
+      new Color(0, 255, 0)
+   };
+   
+   private static final Color[] MYENDCOLOR = {
+      new Color(255, 235, 70),
+      new Color(100, 255, 100)
+   };
+   
    private NoteWindow parentWindow;
+   private byte myColor;
    
    public void paintComponent(Graphics g) {
        setBounds(0,0,parentWindow.getWidth(),parentWindow.getHeight());
@@ -45,17 +60,26 @@ public class BackgroundLabel extends JLabel {
           int startY = 0;
           int endX = startX+1;
           int endY = startY+h;
-          GradientPaint gradient = new GradientPaint(startX, startY, MYSTARTCOLOR, endX, endY, MYENDCOLOR);
+          GradientPaint gradient = new GradientPaint(startX, startY, MYSTARTCOLOR[myColor], endX, endY, MYENDCOLOR[myColor]);
           g2.setPaint(gradient);
        }
        g2.fillRect(0,0,w,h);
    }
    
-   public BackgroundLabel(NoteWindow w) {
+   public BackgroundLabel(NoteWindow w, byte c) {
       super();
       parentWindow = w;
+      myColor = c;
       setBounds(0,0,parentWindow.getWidth(),parentWindow.getHeight());
       setFocusable(false);
       setOpaque(false);
+   }
+   
+   public void setMyColor(byte c) {
+      myColor = c;
+   }
+   
+   public static String getColorName(byte nr) {
+      return COLORNAME[nr];
    }
 }

@@ -126,7 +126,7 @@ public class MenuCreator implements ActionListener {
       if ((basicItem != null && src == basicItem[0]) || (basicItemJ != null && src == basicItemJ[0])) {
          Category defCat = categories.getDefaultCategory();
          if (defCat != null) {
-            Note newNote = new Note("",settings,categories);
+            Note newNote = new Note("",settings,categories,defCat.getDefaultNoteColor());
             defCat.getNotes().add(newNote);
             newNote.showIfNotHidden();
             newNote.jumpInto();

@@ -35,6 +35,9 @@ import javax.xml.validation.*;
 import org.xml.sax.SAXException;
 
 public class NoteIO {
+   
+   private static final String NOTESFILE_VERSION = "0.2";
+   
    public static void writeCategoriesToFile(CategoryList c, UserSettings s) {
       //write notes to xml file
       try {
@@ -44,7 +47,7 @@ public class NoteIO {
          
          writer.writeStartDocument("UTF-8","1.0");
          writer.writeStartElement("notesfile");
-         writer.writeAttribute("version","0.1");
+         writer.writeAttribute("version",NOTESFILE_VERSION);
          
          CategoryList cl = c;
          while (cl != null) {
@@ -52,6 +55,7 @@ public class NoteIO {
                writer.writeStartElement("category");
                writer.writeAttribute("name", cl.getCategory().getName());
                writer.writeAttribute("default",String.valueOf(cl.getCategory().isDefaultCategory()));
+               writer.writeAttribute("defaultnotecolor",String.valueOf(cl.getCategory().getDefaultNoteColor()));
 
                NoteList nl = cl.getCategory().getNotes();
                while (nl != null) {
@@ -63,6 +67,7 @@ public class NoteIO {
                      writer.writeAttribute("yposition", String.valueOf(nl.getNote().getYPos()));
                      writer.writeAttribute("width", String.valueOf(nl.getNote().getXSize()));
                      writer.writeAttribute("height", String.valueOf(nl.getNote().getYSize()));
+                     writer.writeAttribute("color", String.valueOf(nl.getNote().getBGColor()));
                      writer.writeStartElement("text");
                      writer.writeAttribute("size", String.valueOf(nl.getNote().getFontSize()));
                      String noteText = nl.getNote().getText(); 
@@ -148,6 +153,7 @@ public class NoteIO {
                } else if (ename.equals("category")) {
                   String name = "";
                   boolean def = false;
+                  byte defNoteColor = 0;
                   for (int i=0; i<parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("name")) {
                         name = parser.getAttributeValue(i);
@@ -156,12 +162,14 @@ public class NoteIO {
                         if (def) {
                            defaultNotAdded = false;
                         }
+                     } else if (parser.getAttributeLocalName(i).equals("defaultnotecolor")) {
+                        defNoteColor = Byte.parseByte(parser.getAttributeValue(i));
                      }
                   }
-                  currentCategory = new Category(name,new NoteList(),def);
-                  c.add(currentCategory);                  
+                  currentCategory = new Category(name,new NoteList(),def,defNoteColor);
+                  c.add(currentCategory);
                } else if (ename.equals("note")) {
-                  currentNote = new Note("",s,c);
+                  currentNote = new Note("",s,c,(byte)0);
                   for (int i=0; i<parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");
@@ -181,6 +189,9 @@ public class NoteIO {
                      } else if (parser.getAttributeLocalName(i).equals("alwaysontop")) {
                         boolean a = parser.getAttributeValue(i).equals("true");
                         currentNote.setAlwaysOnTop(a);
+                     } else if (parser.getAttributeLocalName(i).equals("color")) {
+                        byte clr = Byte.parseByte(parser.getAttributeValue(i));
+                        currentNote.setBGColor(clr);
                      }
                   }
                   if (currentCategory != null) {
@@ -216,8 +227,8 @@ public class NoteIO {
          in.close();
       } catch (FileNotFoundException e) {
          //neu erstellen
-         c.add(new Category("Home",new NoteList(),true));
-         c.add(new Category("Office",new NoteList(),false));
+         c.add(new Category("Home",new NoteList(),true,(byte)0));
+         c.add(new Category("Office",new NoteList(),false,(byte)0));
       } catch (XMLStreamException e) {
          //Meldung ausgeben
          System.out.println("XML Error");
@@ -361,6 +372,10 @@ public class NoteIO {
          //System.out.println(e.getMessage());
          return false;
       }
+   }
+   
+   public static String getNotesfileVersion() {
+      return NOTESFILE_VERSION;
    }
 
 }

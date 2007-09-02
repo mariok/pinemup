@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <xsd:element name="notesfile" type="notesfileType" />
+   <xsd:complexType name="notesfileType">
+      <xsd:sequence>
+         <xsd:element name="category" type="categoryType" minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+      <xsd:attribute name="version" type="xsd:float" use="required" />
+   </xsd:complexType>
+   
+   <xsd:complexType name="categoryType">
+      <xsd:sequence>
+         <xsd:element name="note" type="noteType" minOccurs="0" maxOccurs="unbounded" />
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="required" />
+      <xsd:attribute name="default" type="xsd:boolean" use="required" />
+      <xsd:attribute name="defaultnotecolor" type="xsd:nonNegativeInteger" use="required" />
+   </xsd:complexType>
+   <xsd:complexType name="noteType">
+      <xsd:sequence>
+         <xsd:element name="text" type="textType" minOccurs="1" maxOccurs="unbounded" />
+      </xsd:sequence>
+      <xsd:attribute name="hidden" type="xsd:boolean" use="required" />
+      <xsd:attribute name="alwaysontop" type="xsd:boolean" use="required" />
+      <xsd:attribute name="xposition" type="xsd:integer" use="required" />
+      <xsd:attribute name="yposition" type="xsd:integer" use="required" />
+      <xsd:attribute name="width" type="xsd:positiveInteger" use="required" />
+      <xsd:attribute name="height" type="xsd:positiveInteger" use="required" />
+      <xsd:attribute name="color" type="xsd:nonNegativeInteger" use="required" />
+   </xsd:complexType>
+   <xsd:complexType name="textType" mixed="true">
+      <xsd:sequence>
+         <xsd:element name="newline" minOccurs="0" maxOccurs="unbounded" type="newlineType" />
+      </xsd:sequence>
+      <xsd:attribute name="size" type="xsd:positiveInteger" use="required" />
+   </xsd:complexType>
+   <xsd:complexType name="newlineType" />
+</xsd:schema>

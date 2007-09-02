@@ -143,7 +143,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
          if (categories.getNumberOfCategories()<1000) {
             String cname = JOptionPane.showInputDialog(null, "Category name:");
             if (cname != null) {
-               categories.add(new Category(cname,new NoteList(),false));
+               categories.add(new Category(cname,new NoteList(),false,(byte)0));
                PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
             }
          }

@@ -54,7 +54,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private boolean resizeCursor, resizing; // required to make window resizable
    
-   private JLabel bgLabel;
+   private BackgroundLabel bgLabel;
    
    private UserSettings settings;
    
@@ -167,8 +167,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       addWindowListener(this);
       textArea.setFocusable(false);
       
-      bgLabel = new BackgroundLabel(this);
-     
+      bgLabel = new BackgroundLabel(this, parentNote.getBGColor());
+      
       getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
       
       textPanel.getVerticalScrollBar().setOpaque(false);
@@ -390,7 +390,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
    
    public void updateFontSize() {
-      textArea.setFont(new java.awt.Font("SERIF", 1, parentNote.getFontSize()));
+      textArea.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, 1, parentNote.getFontSize()));
    }
    
    public void jumpIntoTextArea() {
@@ -410,5 +410,10 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private void showScrollBarIfNeeded() {
       scrollButton.setVisible(false);
       textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+   }
+   
+   public void setBGColor(byte c) {
+      bgLabel.setMyColor(c);
+      repaint();
    }
 }

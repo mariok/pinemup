@@ -9,7 +9,7 @@ public class IconClickLogic extends MouseAdapter implements ActionListener {
    public void actionPerformed(ActionEvent arg0) {
       Category defCat = categories.getDefaultCategory();
       if (defCat != null) {
-         Note newNote = new Note("",settings,categories);
+         Note newNote = new Note("",settings,categories,defCat.getDefaultNoteColor());
          defCat.getNotes().add(newNote);
          newNote.showIfNotHidden();
          newNote.jumpInto();

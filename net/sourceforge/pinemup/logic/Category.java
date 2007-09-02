@@ -25,11 +25,13 @@ public class Category {
   private String name;
   private NoteList notes;
   private boolean defaultCategory;
+  private byte defaultNoteColor;
   
-  public Category(String name, NoteList nl, boolean def) {
+  public Category(String name, NoteList nl, boolean def, byte defNoteColor) {
      this.name = name;
      this.notes = nl;
      this.defaultCategory = def;
+     this.defaultNoteColor = defNoteColor;
   }
   
   public NoteList getNotes() {
@@ -55,5 +57,13 @@ public class Category {
   
   public void setDefault(boolean b) {
      defaultCategory = b;
+  }
+  
+  public void setDefaultNoteColor(byte c) {
+     defaultNoteColor = c;
+  }
+  
+  public byte getDefaultNoteColor() {
+     return defaultNoteColor;
   }
 }

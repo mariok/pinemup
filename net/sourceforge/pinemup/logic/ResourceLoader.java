@@ -117,7 +117,7 @@ public class ResourceLoader {
    
    public static URL getSchemaFile() {
       String pkg = "net.sourceforge.pinemup.resources";
-      String filename = "notesfile-0.1.xsd";
+      String filename = "notesfile-" + NoteIO.getNotesfileVersion() + ".xsd";
       String name = "/" + pkg.replace('.', '/') + "/" + filename;
       URL u = PinEmUp.getMainApp().getClass().getResource(name);
       return u;

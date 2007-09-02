@@ -26,7 +26,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import net.sourceforge.pinemup.gui.NoteWindow;
+import net.sourceforge.pinemup.gui.*;
 import net.sourceforge.pinemup.logic.*;
 
 public class RightClickMenu extends JPopupMenu implements ActionListener {
@@ -42,7 +42,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
    
    private JMenuItem deleteNoteItem, alwaysOnTopOnItem, alwaysOnTopOffItem;
    
-   private JMenuItem[] setFontSizeItem, setCategoryItem;
+   private JMenuItem[] setFontSizeItem, setCategoryItem, setBGColorItem;
    
    private CategoryList categories;
    
@@ -73,6 +73,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       
       // settings menu
       JMenu settingsMenu = new JMenu("note settings");
+      
       JMenu setFontSizeMenu = new JMenu("font size");
       setFontSizeItem = new JMenuItem[26];
       for (int i=0; i<26; i++) {
@@ -85,8 +86,17 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          setFontSizeItem[i].addActionListener(this);
          setFontSizeMenu.add(setFontSizeItem[i]);
       }
-      JMenu setCategoryMenu = new JMenu("category");
       
+      JMenu setBGColorMenu = new JMenu("note color");
+      setBGColorItem = new JMenuItem[2];
+      for (byte i=0; i<setBGColorItem.length; i++) {
+         setBGColorItem[i] = new JMenuItem(BackgroundLabel.getColorName(i));
+         setBGColorItem[i].setText("  "+setBGColorItem[i].getText());
+         setBGColorItem[i].addActionListener(this);
+         setBGColorMenu.add(setBGColorItem[i]);
+      }
+      
+      JMenu setCategoryMenu = new JMenu("category");
       setCategoryItem = new JMenuItem[categories.getNumberOfCategories()];
       for (int i=0; i<setCategoryItem.length; i++) {
          setCategoryItem[i] = new JMenuItem((i+1) + " " + categories.getNames()[i]);
@@ -111,6 +121,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       settingsMenu.add(alwaysOnTopMenu);
       settingsMenu.add(setCategoryMenu);
       settingsMenu.add(setFontSizeMenu);
+      settingsMenu.add(setBGColorMenu);
       add(settingsMenu);
       addSeparator();
       
@@ -144,6 +155,13 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
             if (src == setFontSizeItem[i]) {
                parentWindow.getParentNote().setFontSize((short)(i+5));
                parentWindow.updateFontSize();
+            }
+         }
+         
+         for (byte i=0; i<setBGColorItem.length; i++) {
+            if (src == setBGColorItem[i]) {
+               parentWindow.getParentNote().setBGColor(i);
+               parentWindow.setBGColor(i);
             }
          }
       }

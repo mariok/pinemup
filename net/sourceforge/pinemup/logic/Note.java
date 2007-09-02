@@ -39,6 +39,8 @@ public class Note implements Serializable {
 
    private short xpos, ypos, xsize, ysize, fontsize;
    
+   private byte bgColor;
+   
    private transient CategoryList categories;
    
    private transient UserSettings settings;
@@ -72,7 +74,7 @@ public class Note implements Serializable {
       hidden = b;
    }
 
-   public Note(String text, UserSettings s, CategoryList cl) {
+   public Note(String text, UserSettings s, CategoryList cl, byte bgColor) {
       this.text = text;
       hidden = false;
       window = null;
@@ -83,6 +85,7 @@ public class Note implements Serializable {
       ysize = settings.getDefaultWindowHeight();
       fontsize = settings.getDefaultFontSize();
       alwaysOnTop = settings.getDefaultAlwaysOnTop();
+      this.bgColor = bgColor;
       categories = cl;
    }
 
@@ -176,6 +179,14 @@ public class Note implements Serializable {
    
    public void setWindow(NoteWindow w) {
       window = w;
+   }
+   
+   public void setBGColor(byte c) {
+      bgColor = c;
+   }
+   
+   public byte getBGColor() {
+      return bgColor;
    }
 
 }

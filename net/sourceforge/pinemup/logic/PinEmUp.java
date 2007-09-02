@@ -27,7 +27,7 @@ import javax.swing.*;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
 public class PinEmUp {
-   private static final String VERSION = "0.3";
+   private static final String VERSION = "0.4-svn";
    
    private Note failNote;
    

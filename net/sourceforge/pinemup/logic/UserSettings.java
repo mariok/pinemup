@@ -32,6 +32,8 @@ public class UserSettings {
    private Preferences prefs;
    
    private static final long serialVersionUID = 1L;
+   
+   private final String PREFIX = "peu_dev_";
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;
@@ -211,26 +213,26 @@ public class UserSettings {
 
    public void saveSettings() {
       // save preferences
-      prefs.putInt("peu_defaultWindowWidth", defaultWindowWidth);
-      prefs.putInt("peu_defaultWindowHeight", defaultWindowHeight);
-      prefs.putInt("peu_defaultWindowXPosition", defaultWindowXPosition);
-      prefs.putInt("peu_defaultWindowYPosition", defaultWindowYPosition);
-      prefs.putInt("peu_defaultFontSize", defaultFontSize);
-      prefs.putBoolean("peu_defaultAlwaysOnTop", defaultAlwaysOnTop);
-      prefs.put("peu_notesFile", notesFile);
-      prefs.put("peu_ftpServer", ftpServer);
-      prefs.put("peu_ftpUser", ftpUser);
+      prefs.putInt(PREFIX + "defaultWindowWidth", defaultWindowWidth);
+      prefs.putInt(PREFIX + "defaultWindowHeight", defaultWindowHeight);
+      prefs.putInt(PREFIX + "defaultWindowXPosition", defaultWindowXPosition);
+      prefs.putInt(PREFIX + "defaultWindowYPosition", defaultWindowYPosition);
+      prefs.putInt(PREFIX + "defaultFontSize", defaultFontSize);
+      prefs.putBoolean(PREFIX + "defaultAlwaysOnTop", defaultAlwaysOnTop);
+      prefs.put(PREFIX + "notesFile", notesFile);
+      prefs.put(PREFIX + "ftpServer", ftpServer);
+      prefs.put(PREFIX + "ftpUser", ftpUser);
       if (storeFTPPass) {
-         prefs.put("peu_ftpPasswd", getFtpPasswdString());         
+         prefs.put(PREFIX + "ftpPasswd", getFtpPasswdString());         
       } else {
-         prefs.put("peu_ftpPasswd", "");
+         prefs.put(PREFIX + "ftpPasswd", "");
       }
-      prefs.put("peu_ftpDir", ftpDir);
-      prefs.putInt("peu_closeicon", closeicon);
-      prefs.putBoolean("peu_showCategory", showCategory);
-      prefs.putBoolean("peu_confirmDeletion", confirmDeletion);
-      prefs.putBoolean("peu_storeFTPPass", storeFTPPass);
-      prefs.putBoolean("peu_updateCheckEnabled", updateCheckEnabled);
+      prefs.put(PREFIX + "ftpDir", ftpDir);
+      prefs.putInt(PREFIX + "closeicon", closeicon);
+      prefs.putBoolean(PREFIX + "showCategory", showCategory);
+      prefs.putBoolean(PREFIX + "confirmDeletion", confirmDeletion);
+      prefs.putBoolean(PREFIX + "storeFTPPass", storeFTPPass);
+      prefs.putBoolean(PREFIX + "updateCheckEnabled", updateCheckEnabled);
    }
 
    public UserSettings() {
@@ -241,21 +243,21 @@ public class UserSettings {
          homeDir = homeDir + "/";
       }
       
-      defaultWindowWidth = Short.parseShort(prefs.get("peu_defaultWindowWidth", "170"));
-      defaultWindowHeight = Short.parseShort(prefs.get("peu_defaultWindowHeight", "150"));
-      defaultWindowXPosition = Short.parseShort(prefs.get("peu_defaultWindowXPosition", "0"));
-      defaultWindowYPosition = Short.parseShort(prefs.get("peu_defaultWindowYPosition", "0"));
-      defaultFontSize = Short.parseShort(prefs.get("peu_defaultFontSize", "14"));
-      defaultAlwaysOnTop = prefs.getBoolean("peu_defaultAlwaysOnTop", false);
-      notesFile = prefs.get("peu_notesFile", homeDir + "pinemup.xml");
-      ftpServer = prefs.get("peu_ftpServer", "ftp.example.com");
-      ftpUser = prefs.get("peu_ftpUser", "anonymous");
-      ftpPasswd = prefs.get("peu_ftpPasswd", "").toCharArray();
-      ftpDir = prefs.get("peu_ftpDir", "/");
-      closeicon = Byte.parseByte(prefs.get("peu_closeicon", "1"));
-      showCategory = prefs.getBoolean("peu_showCategory", false);
-      confirmDeletion = prefs.getBoolean("peu_confirmDeletion", true);
-      storeFTPPass = prefs.getBoolean("peu_storeFTPPass", false);
-      updateCheckEnabled = prefs.getBoolean("peu_updateCheckEnabled", true);
+      defaultWindowWidth = Short.parseShort(prefs.get(PREFIX + "defaultWindowWidth", "170"));
+      defaultWindowHeight = Short.parseShort(prefs.get(PREFIX + "defaultWindowHeight", "150"));
+      defaultWindowXPosition = Short.parseShort(prefs.get(PREFIX + "defaultWindowXPosition", "0"));
+      defaultWindowYPosition = Short.parseShort(prefs.get(PREFIX + "defaultWindowYPosition", "0"));
+      defaultFontSize = Short.parseShort(prefs.get(PREFIX + "defaultFontSize", "14"));
+      defaultAlwaysOnTop = prefs.getBoolean(PREFIX + "defaultAlwaysOnTop", false);
+      notesFile = prefs.get(PREFIX + "notesFile", homeDir + "pinemup.xml");
+      ftpServer = prefs.get(PREFIX + "ftpServer", "ftp.example.com");
+      ftpUser = prefs.get(PREFIX + "ftpUser", "anonymous");
+      ftpPasswd = prefs.get(PREFIX + "ftpPasswd", "").toCharArray();
+      ftpDir = prefs.get(PREFIX + "ftpDir", "/");
+      closeicon = Byte.parseByte(prefs.get(PREFIX + "closeicon", "1"));
+      showCategory = prefs.getBoolean(PREFIX + "showCategory", false);
+      confirmDeletion = prefs.getBoolean(PREFIX + "confirmDeletion", true);
+      storeFTPPass = prefs.getBoolean(PREFIX + "storeFTPPass", false);
+      updateCheckEnabled = prefs.getBoolean(PREFIX + "updateCheckEnabled", true);
    }
 }
