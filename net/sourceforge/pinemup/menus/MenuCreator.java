@@ -54,10 +54,7 @@ public class MenuCreator implements ActionListener {
       "hide notes of this category",
       "show all notes of this category",
       "show only notes of this category",
-      "set as default",
-      "move up in list",
-      "rename this category",
-      "remove this category"
+      "set as default"
    };
    
    public MenuCreator(CategoryList cl, UserSettings s) {
@@ -92,7 +89,6 @@ public class MenuCreator implements ActionListener {
          menu.add(categoryItemJ[i]);
          switch(i) {
          case 2:
-         case 5:
             menu.addSeparator();
             break;
          default:
@@ -111,7 +107,6 @@ public class MenuCreator implements ActionListener {
          menu.add(categoryItem[i]);
          switch(i) {
          case 2:
-         case 5:
             menu.addSeparator();
             break;
          default:
@@ -143,32 +138,6 @@ public class MenuCreator implements ActionListener {
          categories.showOnlyNotesOfCategory(((MenuItemWithCategory)src).getCategory());
       } else if ((categoryItem != null && src == categoryItem[3]) || (categoryItemJ != null && src == categoryItemJ[3])) {
          categories.setDefaultCategory(((MenuItemWithCategory)src).getCategory());
-      } else if ((categoryItem != null && src == categoryItem[4]) || (categoryItemJ != null && src == categoryItemJ[4])) {
-         categories.moveCategoryUp(((MenuItemWithCategory)src).getCategory());
-         PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
-      } else if ((categoryItem != null && src == categoryItem[5]) || (categoryItemJ != null && src == categoryItemJ[5])) {
-         String newname = JOptionPane.showInputDialog(null, "Category name:");
-         if (newname != null) {
-            ((MenuItemWithCategory)src).getCategory().rename(newname);
-            PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
-         }
-      } else if ((categoryItem != null && src == categoryItem[6]) || (categoryItem != null && src == categoryItem[6])) {
-         boolean confirmed = true;
-         if (categories.getNumberOfCategories() == 1) {
-            confirmed = false;
-            JOptionPane.showMessageDialog(null, "The last remaining category cannot be removed!","pin 'em up - error",JOptionPane.WARNING_MESSAGE);
-         } else if (((MenuItemWithCategory)src).getCategory().getNotes().getNumberOfNotes() > 0) {
-            confirmed = JOptionPane.showConfirmDialog(null, "All " + ((MenuItemWithCategory)src).getCategory().getNotes().getNumberOfNotes() + " notes in this category will be deleted! Proceed?","Remove category",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
-         }
-         
-         if (confirmed) {
-            ((MenuItemWithCategory)src).getCategory().getNotes().hideAllNotes();
-            categories.remove(((MenuItemWithCategory)src).getCategory());
-            if (((MenuItemWithCategory)src).getCategory().isDefaultCategory()) {
-               categories.getCategory().setDefault(true);
-            }
-            PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
-         }
       }
       
       // save notes to file after every change

@@ -82,4 +82,8 @@ public class BackgroundLabel extends JLabel {
    public static String getColorName(byte nr) {
       return COLORNAME[nr];
    }
+   
+   public static int getNumberOfColors() {
+      return COLORNAME.length;
+   }
 }

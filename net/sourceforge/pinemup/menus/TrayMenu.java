@@ -36,7 +36,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
     */
    private static final long serialVersionUID = 1L;
 
-   private MenuItem addCategoryItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
+   private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
    
    private UserSettings settings;
    
@@ -72,10 +72,10 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       }
       
       //other category actions
-      addCategoryItem = new MenuItem("add new category");
-      addCategoryItem.addActionListener(this);
       categoriesMenu.addSeparator();
-      categoriesMenu.add(addCategoryItem);
+      manageCategoriesItem = new MenuItem("manage categories");
+      manageCategoriesItem.addActionListener(this);
+      categoriesMenu.add(manageCategoriesItem);
       
       // im-/export menu      
       addSeparator();
@@ -139,14 +139,8 @@ public class TrayMenu extends PopupMenu implements ActionListener {
          }
       } else if (src == exportItem) {
          new ExportDialog(categories);
-      } else if (src == addCategoryItem) {
-         if (categories.getNumberOfCategories()<1000) {
-            String cname = JOptionPane.showInputDialog(null, "Category name:");
-            if (cname != null) {
-               categories.add(new Category(cname,new NoteList(),false,(byte)0));
-               PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
-            }
-         }
+      } else if (src == manageCategoriesItem) {
+         new CategoryDialog(categories,settings);
       } else if (src == updateItem) {
          new UpdateCheckThread(true);
       }

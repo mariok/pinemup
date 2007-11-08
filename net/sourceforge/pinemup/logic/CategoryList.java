@@ -208,4 +208,23 @@ public class CategoryList {
       }
    }
    
+   public void moveCategoryDown(Category c) {
+      if (next != null) {
+         if (category == c) { //current category
+            Category temp = category;
+            category = next.getCategory();
+            next.setCategory(temp);
+         } else {
+            next.moveCategoryDown(c);
+         }
+      }
+   }
+   
+   public Category getCategoryByNumber(int n) {
+      CategoryList cl = this;
+      for (int i=0; i<n; i++) {
+         cl = cl.next;
+      }
+      return cl.category;
+   }
 }
