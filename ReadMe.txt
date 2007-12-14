@@ -47,6 +47,9 @@ Contents
     - BUGFIX: font type was changed to SERIF on change of font-size
     - BUGFIX: notesfile now allows negative note-positions
     - notecolor can be changed
+    - dialog for managing categories
+    - JTextArea in NoteWindows replaced by JEditorPane
+    - title of note-windows changed
     - some internal code improvements
 
   0.3:
@@ -99,7 +102,6 @@ Contents
   - option: assign all visible notes to one category
   - schedule --> popup at a certain time
   - special TODO notes
-  - easier category organization
   - rightclickmenu in textarea (cut, copy, paste, ...)
   - different languages
   - more freedom with fonts / notes look & feel

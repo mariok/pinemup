@@ -30,20 +30,18 @@ public class BackgroundLabel extends JLabel {
     */
    private static final long serialVersionUID = 1L;
    
-   //color-arrays
-   private static final String[] COLORNAME = {
-      "yellow",
-      "green"
-   };
-   
-   private static final Color[] MYSTARTCOLOR = {
-      new Color(255, 255, 185),
-      new Color(0, 255, 0)
-   };
-   
-   private static final Color[] MYENDCOLOR = {
-      new Color(255, 235, 70),
-      new Color(100, 255, 100)
+   //color-array
+   private static final Object[][] COLORS = {
+      {
+         "yellow",
+         new Color(255, 255, 185),
+         new Color(255, 235, 70)
+      },
+      {
+         "green",
+         new Color(0, 255, 0),
+         new Color(100, 255, 100)
+      }
    };
    
    private NoteWindow parentWindow;
@@ -60,7 +58,7 @@ public class BackgroundLabel extends JLabel {
           int startY = 0;
           int endX = startX+1;
           int endY = startY+h;
-          GradientPaint gradient = new GradientPaint(startX, startY, MYSTARTCOLOR[myColor], endX, endY, MYENDCOLOR[myColor]);
+          GradientPaint gradient = new GradientPaint(startX, startY, (Color)COLORS[myColor][1], endX, endY, (Color)COLORS[myColor][2]);
           g2.setPaint(gradient);
        }
        g2.fillRect(0,0,w,h);
@@ -80,10 +78,22 @@ public class BackgroundLabel extends JLabel {
    }
    
    public static String getColorName(byte nr) {
-      return COLORNAME[nr];
+      return (String)COLORS[nr][0];
    }
    
    public static int getNumberOfColors() {
-      return COLORNAME.length;
+      return COLORS.length;
+   }
+   
+   public static Color getColor(byte nr) {
+      return (Color)COLORS[nr][1];
+   }
+   
+   public static String[] getColorNames() {
+      String[] names = new String[COLORS.length];
+      for (int i=0;i<COLORS.length;i++) {
+         names[i] = (String)COLORS[i][0];
+      }
+      return names;
    }
 }
