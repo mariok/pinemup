@@ -200,6 +200,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       jt.setColumnSelectionAllowed(false);
       jt.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
       jt.getSelectionModel().addListSelectionListener(this);
+      jt.setDefaultRenderer(Object.class, new ColoredTableCellRenderer());
       return jt;
    }
    
