@@ -23,8 +23,9 @@ public class ColoredTableCellRenderer implements TableCellRenderer {
       if (column == 2) {
          Color myColor = BackgroundLabel.getColor(Byte.parseByte((String)value));
          if (hasFocus || isSelected) {
-            myCell.setBackground(selectionColor);
-            myCell.setForeground(selectionColor);
+            myCell.setBackground(myColor);
+            myCell.setBorder(BorderFactory.createLineBorder(selectionColor, 3));
+            myCell.setForeground(myColor);
          } else {
             myCell.setBackground(myColor);
             myCell.setForeground(myColor);
