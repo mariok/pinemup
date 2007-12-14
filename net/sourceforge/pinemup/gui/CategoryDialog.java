@@ -23,19 +23,13 @@ package net.sourceforge.pinemup.gui;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
 import net.sourceforge.pinemup.logic.*;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
@@ -195,12 +189,15 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       for (int i=0;i<rowData.length;i++) {
          catTableModel.addRow(rowData[i]);
       }
-      JTable jt = new JTable(catTableModel);
       
+      JTable jt = new JTable(catTableModel);
       jt.setColumnSelectionAllowed(false);
       jt.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
       jt.getSelectionModel().addListSelectionListener(this);
       jt.setDefaultRenderer(Object.class, new ColoredTableCellRenderer());
+      jt.getColumnModel().getColumn(0).setPreferredWidth(70);
+      jt.getColumnModel().getColumn(1).setPreferredWidth(400);
+      jt.getColumnModel().getColumn(2).setPreferredWidth(70);
       return jt;
    }
    

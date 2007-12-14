@@ -19,6 +19,7 @@ public class ColoredTableCellRenderer implements TableCellRenderer {
       
       column = table.convertColumnIndexToModel(column);
       
+      //set colors
       if (column == 2) {
          Color myColor = BackgroundLabel.getColor(Byte.parseByte((String)value));
          if (hasFocus || isSelected) {
@@ -33,6 +34,11 @@ public class ColoredTableCellRenderer implements TableCellRenderer {
                myCell.setBackground(selectionColor);
                myCell.setForeground(Color.white);
          }
+      }
+      
+      //change alignment for first column
+      if (column == 0) {
+         myCell.setHorizontalAlignment(JLabel.CENTER);
       }
       return myCell;
    }
