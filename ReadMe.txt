@@ -48,7 +48,6 @@ Contents
     - BUGFIX: notesfile now allows negative note-positions
     - notecolor can be changed
     - dialog for managing categories
-    - JTextArea in NoteWindows replaced by JEditorPane
     - title of note-windows changed
     - some internal code improvements
 

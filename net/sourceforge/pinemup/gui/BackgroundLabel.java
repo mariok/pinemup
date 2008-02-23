@@ -39,8 +39,19 @@ public class BackgroundLabel extends JLabel {
       },
       {
          "green",
-         new Color(0, 255, 0),
-         new Color(100, 255, 100)
+         new Color(100, 255, 100),
+         new Color(0, 255, 0)         
+      },
+      {
+         "red",
+         new Color(255, 96, 96),
+         new Color(255, 11, 11)         
+      },
+      {
+         "blue",
+         new Color(154, 154, 255),
+         new Color(93, 93, 208)
+         
       }
    };
    
