@@ -23,7 +23,6 @@ package net.sourceforge.pinemup.gui;
 
 import javax.swing.*;
 import javax.swing.text.View;
-import javax.swing.text.html.HTMLEditorKit;
 
 import net.sourceforge.pinemup.logic.*;
 import net.sourceforge.pinemup.menus.*;
@@ -43,7 +42,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private JPanel topPanel, catPanel, mainPanel;
 
-   private JEditorPane textPane;
+   private JTextArea textArea;
 
    private Note parentNote;
 
@@ -59,8 +58,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    
    private UserSettings settings;
    
-   private CategoryList categories;
-   
+   private CategoryList categories;   
 
    public NoteWindow(Note pn, CategoryList c, UserSettings s) {
       super(
@@ -114,20 +112,15 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       }
 
       // create and adjust TextArea
-      textPane = new JEditorPane();
-      textPane.setEditable(true);
-      textPane.setOpaque(false);
-      textPane.addFocusListener(this);
-      textPane.setMargin(new Insets(0, 10, 3, 0));
-      HTMLEditorKit myEditorKit = new HTMLEditorKit();
-      textPane.getEditorKit().deinstall(textPane);
-      textPane.setEditorKit(myEditorKit);
-      //textPane.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, 1, parentNote.getFontSize()));
-      javax.swing.text.html.StyleSheet mySheet = myEditorKit.getStyleSheet();
-      //TODO: Fonts, etc.
-    
-      textPane.setText(parentNote.getText());
-      textPanel.setViewportView(textPane);
+      textArea = new JTextArea(parentNote.getText(), 1, 1);
+      textArea.setEditable(true);
+      textArea.setOpaque(false);
+      textArea.addFocusListener(this);
+      textArea.setMargin(new Insets(0, 10, 3, 0));
+      textArea.setLineWrap(true);
+      textArea.setWrapStyleWord(true);
+      updateFontSize();
+      textPanel.setViewportView(textArea);
       textPanel.getViewport().setOpaque(false);
       textPanel.setBorder(null);
       textPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -165,7 +158,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       closeButton.setPreferredSize(new Dimension(20, 20));
       closeButton.setMargin(new Insets(3, 0, 0, 3));
       topPanel.add(closeButton, BorderLayout.EAST);
-      updateCategory();
       
       setUndecorated(true);
       setLocation(parentNote.getXPos(),parentNote.getYPos());
@@ -177,37 +169,39 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       // resize listener
       resizing = false;
       resizeCursor = false;
-      textPane.addMouseListener(this);
-      textPane.addMouseMotionListener(this);
+      textArea.addMouseListener(this);
+      textArea.addMouseMotionListener(this);
       
       setAlwaysOnTop(parentNote.isAlwaysOnTop());
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       addWindowListener(this);
-      textPane.setFocusable(false);
+      textArea.setFocusable(false);
       
       bgLabel = new BackgroundLabel(this, parentNote.getBGColor());
       
       getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
       
       textPanel.getVerticalScrollBar().setOpaque(false);
+      
+      updateCategory();
       setVisible(true);
       showScrollButtonIfNeeded();
    }
 
    public void focusGained(FocusEvent e) {
-      if (e.getSource() == textPane) {
+      if (e.getSource() == textArea) {
          showScrollBarIfNeeded();   
       }      
    }
 
    public void focusLost(FocusEvent e) {
-      if (e.getSource() == textPane) {
+      if (e.getSource() == textArea) {
          if (!resizing) { //resizing would call showScrollBarIfNeeded() and thus revert the effect
             showScrollButtonIfNeeded();
          }
-         parentNote.setText(textPane.getText());
-         textPane.setFocusable(false);
+         parentNote.setText(textArea.getText());
+         textArea.setFocusable(false);
          
          // write notes to file after every change
          NoteIO.writeCategoriesToFile(categories, settings);
@@ -259,11 +253,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             // write notes to file after every change
             NoteIO.writeCategoriesToFile(categories, settings);
          } else {
-            textPane.setFocusable(false);
+            textArea.setFocusable(false);
          }
-      } else if (e.getSource() == textPane) {
-         textPane.setFocusable(true);
-         textPane.requestFocus();         
+      } else if (e.getSource() == textArea) {
+         textArea.setFocusable(true);
+         textArea.requestFocus();         
       }
    }
    
@@ -272,8 +266,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       int sizeY = OFFSET;
             
       //get number of lines (incl. wrapped lines)
-      int lineHeight = textPane.getFontMetrics(textPane.getFont()).getHeight();
-      View view = textPane.getUI().getRootView(textPane).getView(0);
+      int lineHeight = textArea.getFontMetrics(textArea.getFont()).getHeight();
+      View view = textArea.getUI().getRootView(textArea).getView(0);
       int prefHeight = (int)view.getPreferredSpan(View.Y_AXIS);
       int lines = prefHeight / lineHeight;
       
@@ -299,23 +293,23 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       Object src = e.getSource();
       if (src == topPanel || src == catButton) {
          checkPopupMenu(e);
-         textPane.setFocusable(false);
+         textArea.setFocusable(false);
          if (e.getButton() == MouseEvent.BUTTON1) {
             // Position on Panel
             dx = e.getXOnScreen() - getX();
             dy = e.getYOnScreen() - getY();
             dragging = true;
          }
-      } else if (src == textPane) {
+      } else if (src == textArea) {
          if (e.getButton() == MouseEvent.BUTTON1 && resizeCursor) {
             dx = getX() + getWidth() - e.getXOnScreen();
             dy = getY() + getHeight() - e.getYOnScreen();
             resizing = true;
-            textPane.setFocusable(false);
+            textArea.setFocusable(false);
             showScrollBarIfNeeded();            
          } else {
-            textPane.setFocusable(true);
-            textPane.requestFocus();
+            textArea.setFocusable(true);
+            textArea.requestFocus();
          }
       }
    }
@@ -340,9 +334,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       } else if (e.getSource() == closeButton) {
          // restore button background if not pressed
          repaint();
-      } else if (e.getSource() == textPane) {
-         textPane.setFocusable(true);
-         textPane.requestFocus();
+      } else if (e.getSource() == textArea) {
+         textArea.setFocusable(true);
+         textArea.requestFocus();
       }
       
       if (changeMade) {
@@ -388,40 +382,41 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             catButton.setText(cat.getName());
             repaint();
          }
+         setBGColor(parentNote.getBGColor());
       }
    }
 
    public void mouseMoved(MouseEvent e) {
       if (!resizing) {
          // if in lower right corner, start resizing or change cursor
-         if ((e.getSource() == textPane && (e.getX() >= textPane.getWidth() - 10 && e.getY() >= textPanel.getHeight() - 10)) || (e.getSource() == scrollButton && (e.getX() >= scrollButton.getWidth() - 10))) { // height from panel because of vertical scrolling
+         if ((e.getSource() == textArea && (e.getX() >= textArea.getWidth() - 10 && e.getY() >= textPanel.getHeight() - 10)) || (e.getSource() == scrollButton && (e.getX() >= scrollButton.getWidth() - 10))) { // height from panel because of vertical scrolling
             if (!resizeCursor) {
                resizeCursor = true;
-               textPane.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+               textArea.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
             }
          } else {
             if (resizeCursor) {
                resizeCursor = false;
-               textPane.setCursor(new Cursor(Cursor.TEXT_CURSOR));
+               textArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
             }
          }
       }
    }
    
    public void updateFontSize() {
-      textPane.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, 1, parentNote.getFontSize()));
+      textArea.setFont(new java.awt.Font("SANSSERIF", 1, parentNote.getFontSize()));
    }
    
    public void jumpIntoTextArea() {
       toFront();
       requestFocus();
-      textPane.setFocusable(true);
-      textPane.requestFocusInWindow();
+      textArea.setFocusable(true);
+      textArea.requestFocusInWindow();
    }
 
    private void showScrollButtonIfNeeded() {
       textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-      if (textPanel.getHeight() != textPane.getHeight()) {
+      if (textPanel.getHeight() != textArea.getHeight()) {
          scrollButton.setVisible(true);
       }
    }

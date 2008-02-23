@@ -120,12 +120,12 @@ public class NoteList {
      return b;
   }
   
-  public void updateAllCategoryNamesInWindows() {
+  public void updateAllCategoriesInWindows() {
      if (note != null) {
-        note.updateCategoryNameInWindow();
+        note.updateCategoryInWindow();
      }
      if (next != null) {
-        next.updateAllCategoryNamesInWindows();
+        next.updateAllCategoriesInWindows();
      }
   }
   

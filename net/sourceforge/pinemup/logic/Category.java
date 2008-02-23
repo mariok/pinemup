@@ -48,7 +48,7 @@ public class Category {
   
   public void rename(String s) {
      name = s;
-     notes.updateAllCategoryNamesInWindows();
+     notes.updateAllCategoriesInWindows();
   }
   
   public boolean isDefaultCategory() {

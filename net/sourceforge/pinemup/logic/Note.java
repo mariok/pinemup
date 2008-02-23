@@ -159,15 +159,17 @@ public class Note implements Serializable {
          newCat.getNotes().add(this);
          //remove from old category
          if (myCategory != null) {
-            //remove from current Category
+            //remove from current category
             myCategory.getNotes().removeWithoutHiding(this);
          }
-         //update Category Name in Window
-         updateCategoryNameInWindow();
+         //set color to default color of the new category
+         setBGColor(newCat.getDefaultNoteColor());
+         //update Category name and color in Window
+         updateCategoryInWindow();
       }
    }
    
-   public void updateCategoryNameInWindow() {
+   public void updateCategoryInWindow() {
       if (!hidden && window != null) {
          window.updateCategory();
       }

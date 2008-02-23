@@ -128,11 +128,11 @@ public class CategoryList {
       }
    }
    
-   public void updateAllCategoryNamesInWindows() {
+   public void updateAllCategoriesInWindows() {
       if (category != null) {
-         category.getNotes().updateAllCategoryNamesInWindows();
+         category.getNotes().updateAllCategoriesInWindows();
          if (next != null) {
-            next.updateAllCategoryNamesInWindows();
+            next.updateAllCategoriesInWindows();
          }
       }
    }

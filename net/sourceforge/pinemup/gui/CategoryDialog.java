@@ -285,16 +285,18 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       }
       
       if (confirmed) {
+         boolean isDef = selectedCat.isDefaultCategory();
          selectedCat.getNotes().hideAllNotes();
          categories.remove(selectedCat);
          catTableModel.removeRow(selectedRow);
-         if (selectedCat.isDefaultCategory()) {
+         if (isDef) {
             categories.getCategory().setDefault(true);
             catTableModel.setValueAt("!", 0, 0);
             defCat = 0;
          }
          PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
          noOfCategories--;
+         selectedCat = null;
          
          //disable all Buttons and fields
          moveUpButton.setEnabled(false);
@@ -382,6 +384,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          byte c = (byte)colorBox.getSelectedIndex();
          catTable.getModel().setValueAt(String.valueOf(c), selectedRow, 2);
          selectedCat.setDefaultNoteColor(c);
+         colorBox.setBackground(BackgroundLabel.getColor(selectedCat.getDefaultNoteColor()));
       }
    }
 
