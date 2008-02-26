@@ -46,7 +46,7 @@ Contents
   0.4:
     - BUGFIX: font type was changed to SERIF on change of font-size
     - BUGFIX: notesfile now allows negative note-positions
-    - notecolor can be changed
+    - notecolor can be changed (9 different colors so far)
     - dialog for managing categories
     - title of note-windows changed
     - some internal code improvements
@@ -97,13 +97,13 @@ Contents
 
 4. Planned features
 ------------------------
-  - priorities (maybe with different colors)
   - option: assign all visible notes to one category
   - schedule --> popup at a certain time
   - special TODO notes
   - rightclickmenu in textarea (cut, copy, paste, ...)
   - different languages
   - more freedom with fonts / notes look & feel
+  - plugins
 
 
 
@@ -121,7 +121,7 @@ Contents
 6. Thanks
 ------------------------
   Special Thanks go to:
-  - Jan Laczay and Michael Mrose for their contributions to the project website
+  - Jan Laczay for his contributions to the project website and the note-color design
   - Andreas Kwiatkowski for redisigning the closeicon
+  - Michael Mrose for their contributions to the project website
   - Natalie Noering for testing the new version
-  

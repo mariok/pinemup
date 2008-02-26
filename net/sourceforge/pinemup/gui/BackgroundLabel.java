@@ -34,24 +34,48 @@ public class BackgroundLabel extends JLabel {
    private static final Object[][] COLORS = {
       {
          "yellow",
-         new Color(255, 255, 185),
-         new Color(255, 235, 70)
+         new Color(254, 255, 204),
+         new Color(255, 255, 154)
       },
       {
          "green",
-         new Color(100, 255, 100),
-         new Color(0, 255, 0)         
-      },
-      {
-         "red",
-         new Color(255, 96, 96),
-         new Color(255, 11, 11)         
+         new Color(216, 255, 204),
+         new Color(177, 255, 153)
       },
       {
          "blue",
-         new Color(154, 154, 255),
-         new Color(93, 93, 208)
-         
+         new Color(204, 213, 255),
+         new Color(153, 170, 255)
+      },
+      {
+         "turquoise",
+         new Color(225, 247, 250),
+         new Color(177, 240, 253)
+      },
+      {
+         "orange",
+         new Color(252, 234, 177),
+         new Color(252, 221, 126)
+      },
+      {
+         "magenta",
+         new Color(255, 204, 230),
+         new Color(255, 153, 204)
+      },
+      {
+         "purple",
+         new Color(222, 202, 252),
+         new Color(192, 154, 255)
+      },
+      {
+         "gray",
+         new Color(209, 209, 209),
+         new Color(184, 184, 184)
+      },
+      {
+         "red",
+         new Color(255, 166, 167),
+         new Color(255, 115, 115)
       }
    };
    
