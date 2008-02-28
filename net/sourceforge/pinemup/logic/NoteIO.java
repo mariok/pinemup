@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
 
 public class NoteIO {
    
-   private static final String NOTESFILE_VERSION = "0.2";
+   private static final String LATEST_NOTESFILE_VERSION = "0.2";
    
    public static void writeCategoriesToFile(CategoryList c, UserSettings s) {
       //write notes to xml file
@@ -47,7 +47,7 @@ public class NoteIO {
          
          writer.writeStartDocument("UTF-8","1.0");
          writer.writeStartElement("notesfile");
-         writer.writeAttribute("version",NOTESFILE_VERSION);
+         writer.writeAttribute("version",LATEST_NOTESFILE_VERSION);
          
          CategoryList cl = c;
          while (cl != null) {
@@ -350,7 +350,8 @@ public class NoteIO {
       // Here the schema is loaded from a java.io.File, but you could use 
       // a java.net.URL or a javax.xml.transform.Source instead.
       //File schemaLocation = ResourceLoader.getSchemaFile();
-      URL schemaLocation = ResourceLoader.getSchemaFile();
+      String version = getNotesFileVersion(filename);
+      URL schemaLocation = ResourceLoader.getSchemaFile(version);
       Schema schema;
       schema = factory.newSchema(schemaLocation);
  
@@ -374,8 +375,46 @@ public class NoteIO {
       }
    }
    
-   public static String getNotesfileVersion() {
-      return NOTESFILE_VERSION;
+   private static String getNotesFileVersion(String filename) {
+      String version = "";
+      try {
+         InputStream in = new FileInputStream(filename);
+         XMLInputFactory myFactory = XMLInputFactory.newInstance();
+         XMLStreamReader parser = myFactory.createXMLStreamReader(in,"UTF-8");
+        
+         int event;
+         while(parser.hasNext()) {
+            event = parser.next();
+            switch(event) {
+            case XMLStreamConstants.START_ELEMENT:
+               String ename = parser.getLocalName();
+               if (ename.equals("notesfile")) {
+                  for (int i=0; i<parser.getAttributeCount(); i++) {
+                     if (parser.getAttributeLocalName(i).equals("version")) {
+                        version = parser.getAttributeValue(i);
+                     }
+                  }
+               }
+               break;
+            default:
+               // do nothing
+               break;
+            }
+         }
+         parser.close();
+         in.close();
+      } catch (FileNotFoundException e) {
+         // do nothing
+      } catch (XMLStreamException e) {
+         System.out.println("XML Error");
+      } catch (IOException e) {
+         System.out.println("IO Error");
+      }
+      return version;
+   }
+   
+   public static String getLatestNotesfileVersion() {
+      return LATEST_NOTESFILE_VERSION;
    }
 
 }
