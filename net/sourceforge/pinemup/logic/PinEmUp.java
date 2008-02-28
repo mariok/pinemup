@@ -73,17 +73,18 @@ public class PinEmUp {
    }
 
    public PinEmUp() {
-      // for FTP issues
-      failNote = new Note();
-      
-      PinEmUp.setPinEmUp(this);
+      if (SystemTray.isSupported()) {
+         
+         // for FTP issues
+         failNote = new Note();
+         
+         PinEmUp.setPinEmUp(this);
 
-      // load user settings
-      settings = new UserSettings();
+         // load user settings
+         settings = new UserSettings();
 
-      SystemTray tray = SystemTray.getSystemTray();
-      //SystemTray.isSupported() does not work for all Windowmanagers...
-      if (tray != null) {
+         SystemTray tray = SystemTray.getSystemTray();
+
          Image img = ResourceLoader.getTrayIcon();
          
          // create File-Dialog for notesfile
