@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.4-svn
+version 0.4
 
 Contents
 ------------------------
@@ -45,10 +45,10 @@ Contents
 ------------------------
   0.4:
     - BUGFIX: font type was changed to SERIF on change of font-size
-    - BUGFIX: notesfile now allows negative note-positions
+    - BUGFIX: notesfile now allows negative note-positions (fixes "notesfile not valid" error)
     - notecolor can be changed (9 different colors so far)
     - dialog for managing categories
-    - title of note-windows changed
+    - title of note-windows changed (e.g. displayed when pressing alt+tab)
     - some internal code improvements
 
   0.3:
@@ -103,6 +103,7 @@ Contents
   - rightclickmenu in textarea (cut, copy, paste, ...)
   - different languages
   - more freedom with fonts / notes look & feel
+  - global shortcuts
   - plugins
 
 
@@ -123,5 +124,5 @@ Contents
   Special Thanks go to:
   - Jan Laczay for his contributions to the project website and the note-color design
   - Andreas Kwiatkowski for redisigning the closeicon
-  - Michael Mrose for their contributions to the project website
+  - Michael Mrose for his contributions to the project website and for testing the new version
   - Natalie Noering for testing the new version

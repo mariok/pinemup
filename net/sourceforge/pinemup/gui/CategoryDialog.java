@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  * 
- * Copyright (C) 2007 by Mario Koedding
+ * Copyright (C) 2007-2008 by Mario Koedding
  *
  *
  * This program is free software: you can redistribute it and/or modify

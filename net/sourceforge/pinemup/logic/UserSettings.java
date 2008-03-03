@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  * 
- * Copyright (C) 2007 by Mario Koedding
+ * Copyright (C) 2007-2008 by Mario Koedding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ public class UserSettings {
    
    private static final long serialVersionUID = 1L;
    
-   private final String PREFIX = "peu_dev_";
+   private final String PREFIX = "peu_";
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;

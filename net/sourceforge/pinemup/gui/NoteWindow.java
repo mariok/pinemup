@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  * 
- * Copyright (C) 2007 by Mario Koedding
+ * Copyright (C) 2007-2008 by Mario Koedding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,7 +71,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
                return true;
             }
          },
-         "note"
+         "note:"
       );
       parentNote = pn;
       categories = c;
@@ -187,6 +187,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       updateCategory();
       setVisible(true);
       showScrollButtonIfNeeded();
+      setTitle("note: " + getShortText());
    }
 
    public void focusGained(FocusEvent e) {
@@ -200,6 +201,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          if (!resizing) { //resizing would call showScrollBarIfNeeded() and thus revert the effect
             showScrollButtonIfNeeded();
          }
+         setTitle("note: " + getShortText());
          parentNote.setText(textArea.getText());
          textArea.setFocusable(false);
          
@@ -429,5 +431,17 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    public void setBGColor(byte c) {
       bgLabel.setMyColor(c);
       repaint();
+   }
+   
+   private String getShortText() { //returns short text for the window titles
+      int l = textArea.getText().length();
+      String dots = "";
+      if (l>30) {
+         l = 30;
+         dots = "...";
+      }
+      String t = textArea.getText().substring(0, l);
+      t = t.replace("\n", " ") + dots;
+      return t;
    }
 }
