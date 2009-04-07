@@ -46,17 +46,14 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
    
    private CategoryList categories;
    
-   private UserSettings settings;
-   
-   public RightClickMenu(NoteWindow w, CategoryList c, UserSettings s) {
+   public RightClickMenu(NoteWindow w, CategoryList c) {
       super();
       categories = c;
-      settings = s;      
       parentWindow = w;
       myCat = categories.getCategoryForNote(parentWindow.getParentNote());
 
       //create MenuCreator
-      MenuCreator myMenuCreator = new MenuCreator(categories,settings);      
+      MenuCreator myMenuCreator = new MenuCreator(categories);      
       
       //add basic items
       JMenuItem[] basicItems = myMenuCreator.getBasicJMenuItems();
@@ -133,7 +130,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       Object src = e.getSource();
       if (src == deleteNoteItem) {
          boolean confirmed = true;
-         if (settings.getConfirmDeletion()) {
+         if (UserSettings.getInstance().getConfirmDeletion()) {
             confirmed = JOptionPane.showConfirmDialog(this, "Are you sure to irrevocably delete this note?","Remove note",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
          if (confirmed && myCat != null) {
@@ -167,7 +164,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       }
       
       // save notes to file after every change
-      NoteIO.writeCategoriesToFile(categories, settings);
+      NoteIO.writeCategoriesToFile(categories);
       
    }
 

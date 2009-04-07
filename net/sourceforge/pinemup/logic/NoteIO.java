@@ -38,11 +38,11 @@ public class NoteIO {
    
    private static final String LATEST_NOTESFILE_VERSION = "0.2";
    
-   public static void writeCategoriesToFile(CategoryList c, UserSettings s) {
+   public static void writeCategoriesToFile(CategoryList c) {
       //write notes to xml file
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
-         FileOutputStream f = new FileOutputStream(s.getNotesFile());
+         FileOutputStream f = new FileOutputStream(UserSettings.getInstance().getNotesFile());
          XMLStreamWriter writer = myFactory.createXMLStreamWriter(f,"UTF-8");
          
          writer.writeStartDocument("UTF-8","1.0");
@@ -106,13 +106,13 @@ public class NoteIO {
       }
    }
 
-   public static CategoryList readCategoriesFromFile(UserSettings s) {
+   public static CategoryList readCategoriesFromFile() {
       CategoryList c = new CategoryList();
       Category currentCategory = null;
       Note currentNote = null;
       boolean defaultNotAdded = true;
-      File nfile = new File(s.getNotesFile());
-      while (nfile.exists() && !fileIsValid(s.getNotesFile())) {
+      File nfile = new File(UserSettings.getInstance().getNotesFile());
+      while (nfile.exists() && !fileIsValid(UserSettings.getInstance().getNotesFile())) {
          if (JOptionPane.showConfirmDialog(null, "Notefile is not valid. Do you want to select a new one? (Click NO to exit)","Invalid notesfile",JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
             System.exit(0);
          }
@@ -122,14 +122,14 @@ public class NoteIO {
             f = PinEmUp.getFileDialog().getSelectedFile();
          }
          if (f != null) {
-            s.setNotesFile((NoteIO.checkAndAddExtension(f.getAbsolutePath(),".xml")));
+            UserSettings.getInstance().setNotesFile((NoteIO.checkAndAddExtension(f.getAbsolutePath(),".xml")));
          }
-         nfile = new File(s.getNotesFile());
+         nfile = new File(UserSettings.getInstance().getNotesFile());
       }
-      s.saveSettings();
+      UserSettings.getInstance().saveSettings();
       
       try {
-         InputStream in = new FileInputStream(s.getNotesFile());
+         InputStream in = new FileInputStream(UserSettings.getInstance().getNotesFile());
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
          XMLStreamReader parser = myFactory.createXMLStreamReader(in,"UTF-8");
         
@@ -169,7 +169,7 @@ public class NoteIO {
                   currentCategory = new Category(name,new NoteList(),def,defNoteColor);
                   c.add(currentCategory);
                } else if (ename.equals("note")) {
-                  currentNote = new Note("",s,c,(byte)0);
+                  currentNote = new Note("",c,(byte)0);
                   for (int i=0; i<parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");
@@ -238,15 +238,15 @@ public class NoteIO {
       return c;
    }
 
-   public static void getCategoriesFromFTP(UserSettings us) {
+   public static void getCategoriesFromFTP() {
       boolean downloaded = true;
       try {
-         File f = new File(us.getNotesFile());
+         File f = new File(UserSettings.getInstance().getNotesFile());
          FileOutputStream fos = new FileOutputStream(f);
          String filename = f.getName();
-         String ftpString = "ftp://" + us.getFtpUser() + ":"
-               + us.getFtpPasswdString() + "@" + us.getFtpServer()
-               + us.getFtpDir() + filename + ";type=i";
+         String ftpString = "ftp://" + UserSettings.getInstance().getFtpUser() + ":"
+               + UserSettings.getInstance().getFtpPasswdString() + "@" + UserSettings.getInstance().getFtpServer()
+               + UserSettings.getInstance().getFtpDir() + filename + ";type=i";
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
          InputStream is = urlc.getInputStream();
@@ -265,16 +265,16 @@ public class NoteIO {
       }
    }
 
-   public static void writeCategoriesToFTP(UserSettings us) {
+   public static void writeCategoriesToFTP() {
       boolean uploaded = true;
       try {
-         String completeFilename = us.getNotesFile();
+         String completeFilename = UserSettings.getInstance().getNotesFile();
          File f = new File(completeFilename);
          String filename = f.getName();
          FileInputStream fis = new FileInputStream(f);
-         String ftpString = "ftp://" + us.getFtpUser() + ":"
-         + us.getFtpPasswdString() + "@" + us.getFtpServer()
-         + us.getFtpDir() + filename + ";type=i";
+         String ftpString = "ftp://" + UserSettings.getInstance().getFtpUser() + ":"
+         + UserSettings.getInstance().getFtpPasswdString() + "@" + UserSettings.getInstance().getFtpServer()
+         + UserSettings.getInstance().getFtpDir() + filename + ";type=i";
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
          OutputStream  os = urlc.getOutputStream();

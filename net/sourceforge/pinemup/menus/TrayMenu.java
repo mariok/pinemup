@@ -38,17 +38,14 @@ public class TrayMenu extends PopupMenu implements ActionListener {
 
    private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
    
-   private UserSettings settings;
-   
    private CategoryList categories;
 
-   public TrayMenu(CategoryList c, UserSettings s) {
+   public TrayMenu(CategoryList c) {
       super("pin 'em up");
       categories = c;
-      settings = s;
       
       //add basic items
-      MenuItem[] basicItems = (new MenuCreator(categories,settings)).getBasicMenuItems();
+      MenuItem[] basicItems = (new MenuCreator(categories)).getBasicMenuItems();
       for (int i=0; i<basicItems.length;i++) {
          add(basicItems[i]);
       }
@@ -67,7 +64,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
             myCat = tempCL.getCategory();
             tempCL = tempCL.getNext();
          }
-         catMenu[i] = (new MenuCreator(categories,settings)).getCategoryActionsMenu((i+1) + " " + categories.getNames()[i],myCat);
+         catMenu[i] = (new MenuCreator(categories)).getCategoryActionsMenu((i+1) + " " + categories.getNames()[i],myCat);
          categoriesMenu.add(catMenu[i]);
       }
       
@@ -123,29 +120,29 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       if (src == aboutItem) {
          new AboutDialog();
       } else if (src == showSettingsDialogItem) {
-         new SettingsDialog(settings,categories);
+         new SettingsDialog(categories);
       } else if (src == closeItem) {
          PinEmUp.getMainApp().exit();
       } else if (src == ftpUploadItem) {
          if (JOptionPane.showConfirmDialog(null, "Notesfile on server will be replaced, if it already exists! Proceed?","Upload Notesfile",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             //save notes to file
-            NoteIO.writeCategoriesToFile(categories, settings);
+            NoteIO.writeCategoriesToFile(categories);
             //copy file to ftp
-            new FTPThread(true,categories,settings);
+            new FTPThread(true,categories);
          }
       } else if (src == ftpDownloadItem) {
          if (JOptionPane.showConfirmDialog(null, "Your current notesfile will be replaced by the version on the FTP server! Proceed?","Download Notesfile",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            new FTPThread(false,categories, settings);
+            new FTPThread(false,categories);
          }
       } else if (src == exportItem) {
          new ExportDialog(categories);
       } else if (src == manageCategoriesItem) {
-         new CategoryDialog(categories,settings);
+         new CategoryDialog(categories);
       } else if (src == updateItem) {
          new UpdateCheckThread(true);
       }
       
       // save notes to file after every change
-      NoteIO.writeCategoriesToFile(categories, settings);
+      NoteIO.writeCategoriesToFile(categories);
    }
 }

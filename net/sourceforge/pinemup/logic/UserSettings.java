@@ -30,6 +30,7 @@ public class UserSettings {
     */
    
    private Preferences prefs;
+   private static UserSettings instance; //Singleton
    
    private static final long serialVersionUID = 1L;
    
@@ -235,7 +236,7 @@ public class UserSettings {
       prefs.putBoolean(PREFIX + "updateCheckEnabled", updateCheckEnabled);
    }
 
-   public UserSettings() {
+   private UserSettings() {
       prefs = Preferences.userNodeForPackage(PinEmUp.class);
 
       String homeDir = System.getProperty("user.home");
@@ -259,5 +260,12 @@ public class UserSettings {
       confirmDeletion = prefs.getBoolean(PREFIX + "confirmDeletion", true);
       storeFTPPass = prefs.getBoolean(PREFIX + "storeFTPPass", false);
       updateCheckEnabled = prefs.getBoolean(PREFIX + "updateCheckEnabled", true);
+   }
+   
+   public static UserSettings getInstance() {
+      if (UserSettings.instance == null) {
+         UserSettings.instance = new UserSettings();
+      }
+      return UserSettings.instance;
    }
 }

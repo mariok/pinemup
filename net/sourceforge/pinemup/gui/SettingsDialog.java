@@ -56,8 +56,6 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    
    private JButton checkForUpdatesButton;
    
-   private UserSettings settings;
-   
    private CategoryList categories;
    
    private JPanel makeGeneralTab() {
@@ -746,10 +744,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       return ftpPanel;
    }
    
-   public SettingsDialog(UserSettings s, CategoryList c) {
+   public SettingsDialog(CategoryList c) {
       super("Settings - pin 'em up");
       setSize(new Dimension(640,480));
-      settings = s;
       categories = c;
 
       // PREPARE ALL PANELS
@@ -836,40 +833,38 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    }
 
    private void loadSettings() {
-      if (settings != null) {            
-         // write settings from object into fields
-         
-         checkForUpdatesBox.setSelected(settings.isUpdateCheckEnabled());
-         
-         defaultWidthField.setText(String.valueOf(settings.getDefaultWindowWidth()));
-         defaultHeightField.setText(String.valueOf(settings.getDefaultWindowHeight()));
-         defaultXPositionField.setText(String.valueOf(settings.getDefaultWindowXPostition()));
-         defaultYPositionField.setText(String.valueOf(settings.getDefaultWindowYPostition()));
-         defaultFontSizeSpinner.getModel().setValue(new Integer(settings.getDefaultFontSize()));
-         if (settings.getCloseIcon() == 1) {
-            closeIcon1Button.setSelected(true);
-         } else if (settings.getCloseIcon() == 2) {
-            closeIcon2Button.setSelected(true);
-         }
-         alwaysOnTopBox.setSelected(settings.getDefaultAlwaysOnTop());
-         showCatBox.setSelected(settings.getShowCategory());
-         confirmDeleteBox.setSelected(settings.getConfirmDeletion());
-               
-         notesFileField.setText(settings.getNotesFile());
-         ftpServerField.setText(settings.getFtpServer());
-         ftpUserField.setText(settings.getFtpUser());
-         storeFTPPassBox.setSelected(settings.getStoreFTPPass());
-         if (settings.getStoreFTPPass() && settings.getFtpPasswd() != null) {
-               ftpPasswdField.setText(String.copyValueOf(settings.getFtpPasswd()));
-         }
-         ftpPasswdField.setEnabled(settings.getStoreFTPPass());
-         ftpDirField.setText(settings.getFtpDir());
+      // write settings from object into fields
+      
+      checkForUpdatesBox.setSelected(UserSettings.getInstance().isUpdateCheckEnabled());
+      
+      defaultWidthField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowWidth()));
+      defaultHeightField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowHeight()));
+      defaultXPositionField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowXPostition()));
+      defaultYPositionField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowYPostition()));
+      defaultFontSizeSpinner.getModel().setValue(new Integer(UserSettings.getInstance().getDefaultFontSize()));
+      if (UserSettings.getInstance().getCloseIcon() == 1) {
+         closeIcon1Button.setSelected(true);
+      } else if (UserSettings.getInstance().getCloseIcon() == 2) {
+         closeIcon2Button.setSelected(true);
       }
+      alwaysOnTopBox.setSelected(UserSettings.getInstance().getDefaultAlwaysOnTop());
+      showCatBox.setSelected(UserSettings.getInstance().getShowCategory());
+      confirmDeleteBox.setSelected(UserSettings.getInstance().getConfirmDeletion());
+            
+      notesFileField.setText(UserSettings.getInstance().getNotesFile());
+      ftpServerField.setText(UserSettings.getInstance().getFtpServer());
+      ftpUserField.setText(UserSettings.getInstance().getFtpUser());
+      storeFTPPassBox.setSelected(UserSettings.getInstance().getStoreFTPPass());
+      if (UserSettings.getInstance().getStoreFTPPass() && UserSettings.getInstance().getFtpPasswd() != null) {
+            ftpPasswdField.setText(String.copyValueOf(UserSettings.getInstance().getFtpPasswd()));
+      }
+      ftpPasswdField.setEnabled(UserSettings.getInstance().getStoreFTPPass());
+      ftpDirField.setText(UserSettings.getInstance().getFtpDir());
    }
 
    private void saveSettings() {
       //save old notesfile
-      NoteIO.writeCategoriesToFile(categories, settings);
+      NoteIO.writeCategoriesToFile(categories);
       
       // load settings from fields
       boolean updateCheckEnabled = checkForUpdatesBox.isSelected(); 
@@ -895,42 +890,42 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       String ftpDir = ftpDirField.getText();
       
       // write settings into object
-      settings.setUpdateCheckEnabled(updateCheckEnabled);
-      settings.setDefaultWindowHeight(defaultHeight);
-      settings.setDefaultWindowWidth(defaultWidth);
-      settings.setDefaultWindowXPosition(defaultXPosition);
-      settings.setDefaultWindowYPosition(defaultYPosition);
-      settings.setDefaultFontSize(defaultFontSize);
-      settings.setDefaultAlwaysOnTop(defaultAlwaysOnTop);
-      settings.setCloseIcon(ci);
-      settings.setShowCategory(showCat);
-      settings.setConfirmDeletion(confirmDel);
-      settings.setNotesFile(notesFile);
-      settings.setFtpServer(ftpServer);
-      settings.setFtpUser(ftpUser);
-      settings.setStoreFTPPass(storeFTPPass);
+      UserSettings.getInstance().setUpdateCheckEnabled(updateCheckEnabled);
+      UserSettings.getInstance().setDefaultWindowHeight(defaultHeight);
+      UserSettings.getInstance().setDefaultWindowWidth(defaultWidth);
+      UserSettings.getInstance().setDefaultWindowXPosition(defaultXPosition);
+      UserSettings.getInstance().setDefaultWindowYPosition(defaultYPosition);
+      UserSettings.getInstance().setDefaultFontSize(defaultFontSize);
+      UserSettings.getInstance().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
+      UserSettings.getInstance().setCloseIcon(ci);
+      UserSettings.getInstance().setShowCategory(showCat);
+      UserSettings.getInstance().setConfirmDeletion(confirmDel);
+      UserSettings.getInstance().setNotesFile(notesFile);
+      UserSettings.getInstance().setFtpServer(ftpServer);
+      UserSettings.getInstance().setFtpUser(ftpUser);
+      UserSettings.getInstance().setStoreFTPPass(storeFTPPass);
       if (storeFTPPass) {
-         settings.setFtpPasswd(ftpPasswd);
+         UserSettings.getInstance().setFtpPasswd(ftpPasswd);
       } else {
-         settings.setFtpPasswd(null);
+         UserSettings.getInstance().setFtpPasswd(null);
       }
-      settings.setFtpDir(ftpDir);
+      UserSettings.getInstance().setFtpDir(ftpDir);
       
       // load new notes from file
       categories.hideAllNotes();
       categories.removeAll();
-      CategoryList cl = NoteIO.readCategoriesFromFile(settings);
-      notesFileField.setText(settings.getNotesFile()); //if file has not been valid and new one has been selected
+      CategoryList cl = NoteIO.readCategoriesFromFile();
+      notesFileField.setText(UserSettings.getInstance().getNotesFile()); //if file has not been valid and new one has been selected
       categories.attach(cl);
       
       // show all visible notes
       categories.showAllNotesNotHidden();
       
       // replace Traymenu (because of new categories)
-      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
+      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
       
       // save settings permanentely
-      settings.saveSettings();
+      UserSettings.getInstance().saveSettings();
    }
 
    public void changedUpdate(DocumentEvent arg0) {

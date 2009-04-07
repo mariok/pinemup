@@ -24,24 +24,22 @@ package net.sourceforge.pinemup.logic;
 public class FTPThread extends Thread {
    private boolean upload;
    private CategoryList categories;
-   private UserSettings settings;
    
-   public FTPThread(boolean upload, CategoryList c, UserSettings s) {
+   public FTPThread(boolean upload, CategoryList c) {
       super("FTP-Up-/Download Thread");
       this.upload = upload;      
       this.categories = c;
-      this.settings = s;
       this.start();
    }
    
    public void run() {
       if (upload) { // upload notes
-         NoteIO.writeCategoriesToFTP(settings);
+         NoteIO.writeCategoriesToFTP();
       } else { // download notes
          // download Notes
-         NoteIO.getCategoriesFromFTP(settings);
+         NoteIO.getCategoriesFromFTP();
          //load new file
-         CategoryList newCats = NoteIO.readCategoriesFromFile(settings);
+         CategoryList newCats = NoteIO.readCategoriesFromFile();
          // If successfull downloaded, replace:
          // hide notes
          categories.hideAllNotes();
@@ -54,7 +52,7 @@ public class FTPThread extends Thread {
          categories.showAllNotesNotHidden();
          
          //save to file
-         NoteIO.writeCategoriesToFile(categories, settings);
+         NoteIO.writeCategoriesToFile(categories);
       }
    }
 

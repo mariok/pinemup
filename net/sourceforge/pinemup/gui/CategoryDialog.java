@@ -41,7 +41,6 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    private JButton closeButton, moveUpButton, moveDownButton, deleteButton, addButton;
    
    private CategoryList categories;
-   private UserSettings settings;
    private JTable catTable;
    private DefaultTableModel catTableModel;
    private JTextField catNameField;
@@ -55,11 +54,10 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    
    private boolean trackChanges;
    
-   public CategoryDialog(CategoryList c, UserSettings s) {
+   public CategoryDialog(CategoryList c) {
       super();
       setTitle("manage categories");
       categories = c;
-      settings = s;
       trackChanges = false;
       noOfCategories = categories.getNumberOfCategories();
       Container main = getContentPane();
@@ -294,7 +292,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
             catTableModel.setValueAt("!", 0, 0);
             defCat = 0;
          }
-         PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
+         PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
          noOfCategories--;
          selectedCat = null;
          
@@ -328,7 +326,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          catTableModel.moveRow(selectedRow, selectedRow, selectedRow+1);
          catTable.setRowSelectionInterval(selectedRow+1, selectedRow+1);
       }
-      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
+      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
    }
    
    private void makeSelectedCategoryDefault() {
@@ -347,7 +345,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
       categories.add(new Category(catName,new NoteList(),false,(byte)(0)));
-      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
+      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
       Object[] rowData = {"",catName,"0"};
       catTableModel.addRow(rowData);
       noOfCategories++;
@@ -375,7 +373,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          String name = catNameField.getText();
          catTable.getModel().setValueAt(name, selectedRow, 1);
          selectedCat.setName(name);
-         PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories,settings));
+         PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
       }
    }
    

@@ -43,8 +43,6 @@ public class Note implements Serializable {
    
    private transient CategoryList categories;
    
-   private transient UserSettings settings;
-   
    public void setAlwaysOnTop(boolean b) {
       alwaysOnTop = b;
       if (window != null) {
@@ -74,30 +72,29 @@ public class Note implements Serializable {
       hidden = b;
    }
 
-   public Note(String text, UserSettings s, CategoryList cl, byte bgColor) {
+   public Note(String text, CategoryList cl, byte bgColor) {
       this.text = text;
       hidden = false;
       window = null;
-      settings = s;
-      xpos = settings.getDefaultWindowXPostition();
-      ypos = settings.getDefaultWindowYPostition();
-      xsize = settings.getDefaultWindowWidth();
-      ysize = settings.getDefaultWindowHeight();
-      fontsize = settings.getDefaultFontSize();
-      alwaysOnTop = settings.getDefaultAlwaysOnTop();
+      xpos = UserSettings.getInstance().getDefaultWindowXPostition();
+      ypos = UserSettings.getInstance().getDefaultWindowYPostition();
+      xsize = UserSettings.getInstance().getDefaultWindowWidth();
+      ysize = UserSettings.getInstance().getDefaultWindowHeight();
+      fontsize = UserSettings.getInstance().getDefaultFontSize();
+      alwaysOnTop = UserSettings.getInstance().getDefaultAlwaysOnTop();
       this.bgColor = bgColor;
       categories = cl;
    }
 
    public void showIfNotHidden() {
       if (hidden == false && window == null) {
-         window = new NoteWindow(this, categories, settings);
+         window = new NoteWindow(this, categories);
       }
    }
    
    public void unhideAndShow() {
       if (window == null) {
-         window = new NoteWindow(this, categories, settings);
+         window = new NoteWindow(this, categories);
       }
       hidden = false;
    }

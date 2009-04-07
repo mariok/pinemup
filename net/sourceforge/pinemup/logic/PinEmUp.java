@@ -27,7 +27,7 @@ import javax.swing.*;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
 public class PinEmUp {
-   private static final String VERSION = "0.4";
+   private static final String VERSION = "0.5-svn";
    
    private Note failNote;
    
@@ -35,8 +35,6 @@ public class PinEmUp {
 
    private static JFileChooser fileDialog, exportFileDialog;
    
-   private UserSettings settings;
-
    private TrayIcon icon;
    
    private CategoryList categories;
@@ -67,7 +65,7 @@ public class PinEmUp {
 
    public void exit() {
       //save notes to file
-      NoteIO.writeCategoriesToFile(categories, settings);
+      NoteIO.writeCategoriesToFile(categories);
       
       System.exit(0);
    }
@@ -79,9 +77,6 @@ public class PinEmUp {
          failNote = new Note();
          
          PinEmUp.setPinEmUp(this);
-
-         // load user settings
-         settings = new UserSettings();
 
          SystemTray tray = SystemTray.getSystemTray();
 
@@ -102,13 +97,13 @@ public class PinEmUp {
          exportFileDialog.setMultiSelectionEnabled(false);
          
          //load notes from file
-         categories = NoteIO.readCategoriesFromFile(settings);
+         categories = NoteIO.readCategoriesFromFile();
          
          // create trayicon
-         icon = new TrayIcon(img, "pin 'em up", new TrayMenu(categories,settings));
+         icon = new TrayIcon(img, "pin 'em up", new TrayMenu(categories));
          icon.setImageAutoSize(false);
          
-         IconClickLogic myIconListener = new IconClickLogic(categories,settings);
+         IconClickLogic myIconListener = new IconClickLogic(categories);
          // add actionlistener for doubleclick on icon
          icon.addActionListener(myIconListener);
          // add mouselistener for traymenu
@@ -125,9 +120,9 @@ public class PinEmUp {
          categories.showAllNotesNotHidden();
          
          //udate check
-         if (settings.isUpdateCheckEnabled()) {
+         if (UserSettings.getInstance().isUpdateCheckEnabled()) {
             new UpdateCheckThread(false);
-         }          
+         }
       } else {
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          System.exit(1);

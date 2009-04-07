@@ -42,8 +42,6 @@ public class MenuCreator implements ActionListener {
 
    private CategoryList categories;
    
-   private UserSettings settings;
-   
    private static final String[] BASICITEMTEXT = {
       "add note",
       "show all notes",
@@ -57,9 +55,8 @@ public class MenuCreator implements ActionListener {
       "set as default"
    };
    
-   public MenuCreator(CategoryList cl, UserSettings s) {
+   public MenuCreator(CategoryList cl) {
       categories = cl;
-      settings = s;
    }
 
    public JMenuItem[] getBasicJMenuItems() {
@@ -121,7 +118,7 @@ public class MenuCreator implements ActionListener {
       if ((basicItem != null && src == basicItem[0]) || (basicItemJ != null && src == basicItemJ[0])) {
          Category defCat = categories.getDefaultCategory();
          if (defCat != null) {
-            Note newNote = new Note("",settings,categories,defCat.getDefaultNoteColor());
+            Note newNote = new Note("",categories,defCat.getDefaultNoteColor());
             defCat.getNotes().add(newNote);
             newNote.showIfNotHidden();
             newNote.jumpInto();
@@ -141,7 +138,7 @@ public class MenuCreator implements ActionListener {
       }
       
       // save notes to file after every change
-      NoteIO.writeCategoriesToFile(categories, settings);
+      NoteIO.writeCategoriesToFile(categories);
    }
    
 class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {

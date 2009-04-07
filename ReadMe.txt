@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.4
+version 0.5-svn
 
 Contents
 ------------------------
@@ -43,6 +43,9 @@ Contents
 
 3. Changelog
 ------------------------
+  0.5:
+    - some internal code improvements
+
   0.4:
     - BUGFIX: font type was changed to SERIF on change of font-size
     - BUGFIX: notesfile now allows negative note-positions (fixes "notesfile not valid" error)

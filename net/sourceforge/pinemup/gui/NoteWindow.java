@@ -56,11 +56,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    
    private BackgroundLabel bgLabel;
    
-   private UserSettings settings;
-   
    private CategoryList categories;   
 
-   public NoteWindow(Note pn, CategoryList c, UserSettings s) {
+   public NoteWindow(Note pn, CategoryList c) {
       super(
          new JFrame(){
             /**
@@ -75,14 +73,13 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       );
       parentNote = pn;
       categories = c;
-      settings = s;
       textPanel = new JScrollPane();
       textPanel.setBorder(null);
       textPanel.setOpaque(false);
       mainPanel = new JPanel(new BorderLayout());
       mainPanel.setOpaque(false);
       topPanel = new JPanel(new BorderLayout());
-      topPanel.setPreferredSize(new Dimension(settings.getDefaultWindowWidth(),26));
+      topPanel.setPreferredSize(new Dimension(UserSettings.getInstance().getDefaultWindowWidth(),26));
       topPanel.setBorder(null);
       topPanel.setOpaque(false);
       mainPanel.add(textPanel, BorderLayout.CENTER);
@@ -91,7 +88,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       catButton = null;
       
       //create category-label, if option is enabled
-      if (settings.getShowCategory()) {
+      if (UserSettings.getInstance().getShowCategory()) {
          Category cat = categories.getCategoryForNote(parentNote);
          if (cat != null) {
             catButton = new JButton(cat.getName());
@@ -144,7 +141,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       
-      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getCloseIcon(settings.getCloseIcon()));
+      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getCloseIcon(UserSettings.getInstance().getCloseIcon()));
       closeButton = new JButton(closeIcon);
       closeButton.setBackground(new Color(255,255,255,0));
       closeButton.setRolloverEnabled(false);
@@ -206,7 +203,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          textArea.setFocusable(false);
          
          // write notes to file after every change
-         NoteIO.writeCategoriesToFile(categories, settings);
+         NoteIO.writeCategoriesToFile(categories);
       }
    }
 
@@ -243,7 +240,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          parentNote.hide();
          
          // write notes to file after every change
-         NoteIO.writeCategoriesToFile(categories, settings);
+         NoteIO.writeCategoriesToFile(categories);
       }
 
    }
@@ -253,7 +250,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          if (e.getClickCount() == 2) { // doubleclick on topPanel
             autoSizeY();
             // write notes to file after every change
-            NoteIO.writeCategoriesToFile(categories, settings);
+            NoteIO.writeCategoriesToFile(categories);
          } else {
             textArea.setFocusable(false);
          }
@@ -343,7 +340,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       
       if (changeMade) {
          // write notes to file after every change
-         NoteIO.writeCategoriesToFile(categories,settings);
+         NoteIO.writeCategoriesToFile(categories);
       }
       
       
@@ -351,7 +348,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private void checkPopupMenu(MouseEvent event) {
       if (event.isPopupTrigger()) {
-         RightClickMenu popup = new RightClickMenu(this, categories, settings);
+         RightClickMenu popup = new RightClickMenu(this, categories);
          popup.show(event.getComponent(), event.getX(), event.getY());
       }
    }
