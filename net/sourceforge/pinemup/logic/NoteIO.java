@@ -40,7 +40,7 @@ public class NoteIO {
    
    private static final String LATEST_NOTESFILE_VERSION = "0.2";
    
-   public static void writeCategoriesToFile(CategoryList c) {
+   public static void writeCategoriesToFile(CategoryManager c) {
       //write notes to xml file
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
@@ -51,47 +51,46 @@ public class NoteIO {
          writer.writeStartElement("notesfile");
          writer.writeAttribute("version",LATEST_NOTESFILE_VERSION);
          
-         CategoryList cl = c;
-         while (cl != null) {
-            if (cl.getCategory() != null) {
-               writer.writeStartElement("category");
-               writer.writeAttribute("name", cl.getCategory().getName());
-               writer.writeAttribute("default",String.valueOf(cl.getCategory().isDefaultCategory()));
-               writer.writeAttribute("defaultnotecolor",String.valueOf(cl.getCategory().getDefaultNoteColor()));
+         ListIterator<Category> l = c.getListIterator();
+         Category tc;
+         while (l.hasNext()) {
+            tc = l.next();
+            writer.writeStartElement("category");
+            writer.writeAttribute("name", tc.getName());
+            writer.writeAttribute("default",String.valueOf(tc.isDefaultCategory()));
+            writer.writeAttribute("defaultnotecolor",String.valueOf(tc.getDefaultNoteColor()));
 
-               ListIterator<Note> nl = cl.getCategory().getListIterator();
-               Note n;
-               while (nl.hasNext()) {
-                  n = nl.next();
-                  writer.writeStartElement("note");
-                  writer.writeAttribute("hidden", String.valueOf(n.isHidden()));
-                  writer.writeAttribute("alwaysontop", String.valueOf(n.isAlwaysOnTop()));
-                  writer.writeAttribute("xposition", String.valueOf(n.getXPos()));
-                  writer.writeAttribute("yposition", String.valueOf(n.getYPos()));
-                  writer.writeAttribute("width", String.valueOf(n.getXSize()));
-                  writer.writeAttribute("height", String.valueOf(n.getYSize()));
-                  writer.writeAttribute("color", String.valueOf(n.getBGColor()));
-                  writer.writeStartElement("text");
-                  writer.writeAttribute("size", String.valueOf(n.getFontSize()));
-                  String noteText = n.getText(); 
-                  String[] textParts = noteText.split("\n");
-                  for (int i = 0; i<textParts.length; i++) {
-                     writer.writeCharacters(textParts[i]);
-                     if (i < textParts.length-1) {
-                        writer.writeEmptyElement("newline");
-                     }
-                  }
-                  //newlines at the end
-                  while (noteText.endsWith("\n")) {
+            ListIterator<Note> nl = tc.getListIterator();
+            Note n;
+            while (nl.hasNext()) {
+               n = nl.next();
+               writer.writeStartElement("note");
+               writer.writeAttribute("hidden", String.valueOf(n.isHidden()));
+               writer.writeAttribute("alwaysontop", String.valueOf(n.isAlwaysOnTop()));
+               writer.writeAttribute("xposition", String.valueOf(n.getXPos()));
+               writer.writeAttribute("yposition", String.valueOf(n.getYPos()));
+               writer.writeAttribute("width", String.valueOf(n.getXSize()));
+               writer.writeAttribute("height", String.valueOf(n.getYSize()));
+               writer.writeAttribute("color", String.valueOf(n.getBGColor()));
+               writer.writeStartElement("text");
+               writer.writeAttribute("size", String.valueOf(n.getFontSize()));
+               String noteText = n.getText(); 
+               String[] textParts = noteText.split("\n");
+               for (int i = 0; i<textParts.length; i++) {
+                  writer.writeCharacters(textParts[i]);
+                  if (i < textParts.length-1) {
                      writer.writeEmptyElement("newline");
-                     noteText = noteText.substring(0, noteText.length()-1);
                   }
-                  writer.writeEndElement();
-                  writer.writeEndElement();
+               }
+               //newlines at the end
+               while (noteText.endsWith("\n")) {
+                  writer.writeEmptyElement("newline");
+                  noteText = noteText.substring(0, noteText.length()-1);
                }
                writer.writeEndElement();
+               writer.writeEndElement();
             }
-            cl = cl.getNext();
+            writer.writeEndElement();
          }
          writer.writeEndElement();
          writer.writeEndDocument();
@@ -106,8 +105,8 @@ public class NoteIO {
       }
    }
 
-   public static CategoryList readCategoriesFromFile() {
-      CategoryList c = new CategoryList();
+   public static CategoryManager readCategoriesFromFile() {
+      CategoryManager c = new CategoryManager();
       Category currentCategory = null;
       Note currentNote = null;
       boolean defaultNotAdded = true;
@@ -167,7 +166,7 @@ public class NoteIO {
                      }
                   }
                   currentCategory = new Category(name,def,defNoteColor);
-                  c.add(currentCategory);
+                  c.addCategory(currentCategory);
                } else if (ename.equals("note")) {
                   currentNote = new Note("",c,(byte)0);
                   for (int i=0; i<parser.getAttributeCount(); i++) {
@@ -227,8 +226,8 @@ public class NoteIO {
          in.close();
       } catch (FileNotFoundException e) {
          //neu erstellen
-         c.add(new Category("Home",true,(byte)0));
-         c.add(new Category("Office",false,(byte)0));
+         c.addCategory(new Category("Home",true,(byte)0));
+         c.addCategory(new Category("Office",false,(byte)0));
       } catch (XMLStreamException e) {
          //Meldung ausgeben
          System.out.println("XML Error");
@@ -294,7 +293,7 @@ public class NoteIO {
       }
    }
    
-   public static void exportCategoriesToTextFile(CategoryList c) {
+   public static void exportCategoriesToTextFile(CategoryManager c) {
       File f = null;
       if (PinEmUp.getExportFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
          String name = NoteIO.checkAndAddExtension(PinEmUp.getExportFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
@@ -304,10 +303,13 @@ public class NoteIO {
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
             // write text of notes to file
-            while (c != null) {
-               ostream.println("Category: " + c.getCategory().getName());
+            ListIterator<Category> l = c.getListIterator();
+            Category tc;
+            while (l.hasNext()) {
+               tc = l.next();
+               ostream.println("Category: " + tc.getName());
                ostream.println();
-               ListIterator<Note> nl = c.getCategory().getListIterator();
+               ListIterator<Note> nl = tc.getListIterator();
                Note n;
                while (nl.hasNext()) {
                   n = nl.next();
@@ -319,7 +321,6 @@ public class NoteIO {
                ostream.println();
                ostream.println("################################################################");
                ostream.println();
-               c = c.getNext();
             }
             ostream.flush();
             ostream.close();

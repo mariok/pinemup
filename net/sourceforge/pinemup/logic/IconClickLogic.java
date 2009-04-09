@@ -24,7 +24,7 @@ package net.sourceforge.pinemup.logic;
 import java.awt.event.*;
 
 public class IconClickLogic extends MouseAdapter implements ActionListener {
-   private CategoryList categories;
+   private CategoryManager categories;
    
    public void actionPerformed(ActionEvent arg0) {
       Category defCat = categories.getDefaultCategory();
@@ -36,7 +36,7 @@ public class IconClickLogic extends MouseAdapter implements ActionListener {
       }
    }
    
-   public IconClickLogic(CategoryList c) {
+   public IconClickLogic(CategoryManager c) {
       categories = c;
    }
 }

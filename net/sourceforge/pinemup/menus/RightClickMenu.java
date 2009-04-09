@@ -44,9 +44,9 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
    
    private JMenuItem[] setFontSizeItem, setCategoryItem, setBGColorItem;
    
-   private CategoryList categories;
+   private CategoryManager categories;
    
-   public RightClickMenu(NoteWindow w, CategoryList c) {
+   public RightClickMenu(NoteWindow w, CategoryManager c) {
       super();
       categories = c;
       parentWindow = w;
@@ -96,7 +96,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       JMenu setCategoryMenu = new JMenu("category");
       setCategoryItem = new JMenuItem[categories.getNumberOfCategories()];
       for (int i=0; i<setCategoryItem.length; i++) {
-         setCategoryItem[i] = new JMenuItem((i+1) + " " + categories.getNames()[i]);
+         setCategoryItem[i] = new JMenuItem((i+1) + " " + categories.getCategoryNames()[i]);
          setCategoryItem[i].addActionListener(this);
          setCategoryMenu.add(setCategoryItem[i]);
       }
@@ -142,13 +142,12 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       } else if (src == alwaysOnTopOffItem) {
          parentWindow.getParentNote().setAlwaysOnTop(false);
       } else {
-         CategoryList tempCat = categories;
          for (int i=0; i<setCategoryItem.length; i++) {
             if (src == setCategoryItem[i]) {
-               parentWindow.getParentNote().moveToCategory(tempCat.getCategory());
+               parentWindow.getParentNote().moveToCategory(categories.getCategoryByNumber(i));
             }
-            tempCat = tempCat.getNext();
          }
+         
          for (int i=0; i<setFontSizeItem.length; i++) {
             if (src == setFontSizeItem[i]) {
                parentWindow.getParentNote().setFontSize((short)(i+5));

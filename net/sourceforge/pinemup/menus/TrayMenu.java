@@ -23,6 +23,7 @@ package net.sourceforge.pinemup.menus;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ListIterator;
 
 import javax.swing.*;
 
@@ -38,9 +39,9 @@ public class TrayMenu extends PopupMenu implements ActionListener {
 
    private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
    
-   private CategoryList categories;
+   private CategoryManager categories;
 
-   public TrayMenu(CategoryList c) {
+   public TrayMenu(CategoryManager c) {
       super("pin 'em up");
       categories = c;
       
@@ -57,14 +58,11 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       Menu[] catMenu = new Menu[categories.getNumberOfCategories()];
       
       //Category menu items
-      CategoryList tempCL = categories;
-      Category myCat = null;
-      for (int i=0; i<catMenu.length; i++) {
-         if (tempCL != null) {
-            myCat = tempCL.getCategory();
-            tempCL = tempCL.getNext();
-         }
-         catMenu[i] = (new MenuCreator(categories)).getCategoryActionsMenu((i+1) + " " + categories.getNames()[i],myCat);
+      ListIterator<Category> l = categories.getListIterator();
+      int i;
+      while (l.hasNext()) {
+         i = l.nextIndex();
+         catMenu[i] = (new MenuCreator(categories)).getCategoryActionsMenu((i+1) + " " + categories.getCategoryNames()[i],l.next());
          categoriesMenu.add(catMenu[i]);
       }
       

@@ -56,9 +56,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    
    private BackgroundLabel bgLabel;
    
-   private CategoryList categories;   
+   private CategoryManager categories;   
 
-   public NoteWindow(Note pn, CategoryList c) {
+   public NoteWindow(Note pn, CategoryManager c) {
       super(
          new JFrame(){
             /**

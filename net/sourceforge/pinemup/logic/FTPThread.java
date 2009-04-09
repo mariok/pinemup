@@ -23,9 +23,9 @@ package net.sourceforge.pinemup.logic;
 
 public class FTPThread extends Thread {
    private boolean upload;
-   private CategoryList categories;
+   private CategoryManager categories;
    
-   public FTPThread(boolean upload, CategoryList c) {
+   public FTPThread(boolean upload, CategoryManager c) {
       super("FTP-Up-/Download Thread");
       this.upload = upload;      
       this.categories = c;
@@ -39,13 +39,13 @@ public class FTPThread extends Thread {
          // download Notes
          NoteIO.getCategoriesFromFTP();
          //load new file
-         CategoryList newCats = NoteIO.readCategoriesFromFile();
+         CategoryManager newCats = NoteIO.readCategoriesFromFile();
          // If successfull downloaded, replace:
          // hide notes
          categories.hideAllNotes();
          
          // link and save new notes
-         categories.removeAll();
+         categories.removeAllCategories();
          categories.attach(newCats);
          
          // show all notes which are not hidden

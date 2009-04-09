@@ -21,11 +21,9 @@
 
 package net.sourceforge.pinemup.logic;
 
-import java.io.*;
-
 import net.sourceforge.pinemup.gui.*;
 
-public class Note implements Serializable {
+public class Note {
    /**
     * 
     */
@@ -35,13 +33,13 @@ public class Note implements Serializable {
 
    private boolean hidden, alwaysOnTop;
 
-   private transient NoteWindow window;
+   private NoteWindow window;
 
    private short xpos, ypos, xsize, ysize, fontsize;
    
    private byte bgColor;
    
-   private transient CategoryList categories;
+   private CategoryManager categories;
    
    private Category category;
    
@@ -74,7 +72,7 @@ public class Note implements Serializable {
       hidden = b;
    }
 
-   public Note(String text, CategoryList cl, byte bgColor) {
+   public Note(String text, CategoryManager cl, byte bgColor) {
       this.text = text;
       hidden = false;
       window = null;

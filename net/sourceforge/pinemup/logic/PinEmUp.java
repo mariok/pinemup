@@ -37,7 +37,7 @@ public class PinEmUp {
    
    private TrayIcon icon;
    
-   private CategoryList categories;
+   private CategoryManager categories;
 
    public static JFileChooser getFileDialog() {
       return fileDialog;

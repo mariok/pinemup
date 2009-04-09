@@ -23,6 +23,8 @@ package net.sourceforge.pinemup.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ListIterator;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
@@ -40,7 +42,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    private static final long serialVersionUID = 1L;
    private JButton closeButton, moveUpButton, moveDownButton, deleteButton, addButton;
    
-   private CategoryList categories;
+   private CategoryManager categories;
    private JTable catTable;
    private DefaultTableModel catTableModel;
    private JTextField catNameField;
@@ -54,7 +56,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    
    private boolean trackChanges;
    
-   public CategoryDialog(CategoryList c) {
+   public CategoryDialog(CategoryManager c) {
       super();
       setTitle("manage categories");
       categories = c;
@@ -201,18 +203,21 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    
    private Object[][] makeDataArray() {
       int anz = categories.getNumberOfCategories();
-      CategoryList c = categories;
       Object[][] data = new Object[anz][3];
-      for (int i = 0; i < anz; i++) {
-         if (c.getCategory().isDefaultCategory()) {
-            data[i][0] = "!";
-            defCat = i;
+      ListIterator<Category> l = categories.getListIterator();
+      Category tc;
+      int index;
+      while (l.hasNext()) {
+         index = l.nextIndex();
+         tc = l.next();
+         if (tc.isDefaultCategory()) {
+            data[index][0] = "!";
+            defCat = index;
          } else {
-            data[i][0] = "";
+            data[index][0] = "";
          }
-         data[i][1] = c.getCategory().getName();
-         data[i][2] = String.valueOf(c.getCategory().getDefaultNoteColor());
-         c = c.getNext();
+         data[index][1] = tc.getName();
+         data[index][2] = String.valueOf(tc.getDefaultNoteColor());
       }
       return data;
    }
@@ -285,10 +290,10 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       if (confirmed) {
          boolean isDef = selectedCat.isDefaultCategory();
          selectedCat.hideAllNotes();
-         categories.remove(selectedCat);
+         categories.removeCategory(selectedCat);
          catTableModel.removeRow(selectedRow);
          if (isDef) {
-            categories.getCategory().setDefault(true);
+            categories.getListIterator().next().setDefault(true); //set first category as default
             catTableModel.setValueAt("!", 0, 0);
             defCat = 0;
          }
@@ -344,7 +349,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
-      categories.add(new Category(catName,false,(byte)(0)));
+      categories.addCategory(new Category(catName,false,(byte)(0)));
       PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
       Object[] rowData = {"",catName,"0"};
       catTableModel.addRow(rowData);

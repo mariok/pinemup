@@ -40,7 +40,7 @@ public class MenuCreator implements ActionListener {
    private JMenuItem[] basicItemJ = null;
    private MenuItem[] basicItem = null;
 
-   private CategoryList categories;
+   private CategoryManager categories;
    
    private static final String[] BASICITEMTEXT = {
       "add note",
@@ -55,7 +55,7 @@ public class MenuCreator implements ActionListener {
       "set as default"
    };
    
-   public MenuCreator(CategoryList cl) {
+   public MenuCreator(CategoryManager cl) {
       categories = cl;
    }
 

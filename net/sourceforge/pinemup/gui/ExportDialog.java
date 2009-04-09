@@ -38,9 +38,9 @@ public class ExportDialog extends JDialog implements ActionListener {
    private JCheckBox[] catBox;
    private JCheckBox allCatsBox;
    
-   private CategoryList categories;
+   private CategoryManager categories;
    
-   public ExportDialog(CategoryList c) {
+   public ExportDialog(CategoryManager c) {
       super();
       setTitle("export notes");
       categories = c;
@@ -56,7 +56,7 @@ public class ExportDialog extends JDialog implements ActionListener {
       // Category Checkboxes
       int rows = c.getNumberOfCategories();
       JPanel checkBoxPanel = new JPanel (new GridLayout(rows+2,1));
-      String[] cats = c.getNames();
+      String[] cats = c.getCategoryNames();
       JPanel[] catPanel = new JPanel[rows];
       catBox = new JCheckBox[rows];
       JPanel allCatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -104,13 +104,12 @@ public class ExportDialog extends JDialog implements ActionListener {
          setVisible(false);
          dispose();
       } else if (src == okButton) {
-         CategoryList c = categories;
-         CategoryList catsToExport = new CategoryList();
+         CategoryManager c = categories;
+         CategoryManager catsToExport = new CategoryManager();
          for (int i=0; i<catBox.length; i++) {
             if(catBox[i].isSelected()) {
-               catsToExport.add(c.getCategory());
+               catsToExport.addCategory(c.getCategoryByNumber(i));
             }
-            c = c.getNext();
          }
          
          NoteIO.exportCategoriesToTextFile(catsToExport);

@@ -56,7 +56,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    
    private JButton checkForUpdatesButton;
    
-   private CategoryList categories;
+   private CategoryManager categories;
    
    private JPanel makeGeneralTab() {
       JPanel generalPanel = new JPanel();
@@ -744,7 +744,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       return ftpPanel;
    }
    
-   public SettingsDialog(CategoryList c) {
+   public SettingsDialog(CategoryManager c) {
       super("Settings - pin 'em up");
       setSize(new Dimension(640,480));
       categories = c;
@@ -913,10 +913,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       
       // load new notes from file
       categories.hideAllNotes();
-      categories.removeAll();
-      CategoryList cl = NoteIO.readCategoriesFromFile();
+      categories.removeAllCategories();
+      CategoryManager cm = NoteIO.readCategoriesFromFile();
       notesFileField.setText(UserSettings.getInstance().getNotesFile()); //if file has not been valid and new one has been selected
-      categories.attach(cl);
+      categories.attach(cm);
       
       // show all visible notes
       categories.showAllNotesNotHidden();
