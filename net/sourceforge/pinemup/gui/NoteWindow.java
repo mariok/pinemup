@@ -89,7 +89,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       
       //create category-label, if option is enabled
       if (UserSettings.getInstance().getShowCategory()) {
-         Category cat = categories.getCategoryForNote(parentNote);
+         Category cat = parentNote.getCategory();
          if (cat != null) {
             catButton = new JButton(cat.getName());
             catButton.setRolloverEnabled(false);
@@ -374,7 +374,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    }
    
    public void updateCategory() {
-      Category cat = categories.getCategoryForNote(parentNote);
+      Category cat = parentNote.getCategory();
       if (cat != null) {
          topPanel.setToolTipText("Category: " + cat.getName());
          if (catButton != null) {

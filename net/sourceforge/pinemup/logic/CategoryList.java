@@ -71,18 +71,6 @@ public class CategoryList {
       }
    }
    
-   public Category getCategoryForNote(Note n) {
-      Category c = null;
-      if (category.containsNote(n)) {
-         c = category;
-      } else {
-         if (next != null) {
-            c = next.getCategoryForNote(n);
-         }
-      }
-      return c;
-   }
-   
    public void removeAll() {
       category = null;
       next = null;

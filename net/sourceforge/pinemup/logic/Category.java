@@ -82,15 +82,13 @@ public class Category {
   }
   
   public void addNote(Note n) {
+     n.setCategory(this);
      notes.add(n);
   }
   
   public void removeNote(Note n) {
+     n.setCategory(null);
      notes.remove(n);
-  }
-  
-  public boolean containsNote(Note n) {
-     return notes.contains(n);
   }
   
   public void showAllNotesNotHidden() {

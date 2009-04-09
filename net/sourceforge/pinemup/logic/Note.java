@@ -43,6 +43,8 @@ public class Note implements Serializable {
    
    private transient CategoryList categories;
    
+   private Category category;
+   
    public void setAlwaysOnTop(boolean b) {
       alwaysOnTop = b;
       if (window != null) {
@@ -142,6 +144,14 @@ public class Note implements Serializable {
       return ysize;
    }
    
+   public Category getCategory() {
+      return category;
+   }
+   
+   public void setCategory(Category c) {
+      category = c;
+   }
+   
    public void jumpInto() {
       if (window != null) {
          window.jumpIntoTextArea();
@@ -150,15 +160,12 @@ public class Note implements Serializable {
    
    public void moveToCategory(Category newCat) {
       if (newCat != null) {
-         //get old category
-         Category myCategory = categories.getCategoryForNote(this);
+         //remove from old category
+         if (category != null) {
+            category.removeNote(this);
+         }
          //add to new category
          newCat.addNote(this);
-         //remove from old category
-         if (myCategory != null) {
-            //remove from current category
-            myCategory.removeNote(this);
-         }
          //set color to default color of the new category
          setBGColor(newCat.getDefaultNoteColor());
          //update Category name and color in Window

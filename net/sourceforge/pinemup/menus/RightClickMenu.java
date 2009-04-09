@@ -50,7 +50,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       super();
       categories = c;
       parentWindow = w;
-      myCat = categories.getCategoryForNote(parentWindow.getParentNote());
+      myCat = parentWindow.getParentNote().getCategory();
 
       //create MenuCreator
       MenuCreator myMenuCreator = new MenuCreator(categories);      
