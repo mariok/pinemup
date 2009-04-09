@@ -153,11 +153,11 @@ public class Note implements Serializable {
          //get old category
          Category myCategory = categories.getCategoryForNote(this);
          //add to new category
-         newCat.getNotes().add(this);
+         newCat.addNote(this);
          //remove from old category
          if (myCategory != null) {
             //remove from current category
-            myCategory.getNotes().removeWithoutHiding(this);
+            myCategory.removeNote(this);
          }
          //set color to default color of the new category
          setBGColor(newCat.getDefaultNoteColor());
@@ -187,5 +187,4 @@ public class Note implements Serializable {
    public byte getBGColor() {
       return bgColor;
    }
-
 }

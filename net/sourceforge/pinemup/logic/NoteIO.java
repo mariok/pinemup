@@ -24,6 +24,8 @@ package net.sourceforge.pinemup.logic;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ListIterator;
+
 import javax.swing.*;
 
 import javax.swing.JOptionPane;
@@ -57,38 +59,36 @@ public class NoteIO {
                writer.writeAttribute("default",String.valueOf(cl.getCategory().isDefaultCategory()));
                writer.writeAttribute("defaultnotecolor",String.valueOf(cl.getCategory().getDefaultNoteColor()));
 
-               NoteList nl = cl.getCategory().getNotes();
-               while (nl != null) {
-                  if (nl.getNote() != null) {
-                     writer.writeStartElement("note");
-                     writer.writeAttribute("hidden", String.valueOf(nl.getNote().isHidden()));
-                     writer.writeAttribute("alwaysontop", String.valueOf(nl.getNote().isAlwaysOnTop()));
-                     writer.writeAttribute("xposition", String.valueOf(nl.getNote().getXPos()));
-                     writer.writeAttribute("yposition", String.valueOf(nl.getNote().getYPos()));
-                     writer.writeAttribute("width", String.valueOf(nl.getNote().getXSize()));
-                     writer.writeAttribute("height", String.valueOf(nl.getNote().getYSize()));
-                     writer.writeAttribute("color", String.valueOf(nl.getNote().getBGColor()));
-                     writer.writeStartElement("text");
-                     writer.writeAttribute("size", String.valueOf(nl.getNote().getFontSize()));
-                     String noteText = nl.getNote().getText(); 
-                     String[] textParts = noteText.split("\n");
-                     for (int i = 0; i<textParts.length; i++) {
-                        writer.writeCharacters(textParts[i]);
-                        if (i < textParts.length-1) {
-                           writer.writeEmptyElement("newline");
-                        }
-                     }
-                     //newlines at the end
-                     while (noteText.endsWith("\n")) {
+               ListIterator<Note> nl = cl.getCategory().getListIterator();
+               Note n;
+               while (nl.hasNext()) {
+                  n = nl.next();
+                  writer.writeStartElement("note");
+                  writer.writeAttribute("hidden", String.valueOf(n.isHidden()));
+                  writer.writeAttribute("alwaysontop", String.valueOf(n.isAlwaysOnTop()));
+                  writer.writeAttribute("xposition", String.valueOf(n.getXPos()));
+                  writer.writeAttribute("yposition", String.valueOf(n.getYPos()));
+                  writer.writeAttribute("width", String.valueOf(n.getXSize()));
+                  writer.writeAttribute("height", String.valueOf(n.getYSize()));
+                  writer.writeAttribute("color", String.valueOf(n.getBGColor()));
+                  writer.writeStartElement("text");
+                  writer.writeAttribute("size", String.valueOf(n.getFontSize()));
+                  String noteText = n.getText(); 
+                  String[] textParts = noteText.split("\n");
+                  for (int i = 0; i<textParts.length; i++) {
+                     writer.writeCharacters(textParts[i]);
+                     if (i < textParts.length-1) {
                         writer.writeEmptyElement("newline");
-                        noteText = noteText.substring(0, noteText.length()-1);
                      }
-                     writer.writeEndElement();
-                     writer.writeEndElement();
                   }
-                  nl = nl.getNext();
+                  //newlines at the end
+                  while (noteText.endsWith("\n")) {
+                     writer.writeEmptyElement("newline");
+                     noteText = noteText.substring(0, noteText.length()-1);
+                  }
+                  writer.writeEndElement();
+                  writer.writeEndElement();
                }
-               
                writer.writeEndElement();
             }
             cl = cl.getNext();
@@ -166,7 +166,7 @@ public class NoteIO {
                         defNoteColor = Byte.parseByte(parser.getAttributeValue(i));
                      }
                   }
-                  currentCategory = new Category(name,new NoteList(),def,defNoteColor);
+                  currentCategory = new Category(name,def,defNoteColor);
                   c.add(currentCategory);
                } else if (ename.equals("note")) {
                   currentNote = new Note("",c,(byte)0);
@@ -195,7 +195,7 @@ public class NoteIO {
                      }
                   }
                   if (currentCategory != null) {
-                     currentCategory.getNotes().add(currentNote);
+                     currentCategory.addNote(currentNote);
                   }
                } else if (ename.equals("text")) {
                   for (int i=0; i<parser.getAttributeCount(); i++) {
@@ -227,8 +227,8 @@ public class NoteIO {
          in.close();
       } catch (FileNotFoundException e) {
          //neu erstellen
-         c.add(new Category("Home",new NoteList(),true,(byte)0));
-         c.add(new Category("Office",new NoteList(),false,(byte)0));
+         c.add(new Category("Home",true,(byte)0));
+         c.add(new Category("Office",false,(byte)0));
       } catch (XMLStreamException e) {
          //Meldung ausgeben
          System.out.println("XML Error");
@@ -307,15 +307,14 @@ public class NoteIO {
             while (c != null) {
                ostream.println("Category: " + c.getCategory().getName());
                ostream.println();
-               NoteList n = c.getCategory().getNotes();
-               while (n != null) {
-                  if (n.getNote() != null) {
-                     ostream.println(n.getNote().getText());
-                     ostream.println();
-                     ostream.println("---------------------");
-                     ostream.println();
-                  }
-                  n = n.getNext();
+               ListIterator<Note> nl = c.getCategory().getListIterator();
+               Note n;
+               while (nl.hasNext()) {
+                  n = nl.next();
+                  ostream.println(n.getText());
+                  ostream.println();
+                  ostream.println("---------------------");
+                  ostream.println();
                }
                ostream.println();
                ostream.println("################################################################");

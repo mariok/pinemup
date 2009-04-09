@@ -278,13 +278,13 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    
    private void deleteSelectedCategory() {
       boolean confirmed = true;
-      if (selectedCat.getNotes().getNumberOfNotes() > 0) {
-         confirmed = JOptionPane.showConfirmDialog(null, "All " + selectedCat.getNotes().getNumberOfNotes() + " notes in this category will be deleted! Proceed?","Remove category",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+      if (selectedCat.getNumberOfNotes() > 0) {
+         confirmed = JOptionPane.showConfirmDialog(null, "All " + selectedCat.getNumberOfNotes() + " notes in this category will be deleted! Proceed?","Remove category",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
       }
       
       if (confirmed) {
          boolean isDef = selectedCat.isDefaultCategory();
-         selectedCat.getNotes().hideAllNotes();
+         selectedCat.hideAllNotes();
          categories.remove(selectedCat);
          catTableModel.removeRow(selectedRow);
          if (isDef) {
@@ -344,7 +344,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
-      categories.add(new Category(catName,new NoteList(),false,(byte)(0)));
+      categories.add(new Category(catName,false,(byte)(0)));
       PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
       Object[] rowData = {"",catName,"0"};
       catTableModel.addRow(rowData);

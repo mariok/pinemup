@@ -134,7 +134,8 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
             confirmed = JOptionPane.showConfirmDialog(this, "Are you sure to irrevocably delete this note?","Remove note",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
          if (confirmed && myCat != null) {
-            myCat.getNotes().remove(parentWindow.getParentNote());
+            parentWindow.getParentNote().hide();
+            myCat.removeNote(parentWindow.getParentNote());
          }
       } else if (src == alwaysOnTopOnItem) {
          parentWindow.getParentNote().setAlwaysOnTop(true);

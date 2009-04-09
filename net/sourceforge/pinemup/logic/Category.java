@@ -21,21 +21,20 @@
 
 package net.sourceforge.pinemup.logic;
 
+import java.util.LinkedList;
+import java.util.ListIterator;
+
 public class Category {
   private String name;
-  private NoteList notes;
+  private LinkedList<Note> notes;
   private boolean defaultCategory;
   private byte defaultNoteColor;
   
-  public Category(String name, NoteList nl, boolean def, byte defNoteColor) {
+  public Category(String name, boolean def, byte defNoteColor) {
      this.name = name;
-     this.notes = nl;
      this.defaultCategory = def;
      this.defaultNoteColor = defNoteColor;
-  }
-  
-  public NoteList getNotes() {
-     return notes;
+     notes = new LinkedList<Note>();
   }
   
   public String getName() {
@@ -48,7 +47,7 @@ public class Category {
   
   public void rename(String s) {
      name = s;
-     notes.updateAllCategoriesInWindows();
+     updateCategoryInWindows();
   }
   
   public boolean isDefaultCategory() {
@@ -65,5 +64,53 @@ public class Category {
   
   public byte getDefaultNoteColor() {
      return defaultNoteColor;
+  }
+  
+  public int getNumberOfNotes() {
+     return notes.size();
+  }
+  
+  public void hideAllNotes() {
+     ListIterator<Note> l = notes.listIterator();
+     while (l.hasNext()) {
+        l.next().hide();
+     }
+  }
+  
+  public ListIterator<Note> getListIterator() {
+     return notes.listIterator();
+  }
+  
+  public void addNote(Note n) {
+     notes.add(n);
+  }
+  
+  public void removeNote(Note n) {
+     notes.remove(n);
+  }
+  
+  public boolean containsNote(Note n) {
+     return notes.contains(n);
+  }
+  
+  public void showAllNotesNotHidden() {
+     ListIterator<Note> l = notes.listIterator();
+     while (l.hasNext()) {
+        l.next().showIfNotHidden();
+     }
+  }
+  
+  public void unhideAndShowAllNotes() {
+     ListIterator<Note> l = notes.listIterator();
+     while (l.hasNext()) {
+        l.next().unhideAndShow();
+     }
+  }
+  
+  public void updateCategoryInWindows() {
+     ListIterator<Note> l = notes.listIterator();
+     while (l.hasNext()) {
+        l.next().updateCategoryInWindow();
+     }
   }
 }

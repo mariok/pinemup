@@ -73,7 +73,7 @@ public class CategoryList {
    
    public Category getCategoryForNote(Note n) {
       Category c = null;
-      if (category.getNotes().noteInList(n)) {
+      if (category.containsNote(n)) {
          c = category;
       } else {
          if (next != null) {
@@ -103,7 +103,7 @@ public class CategoryList {
    
    public void hideAllNotes() {
       if (category != null) { //list not empty
-         category.getNotes().hideAllNotes();
+         category.hideAllNotes();
          if (next != null) {
             next.hideAllNotes();
          }
@@ -112,7 +112,7 @@ public class CategoryList {
    
    public void showAllNotesNotHidden() {
       if (category != null) { //list not empty
-         category.getNotes().showAllNotesNotHidden();
+         category.showAllNotesNotHidden();
          if (next != null) {
             next.showAllNotesNotHidden();
          }
@@ -121,7 +121,7 @@ public class CategoryList {
    
    public void unhideAndShowAllNotes() {
       if (category != null) {
-         category.getNotes().unhideAndShowAllNotes();
+         category.unhideAndShowAllNotes();
          if (next != null) {
             next.unhideAndShowAllNotes();
          }
@@ -130,7 +130,7 @@ public class CategoryList {
    
    public void updateAllCategoriesInWindows() {
       if (category != null) {
-         category.getNotes().updateAllCategoriesInWindows();
+         category.updateCategoryInWindows();
          if (next != null) {
             next.updateAllCategoriesInWindows();
          }
@@ -187,9 +187,9 @@ public class CategoryList {
    
    public void showOnlyNotesOfCategory(Category c) {
       if (category == c) {
-         category.getNotes().unhideAndShowAllNotes();
+         category.unhideAndShowAllNotes();
       } else {
-         category.getNotes().hideAllNotes();
+         category.hideAllNotes();
       }
       if (next != null) {
          next.showOnlyNotesOfCategory(c);

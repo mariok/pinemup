@@ -119,7 +119,7 @@ public class MenuCreator implements ActionListener {
          Category defCat = categories.getDefaultCategory();
          if (defCat != null) {
             Note newNote = new Note("",categories,defCat.getDefaultNoteColor());
-            defCat.getNotes().add(newNote);
+            defCat.addNote(newNote);
             newNote.showIfNotHidden();
             newNote.jumpInto();
          }
@@ -128,9 +128,9 @@ public class MenuCreator implements ActionListener {
       } else if ((basicItem != null && src == basicItem[2]) || (basicItemJ != null && src == basicItemJ[2])) {
          categories.hideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[0]) || (categoryItemJ != null && src == categoryItemJ[0])) {
-         ((MenuItemWithCategory)src).getCategory().getNotes().hideAllNotes();
+         ((MenuItemWithCategory)src).getCategory().hideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[1]) || (categoryItemJ != null && src == categoryItemJ[1])) {
-         ((MenuItemWithCategory)src).getCategory().getNotes().unhideAndShowAllNotes();
+         ((MenuItemWithCategory)src).getCategory().unhideAndShowAllNotes();
       } else if ((categoryItem != null && src == categoryItem[2]) || (categoryItemJ != null && src == categoryItemJ[2])) {
          categories.showOnlyNotesOfCategory(((MenuItemWithCategory)src).getCategory());
       } else if ((categoryItem != null && src == categoryItem[3]) || (categoryItemJ != null && src == categoryItemJ[3])) {
