@@ -24,19 +24,13 @@ package net.sourceforge.pinemup.logic;
 import java.awt.event.*;
 
 public class IconClickLogic extends MouseAdapter implements ActionListener {
-   private CategoryManager categories;
-   
    public void actionPerformed(ActionEvent arg0) {
-      Category defCat = categories.getDefaultCategory();
+      Category defCat = CategoryManager.getInstance().getDefaultCategory();
       if (defCat != null) {
-         Note newNote = new Note("",categories,defCat.getDefaultNoteColor());
+         Note newNote = new Note("",defCat.getDefaultNoteColor());
          defCat.addNote(newNote);
          newNote.showIfNotHidden();
          newNote.jumpInto();
       }
-   }
-   
-   public IconClickLogic(CategoryManager c) {
-      categories = c;
    }
 }

@@ -22,9 +22,7 @@
 package net.sourceforge.pinemup.logic;
 
 import java.awt.*;
-
 import javax.swing.*;
-import net.sourceforge.pinemup.menus.TrayMenu;
 
 public class PinEmUp {
    private static final String VERSION = "0.5-svn";
@@ -35,10 +33,6 @@ public class PinEmUp {
 
    private static JFileChooser fileDialog, exportFileDialog;
    
-   private TrayIcon icon;
-   
-   private CategoryManager categories;
-
    public static JFileChooser getFileDialog() {
       return fileDialog;
    }
@@ -47,10 +41,6 @@ public class PinEmUp {
       return exportFileDialog;
    }
    
-   public TrayIcon getTrayIcon() {
-      return icon;
-   }
-
    public static void setPinEmUp(PinEmUp m) {
       main = m;
    }
@@ -63,13 +53,6 @@ public class PinEmUp {
       return failNote;
    }
 
-   public void exit() {
-      //save notes to file
-      NoteIO.writeCategoriesToFile(categories);
-      
-      System.exit(0);
-   }
-
    public PinEmUp() {
       if (SystemTray.isSupported()) {
          
@@ -78,10 +61,6 @@ public class PinEmUp {
          
          PinEmUp.setPinEmUp(this);
 
-         SystemTray tray = SystemTray.getSystemTray();
-
-         Image img = ResourceLoader.getTrayIcon();
-         
          // create File-Dialog for notesfile
          fileDialog = new JFileChooser();
          fileDialog.setDialogTitle("select notes file");
@@ -97,27 +76,18 @@ public class PinEmUp {
          exportFileDialog.setMultiSelectionEnabled(false);
          
          //load notes from file
-         categories = NoteIO.readCategoriesFromFile();
+         CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());
          
-         // create trayicon
-         icon = new TrayIcon(img, "pin 'em up", new TrayMenu(categories));
-         icon.setImageAutoSize(false);
-         
-         IconClickLogic myIconListener = new IconClickLogic(categories);
-         // add actionlistener for doubleclick on icon
-         icon.addActionListener(myIconListener);
-         // add mouselistener for traymenu
-         icon.addMouseListener(myIconListener);
-
          // add trayicon
+         SystemTray tray = SystemTray.getSystemTray();
          try {
-            tray.add(icon);
+            tray.add(PinEmUpTrayIcon.getInstance());
          } catch (AWTException e) {
             System.err.println(e);
          }
 
          //show all visible notes
-         categories.showAllNotesNotHidden();
+         CategoryManager.getInstance().showAllNotesNotHidden();
          
          //udate check
          if (UserSettings.getInstance().isUpdateCheckEnabled()) {

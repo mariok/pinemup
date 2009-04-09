@@ -22,13 +22,22 @@
 package net.sourceforge.pinemup.logic;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 public class CategoryManager {
    private LinkedList<Category> categories;
+   private static CategoryManager instance;
    
-   public CategoryManager() {
+   private CategoryManager() {
       categories = new LinkedList<Category>();
+   }
+   
+   public static CategoryManager getInstance() {
+      if (CategoryManager.instance == null) {
+         CategoryManager.instance = new CategoryManager();
+      }
+      return CategoryManager.instance;
    }
    
    public void addCategory(Category c) {
@@ -150,8 +159,8 @@ public class CategoryManager {
       categories.clear();
    }
    
-   public void attach(CategoryManager cm) {
-      ListIterator<Category> l = cm.getListIterator();
+   public void append(List<Category> cl) {
+      ListIterator<Category> l = cl.listIterator();
       while (l.hasNext()) {
          categories.add(l.next());
       }

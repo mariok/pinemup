@@ -40,8 +40,6 @@ public class MenuCreator implements ActionListener {
    private JMenuItem[] basicItemJ = null;
    private MenuItem[] basicItem = null;
 
-   private CategoryManager categories;
-   
    private static final String[] BASICITEMTEXT = {
       "add note",
       "show all notes",
@@ -55,10 +53,6 @@ public class MenuCreator implements ActionListener {
       "set as default"
    };
    
-   public MenuCreator(CategoryManager cl) {
-      categories = cl;
-   }
-
    public JMenuItem[] getBasicJMenuItems() {
       basicItemJ = new JMenuItem[BASICITEMTEXT.length];
       for (int i=0; i<BASICITEMTEXT.length; i++) {
@@ -116,67 +110,67 @@ public class MenuCreator implements ActionListener {
    public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
       if ((basicItem != null && src == basicItem[0]) || (basicItemJ != null && src == basicItemJ[0])) {
-         Category defCat = categories.getDefaultCategory();
+         Category defCat = CategoryManager.getInstance().getDefaultCategory();
          if (defCat != null) {
-            Note newNote = new Note("",categories,defCat.getDefaultNoteColor());
+            Note newNote = new Note("",defCat.getDefaultNoteColor());
             defCat.addNote(newNote);
             newNote.showIfNotHidden();
             newNote.jumpInto();
          }
       } else if ((basicItem != null && src == basicItem[1]) || (basicItemJ != null && src == basicItemJ[1])) {
-         categories.unhideAndShowAllNotes();
+         CategoryManager.getInstance().unhideAndShowAllNotes();
       } else if ((basicItem != null && src == basicItem[2]) || (basicItemJ != null && src == basicItemJ[2])) {
-         categories.hideAllNotes();
+         CategoryManager.getInstance().hideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[0]) || (categoryItemJ != null && src == categoryItemJ[0])) {
          ((MenuItemWithCategory)src).getCategory().hideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[1]) || (categoryItemJ != null && src == categoryItemJ[1])) {
          ((MenuItemWithCategory)src).getCategory().unhideAndShowAllNotes();
       } else if ((categoryItem != null && src == categoryItem[2]) || (categoryItemJ != null && src == categoryItemJ[2])) {
-         categories.showOnlyNotesOfCategory(((MenuItemWithCategory)src).getCategory());
+         CategoryManager.getInstance().showOnlyNotesOfCategory(((MenuItemWithCategory)src).getCategory());
       } else if ((categoryItem != null && src == categoryItem[3]) || (categoryItemJ != null && src == categoryItemJ[3])) {
-         categories.setDefaultCategory(((MenuItemWithCategory)src).getCategory());
+         CategoryManager.getInstance().setDefaultCategory(((MenuItemWithCategory)src).getCategory());
       }
       
       // save notes to file after every change
-      NoteIO.writeCategoriesToFile(categories);
+      NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }
    
-class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 1L;
-   private Category myCat;
-   
-   public CategoryMenuItem(String title, Category c) {
-      super(title);
-      myCat = c;
+   class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = 1L;
+      private Category myCat;
+      
+      public CategoryMenuItem(String title, Category c) {
+         super(title);
+         myCat = c;
+      }
+      
+      public Category getCategory() {
+         return myCat;
+      }
    }
    
-   public Category getCategory() {
-      return myCat;
+   class CategoryJMenuItem extends JMenuItem implements MenuItemWithCategory {
+      /**
+       * 
+       */
+      private static final long serialVersionUID = 1L;
+      private Category myCat;
+      
+      public CategoryJMenuItem(String title, Category c) {
+         super(title);
+         myCat = c;
+      }
+      
+      public Category getCategory() {
+         return myCat;
+      }
    }
-}
-
-class CategoryJMenuItem extends JMenuItem implements MenuItemWithCategory {
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 1L;
-   private Category myCat;
    
-   public CategoryJMenuItem(String title, Category c) {
-      super(title);
-      myCat = c;
+   interface MenuItemWithCategory {
+      public Category getCategory();
    }
-   
-   public Category getCategory() {
-      return myCat;
-   }
-}
-
-interface MenuItemWithCategory {
-   public Category getCategory();
-}
 
 }

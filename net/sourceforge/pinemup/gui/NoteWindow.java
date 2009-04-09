@@ -56,9 +56,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    
    private BackgroundLabel bgLabel;
    
-   private CategoryManager categories;   
-
-   public NoteWindow(Note pn, CategoryManager c) {
+   public NoteWindow(Note pn) {
       super(
          new JFrame(){
             /**
@@ -72,7 +70,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          "note:"
       );
       parentNote = pn;
-      categories = c;
       textPanel = new JScrollPane();
       textPanel.setBorder(null);
       textPanel.setOpaque(false);
@@ -203,7 +200,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          textArea.setFocusable(false);
          
          // write notes to file after every change
-         NoteIO.writeCategoriesToFile(categories);
+         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
       }
    }
 
@@ -240,7 +237,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          parentNote.hide();
          
          // write notes to file after every change
-         NoteIO.writeCategoriesToFile(categories);
+         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
       }
 
    }
@@ -250,7 +247,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          if (e.getClickCount() == 2) { // doubleclick on topPanel
             autoSizeY();
             // write notes to file after every change
-            NoteIO.writeCategoriesToFile(categories);
+            NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
          } else {
             textArea.setFocusable(false);
          }
@@ -340,15 +337,13 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       
       if (changeMade) {
          // write notes to file after every change
-         NoteIO.writeCategoriesToFile(categories);
+         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
       }
-      
-      
    }
 
    private void checkPopupMenu(MouseEvent event) {
       if (event.isPopupTrigger()) {
-         RightClickMenu popup = new RightClickMenu(this, categories);
+         RightClickMenu popup = new RightClickMenu(this);
          popup.show(event.getComponent(), event.getX(), event.getY());
       }
    }

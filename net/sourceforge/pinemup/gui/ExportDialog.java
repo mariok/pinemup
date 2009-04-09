@@ -21,8 +21,12 @@
 
 package net.sourceforge.pinemup.gui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.*;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -38,12 +42,9 @@ public class ExportDialog extends JDialog implements ActionListener {
    private JCheckBox[] catBox;
    private JCheckBox allCatsBox;
    
-   private CategoryManager categories;
-   
-   public ExportDialog(CategoryManager c) {
+   public ExportDialog() {
       super();
       setTitle("export notes");
-      categories = c;
       JScrollPane sp = new JScrollPane();
       sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
       sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -54,9 +55,9 @@ public class ExportDialog extends JDialog implements ActionListener {
       main.add(sp, BorderLayout.CENTER);
             
       // Category Checkboxes
-      int rows = c.getNumberOfCategories();
+      int rows = CategoryManager.getInstance().getNumberOfCategories();
       JPanel checkBoxPanel = new JPanel (new GridLayout(rows+2,1));
-      String[] cats = c.getCategoryNames();
+      String[] cats = CategoryManager.getInstance().getCategoryNames();
       JPanel[] catPanel = new JPanel[rows];
       catBox = new JCheckBox[rows];
       JPanel allCatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -104,15 +105,14 @@ public class ExportDialog extends JDialog implements ActionListener {
          setVisible(false);
          dispose();
       } else if (src == okButton) {
-         CategoryManager c = categories;
-         CategoryManager catsToExport = new CategoryManager();
+         List<Category> catsToExport = new LinkedList<Category>();
          for (int i=0; i<catBox.length; i++) {
             if(catBox[i].isSelected()) {
-               catsToExport.addCategory(c.getCategoryByNumber(i));
+               catsToExport.add(CategoryManager.getInstance().getCategoryByNumber(i));
             }
          }
          
-         NoteIO.exportCategoriesToTextFile(catsToExport);
+         NoteIO.exportCategoriesToTextFile(catsToExport.listIterator());
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {

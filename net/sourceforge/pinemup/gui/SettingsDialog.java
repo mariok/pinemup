@@ -24,9 +24,14 @@ package net.sourceforge.pinemup.gui;
 
 import javax.swing.*;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.*;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
@@ -55,8 +60,6 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private ButtonGroup closeIconGroup;
    
    private JButton checkForUpdatesButton;
-   
-   private CategoryManager categories;
    
    private JPanel makeGeneralTab() {
       JPanel generalPanel = new JPanel();
@@ -744,10 +747,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       return ftpPanel;
    }
    
-   public SettingsDialog(CategoryManager c) {
+   public SettingsDialog() {
       super("Settings - pin 'em up");
       setSize(new Dimension(640,480));
-      categories = c;
 
       // PREPARE ALL PANELS
       // ---------------------
@@ -864,7 +866,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private void saveSettings() {
       //save old notesfile
-      NoteIO.writeCategoriesToFile(categories);
+      NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
       
       // load settings from fields
       boolean updateCheckEnabled = checkForUpdatesBox.isSelected(); 
@@ -912,17 +914,17 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       UserSettings.getInstance().setFtpDir(ftpDir);
       
       // load new notes from file
-      categories.hideAllNotes();
-      categories.removeAllCategories();
-      CategoryManager cm = NoteIO.readCategoriesFromFile();
+      CategoryManager.getInstance().hideAllNotes();
+      CategoryManager.getInstance().removeAllCategories();
+      List<Category> cl = NoteIO.readCategoriesFromFile();
       notesFileField.setText(UserSettings.getInstance().getNotesFile()); //if file has not been valid and new one has been selected
-      categories.attach(cm);
+      CategoryManager.getInstance().append(cl);
       
       // show all visible notes
-      categories.showAllNotesNotHidden();
+      CategoryManager.getInstance().showAllNotesNotHidden();
       
       // replace Traymenu (because of new categories)
-      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
+      PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       
       // save settings permanentely
       UserSettings.getInstance().saveSettings();

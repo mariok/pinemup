@@ -39,8 +39,6 @@ public class Note {
    
    private byte bgColor;
    
-   private CategoryManager categories;
-   
    private Category category;
    
    public void setAlwaysOnTop(boolean b) {
@@ -72,7 +70,7 @@ public class Note {
       hidden = b;
    }
 
-   public Note(String text, CategoryManager cl, byte bgColor) {
+   public Note(String text, byte bgColor) {
       this.text = text;
       hidden = false;
       window = null;
@@ -83,18 +81,17 @@ public class Note {
       fontsize = UserSettings.getInstance().getDefaultFontSize();
       alwaysOnTop = UserSettings.getInstance().getDefaultAlwaysOnTop();
       this.bgColor = bgColor;
-      categories = cl;
    }
 
    public void showIfNotHidden() {
       if (hidden == false && window == null) {
-         window = new NoteWindow(this, categories);
+         window = new NoteWindow(this);
       }
    }
    
    public void unhideAndShow() {
       if (window == null) {
-         window = new NoteWindow(this, categories);
+         window = new NoteWindow(this);
       }
       hidden = false;
    }

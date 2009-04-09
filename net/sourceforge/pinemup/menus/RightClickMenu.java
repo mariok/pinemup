@@ -44,16 +44,13 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
    
    private JMenuItem[] setFontSizeItem, setCategoryItem, setBGColorItem;
    
-   private CategoryManager categories;
-   
-   public RightClickMenu(NoteWindow w, CategoryManager c) {
+   public RightClickMenu(NoteWindow w) {
       super();
-      categories = c;
       parentWindow = w;
       myCat = parentWindow.getParentNote().getCategory();
 
       //create MenuCreator
-      MenuCreator myMenuCreator = new MenuCreator(categories);      
+      MenuCreator myMenuCreator = new MenuCreator();      
       
       //add basic items
       JMenuItem[] basicItems = myMenuCreator.getBasicJMenuItems();
@@ -94,9 +91,9 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       }
       
       JMenu setCategoryMenu = new JMenu("category");
-      setCategoryItem = new JMenuItem[categories.getNumberOfCategories()];
+      setCategoryItem = new JMenuItem[CategoryManager.getInstance().getNumberOfCategories()];
       for (int i=0; i<setCategoryItem.length; i++) {
-         setCategoryItem[i] = new JMenuItem((i+1) + " " + categories.getCategoryNames()[i]);
+         setCategoryItem[i] = new JMenuItem((i+1) + " " + CategoryManager.getInstance().getCategoryNames()[i]);
          setCategoryItem[i].addActionListener(this);
          setCategoryMenu.add(setCategoryItem[i]);
       }
@@ -144,7 +141,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       } else {
          for (int i=0; i<setCategoryItem.length; i++) {
             if (src == setCategoryItem[i]) {
-               parentWindow.getParentNote().moveToCategory(categories.getCategoryByNumber(i));
+               parentWindow.getParentNote().moveToCategory(CategoryManager.getInstance().getCategoryByNumber(i));
             }
          }
          
@@ -164,8 +161,6 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       }
       
       // save notes to file after every change
-      NoteIO.writeCategoriesToFile(categories);
-      
+      NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }
-
 }

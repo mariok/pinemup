@@ -24,6 +24,8 @@ package net.sourceforge.pinemup.logic;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.*;
@@ -40,7 +42,7 @@ public class NoteIO {
    
    private static final String LATEST_NOTESFILE_VERSION = "0.2";
    
-   public static void writeCategoriesToFile(CategoryManager c) {
+   public static void writeCategoriesToFile(ListIterator<Category> l) {
       //write notes to xml file
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
@@ -51,7 +53,6 @@ public class NoteIO {
          writer.writeStartElement("notesfile");
          writer.writeAttribute("version",LATEST_NOTESFILE_VERSION);
          
-         ListIterator<Category> l = c.getListIterator();
          Category tc;
          while (l.hasNext()) {
             tc = l.next();
@@ -105,8 +106,8 @@ public class NoteIO {
       }
    }
 
-   public static CategoryManager readCategoriesFromFile() {
-      CategoryManager c = new CategoryManager();
+   public static List<Category> readCategoriesFromFile() {
+      List<Category> c = new LinkedList<Category>();
       Category currentCategory = null;
       Note currentNote = null;
       boolean defaultNotAdded = true;
@@ -166,9 +167,9 @@ public class NoteIO {
                      }
                   }
                   currentCategory = new Category(name,def,defNoteColor);
-                  c.addCategory(currentCategory);
+                  c.add(currentCategory);
                } else if (ename.equals("note")) {
-                  currentNote = new Note("",c,(byte)0);
+                  currentNote = new Note("",(byte)0); //TODO: replace number with constant
                   for (int i=0; i<parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");
@@ -226,8 +227,8 @@ public class NoteIO {
          in.close();
       } catch (FileNotFoundException e) {
          //neu erstellen
-         c.addCategory(new Category("Home",true,(byte)0));
-         c.addCategory(new Category("Office",false,(byte)0));
+         c.add(new Category("Home",true,(byte)0));
+         c.add(new Category("Office",false,(byte)0));
       } catch (XMLStreamException e) {
          //Meldung ausgeben
          System.out.println("XML Error");
@@ -293,7 +294,7 @@ public class NoteIO {
       }
    }
    
-   public static void exportCategoriesToTextFile(CategoryManager c) {
+   public static void exportCategoriesToTextFile(ListIterator<Category> l) {
       File f = null;
       if (PinEmUp.getExportFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
          String name = NoteIO.checkAndAddExtension(PinEmUp.getExportFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
@@ -303,7 +304,6 @@ public class NoteIO {
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
             // write text of notes to file
-            ListIterator<Category> l = c.getListIterator();
             Category tc;
             while (l.hasNext()) {
                tc = l.next();

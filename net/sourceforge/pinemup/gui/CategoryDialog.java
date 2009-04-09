@@ -42,7 +42,6 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    private static final long serialVersionUID = 1L;
    private JButton closeButton, moveUpButton, moveDownButton, deleteButton, addButton;
    
-   private CategoryManager categories;
    private JTable catTable;
    private DefaultTableModel catTableModel;
    private JTextField catNameField;
@@ -56,12 +55,11 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    
    private boolean trackChanges;
    
-   public CategoryDialog(CategoryManager c) {
+   public CategoryDialog() {
       super();
       setTitle("manage categories");
-      categories = c;
       trackChanges = false;
-      noOfCategories = categories.getNumberOfCategories();
+      noOfCategories = CategoryManager.getInstance().getNumberOfCategories();
       Container main = getContentPane();
       main.setLayout(new BorderLayout());
 
@@ -202,9 +200,9 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    }
    
    private Object[][] makeDataArray() {
-      int anz = categories.getNumberOfCategories();
+      int anz = CategoryManager.getInstance().getNumberOfCategories();
       Object[][] data = new Object[anz][3];
-      ListIterator<Category> l = categories.getListIterator();
+      ListIterator<Category> l = CategoryManager.getInstance().getListIterator();
       Category tc;
       int index;
       while (l.hasNext()) {
@@ -290,14 +288,14 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       if (confirmed) {
          boolean isDef = selectedCat.isDefaultCategory();
          selectedCat.hideAllNotes();
-         categories.removeCategory(selectedCat);
+         CategoryManager.getInstance().removeCategory(selectedCat);
          catTableModel.removeRow(selectedRow);
          if (isDef) {
-            categories.getListIterator().next().setDefault(true); //set first category as default
+            CategoryManager.getInstance().getListIterator().next().setDefault(true); //set first category as default
             catTableModel.setValueAt("!", 0, 0);
             defCat = 0;
          }
-         PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
+         PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
          noOfCategories--;
          selectedCat = null;
          
@@ -315,30 +313,30 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       if (moveUp) {
          if(selectedCat.isDefaultCategory()) {
             defCat--;
-         } else if (categories.getCategoryByNumber(selectedRow-1).isDefaultCategory()) {
+         } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow-1).isDefaultCategory()) {
             defCat++;
          }
-         categories.moveCategoryUp(selectedCat);
+         CategoryManager.getInstance().moveCategoryUp(selectedCat);
          catTableModel.moveRow(selectedRow, selectedRow, selectedRow-1);
          catTable.setRowSelectionInterval(selectedRow-1, selectedRow-1);
       } else {
          if(selectedCat.isDefaultCategory()) {
             defCat++;
-         } else if (categories.getCategoryByNumber(selectedRow+1).isDefaultCategory()) {
+         } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow+1).isDefaultCategory()) {
             defCat--;
          }
-         categories.moveCategoryDown(selectedCat);
+         CategoryManager.getInstance().moveCategoryDown(selectedCat);
          catTableModel.moveRow(selectedRow, selectedRow, selectedRow+1);
          catTable.setRowSelectionInterval(selectedRow+1, selectedRow+1);
       }
-      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
+      PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
    }
    
    private void makeSelectedCategoryDefault() {
       if (trackChanges) {
          catTableModel.setValueAt("", defCat, 0);
          defCat = selectedRow;
-         categories.setDefaultCategory(selectedCat);
+         CategoryManager.getInstance().setDefaultCategory(selectedCat);
          catTableModel.setValueAt("!", defCat, 0);
       }
    }
@@ -349,8 +347,8 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
-      categories.addCategory(new Category(catName,false,(byte)(0)));
-      PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
+      CategoryManager.getInstance().addCategory(new Category(catName,false,(byte)(0)));
+      PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       Object[] rowData = {"",catName,"0"};
       catTableModel.addRow(rowData);
       noOfCategories++;
@@ -378,7 +376,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          String name = catNameField.getText();
          catTable.getModel().setValueAt(name, selectedRow, 1);
          selectedCat.setName(name);
-         PinEmUp.getMainApp().getTrayIcon().setPopupMenu(new TrayMenu(categories));
+         PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       }
    }
    
@@ -393,7 +391,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
 
    public void valueChanged(ListSelectionEvent e) {
       selectedRow = catTable.getSelectedRow();
-      selectedCat = categories.getCategoryByNumber(selectedRow);
+      selectedCat = CategoryManager.getInstance().getCategoryByNumber(selectedRow);
 
       //ENABLE OR DISABLE MOVEDOWN BUTTON
       if (selectedRow == noOfCategories-1) {
