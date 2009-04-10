@@ -31,16 +31,6 @@ public class PinEmUp {
    
    private static PinEmUp main;
 
-   private static JFileChooser fileDialog, exportFileDialog;
-   
-   public static JFileChooser getFileDialog() {
-      return fileDialog;
-   }
-
-   public static JFileChooser getExportFileDialog() {
-      return exportFileDialog;
-   }
-   
    public static void setPinEmUp(PinEmUp m) {
       main = m;
    }
@@ -61,20 +51,6 @@ public class PinEmUp {
          
          PinEmUp.setPinEmUp(this);
 
-         // create File-Dialog for notesfile
-         fileDialog = new JFileChooser();
-         fileDialog.setDialogTitle("select notes file");
-         fileDialog.removeChoosableFileFilter(fileDialog.getChoosableFileFilters()[0]);
-         fileDialog.setFileFilter(new MyFileFilter("XML"));
-         fileDialog.setMultiSelectionEnabled(false);
-
-         // create File-Dialog for export
-         exportFileDialog = new JFileChooser();
-         exportFileDialog.setDialogTitle("select text-file for export");
-         exportFileDialog.removeChoosableFileFilter(exportFileDialog.getChoosableFileFilters()[0]);
-         exportFileDialog.setFileFilter(new MyFileFilter("TXT"));
-         exportFileDialog.setMultiSelectionEnabled(false);
-         
          //load notes from file
          CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());
          

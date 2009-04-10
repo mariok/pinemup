@@ -818,8 +818,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          dispose();
       } else if (src == browseButton) {
          File f = null;
-         if (PinEmUp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            f = PinEmUp.getFileDialog().getSelectedFile();
+         if (FileDialogCreator.getFileDialogInstance().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            f = FileDialogCreator.getFileDialogInstance().getSelectedFile();
          }
          if (f != null) {
             notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(),".xml"));

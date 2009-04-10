@@ -36,6 +36,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.*;
 
+import net.sourceforge.pinemup.gui.FileDialogCreator;
+
 import org.xml.sax.SAXException;
 
 public class NoteIO {
@@ -118,8 +120,8 @@ public class NoteIO {
          }
          
          File f = null;
-         if (PinEmUp.getFileDialog().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            f = PinEmUp.getFileDialog().getSelectedFile();
+         if (FileDialogCreator.getFileDialogInstance().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            f = FileDialogCreator.getFileDialogInstance().getSelectedFile();
          }
          if (f != null) {
             UserSettings.getInstance().setNotesFile((NoteIO.checkAndAddExtension(f.getAbsolutePath(),".xml")));
@@ -296,8 +298,8 @@ public class NoteIO {
    
    public static void exportCategoriesToTextFile(ListIterator<Category> l) {
       File f = null;
-      if (PinEmUp.getExportFileDialog().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         String name = NoteIO.checkAndAddExtension(PinEmUp.getExportFileDialog().getSelectedFile().getAbsolutePath(), ".txt");
+      if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+         String name = NoteIO.checkAndAddExtension(FileDialogCreator.getExportFileDialogInstance().getSelectedFile().getAbsolutePath(), ".txt");
          f = new File(name);
       }
       if (f != null) {
