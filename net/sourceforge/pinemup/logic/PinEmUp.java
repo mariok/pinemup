@@ -26,31 +26,10 @@ import javax.swing.*;
 
 public class PinEmUp {
    private static final String VERSION = "0.5-svn";
-   
-   private Note failNote;
-   
-   private static PinEmUp main;
-
-   public static void setPinEmUp(PinEmUp m) {
-      main = m;
-   }
-
-   public static PinEmUp getMainApp() {
-      return main;
-   }
-
-   public Note getFailNote() {
-      return failNote;
-   }
 
    public PinEmUp() {
       if (SystemTray.isSupported()) {
          
-         // for FTP issues
-         failNote = new Note();
-         
-         PinEmUp.setPinEmUp(this);
-
          //load notes from file
          CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());
          

@@ -121,7 +121,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       mainPanel.add(textPanel, BorderLayout.CENTER);
       
       //add area to show if note is scrollable
-      ImageIcon scrollImage = new ImageIcon(ResourceLoader.getScrollImage());
+      ImageIcon scrollImage = new ImageIcon(ResourceLoader.getInstance().getScrollImage());
       scrollButton = new JButton(scrollImage);
       mainPanel.add(scrollButton,BorderLayout.SOUTH);
       scrollButton.setRolloverEnabled(false);
@@ -132,13 +132,13 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       scrollButton.setBorder(null);
       scrollButton.setBackground(new Color(255,255,255,0));
       scrollButton.setVisible(false);
-      scrollButton.setDisabledIcon(new ImageIcon(ResourceLoader.getScrollImage()));
+      scrollButton.setDisabledIcon(new ImageIcon(ResourceLoader.getInstance().getScrollImage()));
       
       // adjust and add buttons to the topPanel
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       
-      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getCloseIcon(UserSettings.getInstance().getCloseIcon()));
+      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(UserSettings.getInstance().getCloseIcon()));
       closeButton = new JButton(closeIcon);
       closeButton.setBackground(new Color(255,255,255,0));
       closeButton.setRolloverEnabled(false);

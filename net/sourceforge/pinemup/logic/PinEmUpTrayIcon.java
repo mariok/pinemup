@@ -8,7 +8,7 @@ public class PinEmUpTrayIcon extends TrayIcon {
    private static PinEmUpTrayIcon instance;
    
    private PinEmUpTrayIcon() {
-      super(ResourceLoader.getTrayIcon(), "pin 'em up", new TrayMenu());
+      super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", new TrayMenu());
       setImageAutoSize(false);
       IconClickLogic myIconListener = new IconClickLogic();
       // add actionlistener for doubleclick on icon

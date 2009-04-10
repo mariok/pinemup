@@ -353,7 +353,7 @@ public class NoteIO {
       // a java.net.URL or a javax.xml.transform.Source instead.
       //File schemaLocation = ResourceLoader.getSchemaFile();
       String version = getNotesFileVersion(filename);
-      URL schemaLocation = ResourceLoader.getSchemaFile(version);
+      URL schemaLocation = ResourceLoader.getInstance().getSchemaFile(version);
       Schema schema;
       schema = factory.newSchema(schemaLocation);
  

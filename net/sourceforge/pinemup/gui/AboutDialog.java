@@ -73,7 +73,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       String msg = "";
       msg += "(C) 2007 Mario Koedding\r\n\r\n";
       msg += "This program is licensed under the terms of the GNU GPL V3 or any later version.\r\n\r\n\r\n";
-      msg += ResourceLoader.getLicense();
+      msg += ResourceLoader.getInstance().getLicense();
       JEditorPane p = new JEditorPane("text/plain",msg);
       p.setEditable(false);
       p.addHyperlinkListener(this);

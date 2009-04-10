@@ -26,13 +26,28 @@ import java.net.URL;
 import java.awt.*;
 
 public class ResourceLoader {
+   private static ResourceLoader instance;
    
-   private static Image closeIcon1 = loadImage("net.sourceforge.pinemup.resources","closeicon.png");
-   private static Image closeIcon2 = loadImage("net.sourceforge.pinemup.resources","closeicon2.png");
-   private static Image trayIcon = loadImage("net.sourceforge.pinemup.resources","icon" + getTrayIconSize() + ".png");
-   private static Image scrollImage = loadImage("net.sourceforge.pinemup.resources","scroll.png");
+   private Image closeIcon1;
+   private Image closeIcon2;
+   private Image trayIcon;
+   private Image scrollImage;
    
-   private static long getTrayIconSize() {
+   public static ResourceLoader getInstance() {
+      if (ResourceLoader.instance == null) {
+         ResourceLoader.instance = new ResourceLoader();
+      }
+      return ResourceLoader.instance;
+   }
+   
+   private ResourceLoader() {
+      closeIcon1 = loadImage("net.sourceforge.pinemup.resources","closeicon.png");
+      closeIcon2 = loadImage("net.sourceforge.pinemup.resources","closeicon2.png");
+      trayIcon = loadImage("net.sourceforge.pinemup.resources","icon" + getTrayIconSize() + ".png");
+      scrollImage = loadImage("net.sourceforge.pinemup.resources","scroll.png");
+   }
+   
+   private long getTrayIconSize() {
       long size = Math.round(SystemTray.getSystemTray().getTrayIconSize().getHeight());
       if ((size < 16)) {
          size = 16;
@@ -44,13 +59,13 @@ public class ResourceLoader {
       return size;
    }
    
-   private static InputStream getResourceStream(String pkg, String filename) {
+   private InputStream getResourceStream(String pkg, String filename) {
       String name = "/" + pkg.replace('.', '/') + "/" + filename;
-      InputStream is = PinEmUp.getMainApp().getClass().getResourceAsStream(name);
+      InputStream is = getClass().getResourceAsStream(name);
       return is;
    }
    
-   private static Image loadImage(String pkg, String filename) {
+   private Image loadImage(String pkg, String filename) {
       Image img = null;
       try {
          InputStream is = getResourceStream(pkg, filename);
@@ -78,7 +93,7 @@ public class ResourceLoader {
       return img;
    }
    
-   public static Image getCloseIcon(int nr) {
+   public Image getCloseIcon(int nr) {
       switch(nr) {
       case 1: return closeIcon1;
       case 2: return closeIcon2;
@@ -86,21 +101,21 @@ public class ResourceLoader {
       }
    }
    
-   public static Image getTrayIcon() {
+   public Image getTrayIcon() {
       return trayIcon;
    }
    
-   public static Image getScrollImage() {
+   public Image getScrollImage() {
       return scrollImage;
    }
    
-   public static String getLicense() {
+   public String getLicense() {
       String s = "";
       try {
          String pkg = "net.sourceforge.pinemup.resources";
          String filename = "COPYING";
          String name = "/" + pkg.replace('.', '/') + "/" + filename;
-         InputStream is = PinEmUp.getMainApp().getClass().getResourceAsStream(name);
+         InputStream is = getClass().getResourceAsStream(name);
          BufferedReader br = new BufferedReader(new InputStreamReader(is));         
          String nextLine = br.readLine();
          while (nextLine != null) {
@@ -115,11 +130,11 @@ public class ResourceLoader {
       return s;
    }
    
-   public static URL getSchemaFile(String version) {
+   public URL getSchemaFile(String version) {
       String pkg = "net.sourceforge.pinemup.resources";
       String filename = "notesfile-" + version + ".xsd";
       String name = "/" + pkg.replace('.', '/') + "/" + filename;
-      URL u = PinEmUp.getMainApp().getClass().getResource(name);
+      URL u = getClass().getResource(name);
       return u;
    }
 }

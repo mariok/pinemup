@@ -380,8 +380,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       
       //Add fields
       closeIconGroup = new ButtonGroup();
-      ImageIcon closeIcon1 = new ImageIcon(ResourceLoader.getCloseIcon(1));
-      ImageIcon closeIcon2 = new ImageIcon(ResourceLoader.getCloseIcon(2));
+      ImageIcon closeIcon1 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(1));
+      ImageIcon closeIcon2 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(2));
       closeIcon1Button = new JRadioButton();
       closeIcon1Button.addActionListener(this);
       closeIcon2Button = new JRadioButton();
