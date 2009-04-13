@@ -57,14 +57,14 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    
    public CategoryDialog() {
       super();
-      setTitle("manage categories");
+      setTitle(I18N.getInstance().getString("categorydialog.title"));
       trackChanges = false;
       noOfCategories = CategoryManager.getInstance().getNumberOfCategories();
       Container main = getContentPane();
       main.setLayout(new BorderLayout());
 
       JPanel buttonPanel = new JPanel();
-      closeButton = new JButton("close");
+      closeButton = new JButton(I18N.getInstance().getString("closebutton"));
       closeButton.addActionListener(this);
       buttonPanel.add(closeButton);
       main.add(buttonPanel,BorderLayout.SOUTH);
@@ -181,7 +181,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          }
       };
       
-      String[] columnNames = {"Default","Name","Color"};
+      String[] columnNames = {I18N.getInstance().getString("categorydialog.defaultcolumn"),I18N.getInstance().getString("categorydialog.namecolumn"),I18N.getInstance().getString("categorydialog.colorcolumn")};
       catTableModel.setColumnIdentifiers(columnNames);
       Object[][] rowData = makeDataArray();
       for (int i=0;i<rowData.length;i++) {
@@ -226,7 +226,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       catNameField.getDocument().addDocumentListener(this);
       catNameField.setEnabled(false);
       p.add(catNameField);
-      defaultBox = new JCheckBox("Default Category");
+      defaultBox = new JCheckBox(I18N.getInstance().getString("categorydialog.defaultcheckbox"));
       defaultBox.addActionListener(this);
       defaultBox.setEnabled(false);
       p.add(defaultBox);
@@ -252,7 +252,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       
       p.add(colorBox);
             
-      p.setBorder(new TitledBorder("edit category"));
+      p.setBorder(new TitledBorder(I18N.getInstance().getString("categorydialog.editborder")));
             
       return p;
    }
@@ -282,7 +282,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    private void deleteSelectedCategory() {
       boolean confirmed = true;
       if (selectedCat.getNumberOfNotes() > 0) {
-         confirmed = JOptionPane.showConfirmDialog(null, "All " + selectedCat.getNumberOfNotes() + " notes in this category will be deleted! Proceed?","Remove category",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+         confirmed = JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("categorydialog.deletemessagespart1") + selectedCat.getNumberOfNotes() + I18N.getInstance().getString("categorydialog.deletemessagespart2"),I18N.getInstance().getString("categorydialog.deletemessagestitle"),JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
       }
       
       if (confirmed) {
@@ -343,7 +343,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    
    private void addCategory() {
       trackChanges = false;
-      String catName = "<new category>";
+      String catName = "<" + I18N.getInstance().getString("categorydialog.defaultcategoryname") + ">";
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);

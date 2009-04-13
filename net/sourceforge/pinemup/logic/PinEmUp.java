@@ -24,11 +24,17 @@ package net.sourceforge.pinemup.logic;
 import java.awt.*;
 import javax.swing.*;
 
+import net.sourceforge.pinemup.gui.I18N;
+
 public class PinEmUp {
    private static final String VERSION = "0.5-svn";
 
    public PinEmUp() {
       if (SystemTray.isSupported()) {
+         //set locale
+         //TODO: load locale from settings
+         I18N.getInstance().setLocale("en", "US");
+         
          //load notes from file
          CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());
          

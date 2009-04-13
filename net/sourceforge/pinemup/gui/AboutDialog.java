@@ -83,7 +83,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
    }
    
    public AboutDialog() {
-      super("About pin 'em up");
+      super(I18N.getInstance().getString("aboutdialog.title"));
       setSize(new Dimension(600,350));
 
       // PREPARE ALL PANELS
@@ -92,13 +92,13 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       
       //tabbed pane and tabs
       JTabbedPane tpane = new JTabbedPane();
-      tpane.addTab("about", null, makeAboutTab(), "about");
-      tpane.addTab("authors", null, makeAuthorsTab(), "authors");
-      tpane.addTab("license", null, makeLicenseTab(), "license");
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(), I18N.getInstance().getString("aboutdialog.abouttab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(), I18N.getInstance().getString("aboutdialog.authorstab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(), I18N.getInstance().getString("aboutdialog.licensetab"));
       mainPanel.add(tpane, BorderLayout.CENTER);
 
       // PANEL WITH BUTTONS
-      okButton = new JButton("close");
+      okButton = new JButton(I18N.getInstance().getString("closebutton"));
       okButton.addActionListener(this);
       okButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
       okButton.setEnabled(true);

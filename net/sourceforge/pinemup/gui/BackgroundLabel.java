@@ -113,7 +113,7 @@ public class BackgroundLabel extends JLabel {
    }
    
    public static String getColorName(byte nr) {
-      return (String)COLORS[nr][0];
+      return I18N.getInstance().getString("color." + (String)COLORS[nr][0]);
    }
    
    public static int getNumberOfColors() {
@@ -126,8 +126,8 @@ public class BackgroundLabel extends JLabel {
    
    public static String[] getColorNames() {
       String[] names = new String[COLORS.length];
-      for (int i=0;i<COLORS.length;i++) {
-         names[i] = (String)COLORS[i][0];
+      for (byte i=0;i<COLORS.length;i++) {
+         names[i] = BackgroundLabel.getColorName(i);
       }
       return names;
    }
