@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  * 
- * Copyright (C) 2007-2008 by Mario Koedding
+ * Copyright (C) 2007-2009 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       msg += "<html>";
       msg += "<p>pin 'em up</p>";
       msg += "<p>version " + PinEmUp.getVersion() + "</p>";
-      msg += "<p>(C) 2007 Mario Koedding</p>";
+      msg += "<p>(C) 2007 - 2009 Mario Ködding</p>";
       msg += "<p><a href=\"http://pinemup.sourceforge.net\" target=\"blank\">http://pinemup.sourceforge.net</a></p>";
       msg += "</html>";
       JEditorPane p = new JEditorPane("text/html",msg);
@@ -59,7 +59,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
    private JEditorPane makeAuthorsTab() {
       String msg = "";
       msg += "<html>";
-      msg += "<p><strong>Mario Koedding</strong><br />";
+      msg += "<p><strong>Mario Ködding</strong><br />";
       msg += "<a href=\"mailto:mario@koedding.net\">mario@koedding.net</a><br />";
       msg += "developer &amp; founder of the project</p>";
       msg += "</html>";
@@ -71,7 +71,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
 
    private JScrollPane makeLicenseTab() {
       String msg = "";
-      msg += "(C) 2007 Mario Koedding\r\n\r\n";
+      msg += "(C) 2007 - 2009 Mario Ködding\r\n\r\n";
       msg += "This program is licensed under the terms of the GNU GPL V3 or any later version.\r\n\r\n\r\n";
       msg += ResourceLoader.getInstance().getLicense();
       JEditorPane p = new JEditorPane("text/plain",msg);

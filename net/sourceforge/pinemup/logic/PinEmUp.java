@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  * 
- * Copyright (C) 2007-2008 by Mario Koedding
+ * Copyright (C) 2007-2009 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ public class PinEmUp {
 
    public PinEmUp() {
       if (SystemTray.isSupported()) {
-         
          //load notes from file
          CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());
          
@@ -41,14 +40,14 @@ public class PinEmUp {
             System.err.println(e);
          }
 
-         //show all visible notes
+         //show all notes that are set visible
          CategoryManager.getInstance().showAllNotesNotHidden();
          
          //udate check
          if (UserSettings.getInstance().isUpdateCheckEnabled()) {
             new UpdateCheckThread(false);
          }
-      } else {
+      } else { //tray icon not supported
          JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
          System.exit(1);
       }
