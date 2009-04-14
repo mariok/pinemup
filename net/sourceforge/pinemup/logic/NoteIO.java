@@ -37,6 +37,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.*;
 
 import net.sourceforge.pinemup.gui.FileDialogCreator;
+import net.sourceforge.pinemup.gui.I18N;
 
 import org.xml.sax.SAXException;
 
@@ -100,11 +101,11 @@ public class NoteIO {
          writer.close();
          f.close();
       } catch (XMLStreamException e) {
-         JOptionPane.showMessageDialog(null, "Could save notes to file! Please check file-settings and free disk-space!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       } catch (FileNotFoundException e) {
-         JOptionPane.showMessageDialog(null, "Could save notes to file! Please check file-settings and free disk-space!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       } catch (IOException e) {
-         System.out.println("IO Error");
+         System.err.println("IO Error");
       }
    }
 
@@ -115,7 +116,7 @@ public class NoteIO {
       boolean defaultNotAdded = true;
       File nfile = new File(UserSettings.getInstance().getNotesFile());
       while (nfile.exists() && !fileIsValid(UserSettings.getInstance().getNotesFile())) {
-         if (JOptionPane.showConfirmDialog(null, "Notefile is not valid. Do you want to select a new one? (Click NO to exit)","Invalid notesfile",JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+         if (JOptionPane.showConfirmDialog(null,  I18N.getInstance().getString("error.notesfilenotvalid"), I18N.getInstance().getString("error.title"), JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
             System.exit(0);
          }
          
@@ -260,10 +261,10 @@ public class NoteIO {
          fos.close();
       } catch (Exception e) {
          downloaded = false;
-         JOptionPane.showMessageDialog(null, "Could not download file from FTP server!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.ftpnotesfilenotdownloaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
       if (downloaded) {
-         JOptionPane.showMessageDialog(null, "Notes successfully downloaded from FTP server!", "pin 'em up - information", JOptionPane.INFORMATION_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.ftpnotesfiledownloaded"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
       }
    }
 
@@ -289,10 +290,10 @@ public class NoteIO {
          os.close();
       } catch (Exception e) {
          uploaded = false;
-         JOptionPane.showMessageDialog(null, "Error! Notes could not be uploaded to FTP server!", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.ftpnotesfilenotuploaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
       if (uploaded) {
-         JOptionPane.showMessageDialog(null, "Notes successfully uploaded to FTP server!", "pin 'em up - information", JOptionPane.INFORMATION_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.ftpnotesfileuploaded"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
       }
    }
    
@@ -309,7 +310,7 @@ public class NoteIO {
             Category tc;
             while (l.hasNext()) {
                tc = l.next();
-               ostream.println("Category: " + tc.getName());
+               ostream.println(I18N.getInstance().getString("category") + ": " + tc.getName());
                ostream.println();
                ListIterator<Note> nl = tc.getListIterator();
                Note n;

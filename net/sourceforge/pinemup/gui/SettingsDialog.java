@@ -261,9 +261,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.WEST;
       JPanel updateCheckPanel = new JPanel(gbl);
-      updateCheckPanel.setBorder(new TitledBorder("Update-Check"));
+      updateCheckPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.update.border")));
       //Add all Labels
-      JLabel checkForUpdatesLabel = new JLabel("Check for update at startup: ");
+      JLabel checkForUpdatesLabel = new JLabel(I18N.getInstance().getString("settingsdialog.update.checkbox") + ": ");
       JLabel emptyLabel1 = new JLabel(" ");
       JLabel emptyLabel2 = new JLabel(" ");
       JLabel emptyLabel3 = new JLabel(" ");
@@ -308,7 +308,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add fields
       checkForUpdatesBox = new JCheckBox("");
       checkForUpdatesBox.addActionListener(this);
-      checkForUpdatesButton = new JButton("check now");
+      checkForUpdatesButton = new JButton(I18N.getInstance().getString("settingsdialog.update.button"));
       checkForUpdatesButton.addActionListener(this);
 
       
@@ -341,10 +341,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.WEST;
       JPanel titleBarPanel = new JPanel(gbl);
-      titleBarPanel.setBorder(new TitledBorder("Titlebar"));
+      titleBarPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.notetitlebar.border")));
       //Add all Labels
-      JLabel closeIconLabel = new JLabel("Close-Icon: ");
-      JLabel showCatLabel = new JLabel("Show category in titlebar: ");
+      JLabel closeIconLabel = new JLabel(I18N.getInstance().getString("settingsdialog.notetitlebar.closeicon") + ": ");
+      JLabel showCatLabel = new JLabel(I18N.getInstance().getString("settingsdialog.notetitlebar.showcategory") + ": ");
       JLabel emptyLabel = new JLabel(" ");
       JLabel emptyLabel2 = new JLabel(" ");
       //Set settings for all Labels
@@ -432,9 +432,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.WEST;
       JPanel behaviorPanel = new JPanel(gbl);
-      behaviorPanel.setBorder(new TitledBorder("Behavior"));
+      behaviorPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.behavior.border")));
       //Add all Labels
-      JLabel confirmDeleteLabel = new JLabel("Confirm deletion of a note: ");
+      JLabel confirmDeleteLabel = new JLabel(I18N.getInstance().getString("settingsdialog.behavior.confirmnotdeletion") + ": ");
       JLabel emptyLabel = new JLabel(" ");
       //Set settings for all Labels
       gbc.weightx = 0;
@@ -480,12 +480,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
       JPanel sizePanel = new JPanel(gbl);
-      sizePanel.setBorder(new TitledBorder("Size and Position"));
+      sizePanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.sizepos.border")));
       //Add all Labels
-      JLabel defaultWidthLabel = new JLabel("Default Note Width: ");
-      JLabel defaultHeightLabel = new JLabel("Default Note Height: ");
-      JLabel defaultXPositionLabel = new JLabel("Default Note X Position: ");
-      JLabel defaultYPositionLabel = new JLabel("Default Note Y Position: ");
+      JLabel defaultWidthLabel = new JLabel(I18N.getInstance().getString("settingsdialog.sizepos.defaultnotewidth") + ": ");
+      JLabel defaultHeightLabel = new JLabel(I18N.getInstance().getString("settingsdialog.sizepos.defaultnoteheight") + ": ");
+      JLabel defaultXPositionLabel = new JLabel(I18N.getInstance().getString("settingsdialog.sizepos.defaultnotexpos") + ": ");
+      JLabel defaultYPositionLabel = new JLabel(I18N.getInstance().getString("settingsdialog.sizepos.defaultnoteypos") + ": ");
       //Set settings for all Labels
       gbc.weightx = 0;
       gbc.weighty = 0;
@@ -552,9 +552,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
       JPanel fontPanel = new JPanel(gbl);
-      fontPanel.setBorder(new TitledBorder("Font"));
+      fontPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.font.border")));
       //Add all Labels
-      JLabel defaultFontSizeLabel = new JLabel("Default Font Size: ");
+      JLabel defaultFontSizeLabel = new JLabel(I18N.getInstance().getString("settingsdialog.font.defaultfontsize") + ": ");
 
       //Set settings for all Labels
       gbc.weightx = 0;
@@ -595,9 +595,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
       JPanel visibilityPanel = new JPanel(gbl);
-      visibilityPanel.setBorder(new TitledBorder("Visibility"));
+      visibilityPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.visibility.border")));
       //Add all Labels
-      JLabel alwaysOnTopLabel = new JLabel("Always On Top By Default: ");
+      JLabel alwaysOnTopLabel = new JLabel(I18N.getInstance().getString("settingsdialog.visibility.defaultalwaysontop") + ": ");
 
       //Set settings for all Labels
       gbc.weightx = 0;
@@ -638,11 +638,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
       JPanel notesFilePanel = new JPanel(gbl);
-      notesFilePanel.setBorder(new TitledBorder("Notes File"));
+      notesFilePanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.notesfile.border")));
       //Add fields
       notesFileField = new JTextField(20);
       notesFileField.getDocument().addDocumentListener(this);
-      browseButton = new JButton("browse");
+      browseButton = new JButton(I18N.getInstance().getString("settingsdialog.notesfile.browsebutton"));
       browseButton.addActionListener(this);
       //Set settings for all fields
       gbc.weightx = 0;
@@ -671,12 +671,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
       JPanel ftpPanel = new JPanel(gbl);
-      ftpPanel.setBorder(new TitledBorder("FTP settings"));
+      ftpPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.ftp.border")));
       //Add all Labels
-      JLabel ftpServerLabel = new JLabel("FTP-Server:");
-      JLabel ftpUserLabel = new JLabel("FTP-User:");
-      JLabel ftpPasswdLabel = new JLabel("FTP-Password:");
-      JLabel ftpDirLabel = new JLabel("FTP-Directory:");
+      JLabel ftpServerLabel = new JLabel(I18N.getInstance().getString("settingsdialog.ftp.ftpserver") + ":");
+      JLabel ftpUserLabel = new JLabel(I18N.getInstance().getString("settingsdialog.ftp.ftpuser") + ":");
+      JLabel ftpPasswdLabel = new JLabel(I18N.getInstance().getString("settingsdialog.ftp.ftppassword") + ":");
+      JLabel ftpDirLabel = new JLabel(I18N.getInstance().getString("settingsdialog.ftp.ftpdirectory") + ":");
 
       //Set settings for all Labels
       gbc.weightx = 0;
@@ -711,7 +711,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       ftpUserField.getDocument().addDocumentListener(this);
       ftpPasswdField = new JPasswordField(20);
       ftpPasswdField.getDocument().addDocumentListener(this);
-      storeFTPPassBox = new JCheckBox("Store FTP-Password on disk");
+      storeFTPPassBox = new JCheckBox(I18N.getInstance().getString("settingsdialog.ftp.storepwcheckbox"));
       storeFTPPassBox.addActionListener(this);
       ftpDirField = new JTextField(20);
       ftpDirField.getDocument().addDocumentListener(this);
@@ -748,7 +748,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    }
    
    public SettingsDialog() {
-      super("Settings - pin 'em up");
+      super(I18N.getInstance().getString("settingsdialog.title"));
       setSize(new Dimension(640,480));
 
       // PREPARE ALL PANELS
@@ -761,18 +761,18 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JPanel lookAndFeelTab = makeLookAndFeelTab();
       JPanel defaultsTab = makeDefaultsTab();
       JPanel loadSaveTab = makeLoadSaveTab();
-      tpane.addTab("General", null, generalTab, "General settings");
-      tpane.addTab("Notes Look&Feel", null, lookAndFeelTab, "Look&Feel of the notes");
-      tpane.addTab("Notes Default Settings", null, defaultsTab, "Default settings for new notes");
-      tpane.addTab("Load/Save", null, loadSaveTab, "Load / Save settings");
+      tpane.addTab(I18N.getInstance().getString("settingsdialog.generaltab.title"), null, generalTab, I18N.getInstance().getString("settingsdialog.generaltab.tooltip"));
+      tpane.addTab(I18N.getInstance().getString("settingsdialog.lookandfeeltab.title"), null, lookAndFeelTab, I18N.getInstance().getString("settingsdialog.lookandfeeltab.tooltip"));
+      tpane.addTab(I18N.getInstance().getString("settingsdialog.defaultsettingstab.title"), null, defaultsTab, I18N.getInstance().getString("settingsdialog.defaultnotesettingstab.tooltip"));
+      tpane.addTab(I18N.getInstance().getString("settingsdialog.loadsavetab.title"), null, loadSaveTab, I18N.getInstance().getString("settingsdialog.loadsavetab.tooltip"));
       mainPanel.add(tpane, BorderLayout.CENTER);
 
       // PANEL WITH BUTTONS
-      okButton = new JButton("OK");
+      okButton = new JButton(I18N.getInstance().getString("okbutton"));
       okButton.addActionListener(this);
-      cancelButton = new JButton("Cancel");
+      cancelButton = new JButton(I18N.getInstance().getString("cancelbutton"));
       cancelButton.addActionListener(this);
-      applyButton = new JButton("Apply");
+      applyButton = new JButton(I18N.getInstance().getString("applybutton"));
       applyButton.addActionListener(this);
       okButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
       cancelButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));

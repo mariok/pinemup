@@ -50,7 +50,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       addSeparator();
       
       // categories menus
-      Menu categoriesMenu = new Menu("category actions");
+      Menu categoriesMenu = new Menu(I18N.getInstance().getString("menu.categorymenu"));
       add(categoriesMenu);
       Menu[] catMenu = new Menu[CategoryManager.getInstance().getNumberOfCategories()];
       
@@ -65,47 +65,47 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       
       //other category actions
       categoriesMenu.addSeparator();
-      manageCategoriesItem = new MenuItem("manage categories");
+      manageCategoriesItem = new MenuItem(I18N.getInstance().getString("menu.categorymenu.managecategoriesitem"));
       manageCategoriesItem.addActionListener(this);
       categoriesMenu.add(manageCategoriesItem);
       
-      // im-/export menu      
+      // im-/export menu
       addSeparator();
-      Menu imExMenu = new Menu("notes im-/export");
-      Menu ftpMenu = new Menu("ftp");
-      ftpUploadItem = new MenuItem("upload to ftp server");
+      Menu imExMenu = new Menu(I18N.getInstance().getString("menu.notesimexport"));
+      Menu ftpMenu = new Menu(I18N.getInstance().getString("menu.notesimexport.ftp"));
+      ftpUploadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.ftp.uploaditem"));
       ftpUploadItem.addActionListener(this);
       ftpMenu.add(ftpUploadItem);
-      ftpDownloadItem = new MenuItem("download from ftp server");
+      ftpDownloadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.ftp.downloaditem"));
       ftpDownloadItem.addActionListener(this);
       ftpMenu.add(ftpDownloadItem);
       imExMenu.add(ftpMenu);
       imExMenu.addSeparator();
-      exportItem = new MenuItem("export to textfile");
+      exportItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.textexportitem"));
       exportItem.addActionListener(this);
       imExMenu.add(exportItem);
       add(imExMenu);
       
       // other items
       addSeparator();
-      showSettingsDialogItem = new MenuItem("settings");
+      showSettingsDialogItem = new MenuItem(I18N.getInstance().getString("menu.settingsitem"));
       showSettingsDialogItem.addActionListener(this);
       add(showSettingsDialogItem);
       
       // help menu
-      Menu helpMenu = new Menu("help");
-      updateItem = new MenuItem("check for updates");
+      Menu helpMenu = new Menu(I18N.getInstance().getString("menu.help"));
+      updateItem = new MenuItem(I18N.getInstance().getString("menu.help.updatecheckitem"));
       updateItem.addActionListener(this);
       helpMenu.add(updateItem);
       helpMenu.addSeparator();
-      aboutItem = new MenuItem("about pin 'em up");
+      aboutItem = new MenuItem(I18N.getInstance().getString("menu.help.aboutitem"));
       aboutItem.addActionListener(this);
       helpMenu.add(aboutItem);
       add(helpMenu);
       addSeparator();
       
       //close item
-      closeItem = new MenuItem("exit");
+      closeItem = new MenuItem(I18N.getInstance().getString("menu.exititem"));
       closeItem.addActionListener(this);
       add(closeItem);
    }
@@ -121,14 +121,14 @@ public class TrayMenu extends PopupMenu implements ActionListener {
          NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
          System.exit(0);
       } else if (src == ftpUploadItem) {
-         if (JOptionPane.showConfirmDialog(null, "Notesfile on server will be replaced, if it already exists! Proceed?","Upload Notesfile",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.ftpreplacefileonserver"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             //save notes to file
             NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
             //copy file to ftp
             new FTPThread(true);
          }
       } else if (src == ftpDownloadItem) {
-         if (JOptionPane.showConfirmDialog(null, "Your current notesfile will be replaced by the version on the FTP server! Proceed?","Download Notesfile",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.ftpreplacelocalfile"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             new FTPThread(false);
          }
       } else if (src == exportItem) {

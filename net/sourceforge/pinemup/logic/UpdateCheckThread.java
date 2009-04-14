@@ -49,10 +49,10 @@ public class UpdateCheckThread extends Thread {
          String versionString = br.readLine();
          if (!versionString.equals(PinEmUp.getVersion())) {
             String changelogString = "<html>"; 
-            changelogString += "<p>THERE IS AN UPDATE AVAILABLE FOR PIN 'EM UP!</p>";
-            changelogString += "<p>Your version of pin 'em up is " + PinEmUp.getVersion() + "<br />";
-            changelogString += "The latest version available is " + versionString + "</p>";
-            changelogString += "<p>The new version can be downloaded at <a href=\"http://pinemup.sourceforge.net\">http://pinemup.sourceforge.net</a></p>";
+            changelogString += "<p>" + I18N.getInstance().getString("info.updateavailable.part1") + "</p>";
+            changelogString += "<p>" + I18N.getInstance().getString("info.updateavailable.part2") + " " + PinEmUp.getVersion() + "<br />";
+            changelogString += I18N.getInstance().getString("info.updateavailable.part3") + " " + versionString + "</p>";
+            changelogString += "<p>" + I18N.getInstance().getString("info.updateavailable.part4") + " <a href=\"http://pinemup.sourceforge.net\">http://pinemup.sourceforge.net</a></p>";
             changelogString += "<p>&nbsp;</p>";
             changelogString += "<p>Changelog:<br />";
             changelogString += "--------------------------------</p><p>";
@@ -78,7 +78,7 @@ public class UpdateCheckThread extends Thread {
             
             new UpdateDialog(changelogString);
          } else if (showUpToDateMessage) {
-            JOptionPane.showMessageDialog(null, "Your version of pin 'em up is up to date!", "pin 'em up - information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.versionuptodate"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
          }
          br.close();
       } catch (IOException e) {

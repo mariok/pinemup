@@ -39,8 +39,9 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
    private static final long serialVersionUID = 1L;
 
    private JButton closeButton;
-      public UpdateDialog(String updateText) {
-      super("Update available for pin 'em up");
+   
+   public UpdateDialog(String updateText) {
+      super(I18N.getInstance().getString("updatedialog.title"));
       setSize(new Dimension(400,350));
 
       // PREPARE ALL PANELS
@@ -55,7 +56,7 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
       mainPanel.add(myScrollPane, BorderLayout.CENTER);
 
       // PANEL WITH BUTTONS
-      closeButton = new JButton("close");
+      closeButton = new JButton(I18N.getInstance().getString("closebutton"));
       closeButton.addActionListener(this);
       closeButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
       closeButton.setEnabled(true);

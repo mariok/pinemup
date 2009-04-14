@@ -143,7 +143,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       closeButton.setBackground(new Color(255,255,255,0));
       closeButton.setRolloverEnabled(false);
       
-      closeButton.setToolTipText("hide note");
+      closeButton.setToolTipText(I18N.getInstance().getString("notewindow.hidebuttontooltip"));
       closeButton.addActionListener(this);
       closeButton.addMouseListener(this);
       closeButton.setFocusable(false);
@@ -181,7 +181,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       updateCategory();
       setVisible(true);
       showScrollButtonIfNeeded();
-      setTitle("note: " + getShortText());
+      setTitle(I18N.getInstance().getString("note") + ": " + getShortText());
    }
 
    public void focusGained(FocusEvent e) {
@@ -371,7 +371,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    public void updateCategory() {
       Category cat = parentNote.getCategory();
       if (cat != null) {
-         topPanel.setToolTipText("Category: " + cat.getName());
+         topPanel.setToolTipText(I18N.getInstance().getString("category") + ": " + cat.getName());
          if (catButton != null) {
             catButton.setText(cat.getName());
             repaint();

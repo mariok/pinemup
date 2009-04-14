@@ -60,15 +60,15 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       addSeparator();
       
       //add additional items
-      deleteNoteItem = new JMenuItem("delete this note");
+      deleteNoteItem = new JMenuItem(I18N.getInstance().getString("menu.deletenoteitem"));
       deleteNoteItem.addActionListener(this);
       add(deleteNoteItem);
       addSeparator();
       
       // settings menu
-      JMenu settingsMenu = new JMenu("note settings");
+      JMenu settingsMenu = new JMenu(I18N.getInstance().getString("menu.notesettings"));
       
-      JMenu setFontSizeMenu = new JMenu("font size");
+      JMenu setFontSizeMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.fontsize"));
       setFontSizeItem = new JMenuItem[26];
       for (int i=0; i<26; i++) {
          setFontSizeItem[i] = new JMenuItem(String.valueOf(i+5));
@@ -81,7 +81,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          setFontSizeMenu.add(setFontSizeItem[i]);
       }
       
-      JMenu setBGColorMenu = new JMenu("note color");
+      JMenu setBGColorMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.color"));
       setBGColorItem = new JMenuItem[BackgroundLabel.getNumberOfColors()];
       for (byte i=0; i<setBGColorItem.length; i++) {
          setBGColorItem[i] = new JMenuItem(BackgroundLabel.getColorName(i));
@@ -90,7 +90,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          setBGColorMenu.add(setBGColorItem[i]);
       }
       
-      JMenu setCategoryMenu = new JMenu("category");
+      JMenu setCategoryMenu = new JMenu(I18N.getInstance().getString("category"));
       setCategoryItem = new JMenuItem[CategoryManager.getInstance().getNumberOfCategories()];
       for (int i=0; i<setCategoryItem.length; i++) {
          setCategoryItem[i] = new JMenuItem((i+1) + " " + CategoryManager.getInstance().getCategoryNames()[i]);
@@ -98,15 +98,15 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          setCategoryMenu.add(setCategoryItem[i]);
       }
 
-      JMenu alwaysOnTopMenu = new JMenu("always on top");
+      JMenu alwaysOnTopMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.alwaysontop"));
       String[] aot = {"  ","  "};
       if(parentWindow.getParentNote().isAlwaysOnTop()) {
          aot[0] = "# ";
       } else {
          aot[1] = "# ";
       }
-      alwaysOnTopOnItem = new JMenuItem(aot[0]+"enabled");
-      alwaysOnTopOffItem = new JMenuItem(aot[1]+"disabled");
+      alwaysOnTopOnItem = new JMenuItem(aot[0]+I18N.getInstance().getString("enabled"));
+      alwaysOnTopOffItem = new JMenuItem(aot[1]+I18N.getInstance().getString("disabled"));
       alwaysOnTopOnItem.addActionListener(this);
       alwaysOnTopOffItem.addActionListener(this);
       alwaysOnTopMenu.add(alwaysOnTopOnItem);
@@ -120,7 +120,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       addSeparator();
       
       // category menu
-      add(myMenuCreator.getCategoryActionsJMenu("category actions",myCat));
+      add(myMenuCreator.getCategoryActionsJMenu(I18N.getInstance().getString("menu.categorymenu"),myCat));
    }
 
    public void actionPerformed(ActionEvent e) {
@@ -128,7 +128,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       if (src == deleteNoteItem) {
          boolean confirmed = true;
          if (UserSettings.getInstance().getConfirmDeletion()) {
-            confirmed = JOptionPane.showConfirmDialog(this, "Are you sure to irrevocably delete this note?","Remove note",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            confirmed = JOptionPane.showConfirmDialog(this, I18N.getInstance().getString("confirm.deletenote"), I18N.getInstance().getString("confirm.title"),JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
          if (confirmed && myCat != null) {
             parentWindow.getParentNote().hide();

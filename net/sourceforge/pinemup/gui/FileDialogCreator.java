@@ -34,7 +34,7 @@ public class FileDialogCreator {
    public static JFileChooser getFileDialogInstance() {
       if (FileDialogCreator.fileDialog == null) {
          FileDialogCreator.fileDialog = new JFileChooser();
-         FileDialogCreator.fileDialog.setDialogTitle("select notes file");
+         FileDialogCreator.fileDialog.setDialogTitle(I18N.getInstance().getString("filedialog.title"));
          FileDialogCreator.fileDialog.removeChoosableFileFilter(fileDialog.getChoosableFileFilters()[0]);
          FileDialogCreator.fileDialog.setFileFilter(new MyFileFilter("XML"));
          FileDialogCreator.fileDialog.setMultiSelectionEnabled(false);
@@ -45,7 +45,7 @@ public class FileDialogCreator {
    public static JFileChooser getExportFileDialogInstance() {
       if (FileDialogCreator.exportFileDialog == null) {
          FileDialogCreator.exportFileDialog = new JFileChooser();
-         FileDialogCreator.exportFileDialog.setDialogTitle("select text-file for export");
+         FileDialogCreator.exportFileDialog.setDialogTitle(I18N.getInstance().getString("exportfiledialog.title"));
          FileDialogCreator.exportFileDialog.removeChoosableFileFilter(exportFileDialog.getChoosableFileFilters()[0]);
          FileDialogCreator.exportFileDialog.setFileFilter(new MyFileFilter("TXT"));
          FileDialogCreator.exportFileDialog.setMultiSelectionEnabled(false);

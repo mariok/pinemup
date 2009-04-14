@@ -24,11 +24,6 @@ package net.sourceforge.pinemup.logic;
 import net.sourceforge.pinemup.gui.*;
 
 public class Note {
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 1L;
-
    private String text;
 
    private boolean hidden, alwaysOnTop;

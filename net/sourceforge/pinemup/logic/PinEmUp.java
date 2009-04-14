@@ -54,7 +54,7 @@ public class PinEmUp {
             new UpdateCheckThread(false);
          }
       } else { //tray icon not supported
-         JOptionPane.showMessageDialog(null, "Error! TrayIcon not supported by your system. Exiting...", "pin 'em up - error", JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.trayiconnotsupported"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
          System.exit(1);
       }
    }

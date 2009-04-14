@@ -44,13 +44,13 @@ public class ExportDialog extends JDialog implements ActionListener {
    
    public ExportDialog() {
       super();
-      setTitle("export notes");
+      setTitle(I18N.getInstance().getString("exportdialog.title"));
       JScrollPane sp = new JScrollPane();
       sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
       sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
       JPanel main = new JPanel(new BorderLayout());
       JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      topPanel.add(new JLabel("choose categories to export:"));
+      topPanel.add(new JLabel(I18N.getInstance().getString("exportdialog.toplabel")));
       main.add(topPanel, BorderLayout.NORTH);
       main.add(sp, BorderLayout.CENTER);
             
@@ -61,7 +61,7 @@ public class ExportDialog extends JDialog implements ActionListener {
       JPanel[] catPanel = new JPanel[rows];
       catBox = new JCheckBox[rows];
       JPanel allCatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      allCatsBox = new JCheckBox("(all)");
+      allCatsBox = new JCheckBox("(" + I18N.getInstance().getString("exportdialog.allcategoriescheckbox") + ")");
       allCatsBox.setSelected(true);
       allCatsBox.addActionListener(this);
       allCatsPanel.add(allCatsBox);
@@ -77,9 +77,9 @@ public class ExportDialog extends JDialog implements ActionListener {
       sp.setViewportView(checkBoxPanel);
       
       JPanel buttonPanel = new JPanel();
-      okButton = new JButton("OK");
+      okButton = new JButton(I18N.getInstance().getString("okbutton"));
       okButton.addActionListener(this);
-      cancelButton = new JButton("Cancel");
+      cancelButton = new JButton(I18N.getInstance().getString("cancelbutton"));
       cancelButton.addActionListener(this);
       buttonPanel.add(okButton);
       buttonPanel.add(cancelButton);
