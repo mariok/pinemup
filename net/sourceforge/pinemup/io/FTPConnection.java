@@ -14,10 +14,6 @@ import net.sourceforge.pinemup.gui.I18N;
 import net.sourceforge.pinemup.logic.UserSettings;
 
 public class FTPConnection extends ServerConnection {
-   public FTPConnection() {
-      type="FTP";
-   }
-   
    public void importNotesFromServer() {
       boolean downloaded = true;
       try {
