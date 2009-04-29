@@ -83,8 +83,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(updateCheckPanel, gbc);
-      generalPanel.add(updateCheckPanel);
+      generalPanel.add(updateCheckPanel,gbc);
       
       //Add empty panel to tab
       JPanel emptyPanel = new JPanel();
@@ -95,8 +94,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 100;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(emptyPanel, gbc);
-      generalPanel.add(emptyPanel); 
+      generalPanel.add(emptyPanel, gbc); 
       
       return generalPanel;
    }
@@ -119,8 +117,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(titleBarPanel, gbc);
-      lookAndFeelPanel.add(titleBarPanel);
+      lookAndFeelPanel.add(titleBarPanel, gbc);
 
       //Add Panel for behavior
       JPanel behaviorPanel = makeBehaviorPanel();
@@ -131,8 +128,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(behaviorPanel, gbc);
-      lookAndFeelPanel.add(behaviorPanel);
+      lookAndFeelPanel.add(behaviorPanel, gbc);
       
       //Add empty panel to tab
       JPanel emptyPanel = new JPanel();
@@ -143,8 +139,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 100;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(emptyPanel, gbc);
-      lookAndFeelPanel.add(emptyPanel); 
+      lookAndFeelPanel.add(emptyPanel, gbc);
       
       return lookAndFeelPanel;
    }
@@ -167,8 +162,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(sizePosPanel, gbc);
-      defaultsPanel.add(sizePosPanel);
+      defaultsPanel.add(sizePosPanel, gbc);
       
       //Add Panel for Font
       JPanel fontPanel = makeFontPanel();
@@ -179,8 +173,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(fontPanel, gbc);
-      defaultsPanel.add(fontPanel);
+      defaultsPanel.add(fontPanel, gbc);
       
       //Add Panel for Visibility Settings
       JPanel visibilityPanel = makeVisibilityPanel();
@@ -191,8 +184,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(visibilityPanel, gbc);
-      defaultsPanel.add(visibilityPanel);
+      defaultsPanel.add(visibilityPanel, gbc);
       
       //Add empty panel to tab
       JPanel emptyPanel = new JPanel();
@@ -203,8 +195,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 100;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(emptyPanel, gbc);
-      defaultsPanel.add(emptyPanel); 
+      defaultsPanel.add(emptyPanel, gbc); 
       
       return defaultsPanel;
    }
@@ -227,8 +218,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(notesFilePanel, gbc);
-      loadSavePanel.add(notesFilePanel);
+      loadSavePanel.add(notesFilePanel, gbc);
 
       //Add Panel for FTP settings
       JPanel serverPanel = makeServerPanel();
@@ -239,8 +229,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(serverPanel, gbc);
-      loadSavePanel.add(serverPanel);
+      loadSavePanel.add(serverPanel, gbc);
       
       //Add empty panel to tab
       JPanel emptyPanel = new JPanel();
@@ -251,8 +240,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 100;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(emptyPanel, gbc);
-      loadSavePanel.add(emptyPanel); 
+      loadSavePanel.add(emptyPanel, gbc); 
       
       return loadSavePanel;
    }
@@ -281,33 +269,27 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbl.setConstraints(checkForUpdatesLabel, gbc);
-      updateCheckPanel.add(checkForUpdatesLabel);
+      updateCheckPanel.add(checkForUpdatesLabel, gbc);
       gbc.weightx = 100;
       gbc.gridx = 2;
       gbc.gridy = 0;
-      gbl.setConstraints(emptyLabel1, gbc);
-      updateCheckPanel.add(emptyLabel1);
+      updateCheckPanel.add(emptyLabel1, gbc);
       gbc.weightx = 0;
       gbc.gridx = 0;
       gbc.gridy = 1;
-      gbl.setConstraints(emptyLabel2, gbc);
-      updateCheckPanel.add(emptyLabel2);
+      updateCheckPanel.add(emptyLabel2, gbc);
       gbc.weightx = 0;
       gbc.gridx = 1;
       gbc.gridy = 1;
-      gbl.setConstraints(emptyLabel3, gbc);
-      updateCheckPanel.add(emptyLabel3);
+      updateCheckPanel.add(emptyLabel3, gbc);
       gbc.weightx = 100;
       gbc.gridx = 2;
       gbc.gridy = 1;
-      gbl.setConstraints(emptyLabel4, gbc);
-      updateCheckPanel.add(emptyLabel4);
+      updateCheckPanel.add(emptyLabel4, gbc);
       gbc.weightx = 100;
       gbc.gridx = 1;
       gbc.gridy = 2;
-      gbl.setConstraints(emptyLabel5, gbc);
-      updateCheckPanel.add(emptyLabel5);      
+      updateCheckPanel.add(emptyLabel5, gbc);      
       //Add fields
       checkForUpdatesBox = new JCheckBox("");
       checkForUpdatesBox.addActionListener(this);
@@ -325,14 +307,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 0;
       gbc.gridx = 1;
       gbc.gridy = 0;
-      gbl.setConstraints(checkForUpdatesBox, gbc);
-      updateCheckPanel.add(checkForUpdatesBox);
+      updateCheckPanel.add(checkForUpdatesBox, gbc);
 
       gbc.weightx = 0;
       gbc.gridx = 0;
       gbc.gridy = 2;
-      gbl.setConstraints(checkForUpdatesButton, gbc);
-      updateCheckPanel.add(checkForUpdatesButton);
+      updateCheckPanel.add(checkForUpdatesButton, gbc);
 
       return updateCheckPanel;
    }
@@ -359,27 +339,22 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbl.setConstraints(closeIconLabel, gbc);
-      titleBarPanel.add(closeIconLabel);
+      titleBarPanel.add(closeIconLabel, gbc);
       gbc.weightx = 100;
       gbc.gridx = 3;
       gbc.gridy = 0;
-      gbl.setConstraints(emptyLabel, gbc);
-      titleBarPanel.add(emptyLabel);
+      titleBarPanel.add(emptyLabel, gbc);
       gbc.gridx = 3;
       gbc.gridy = 1;
-      gbl.setConstraints(emptyLabel, gbc);
-      titleBarPanel.add(emptyLabel);
+      titleBarPanel.add(emptyLabel, gbc);
       gbc.weightx = 0;
       gbc.gridx = 0;
       gbc.gridy = 2;
-      gbl.setConstraints(emptyLabel2, gbc);
-      titleBarPanel.add(emptyLabel2);
+      titleBarPanel.add(emptyLabel2, gbc);
       gbc.gridwidth = 3;
       gbc.gridx = 0;
       gbc.gridy = 3;
-      gbl.setConstraints(showCatLabel, gbc);
-      titleBarPanel.add(showCatLabel);
+      titleBarPanel.add(showCatLabel, gbc);
       
       //Add fields
       closeIconGroup = new ButtonGroup();
@@ -405,25 +380,20 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
-      gbl.setConstraints(closeIcon1Button, gbc);
-      titleBarPanel.add(closeIcon1Button);
+      titleBarPanel.add(closeIcon1Button, gbc);
       gbc.gridx = 1;
       gbc.gridy = 1;
-      gbl.setConstraints(closeIcon2Button, gbc);
-      titleBarPanel.add(closeIcon2Button);
+      titleBarPanel.add(closeIcon2Button, gbc);
       gbc.gridx = 2;
       gbc.gridy = 0;
-      gbl.setConstraints(closeIcon1Label, gbc);
-      titleBarPanel.add(closeIcon1Label);
+      titleBarPanel.add(closeIcon1Label, gbc);
       gbc.gridx = 2;
       gbc.gridy = 1;
-      gbl.setConstraints(closeIcon2Label, gbc);
-      titleBarPanel.add(closeIcon2Label);
+      titleBarPanel.add(closeIcon2Label, gbc);
       gbc.weightx = 100;
       gbc.gridx = 3;
       gbc.gridy = 3;
-      gbl.setConstraints(showCatBox, gbc);
-      titleBarPanel.add(showCatBox);
+      titleBarPanel.add(showCatBox, gbc);
       
       return titleBarPanel;
    }
@@ -448,13 +418,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbl.setConstraints(confirmDeleteLabel, gbc);
-      behaviorPanel.add(confirmDeleteLabel);
+      behaviorPanel.add(confirmDeleteLabel, gbc);
       gbc.weightx = 100;
       gbc.gridx = 2;
       gbc.gridy = 0;
-      gbl.setConstraints(emptyLabel, gbc);
-      behaviorPanel.add(emptyLabel);
+      behaviorPanel.add(emptyLabel, gbc);
       
       //Add fields
       confirmDeleteBox = new JCheckBox("");
@@ -470,8 +438,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.gridx = 1;
       gbc.gridy = 0;
-      gbl.setConstraints(confirmDeleteBox, gbc);
-      behaviorPanel.add(confirmDeleteBox);
+      behaviorPanel.add(confirmDeleteBox, gbc);
       
       return behaviorPanel;
    }
@@ -569,8 +536,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbl.setConstraints(defaultFontSizeLabel, gbc);
-      fontPanel.add(defaultFontSizeLabel);
+      fontPanel.add(defaultFontSizeLabel, gbc);
       
       //Add fields      
       defaultFontSizeSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
@@ -585,8 +551,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
-      gbl.setConstraints(defaultFontSizeSpinner, gbc);
-      fontPanel.add(defaultFontSizeSpinner);
+      fontPanel.add(defaultFontSizeSpinner, gbc);
 
       return fontPanel;
    }
@@ -612,8 +577,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbl.setConstraints(alwaysOnTopLabel, gbc);
-      visibilityPanel.add(alwaysOnTopLabel);
+      visibilityPanel.add(alwaysOnTopLabel, gbc);
       
       //Add fields
       alwaysOnTopBox = new JCheckBox("");
@@ -628,8 +592,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
-      gbl.setConstraints(alwaysOnTopBox, gbc);
-      visibilityPanel.add(alwaysOnTopBox);
+      visibilityPanel.add(alwaysOnTopBox, gbc);
 
       return visibilityPanel;
    }
@@ -656,13 +619,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add fields with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbl.setConstraints(notesFileField, gbc);
-      notesFilePanel.add(notesFileField);
+      notesFilePanel.add(notesFileField, gbc);
       gbc.weightx = 100;
       gbc.gridx = 1;
       gbc.gridy = 0;
-      gbl.setConstraints(browseButton, gbc);
-      notesFilePanel.add(browseButton);
+      notesFilePanel.add(browseButton, gbc);
 
       return notesFilePanel;
    }

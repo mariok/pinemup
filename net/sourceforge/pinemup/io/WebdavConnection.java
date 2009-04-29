@@ -5,8 +5,10 @@ import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import javax.net.ssl.SSLHandshakeException;
 import javax.swing.JOptionPane;
 import sun.misc.BASE64Encoder;
+
 
 import net.sourceforge.pinemup.gui.I18N;
 import net.sourceforge.pinemup.logic.UserSettings;
@@ -53,6 +55,10 @@ public class WebdavConnection extends ServerConnection {
          if (urlc.getResponseCode() != 201 && urlc.getResponseCode() != 204) {
             uploaded = false;
          }
+      } catch (SSLHandshakeException e) { //Certificate error (self-signed?)
+         //TODO: Show popup message
+         System.err.println("SSL Error");
+         uploaded = false;
       } catch (Exception e) {
          uploaded = false;
       }
