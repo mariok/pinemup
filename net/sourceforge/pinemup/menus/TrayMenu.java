@@ -28,6 +28,7 @@ import java.util.ListIterator;
 import javax.swing.*;
 
 import net.sourceforge.pinemup.gui.*;
+import net.sourceforge.pinemup.io.ServerThread;
 import net.sourceforge.pinemup.logic.*;
 
 public class TrayMenu extends PopupMenu implements ActionListener {
@@ -37,7 +38,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
     */
    private static final long serialVersionUID = 1L;
 
-   private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, ftpUploadItem, ftpDownloadItem;
+   private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, serverUploadItem, serverDownloadItem;
    
    public TrayMenu() {
       super("pin 'em up");
@@ -72,14 +73,12 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       // im-/export menu
       addSeparator();
       Menu imExMenu = new Menu(I18N.getInstance().getString("menu.notesimexport"));
-      Menu ftpMenu = new Menu(I18N.getInstance().getString("menu.notesimexport.ftp"));
-      ftpUploadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.ftp.uploaditem"));
-      ftpUploadItem.addActionListener(this);
-      ftpMenu.add(ftpUploadItem);
-      ftpDownloadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.ftp.downloaditem"));
-      ftpDownloadItem.addActionListener(this);
-      ftpMenu.add(ftpDownloadItem);
-      imExMenu.add(ftpMenu);
+      serverUploadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.serveruploaditem"));
+      serverUploadItem.addActionListener(this);
+      imExMenu.add(serverUploadItem);
+      serverDownloadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.serverdownloaditem"));
+      serverDownloadItem.addActionListener(this);
+      imExMenu.add(serverDownloadItem);
       imExMenu.addSeparator();
       exportItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.textexportitem"));
       exportItem.addActionListener(this);
@@ -120,16 +119,16 @@ public class TrayMenu extends PopupMenu implements ActionListener {
          //save notes to file and exit
          NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
          System.exit(0);
-      } else if (src == ftpUploadItem) {
-         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.ftpreplacefileonserver"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+      } else if (src == serverUploadItem) {
+         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             //save notes to file
             NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
-            //copy file to ftp
-            new FTPThread(true);
+            //copy file to server
+            new ServerThread(ServerThread.UPLOAD);
          }
-      } else if (src == ftpDownloadItem) {
-         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.ftpreplacelocalfile"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            new FTPThread(false);
+      } else if (src == serverDownloadItem) {
+         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacelocalfile"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            new ServerThread(ServerThread.DOWNLOAD);
          }
       } else if (src == exportItem) {
          new ExportDialog();

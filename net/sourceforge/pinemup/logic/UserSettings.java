@@ -42,17 +42,26 @@ public class UserSettings {
    private short defaultWindowYPosition;
    private short defaultFontSize;
    private String notesFile;
-   private String ftpServer;
-   private String ftpUser;
-   private char[] ftpPasswd;
-   private String ftpDir;
+   private String serverAddress;
+   private String serverUser;
+   private char[] serverPasswd;
+   private String serverDir;
    private boolean defaultAlwaysOnTop;
    private byte tempDef = 0;
    private byte closeicon;
    private boolean showCategory;
    private boolean confirmDeletion;
-   private boolean storeFTPPass;
+   private boolean storeServerPass;
    private boolean updateCheckEnabled;
+   private short serverType;
+   
+   public void setServerType(short st) {
+      serverType = st;
+   }
+   
+   public short getServerType() {
+      return serverType;
+   }
    
    public void setUpdateCheckEnabled(boolean b) {
       updateCheckEnabled = b;
@@ -156,31 +165,31 @@ public class UserSettings {
       defaultWindowYPosition = y;
    }
 
-   public String getFtpServer() {
-      return ftpServer;
+   public String getServerAddress() {
+      return serverAddress;
    }
 
-   public void setFtpServer(String s) {
-      ftpServer = s;
+   public void setServerAddress(String s) {
+      serverAddress = s;
    }
 
-   public String getFtpUser() {
-      return ftpUser;
+   public String getServerUser() {
+      return serverUser;
    }
 
-   public void setFtpUser(String u) {
-      ftpUser = u;
+   public void setServerUser(String u) {
+      serverUser = u;
    }
 
-   public char[] getFtpPasswd() {
-      return ftpPasswd;
+   public char[] getServerPasswd() {
+      return serverPasswd;
    }
 
-   public String getFtpPasswdString() {
+   public String getServerPasswdString() {
       String tempString = "";
-      if (storeFTPPass) {
-         for (int i = 0; i < ftpPasswd.length; i++) {
-            tempString += ftpPasswd[i];
+      if (storeServerPass) {
+         for (int i = 0; i < serverPasswd.length; i++) {
+            tempString += serverPasswd[i];
          }         
       } else {
          
@@ -192,24 +201,24 @@ public class UserSettings {
       return tempString;
    }
 
-   public void setFtpPasswd(char[] p) {
-      ftpPasswd = p;
+   public void setServerPasswd(char[] p) {
+      serverPasswd = p;
    }
 
-   public String getFtpDir() {
-      return ftpDir;
+   public String getServerDir() {
+      return serverDir;
    }
 
-   public void setFtpDir(String d) {
-      ftpDir = d;
+   public void setServerDir(String d) {
+      serverDir = d;
    }
    
-   public void setStoreFTPPass(boolean b) {
-      storeFTPPass = b;
+   public void setStoreServerPass(boolean b) {
+      storeServerPass = b;
    }
    
-   public boolean getStoreFTPPass() {
-      return storeFTPPass;
+   public boolean getStoreServerPass() {
+      return storeServerPass;
    }
 
    public void saveSettings() {
@@ -221,19 +230,20 @@ public class UserSettings {
       prefs.putInt(PREFIX + "defaultFontSize", defaultFontSize);
       prefs.putBoolean(PREFIX + "defaultAlwaysOnTop", defaultAlwaysOnTop);
       prefs.put(PREFIX + "notesFile", notesFile);
-      prefs.put(PREFIX + "ftpServer", ftpServer);
-      prefs.put(PREFIX + "ftpUser", ftpUser);
-      if (storeFTPPass) {
-         prefs.put(PREFIX + "ftpPasswd", getFtpPasswdString());         
+      prefs.put(PREFIX + "serverAddress", serverAddress);
+      prefs.put(PREFIX + "serverUser", serverUser);
+      if (storeServerPass) {
+         prefs.put(PREFIX + "serverPasswd", getServerPasswdString());         
       } else {
-         prefs.put(PREFIX + "ftpPasswd", "");
+         prefs.put(PREFIX + "serverPasswd", "");
       }
-      prefs.put(PREFIX + "ftpDir", ftpDir);
+      prefs.put(PREFIX + "serverDir", serverDir);
       prefs.putInt(PREFIX + "closeicon", closeicon);
       prefs.putBoolean(PREFIX + "showCategory", showCategory);
       prefs.putBoolean(PREFIX + "confirmDeletion", confirmDeletion);
-      prefs.putBoolean(PREFIX + "storeFTPPass", storeFTPPass);
+      prefs.putBoolean(PREFIX + "storeServerPass", storeServerPass);
       prefs.putBoolean(PREFIX + "updateCheckEnabled", updateCheckEnabled);
+      prefs.putInt(PREFIX + "serverType", serverType);
    }
 
    private UserSettings() {
@@ -251,15 +261,16 @@ public class UserSettings {
       defaultFontSize = Short.parseShort(prefs.get(PREFIX + "defaultFontSize", "14"));
       defaultAlwaysOnTop = prefs.getBoolean(PREFIX + "defaultAlwaysOnTop", false);
       notesFile = prefs.get(PREFIX + "notesFile", homeDir + "pinemup.xml");
-      ftpServer = prefs.get(PREFIX + "ftpServer", "ftp.example.com");
-      ftpUser = prefs.get(PREFIX + "ftpUser", "anonymous");
-      ftpPasswd = prefs.get(PREFIX + "ftpPasswd", "").toCharArray();
-      ftpDir = prefs.get(PREFIX + "ftpDir", "/");
+      serverAddress = prefs.get(PREFIX + "serverAddress", "ftp.example.com");
+      serverUser = prefs.get(PREFIX + "serverUser", "anonymous");
+      serverPasswd = prefs.get(PREFIX + "serverPasswd", "").toCharArray();
+      serverDir = prefs.get(PREFIX + "serverDir", "/");
       closeicon = Byte.parseByte(prefs.get(PREFIX + "closeicon", "1"));
       showCategory = prefs.getBoolean(PREFIX + "showCategory", false);
       confirmDeletion = prefs.getBoolean(PREFIX + "confirmDeletion", true);
-      storeFTPPass = prefs.getBoolean(PREFIX + "storeFTPPass", false);
+      storeServerPass = prefs.getBoolean(PREFIX + "storeServerPass", false);
       updateCheckEnabled = prefs.getBoolean(PREFIX + "updateCheckEnabled", true);
+      serverType = Short.parseShort(prefs.get(PREFIX + "serverType", "0"));
    }
    
    public static UserSettings getInstance() {

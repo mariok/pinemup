@@ -19,25 +19,33 @@
  *
  */
 
-package net.sourceforge.pinemup.logic;
+package net.sourceforge.pinemup.io;
 
 import java.util.List;
 
-public class FTPThread extends Thread {
+import net.sourceforge.pinemup.logic.Category;
+import net.sourceforge.pinemup.logic.CategoryManager;
+import net.sourceforge.pinemup.logic.NoteIO;
+import net.sourceforge.pinemup.logic.UserSettings;
+
+public class ServerThread extends Thread {
+   public static final boolean UPLOAD = true;
+   public static final boolean DOWNLOAD = false;
+   
    private boolean upload;
    
-   public FTPThread(boolean upload) {
-      super("FTP-Up-/Download Thread");
-      this.upload = upload;      
+   public ServerThread(boolean upload) {
+      super("Server Up-/Download Thread");
+      this.upload = upload;
       this.start();
    }
    
    public void run() {
-      if (upload) { // upload notes
-         NoteIO.writeCategoriesToFTP();
+      if (upload == ServerThread.UPLOAD) { // upload notes
+         ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).exportNotesToServer();
       } else { // download notes
          // download Notes
-         NoteIO.getCategoriesFromFTP();
+         ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).importNotesFromServer();
          //load new file
          List<Category> newCats = NoteIO.readCategoriesFromFile();
          // If successfull downloaded, replace:

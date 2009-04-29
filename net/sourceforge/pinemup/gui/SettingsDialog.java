@@ -47,11 +47,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private JButton okButton, cancelButton, applyButton, browseButton;
 
-   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, ftpServerField, ftpUserField, ftpDirField, notesFileField;
+   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, serverAddressField, serverUserField, serverDirField, notesFileField;
 
-   private JPasswordField ftpPasswdField;
+   private JPasswordField serverPasswdField;
 
-   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeFTPPassBox, checkForUpdatesBox;
+   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeServerPassBox, checkForUpdatesBox;
 
    private JSpinner defaultFontSizeSpinner;
    
@@ -228,7 +228,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       loadSavePanel.add(notesFilePanel);
 
       //Add Panel for FTP settings
-      JPanel ftpPanel = makeFtpPanel();
+      JPanel serverPanel = makeServerPanel();
       gbc.gridx = 0;
       gbc.gridy = 1;
       gbc.gridwidth = 1;
@@ -236,8 +236,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(ftpPanel, gbc);
-      loadSavePanel.add(ftpPanel);
+      gbl.setConstraints(serverPanel, gbc);
+      loadSavePanel.add(serverPanel);
       
       //Add empty panel to tab
       JPanel emptyPanel = new JPanel();
@@ -664,19 +664,19 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       return notesFilePanel;
    }
    
-   private JPanel makeFtpPanel() {
+   private JPanel makeServerPanel() {
       // PANEL FOR CATEGORY NAMES
       GridBagLayout gbl = new GridBagLayout();
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
-      JPanel ftpPanel = new JPanel(gbl);
-      ftpPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.ftp.border")));
+      JPanel serverPanel = new JPanel(gbl);
+      serverPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.server.border")));
       //Add all Labels
-      JLabel ftpServerLabel = new JLabel(I18N.getInstance().getString("settingsdialog.ftp.ftpserver") + ":");
-      JLabel ftpUserLabel = new JLabel(I18N.getInstance().getString("settingsdialog.ftp.ftpuser") + ":");
-      JLabel ftpPasswdLabel = new JLabel(I18N.getInstance().getString("settingsdialog.ftp.ftppassword") + ":");
-      JLabel ftpDirLabel = new JLabel(I18N.getInstance().getString("settingsdialog.ftp.ftpdirectory") + ":");
+      JLabel serverAddressLabel = new JLabel(I18N.getInstance().getString("settingsdialog.server.address") + ":");
+      JLabel serverUserLabel = new JLabel(I18N.getInstance().getString("settingsdialog.server.user") + ":");
+      JLabel serverPasswdLabel = new JLabel(I18N.getInstance().getString("settingsdialog.server.password") + ":");
+      JLabel serverDirLabel = new JLabel(I18N.getInstance().getString("settingsdialog.server.directory") + ":");
 
       //Set settings for all Labels
       gbc.weightx = 0;
@@ -688,33 +688,33 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbl.setConstraints(ftpServerLabel, gbc);
-      ftpPanel.add(ftpServerLabel);
+      gbl.setConstraints(serverAddressLabel, gbc);
+      serverPanel.add(serverAddressLabel);
       gbc.gridx = 0;
       gbc.gridy = 1;
-      gbl.setConstraints(ftpUserLabel, gbc);
-      ftpPanel.add(ftpUserLabel);
+      gbl.setConstraints(serverUserLabel, gbc);
+      serverPanel.add(serverUserLabel);
       gbc.gridx = 0;
       gbc.gridy = 2;
-      gbl.setConstraints(ftpPasswdLabel, gbc);
-      ftpPanel.add(ftpPasswdLabel);
+      gbl.setConstraints(serverPasswdLabel, gbc);
+      serverPanel.add(serverPasswdLabel);
       gbc.gridx = 0;
       gbc.gridy = 4;
-      gbl.setConstraints(ftpDirLabel, gbc);
-      ftpPanel.add(ftpDirLabel);
+      gbl.setConstraints(serverDirLabel, gbc);
+      serverPanel.add(serverDirLabel);
 
       
       //Add fields
-      ftpServerField = new JTextField(20);
-      ftpServerField.getDocument().addDocumentListener(this);
-      ftpUserField = new JTextField(20);
-      ftpUserField.getDocument().addDocumentListener(this);
-      ftpPasswdField = new JPasswordField(20);
-      ftpPasswdField.getDocument().addDocumentListener(this);
-      storeFTPPassBox = new JCheckBox(I18N.getInstance().getString("settingsdialog.ftp.storepwcheckbox"));
-      storeFTPPassBox.addActionListener(this);
-      ftpDirField = new JTextField(20);
-      ftpDirField.getDocument().addDocumentListener(this);
+      serverAddressField = new JTextField(20);
+      serverAddressField.getDocument().addDocumentListener(this);
+      serverUserField = new JTextField(20);
+      serverUserField.getDocument().addDocumentListener(this);
+      serverPasswdField = new JPasswordField(20);
+      serverPasswdField.getDocument().addDocumentListener(this);
+      storeServerPassBox = new JCheckBox(I18N.getInstance().getString("settingsdialog.server.storepwcheckbox"));
+      storeServerPassBox.addActionListener(this);
+      serverDirField = new JTextField(20);
+      serverDirField.getDocument().addDocumentListener(this);
       
       //Set settings for all fields
       gbc.weightx = 100;
@@ -725,26 +725,26 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
-      gbl.setConstraints(ftpServerField, gbc);
-      ftpPanel.add(ftpServerField);
+      gbl.setConstraints(serverAddressField, gbc);
+      serverPanel.add(serverAddressField);
       gbc.gridx = 1;
       gbc.gridy = 1;
-      gbl.setConstraints(ftpUserField, gbc);
-      ftpPanel.add(ftpUserField);
+      gbl.setConstraints(serverUserField, gbc);
+      serverPanel.add(serverUserField);
       gbc.gridx = 1;
       gbc.gridy = 2;
-      gbl.setConstraints(ftpPasswdField, gbc);
-      ftpPanel.add(ftpPasswdField);
+      gbl.setConstraints(serverPasswdField, gbc);
+      serverPanel.add(serverPasswdField);
       gbc.gridx = 1;
       gbc.gridy = 3;
-      gbl.setConstraints(storeFTPPassBox, gbc);
-      ftpPanel.add(storeFTPPassBox);
+      gbl.setConstraints(storeServerPassBox, gbc);
+      serverPanel.add(storeServerPassBox);
       gbc.gridx = 1;
       gbc.gridy = 4;
-      gbl.setConstraints(ftpDirField, gbc);
-      ftpPanel.add(ftpDirField);
+      gbl.setConstraints(serverDirField, gbc);
+      serverPanel.add(serverDirField);
 
-      return ftpPanel;
+      return serverPanel;
    }
    
    public SettingsDialog() {
@@ -828,9 +828,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          new UpdateCheckThread(true);
       } else if (src == checkForUpdatesBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox) {
          applyButton.setEnabled(true);
-      } else if (src == storeFTPPassBox) {
+      } else if (src == storeServerPassBox) {
          applyButton.setEnabled(true);
-         ftpPasswdField.setEnabled(storeFTPPassBox.isSelected());
+         serverPasswdField.setEnabled(storeServerPassBox.isSelected());
       }
    }
 
@@ -854,14 +854,14 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       confirmDeleteBox.setSelected(UserSettings.getInstance().getConfirmDeletion());
             
       notesFileField.setText(UserSettings.getInstance().getNotesFile());
-      ftpServerField.setText(UserSettings.getInstance().getFtpServer());
-      ftpUserField.setText(UserSettings.getInstance().getFtpUser());
-      storeFTPPassBox.setSelected(UserSettings.getInstance().getStoreFTPPass());
-      if (UserSettings.getInstance().getStoreFTPPass() && UserSettings.getInstance().getFtpPasswd() != null) {
-            ftpPasswdField.setText(String.copyValueOf(UserSettings.getInstance().getFtpPasswd()));
+      serverAddressField.setText(UserSettings.getInstance().getServerAddress());
+      serverUserField.setText(UserSettings.getInstance().getServerUser());
+      storeServerPassBox.setSelected(UserSettings.getInstance().getStoreServerPass());
+      if (UserSettings.getInstance().getStoreServerPass() && UserSettings.getInstance().getServerPasswd() != null) {
+            serverPasswdField.setText(String.copyValueOf(UserSettings.getInstance().getServerPasswd()));
       }
-      ftpPasswdField.setEnabled(UserSettings.getInstance().getStoreFTPPass());
-      ftpDirField.setText(UserSettings.getInstance().getFtpDir());
+      serverPasswdField.setEnabled(UserSettings.getInstance().getStoreServerPass());
+      serverDirField.setText(UserSettings.getInstance().getServerDir());
    }
 
    private void saveSettings() {
@@ -885,11 +885,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          ci = 2;
       }
       String notesFile = notesFileField.getText();
-      String ftpServer = ftpServerField.getText();
-      String ftpUser = ftpUserField.getText();
-      char[] ftpPasswd = ftpPasswdField.getPassword();
-      boolean storeFTPPass = storeFTPPassBox.isSelected();
-      String ftpDir = ftpDirField.getText();
+      String serverAddress = serverAddressField.getText();
+      String serverUser = serverUserField.getText();
+      char[] serverPasswd = serverPasswdField.getPassword();
+      boolean storeServerPass = storeServerPassBox.isSelected();
+      String serverDir = serverDirField.getText();
       
       // write settings into object
       UserSettings.getInstance().setUpdateCheckEnabled(updateCheckEnabled);
@@ -903,15 +903,15 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       UserSettings.getInstance().setShowCategory(showCat);
       UserSettings.getInstance().setConfirmDeletion(confirmDel);
       UserSettings.getInstance().setNotesFile(notesFile);
-      UserSettings.getInstance().setFtpServer(ftpServer);
-      UserSettings.getInstance().setFtpUser(ftpUser);
-      UserSettings.getInstance().setStoreFTPPass(storeFTPPass);
-      if (storeFTPPass) {
-         UserSettings.getInstance().setFtpPasswd(ftpPasswd);
+      UserSettings.getInstance().setServerAddress(serverAddress);
+      UserSettings.getInstance().setServerUser(serverUser);
+      UserSettings.getInstance().setStoreServerPass(storeServerPass);
+      if (storeServerPass) {
+         UserSettings.getInstance().setServerPasswd(serverPasswd);
       } else {
-         UserSettings.getInstance().setFtpPasswd(null);
+         UserSettings.getInstance().setServerPasswd(null);
       }
-      UserSettings.getInstance().setFtpDir(ftpDir);
+      UserSettings.getInstance().setServerDir(serverDir);
       
       // load new notes from file
       CategoryManager.getInstance().hideAllNotes();
