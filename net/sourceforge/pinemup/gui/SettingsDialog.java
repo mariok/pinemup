@@ -36,6 +36,7 @@ import java.util.List;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 
+import net.sourceforge.pinemup.io.ServerConnection;
 import net.sourceforge.pinemup.logic.*;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
@@ -60,6 +61,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private ButtonGroup closeIconGroup;
    
    private JButton checkForUpdatesButton;
+   
+   private JComboBox serverTypeBox;
    
    private JPanel makeGeneralTab() {
       JPanel generalPanel = new JPanel();
@@ -665,14 +668,15 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    }
    
    private JPanel makeServerPanel() {
-      // PANEL FOR CATEGORY NAMES
+      // PANEL FOR IM-/EXPORT SERVER
       GridBagLayout gbl = new GridBagLayout();
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.insets = new Insets(1,1,1,1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
       JPanel serverPanel = new JPanel(gbl);
       serverPanel.setBorder(new TitledBorder(I18N.getInstance().getString("settingsdialog.server.border")));
-      //Add all Labels
+      //Create all Labels
+      JLabel serverTypeLabel = new JLabel(I18N.getInstance().getString("settingsdialog.server.type") + ":");
       JLabel serverAddressLabel = new JLabel(I18N.getInstance().getString("settingsdialog.server.address") + ":");
       JLabel serverUserLabel = new JLabel(I18N.getInstance().getString("settingsdialog.server.user") + ":");
       JLabel serverPasswdLabel = new JLabel(I18N.getInstance().getString("settingsdialog.server.password") + ":");
@@ -688,23 +692,20 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbl.setConstraints(serverAddressLabel, gbc);
-      serverPanel.add(serverAddressLabel);
-      gbc.gridx = 0;
+      serverPanel.add(serverTypeLabel, gbc);
       gbc.gridy = 1;
-      gbl.setConstraints(serverUserLabel, gbc);
-      serverPanel.add(serverUserLabel);
-      gbc.gridx = 0;
+      serverPanel.add(serverAddressLabel, gbc);
       gbc.gridy = 2;
-      gbl.setConstraints(serverPasswdLabel, gbc);
-      serverPanel.add(serverPasswdLabel);
-      gbc.gridx = 0;
-      gbc.gridy = 4;
-      gbl.setConstraints(serverDirLabel, gbc);
-      serverPanel.add(serverDirLabel);
+      serverPanel.add(serverUserLabel, gbc);
+      gbc.gridy = 3;
+      serverPanel.add(serverPasswdLabel, gbc);
+      gbc.gridy = 5;
+      serverPanel.add(serverDirLabel, gbc);
 
       
-      //Add fields
+      //Create fields
+      serverTypeBox = new JComboBox(ServerConnection.SERVERTYPE_NAMES);
+      serverTypeBox.addActionListener(this);
       serverAddressField = new JTextField(20);
       serverAddressField.getDocument().addDocumentListener(this);
       serverUserField = new JTextField(20);
@@ -722,27 +723,21 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
+      
       //Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
-      gbl.setConstraints(serverAddressField, gbc);
-      serverPanel.add(serverAddressField);
-      gbc.gridx = 1;
+      serverPanel.add(serverTypeBox, gbc);
       gbc.gridy = 1;
-      gbl.setConstraints(serverUserField, gbc);
-      serverPanel.add(serverUserField);
-      gbc.gridx = 1;
+      serverPanel.add(serverAddressField, gbc);
       gbc.gridy = 2;
-      gbl.setConstraints(serverPasswdField, gbc);
-      serverPanel.add(serverPasswdField);
-      gbc.gridx = 1;
+      serverPanel.add(serverUserField, gbc);
       gbc.gridy = 3;
-      gbl.setConstraints(storeServerPassBox, gbc);
-      serverPanel.add(storeServerPassBox);
-      gbc.gridx = 1;
+      serverPanel.add(serverPasswdField, gbc);
       gbc.gridy = 4;
-      gbl.setConstraints(serverDirField, gbc);
-      serverPanel.add(serverDirField);
+      serverPanel.add(storeServerPassBox, gbc);
+      gbc.gridy = 5;
+      serverPanel.add(serverDirField,gbc);
 
       return serverPanel;
    }
@@ -826,7 +821,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          }
       } else if (src == checkForUpdatesButton) {
          new UpdateCheckThread(true);
-      } else if (src == checkForUpdatesBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox) {
+      } else if (src == checkForUpdatesBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox || src == serverTypeBox) {
          applyButton.setEnabled(true);
       } else if (src == storeServerPassBox) {
          applyButton.setEnabled(true);
@@ -854,6 +849,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       confirmDeleteBox.setSelected(UserSettings.getInstance().getConfirmDeletion());
             
       notesFileField.setText(UserSettings.getInstance().getNotesFile());
+      serverTypeBox.setSelectedIndex(UserSettings.getInstance().getServerType());
       serverAddressField.setText(UserSettings.getInstance().getServerAddress());
       serverUserField.setText(UserSettings.getInstance().getServerUser());
       storeServerPassBox.setSelected(UserSettings.getInstance().getStoreServerPass());
@@ -885,6 +881,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          ci = 2;
       }
       String notesFile = notesFileField.getText();
+      short serverType = (short)serverTypeBox.getSelectedIndex();
       String serverAddress = serverAddressField.getText();
       String serverUser = serverUserField.getText();
       char[] serverPasswd = serverPasswdField.getPassword();
@@ -903,6 +900,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       UserSettings.getInstance().setShowCategory(showCat);
       UserSettings.getInstance().setConfirmDeletion(confirmDel);
       UserSettings.getInstance().setNotesFile(notesFile);
+      UserSettings.getInstance().setServerType(serverType);
       UserSettings.getInstance().setServerAddress(serverAddress);
       UserSettings.getInstance().setServerUser(serverUser);
       UserSettings.getInstance().setStoreServerPass(storeServerPass);

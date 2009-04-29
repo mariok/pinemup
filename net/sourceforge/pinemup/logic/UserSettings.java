@@ -192,12 +192,11 @@ public class UserSettings {
             tempString += serverPasswd[i];
          }         
       } else {
-         
          JPasswordField p = new JPasswordField(12);
-         JOptionPane.showMessageDialog(null,p,"Enter FTP-Password",JOptionPane.PLAIN_MESSAGE);
+         //TODO: I18N for this dialog
+         JOptionPane.showMessageDialog(null,p,"Enter Server-Password",JOptionPane.PLAIN_MESSAGE);
          tempString = String.copyValueOf(p.getPassword());
       }
-
       return tempString;
    }
 

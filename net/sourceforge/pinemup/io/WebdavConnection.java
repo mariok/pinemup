@@ -36,7 +36,7 @@ public class WebdavConnection extends ServerConnection {
          String completeFilename = UserSettings.getInstance().getNotesFile();
          File f = new File(completeFilename);
          FileInputStream fis = new FileInputStream(f);
-         String urlString = protocol + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + f.getName();
+         String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + f.getName();
          URL url = new URL(urlString);
          HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
          urlc.setRequestProperty("Authorization", "Basic " + (new BASE64Encoder()).encode((new String(UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswdString())).getBytes())); 
@@ -50,13 +50,16 @@ public class WebdavConnection extends ServerConnection {
             nextByte = fis.read();
          }
          os.close();
-         System.out.println(urlc.getResponseCode() + " --- " + urlc.getResponseMessage()); //TODO: remove debugging output
+         if (urlc.getResponseCode() != 201 && urlc.getResponseCode() != 204) {
+            uploaded = false;
+         }
       } catch (Exception e) {
          uploaded = false;
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
       if (uploaded) {
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+      } else {
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
    }
 }
