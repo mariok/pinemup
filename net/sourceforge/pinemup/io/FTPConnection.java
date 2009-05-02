@@ -17,6 +17,7 @@ public class FTPConnection extends ServerConnection {
    public void importNotesFromServer() {
       boolean downloaded = true;
       try {
+         makeBackupFile();
          File f = new File(UserSettings.getInstance().getNotesFile());
          FileOutputStream fos = new FileOutputStream(f);
          String filename = f.getName();
@@ -34,10 +35,13 @@ public class FTPConnection extends ServerConnection {
          fos.close();
       } catch (Exception e) {
          downloaded = false;
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotdownloaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
       if (downloaded) {
+         deleteBackupFile();
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfiledownloaded"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+      } else {
+         restoreFileFromBackup();
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotdownloaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
    }
 

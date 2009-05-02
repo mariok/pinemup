@@ -26,10 +26,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
 import javax.swing.*;
-
-import javax.swing.JOptionPane;
 import javax.xml.stream.*;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
