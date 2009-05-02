@@ -16,7 +16,7 @@ public class I18N {
       if (I18N.instance == null) {
          I18N.instance = new I18N();
       }
-      return I18N.instance; 
+      return I18N.instance;
    }
    
    private I18N() {

@@ -50,10 +50,8 @@ public class WebdavConnection extends ServerConnection {
          if (urlc.getResponseCode() != 200) {
             downloaded = false;
          }
-         System.out.println(urlc.getResponseCode() + " --- " + urlc.getResponseMessage());
       } catch (SSLHandshakeException e) { //Certificate error (self-signed?)
-         //TODO: Show popup message
-         System.err.println("SSL Error");
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.sslcertificateerror"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
          downloaded = false;
       } catch (Exception e) {
          downloaded = false;
@@ -89,8 +87,7 @@ public class WebdavConnection extends ServerConnection {
             uploaded = false;
          }
       } catch (SSLHandshakeException e) { //Certificate error (self-signed?)
-         //TODO: Show popup message
-         System.err.println("SSL Error");
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.sslcertificateerror"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
          uploaded = false;
       } catch (Exception e) {
          uploaded = false;

@@ -168,7 +168,7 @@ public class NoteIO {
                   currentCategory = new Category(name,def,defNoteColor);
                   c.add(currentCategory);
                } else if (ename.equals("note")) {
-                  currentNote = new Note("",(byte)0); //TODO: replace number with constant
+                  currentNote = new Note("",(byte)0);
                   for (int i=0; i<parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");

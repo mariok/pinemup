@@ -24,6 +24,8 @@ package net.sourceforge.pinemup.logic;
 import java.util.prefs.Preferences;
 import javax.swing.*;
 
+import net.sourceforge.pinemup.gui.I18N;
+
 public class UserSettings {
    /**
     * 
@@ -54,6 +56,7 @@ public class UserSettings {
    private boolean storeServerPass;
    private boolean updateCheckEnabled;
    private short serverType;
+   private String locale;
    
    public void setServerType(short st) {
       serverType = st;
@@ -193,8 +196,7 @@ public class UserSettings {
          }         
       } else {
          JPasswordField p = new JPasswordField(12);
-         //TODO: I18N for this dialog
-         JOptionPane.showMessageDialog(null,p,"Enter Server-Password",JOptionPane.PLAIN_MESSAGE);
+         JOptionPane.showMessageDialog(null,p,I18N.getInstance().getString("confirm.enterserverpassword"),JOptionPane.PLAIN_MESSAGE);
          tempString = String.copyValueOf(p.getPassword());
       }
       return tempString;
@@ -219,7 +221,15 @@ public class UserSettings {
    public boolean getStoreServerPass() {
       return storeServerPass;
    }
-
+   
+   public String getLocale() {
+      return locale;
+   }
+   
+   public void setLocale(String l) {
+      locale = l;
+   }
+   
    public void saveSettings() {
       // save preferences
       prefs.putInt(PREFIX + "defaultWindowWidth", defaultWindowWidth);
@@ -243,6 +253,7 @@ public class UserSettings {
       prefs.putBoolean(PREFIX + "storeServerPass", storeServerPass);
       prefs.putBoolean(PREFIX + "updateCheckEnabled", updateCheckEnabled);
       prefs.putInt(PREFIX + "serverType", serverType);
+      prefs.put(PREFIX + "locale", locale);
    }
 
    private UserSettings() {
@@ -270,6 +281,7 @@ public class UserSettings {
       storeServerPass = prefs.getBoolean(PREFIX + "storeServerPass", false);
       updateCheckEnabled = prefs.getBoolean(PREFIX + "updateCheckEnabled", true);
       serverType = Short.parseShort(prefs.get(PREFIX + "serverType", "0"));
+      locale = prefs.get(PREFIX + "locale", "en_US");
    }
    
    public static UserSettings getInstance() {
