@@ -44,7 +44,12 @@ Contents
 3. Changelog
 ------------------------
   0.5:
-    - some internal code improvements
+    - added support for webdav(s) servers to up-/download the notesfile
+    - notes are now sent to background when application starts or new notesfile gets loaded
+    - added support for different languages
+    - added german translation
+    - changed "active" symbol in menus from '#' to '->'
+    - many internal code improvements
 
   0.4:
     - BUGFIX: font type was changed to SERIF on change of font-size

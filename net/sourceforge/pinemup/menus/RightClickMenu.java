@@ -35,6 +35,8 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
     * 
     */
    private static final long serialVersionUID = 1L;
+   
+   private static final String ACTIVE_SYMBOL = "->";
 
    private NoteWindow parentWindow;
    
@@ -73,7 +75,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       for (int i=0; i<26; i++) {
          setFontSizeItem[i] = new JMenuItem(String.valueOf(i+5));
          if (i+5 == parentWindow.getParentNote().getFontSize()) {
-            setFontSizeItem[i].setText("# "+setFontSizeItem[i].getText());
+            setFontSizeItem[i].setText(ACTIVE_SYMBOL + " " + setFontSizeItem[i].getText());
          } else {
             setFontSizeItem[i].setText("  "+setFontSizeItem[i].getText());
          }
@@ -84,7 +86,11 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       JMenu setBGColorMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.color"));
       setBGColorItem = new JMenuItem[BackgroundLabel.getNumberOfColors()];
       for (byte i=0; i<setBGColorItem.length; i++) {
-         setBGColorItem[i] = new JMenuItem(BackgroundLabel.getColorName(i));
+         String prefix = " ";
+         if (i == parentWindow.getParentNote().getBGColor()) {
+            prefix = ACTIVE_SYMBOL + " ";
+         }
+         setBGColorItem[i] = new JMenuItem(prefix + BackgroundLabel.getColorName(i));
          setBGColorItem[i].setText("  "+setBGColorItem[i].getText());
          setBGColorItem[i].addActionListener(this);
          setBGColorMenu.add(setBGColorItem[i]);
@@ -101,9 +107,9 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       JMenu alwaysOnTopMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.alwaysontop"));
       String[] aot = {"  ","  "};
       if(parentWindow.getParentNote().isAlwaysOnTop()) {
-         aot[0] = "# ";
+         aot[0] = ACTIVE_SYMBOL + " ";
       } else {
-         aot[1] = "# ";
+         aot[1] = ACTIVE_SYMBOL + " ";
       }
       alwaysOnTopOnItem = new JMenuItem(aot[0]+I18N.getInstance().getString("enabled"));
       alwaysOnTopOffItem = new JMenuItem(aot[1]+I18N.getInstance().getString("disabled"));
