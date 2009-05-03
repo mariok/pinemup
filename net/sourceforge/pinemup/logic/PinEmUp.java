@@ -32,10 +32,7 @@ public class PinEmUp {
    public PinEmUp() {
       if (SystemTray.isSupported()) {
          //set locale
-         String locale = UserSettings.getInstance().getLocale();
-         String language = locale.substring(0, locale.indexOf("_"));
-         String country = locale.substring(locale.indexOf("_")+1);
-         I18N.getInstance().setLocale(language, country);
+         I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
          
          //load notes from file
          CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());

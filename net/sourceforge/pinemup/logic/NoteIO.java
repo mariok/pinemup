@@ -294,6 +294,9 @@ public class NoteIO {
       // a java.net.URL or a javax.xml.transform.Source instead.
       //File schemaLocation = ResourceLoader.getSchemaFile();
       String version = getNotesFileVersion(filename);
+      if (version == null) {
+         return false;
+      }
       URL schemaLocation = ResourceLoader.getInstance().getSchemaFile(version);
       Schema schema;
       schema = factory.newSchema(schemaLocation);
@@ -319,7 +322,7 @@ public class NoteIO {
    }
    
    private static String getNotesFileVersion(String filename) {
-      String version = "";
+      String version = null;
       try {
          InputStream in = new FileInputStream(filename);
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
@@ -349,9 +352,9 @@ public class NoteIO {
       } catch (FileNotFoundException e) {
          // do nothing
       } catch (XMLStreamException e) {
-         System.out.println("XML Error");
+         System.err.println("XML Error");
       } catch (IOException e) {
-         System.out.println("IO Error");
+         System.err.println("IO Error");
       }
       return version;
    }

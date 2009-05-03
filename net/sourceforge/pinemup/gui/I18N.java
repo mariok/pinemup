@@ -8,8 +8,20 @@ public class I18N {
    private static I18N instance;
    private ResourceBundle res;
    
-   public void setLocale(String lang, String country) {
-      res = ResourceBundle.getBundle("net.sourceforge.pinemup.resources.i18n.messages", new Locale(lang, country));
+   public static final String[] LOCALES = {
+         "de_DE",
+         "en_US"
+   };
+   
+   public static final String[] LOCALE_NAMES = {
+         "Deutsch",
+         "English"
+   };
+   
+   public void setLocale(String locale) {
+      String language = locale.substring(0, locale.indexOf("_"));
+      String country = locale.substring(locale.indexOf("_")+1);
+      res = ResourceBundle.getBundle("net.sourceforge.pinemup.resources.i18n.messages", new Locale(language, country));
    }
    
    public static I18N getInstance() {

@@ -40,33 +40,41 @@ public class MenuCreator implements ActionListener {
    private CategoryMenuItem[] categoryItem = null;
    private JMenuItem[] basicItemJ = null;
    private MenuItem[] basicItem = null;
-
-   private static String[] basicItemText = {
-      I18N.getInstance().getString("menu.addnoteitem"),
-      I18N.getInstance().getString("menu.showallnotesitem"),
-      I18N.getInstance().getString("menu.hideallnotesitem")
-   };
    
-   private static String[] categoryItemText = {
-      I18N.getInstance().getString("menu.categorymenu.hidenotes"),
-      I18N.getInstance().getString("menu.categorymenu.shownotes"),
-      I18N.getInstance().getString("menu.categorymenu.showonlynotes"),
-      I18N.getInstance().getString("menu.categorymenu.setasdefault")
-   };
+   private String[] getBasicItemTexts() {
+      String[] s = {
+            I18N.getInstance().getString("menu.addnoteitem"),
+            I18N.getInstance().getString("menu.showallnotesitem"),
+            I18N.getInstance().getString("menu.hideallnotesitem")
+      };
+      return s;
+   }
+
+   private String[] getCategoryItemTexts() {
+      String[] s = {
+            I18N.getInstance().getString("menu.categorymenu.hidenotes"),
+            I18N.getInstance().getString("menu.categorymenu.shownotes"),
+            I18N.getInstance().getString("menu.categorymenu.showonlynotes"),
+            I18N.getInstance().getString("menu.categorymenu.setasdefault")
+      };
+      return s;
+   }
    
    public JMenuItem[] getBasicJMenuItems() {
-      basicItemJ = new JMenuItem[basicItemText.length];
-      for (int i=0; i<basicItemText.length; i++) {
-         basicItemJ[i] = new JMenuItem(basicItemText[i]);
+      String[] texts = getBasicItemTexts();
+      basicItemJ = new JMenuItem[texts.length];
+      for (int i=0; i<texts.length; i++) {
+         basicItemJ[i] = new JMenuItem(texts[i]);
          basicItemJ[i].addActionListener(this);
       }
       return basicItemJ;
    }
    
    public MenuItem[] getBasicMenuItems() {
-      basicItem = new MenuItem[basicItemText.length];
-      for (int i=0; i<basicItemText.length; i++) {
-         basicItem[i] = new MenuItem(basicItemText[i]);
+      String[] texts = getBasicItemTexts();
+      basicItem = new MenuItem[texts.length];
+      for (int i=0; i<texts.length; i++) {
+         basicItem[i] = new MenuItem(texts[i]);
          basicItem[i].addActionListener(this);
       }
       return basicItem;
@@ -74,9 +82,10 @@ public class MenuCreator implements ActionListener {
    
    public JMenu getCategoryActionsJMenu(String title, Category c) {
       JMenu menu = new JMenu(title);
-      categoryItemJ = new CategoryJMenuItem[categoryItemText.length];
-      for (int i=0; i<categoryItemText.length; i++) {
-         categoryItemJ[i] = new CategoryJMenuItem(categoryItemText[i],c);
+      String[] texts = getCategoryItemTexts();
+      categoryItemJ = new CategoryJMenuItem[texts.length];
+      for (int i=0; i<texts.length; i++) {
+         categoryItemJ[i] = new CategoryJMenuItem(texts[i],c);
          categoryItemJ[i].addActionListener(this);
          menu.add(categoryItemJ[i]);
          switch(i) {
@@ -92,9 +101,10 @@ public class MenuCreator implements ActionListener {
    
    public Menu getCategoryActionsMenu(String title, Category c) {
       Menu menu = new Menu(title);
-      categoryItem = new CategoryMenuItem[categoryItemText.length];
-      for (int i=0; i<categoryItemText.length; i++) {
-         categoryItem[i] = new CategoryMenuItem(categoryItemText[i],c);
+      String[] texts = getCategoryItemTexts();
+      categoryItem = new CategoryMenuItem[texts.length];
+      for (int i=0; i<texts.length; i++) {
+         categoryItem[i] = new CategoryMenuItem(texts[i],c);
          categoryItem[i].addActionListener(this);
          menu.add(categoryItem[i]);
          switch(i) {
