@@ -28,7 +28,7 @@ Contents
     - fast switch between categories (e.g. "home" and "office")
     - automatically save notes to file
     - open file format (xml)
-    - FTP upload- and download functions
+    - Server upload- and download functions (FTP, WebDAV)
     - Export notes to a text-file
 
 
@@ -50,6 +50,7 @@ Contents
     - added german translation
     - changed "active" symbol in menus from '#' to '->'
     - only one instance of settings-dialog and category-dialog allowed
+    - BUGFIX: buttons in popup-messages are displayed in the current language
     - many internal code improvements
 
   0.4:

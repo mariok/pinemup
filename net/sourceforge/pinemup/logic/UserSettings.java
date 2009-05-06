@@ -57,6 +57,15 @@ public class UserSettings {
    private boolean updateCheckEnabled;
    private short serverType;
    private String locale;
+   private boolean confirmUpDownload;
+   
+   public boolean getConfirmUpDownload() {
+	   return confirmUpDownload;
+   }
+   
+   public void setConfirmUpDownload(boolean b) {
+      confirmUpDownload = b;
+   }
    
    public void setServerType(short st) {
       serverType = st;
@@ -254,6 +263,7 @@ public class UserSettings {
       prefs.putBoolean(PREFIX + "updateCheckEnabled", updateCheckEnabled);
       prefs.putInt(PREFIX + "serverType", serverType);
       prefs.put(PREFIX + "locale", locale);
+      prefs.putBoolean(PREFIX + "confirmUpDownload", confirmUpDownload);
    }
 
    private UserSettings() {
@@ -282,6 +292,7 @@ public class UserSettings {
       updateCheckEnabled = prefs.getBoolean(PREFIX + "updateCheckEnabled", true);
       serverType = Short.parseShort(prefs.get(PREFIX + "serverType", "0"));
       locale = prefs.get(PREFIX + "locale", "en_US");
+      confirmUpDownload = prefs.getBoolean(PREFIX + "confirmUpDownload", true);
    }
    
    public static UserSettings getInstance() {

@@ -50,7 +50,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private JButton okButton, cancelButton, applyButton, browseButton;
    private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, serverAddressField, serverUserField, serverDirField, notesFileField;
    private JPasswordField serverPasswdField;
-   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeServerPassBox, updateCheckBox;
+   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeServerPassBox, updateCheckBox, confirmUpDownloadBox;
    private JSpinner defaultFontSizeSpinner;
    private JRadioButton closeIcon1Button, closeIcon2Button;
    private ButtonGroup closeIconGroup;
@@ -736,6 +736,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       storeServerPassBox.addActionListener(this);
       serverDirField = new JTextField(20);
       serverDirField.getDocument().addDocumentListener(this);
+      confirmUpDownloadBox = new JCheckBox();
       
       //Set settings for all fields
       gbc.weightx = 100;
@@ -758,6 +759,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverPanel.add(storeServerPassBox, gbc);
       gbc.gridy = 5;
       serverPanel.add(serverDirField,gbc);
+      gbc.gridy = 6;
+      serverPanel.add(new JLabel(" "),gbc);
+      gbc.gridy = 7;
+      serverPanel.add(confirmUpDownloadBox,gbc);
 
       return serverPanel;
    }
@@ -893,6 +898,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       }
       serverPasswdField.setEnabled(UserSettings.getInstance().getStoreServerPass());
       serverDirField.setText(UserSettings.getInstance().getServerDir());
+      confirmUpDownloadBox.setSelected(UserSettings.getInstance().getConfirmUpDownload());
    }
 
    private void saveSettings() {
@@ -923,6 +929,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       char[] serverPasswd = serverPasswdField.getPassword();
       boolean storeServerPass = storeServerPassBox.isSelected();
       String serverDir = serverDirField.getText();
+      boolean confirmUpDownload = confirmUpDownloadBox.isSelected();
       
       // write settings into object
       UserSettings.getInstance().setUpdateCheckEnabled(updateCheckEnabled);
@@ -947,6 +954,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          UserSettings.getInstance().setServerPasswd(null);
       }
       UserSettings.getInstance().setServerDir(serverDir);
+      UserSettings.getInstance().setConfirmUpDownload(confirmUpDownload);
       
       //set new locale
       I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
@@ -1033,5 +1041,6 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverPasswdLabel.setText(I18N.getInstance().getString("settingsdialog.server.password") + ":");
       serverDirLabel.setText(I18N.getInstance().getString("settingsdialog.server.directory") + ":");
       storeServerPassBox.setText(I18N.getInstance().getString("settingsdialog.server.storepwcheckbox"));
+      confirmUpDownloadBox.setText(I18N.getInstance().getString("settingsdialog.server.confirmupdownloadcheckbox"));
    }
 }

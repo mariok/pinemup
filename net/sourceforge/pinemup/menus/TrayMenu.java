@@ -120,14 +120,14 @@ public class TrayMenu extends PopupMenu implements ActionListener {
          NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
          System.exit(0);
       } else if (src == serverUploadItem) {
-         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+         if (!UserSettings.getInstance().getConfirmUpDownload() || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             //save notes to file
             NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
             //copy file to server
             new ServerThread(ServerThread.UPLOAD);
          }
       } else if (src == serverDownloadItem) {
-         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacelocalfile"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+         if (!UserSettings.getInstance().getConfirmUpDownload() || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacelocalfile"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             new ServerThread(ServerThread.DOWNLOAD);
          }
       } else if (src == exportItem) {
