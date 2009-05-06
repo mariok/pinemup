@@ -49,6 +49,7 @@ Contents
     - added support for different languages
     - added german translation
     - changed "active" symbol in menus from '#' to '->'
+    - only one instance of settings-dialog and category-dialog allowed
     - many internal code improvements
 
   0.4:
@@ -118,7 +119,7 @@ Contents
 
 5. Contact information
 ------------------------
-  Author: Mario Koedding
+  Author: Mario Ködding
   Email: mario@koedding.net
   ICQ: 77590604
 
@@ -133,4 +134,4 @@ Contents
   - Jan Laczay for his contributions to the project website and the note-color design
   - Andreas Kwiatkowski for redisigning the closeicon
   - Michael Mrose for his contributions to the project website and for testing the new version
-  - Natalie Noering for testing the new version
+  - Natalie Nöring for testing the new version

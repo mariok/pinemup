@@ -44,6 +44,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
     * 
     */
    private static final long serialVersionUID = 1L;
+   
+   private static SettingsDialog instance;
 
    private JButton okButton, cancelButton, applyButton, browseButton;
    private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, serverAddressField, serverUserField, serverDirField, notesFileField;
@@ -57,6 +59,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private TitledBorder updateCheckBorder, languageBorder, titleBarBorder, behaviorBorder, sizeBorder, fontBorder, visibilityBorder, notesFileBorder, serverBorder;
    private JLabel updateCheckLabel, languageLabel, closeIconLabel, showCatLabel, confirmDeleteLabel, defaultWidthLabel, defaultHeightLabel, defaultXPositionLabel, defaultYPositionLabel, defaultFontSizeLabel, alwaysOnTopLabel, serverTypeLabel, serverAddressLabel, serverUserLabel, serverPasswdLabel, serverDirLabel;
    private JTabbedPane tpane;
+   
+   public static void showInstance() {
+      if (SettingsDialog.instance == null || !SettingsDialog.instance.isVisible()) {
+         instance = new SettingsDialog();
+      }
+   }
    
    private JPanel makeGeneralTab() {
       JPanel generalPanel = new JPanel();
@@ -754,7 +762,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       return serverPanel;
    }
    
-   public SettingsDialog() {
+   private SettingsDialog() {
       super();
       setSize(new Dimension(640,480));
       

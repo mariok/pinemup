@@ -114,7 +114,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       if (src == aboutItem) {
          new AboutDialog();
       } else if (src == showSettingsDialogItem) {
-         new SettingsDialog();
+         SettingsDialog.showInstance();
       } else if (src == closeItem) {
          //save notes to file and exit
          NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
@@ -133,7 +133,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       } else if (src == exportItem) {
          new ExportDialog();
       } else if (src == manageCategoriesItem) {
-         new CategoryDialog();
+         CategoryDialog.showInstance();
       } else if (src == updateItem) {
          new UpdateCheckThread(true);
       }

@@ -40,6 +40,9 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
     * 
     */
    private static final long serialVersionUID = 1L;
+   
+   private static CategoryDialog instance;
+   
    private JButton closeButton, moveUpButton, moveDownButton, deleteButton, addButton;
    
    private JTable catTable;
@@ -55,7 +58,13 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
    
    private boolean trackChanges;
    
-   public CategoryDialog() {
+   public static void showInstance() {
+      if (CategoryDialog.instance == null || !CategoryDialog.instance.isVisible()) {
+         instance = new CategoryDialog();
+      }
+   }
+   
+   private CategoryDialog() {
       super();
       setTitle(I18N.getInstance().getString("categorydialog.title"));
       trackChanges = false;
