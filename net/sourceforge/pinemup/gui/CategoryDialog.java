@@ -400,7 +400,11 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
 
    public void valueChanged(ListSelectionEvent e) {
       selectedRow = catTable.getSelectedRow();
-      selectedCat = CategoryManager.getInstance().getCategoryByNumber(selectedRow);
+      if (selectedRow != -1) {
+         selectedCat = CategoryManager.getInstance().getCategoryByNumber(selectedRow);
+      } else {
+         selectedCat = null;
+      }
 
       //ENABLE OR DISABLE MOVEDOWN BUTTON
       if (selectedRow == noOfCategories-1) {
@@ -427,17 +431,19 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       colorBox.setEnabled(true);
       
       //Insert values in fields
-      trackChanges = false;
-      catNameField.setText(selectedCat.getName());
-      defaultBox.setSelected(selectedCat.isDefaultCategory());
-      if (defaultBox.isSelected()) {
-         defaultBox.setEnabled(false);
-      } else {
-         defaultBox.setEnabled(true);
+      if (selectedCat != null) {
+         trackChanges = false;
+         catNameField.setText(selectedCat.getName());
+         defaultBox.setSelected(selectedCat.isDefaultCategory());
+         if (defaultBox.isSelected()) {
+            defaultBox.setEnabled(false);
+         } else {
+            defaultBox.setEnabled(true);
+         }
+         colorBox.setSelectedIndex(selectedCat.getDefaultNoteColor());
+         colorBox.setBackground(BackgroundLabel.getColor(selectedCat.getDefaultNoteColor()));
+         trackChanges = true;
       }
-      colorBox.setSelectedIndex(selectedCat.getDefaultNoteColor());
-      colorBox.setBackground(BackgroundLabel.getColor(selectedCat.getDefaultNoteColor()));
-      trackChanges = true;
    }
 
 }

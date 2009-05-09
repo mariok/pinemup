@@ -15,21 +15,22 @@ Contents
 
 1. About
 ------------------------
-  pin 'em up is a tool for placing small notes/post-its (e.g. TODOs/Reminders)
-  on your desktop and organize them in various ways (categorize,hide,upload,export,...).
-  Due to platform independence, the notes can also be shared on different operating systems.
+  pin 'em up is a tool for placing small notes/post-its (e.g. TODOs/reminders)
+  on your desktop and organizing them in various ways (categorize, hide, upload, 
+  export, etc.). Due to platform independence, the notes can also be shared
+  on different operating systems.
 
   Features:
     - OS-independence
     - Integrates into system-tray
-    - free placeable notes
+    - freely placeable notes
     - many possibilities to customize the note-design
     - (nearly) unlimited user-defined categories
     - fast switch between categories (e.g. "home" and "office")
     - automatically save notes to file
-    - open file format (xml)
-    - Server upload- and download functions (FTP, WebDAV)
-    - Export notes to a text-file
+    - open file format (XML)
+    - server upload- and download functions (FTP, WebDAV)
+    - exporting notes into a text-file
 
 
 
@@ -50,7 +51,7 @@ Contents
     - added german translation
     - changed "active" symbol in menus from '#' to '->'
     - only one instance of settings-dialog and category-dialog allowed
-    - BUGFIX: buttons in popup-messages are displayed in the current language
+    - BUGFIX: buttons in popup-messages are now displayed in the correct language
     - many internal code improvements
 
   0.4:
@@ -111,9 +112,9 @@ Contents
   - schedule --> popup at a certain time
   - special TODO notes
   - rightclickmenu in textarea (cut, copy, paste, ...)
-  - different languages
+  - more supported languages
   - more freedom with fonts / notes look & feel
-  - global shortcuts
+  - support for global shortcuts
   - plugins
 
 
