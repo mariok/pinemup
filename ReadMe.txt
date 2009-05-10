@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.5-svn
+version 0.5
 
 Contents
 ------------------------
@@ -46,13 +46,14 @@ Contents
 ------------------------
   0.5:
     - added support for webdav(s) servers to up-/download the notesfile
-    - notes are now sent to background when application starts or new notesfile gets loaded
     - added support for different languages
     - added german translation
     - changed "active" symbol in menus from '#' to '->'
+    - notes are now sent to background when application starts or new notesfile gets loaded
     - only one instance of settings-dialog and category-dialog allowed
     - BUGFIX: buttons in popup-messages are now displayed in the correct language
     - many internal code improvements
+
 
   0.4:
     - BUGFIX: font type was changed to SERIF on change of font-size
@@ -61,6 +62,7 @@ Contents
     - dialog for managing categories
     - title of note-windows changed (e.g. displayed when pressing alt+tab)
     - some internal code improvements
+
 
   0.3:
     - changed default font to sans-serif
