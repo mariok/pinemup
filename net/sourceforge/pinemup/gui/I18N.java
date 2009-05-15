@@ -9,11 +9,14 @@ public class I18N {
    private ResourceBundle res;
    
    public static final String[] LOCALES = {
+         "cs_CZ",
          "de_DE",
          "en_US"
+
    };
    
    public static final String[] LOCALE_NAMES = {
+         "Česky",
          "Deutsch",
          "English"
    };

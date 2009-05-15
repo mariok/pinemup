@@ -27,7 +27,7 @@ import javax.swing.*;
 import net.sourceforge.pinemup.gui.I18N;
 
 public class PinEmUp {
-   private static final String VERSION = "0.5";
+   private static final String VERSION = "0.6-svn";
 
    public PinEmUp() {
       if (SystemTray.isSupported()) {

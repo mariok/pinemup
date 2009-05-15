@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.5
+version 0.6-svn
 
 Contents
 ------------------------
@@ -44,6 +44,10 @@ Contents
 
 3. Changelog
 ------------------------
+  0.6:
+    - added czech translation (thanks to Petr Masek)
+
+
   0.5:
     - added support for webdav(s) servers to up-/download the notesfile
     - added support for different languages
