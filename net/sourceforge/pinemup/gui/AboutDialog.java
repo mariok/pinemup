@@ -59,9 +59,13 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
    private JEditorPane makeAuthorsTab() {
       String msg = "";
       msg += "<html>";
-      msg += "<p><strong>Mario Ködding</strong><br />";
+      msg += "<h1>Developers</h1>";
+      msg += "<p>Mario Ködding<br />";
       msg += "<a href=\"mailto:mario@koedding.net\">mario@koedding.net</a><br />";
       msg += "developer &amp; founder of the project</p>";
+      msg += "<p>&nbsp;</p>";
+      msg += "<h1>Translators:</h1>";
+      msg += "<p>Petr Mašek (Czech)</p>";
       msg += "</html>";
       JEditorPane p = new JEditorPane("text/html",msg);
       p.addHyperlinkListener(this);

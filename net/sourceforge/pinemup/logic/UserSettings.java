@@ -36,7 +36,7 @@ public class UserSettings {
    
    private static final long serialVersionUID = 1L;
    
-   private final String PREFIX = "peu_";
+   private final String PREFIX = "peu_dev_";
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;
