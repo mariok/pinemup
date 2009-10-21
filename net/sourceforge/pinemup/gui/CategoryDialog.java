@@ -164,7 +164,8 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       gbl.setConstraints(catEditPanel, gbc);
       centerPanel.add(catEditPanel);
   
-      setSize(500,400);
+      //automatically set window-size
+      pack();
       
       // center on screen
       int screenHeight = (int)getToolkit().getScreenSize().getHeight();
@@ -384,7 +385,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       if (trackChanges) {
          String name = catNameField.getText();
          catTable.getModel().setValueAt(name, selectedRow, 1);
-         selectedCat.setName(name);
+         selectedCat.rename(name);
          PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       }
    }

@@ -46,6 +46,8 @@ Contents
 ------------------------
   0.6:
     - added czech translation (thanks to Petr Masek)
+    - BUGFIX: dialog for managing categories is now sized correctly (no controls out of sight)
+    - BUGFIX: update category name in note-window if it is changed in category dialog
 
 
   0.5:
