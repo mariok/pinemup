@@ -5,11 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import javax.net.ssl.SSLHandshakeException;
 import javax.swing.JOptionPane;
-import sun.misc.BASE64Encoder;
 
 
 import net.sourceforge.pinemup.gui.I18N;
@@ -30,6 +31,14 @@ public class WebdavConnection extends ServerConnection {
       protocol = "http";
    }
    
+   private void setDefaultAuthenticator() {
+      Authenticator.setDefault(new Authenticator() {
+         protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication (UserSettings.getInstance().getServerUser(), UserSettings.getInstance().getServerPasswdString().toCharArray());
+         }
+      });
+   }
+   
    public void importNotesFromServer() {
       boolean downloaded = true;
       try {
@@ -37,9 +46,9 @@ public class WebdavConnection extends ServerConnection {
          File f = new File(UserSettings.getInstance().getNotesFile());
          FileOutputStream fos = new FileOutputStream(f);
          String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + f.getName();
+         setDefaultAuthenticator();
          URL url = new URL(urlString);
          HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
-         urlc.setRequestProperty("Authorization", "Basic " + (new BASE64Encoder()).encode((new String(UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswdString())).getBytes()));
          InputStream is = urlc.getInputStream();
          int nextByte = is.read();
          while(nextByte != -1) {
@@ -71,9 +80,9 @@ public class WebdavConnection extends ServerConnection {
          File f = new File(UserSettings.getInstance().getNotesFile());
          FileInputStream fis = new FileInputStream(f);
          String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + f.getName();
+         setDefaultAuthenticator();
          URL url = new URL(urlString);
          HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
-         urlc.setRequestProperty("Authorization", "Basic " + (new BASE64Encoder()).encode((new String(UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswdString())).getBytes())); 
          urlc.setDoOutput(true);
          urlc.setRequestMethod("PUT");
          OutputStream  os = urlc.getOutputStream();
