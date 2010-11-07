@@ -45,6 +45,7 @@ Contents
 3. Changelog
 ------------------------
   0.6:
+    - added keyboard shortcuts for changing a note's category (first 10 categories: ctrl-0 - ctrl-9)
     - added czech translation (thanks to Petr Masek)
     - BUGFIX: dialog for managing categories is now sized correctly (no controls out of sight)
     - BUGFIX: update category name in note-window if it is changed in category dialog
