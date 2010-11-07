@@ -148,6 +148,9 @@ public class CategoryManager {
    }
    
    public Category getCategoryByNumber(int n) {
+      if (n >= categories.size()) {
+         return null;
+      }
       return categories.get(n);
    }
    

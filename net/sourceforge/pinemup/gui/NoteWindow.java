@@ -30,7 +30,7 @@ import net.sourceforge.pinemup.menus.*;
 import java.awt.event.*;
 import java.awt.*;
 
-public class NoteWindow extends JDialog implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener {
+public class NoteWindow extends JDialog implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener, KeyListener {
    /**
     * 
     */
@@ -137,6 +137,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       // adjust and add buttons to the topPanel
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
+      topPanel.setFocusable(true);
       
       ImageIcon closeIcon = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(UserSettings.getInstance().getCloseIcon()));
       closeButton = new JButton(closeIcon);
@@ -159,7 +160,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
       // menu and doubleclick
       topPanel.addMouseListener(this);
-
+      
       // resize listener
       resizing = false;
       resizeCursor = false;
@@ -178,6 +179,10 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       
       textPanel.getVerticalScrollBar().setOpaque(false);
       
+      //add keylisteners (for keyboard shortcuts)
+      topPanel.addKeyListener(this);
+      textArea.addKeyListener(this);
+      
       updateCategory();
       setVisible(true);
       toBack();
@@ -188,7 +193,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    public void focusGained(FocusEvent e) {
       if (e.getSource() == textArea) {
          showScrollBarIfNeeded();   
-      }      
+      }
    }
 
    public void focusLost(FocusEvent e) {
@@ -436,5 +441,43 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       String t = textArea.getText().substring(0, l);
       t = t.replace("\n", " ") + dots;
       return t;
+   }
+
+   @Override
+   public void keyPressed(KeyEvent e) {
+      if (e.isControlDown()) {
+         switch (e.getKeyCode()) {
+         case KeyEvent.VK_0:
+         case KeyEvent.VK_1:
+         case KeyEvent.VK_2:
+         case KeyEvent.VK_3:
+         case KeyEvent.VK_4:
+         case KeyEvent.VK_5:
+         case KeyEvent.VK_6:
+         case KeyEvent.VK_7:
+         case KeyEvent.VK_8:
+         case KeyEvent.VK_9:
+            int catNumber = Integer.parseInt(String.valueOf(e.getKeyChar()));
+            if (catNumber == 0) {
+               catNumber = 9;
+            } else {
+               catNumber--;
+            }
+            if (CategoryManager.getInstance().getCategoryByNumber(catNumber) != null) {
+               parentNote.moveToCategory(CategoryManager.getInstance().getCategoryByNumber(catNumber));               
+            }
+            break;
+         }
+      }
+   }
+
+   @Override
+   public void keyReleased(KeyEvent e) {
+      //do nothing
+   }
+
+   @Override
+   public void keyTyped(KeyEvent e) {
+      //do nothing
    }
 }
