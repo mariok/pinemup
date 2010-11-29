@@ -126,7 +126,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       addSeparator();
       
       // category menu
-      add(myMenuCreator.getCategoryActionsJMenu(I18N.getInstance().getString("menu.categorymenu"),myCat));
+      add(myMenuCreator.getCategoryActionsJMenu(I18N.getInstance().getString("category") + " '" + myCat.getName() + "'", myCat));
    }
 
    public void actionPerformed(ActionEvent e) {
