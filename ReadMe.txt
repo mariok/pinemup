@@ -7,9 +7,8 @@ Contents
 1. About
 2. System requirements
 3. Changelog
-4. Planned features
-5. Contact information
-6. Thanks
+4. Contact information
+5. Thanks
 
 
 
@@ -27,10 +26,12 @@ Contents
     - many possibilities to customize the note-design
     - (nearly) unlimited user-defined categories
     - fast switch between categories (e.g. "home" and "office")
+        - via right-click menu
+        - via keyboard-shortcuts (ctrl+1, ctrl+2, ..., ctrl+9, crtl+0)
     - automatically save notes to file
     - open file format (XML)
     - server upload- and download functions (FTP, WebDAV)
-    - exporting notes into a text-file
+    - exporting notes into a text-file (e.g. for printing)
 
 
 
@@ -45,7 +46,7 @@ Contents
 3. Changelog
 ------------------------
   0.6:
-    - added keyboard shortcuts for changing a note's category (first 10 categories: ctrl-0 - ctrl-9)
+    - added keyboard shortcuts for changing a note's category (first 10 categories: ctrl+0 - ctrl+9)
     - added czech translation (thanks to Petr Masek)
     - BUGFIX: dialog for managing categories is now sized correctly (no controls out of sight)
     - BUGFIX: update category name in note-window if it is changed in category dialog
@@ -115,23 +116,10 @@ Contents
 
 
 
-4. Planned features
-------------------------
-  - option: assign all visible notes to one category
-  - schedule --> popup at a certain time
-  - special TODO notes
-  - rightclickmenu in textarea (cut, copy, paste, ...)
-  - more supported languages
-  - more freedom with fonts / notes look & feel
-  - support for global shortcuts
-  - plugins
-
-
-
-5. Contact information
+4. Contact information
 ------------------------
   Author: Mario Ködding
-  Email: mario@koedding.net
+  Email: dev-mario@web.de
   ICQ: 77590604
 
   Project-Homepage:
@@ -139,10 +127,10 @@ Contents
 
 
 
-6. Thanks
+5. Thanks
 ------------------------
   Special Thanks go to:
   - Jan Laczay for his contributions to the project website and the note-color design
   - Andreas Kwiatkowski for redisigning the closeicon
-  - Michael Mrose for his contributions to the project website and for testing the new version
-  - Natalie Nöring for testing the new version
+  - Michael Mrose for his contributions to the project website and for testing some new versions
+  - Natalie Nöring for testing some new versions
