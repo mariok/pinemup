@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,14 +21,18 @@
 
 package net.sourceforge.pinemup.gui;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
- 
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellRenderer;
+
 public class ColoredTableCellRenderer implements TableCellRenderer {
    private Color selectionColor = new Color(160, 160, 255);
-   
+
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       JLabel myCell = new JLabel((String)value);
       myCell.setOpaque(true);
@@ -37,9 +41,9 @@ public class ColoredTableCellRenderer implements TableCellRenderer {
       myCell.setFont(table.getFont());
       myCell.setForeground(table.getForeground());
       myCell.setBackground(table.getBackground());
-      
+
       column = table.convertColumnIndexToModel(column);
-      
+
       //set colors
       if (column == 2) {
          Color myColor = BackgroundLabel.getColor(Byte.parseByte((String)value));
@@ -52,12 +56,12 @@ public class ColoredTableCellRenderer implements TableCellRenderer {
             myCell.setForeground(myColor);
          }
       } else {
-         if (hasFocus || isSelected) { 
+         if (hasFocus || isSelected) {
                myCell.setBackground(selectionColor);
                myCell.setForeground(Color.white);
          }
       }
-      
+
       //change alignment for first column
       if (column == 0) {
          myCell.setHorizontalAlignment(JLabel.CENTER);

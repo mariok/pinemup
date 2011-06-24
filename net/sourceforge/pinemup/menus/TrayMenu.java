@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,40 +21,50 @@
 
 package net.sourceforge.pinemup.menus;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Menu;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ListIterator;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
-import net.sourceforge.pinemup.gui.*;
+import net.sourceforge.pinemup.gui.AboutDialog;
+import net.sourceforge.pinemup.gui.CategoryDialog;
+import net.sourceforge.pinemup.gui.ExportDialog;
+import net.sourceforge.pinemup.gui.I18N;
+import net.sourceforge.pinemup.gui.SettingsDialog;
+import net.sourceforge.pinemup.io.NoteIO;
 import net.sourceforge.pinemup.io.ServerThread;
-import net.sourceforge.pinemup.logic.*;
+import net.sourceforge.pinemup.logic.Category;
+import net.sourceforge.pinemup.logic.CategoryManager;
+import net.sourceforge.pinemup.logic.UpdateCheckThread;
+import net.sourceforge.pinemup.logic.UserSettings;
 
 public class TrayMenu extends PopupMenu implements ActionListener {
-
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = 1L;
 
    private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, serverUploadItem, serverDownloadItem;
-   
+
    public TrayMenu() {
       super("pin 'em up");
-      
+
       //add basic items
       MenuItem[] basicItems = (new MenuCreator()).getBasicMenuItems();
-      for (int i=0; i<basicItems.length;i++) {
+      for (int i=0; i<basicItems.length; i++) {
          add(basicItems[i]);
       }
       addSeparator();
-      
+
       // categories menus
       Menu categoriesMenu = new Menu(I18N.getInstance().getString("menu.categorymenu"));
       add(categoriesMenu);
       Menu[] catMenu = new Menu[CategoryManager.getInstance().getNumberOfCategories()];
-      
+
       //Category menu items
       ListIterator<Category> l = CategoryManager.getInstance().getListIterator();
       int i;
@@ -63,13 +73,13 @@ public class TrayMenu extends PopupMenu implements ActionListener {
          catMenu[i] = (new MenuCreator()).getCategoryActionsMenu((i+1) + " " + CategoryManager.getInstance().getCategoryNames()[i],l.next());
          categoriesMenu.add(catMenu[i]);
       }
-      
+
       //other category actions
       categoriesMenu.addSeparator();
       manageCategoriesItem = new MenuItem(I18N.getInstance().getString("menu.categorymenu.managecategoriesitem"));
       manageCategoriesItem.addActionListener(this);
       categoriesMenu.add(manageCategoriesItem);
-      
+
       // im-/export menu
       addSeparator();
       Menu imExMenu = new Menu(I18N.getInstance().getString("menu.notesimexport"));
@@ -84,13 +94,13 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       exportItem.addActionListener(this);
       imExMenu.add(exportItem);
       add(imExMenu);
-      
+
       // other items
       addSeparator();
       showSettingsDialogItem = new MenuItem(I18N.getInstance().getString("menu.settingsitem"));
       showSettingsDialogItem.addActionListener(this);
       add(showSettingsDialogItem);
-      
+
       // help menu
       Menu helpMenu = new Menu(I18N.getInstance().getString("menu.help"));
       updateItem = new MenuItem(I18N.getInstance().getString("menu.help.updatecheckitem"));
@@ -102,7 +112,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       helpMenu.add(aboutItem);
       add(helpMenu);
       addSeparator();
-      
+
       //close item
       closeItem = new MenuItem(I18N.getInstance().getString("menu.exititem"));
       closeItem.addActionListener(this);
@@ -137,7 +147,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       } else if (src == updateItem) {
          new UpdateCheckThread(true);
       }
-      
+
       // save notes to file after every change
       NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }

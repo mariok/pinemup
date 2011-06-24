@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -25,21 +25,20 @@ import java.util.List;
 
 import net.sourceforge.pinemup.logic.Category;
 import net.sourceforge.pinemup.logic.CategoryManager;
-import net.sourceforge.pinemup.logic.NoteIO;
 import net.sourceforge.pinemup.logic.UserSettings;
 
 public class ServerThread extends Thread {
    public static final boolean UPLOAD = true;
    public static final boolean DOWNLOAD = false;
-   
+
    private boolean upload;
-   
+
    public ServerThread(boolean upload) {
       super("Server Up-/Download Thread");
       this.upload = upload;
       this.start();
    }
-   
+
    public void run() {
       if (upload == ServerThread.UPLOAD) { // upload notes
          ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).exportNotesToServer();
@@ -51,14 +50,14 @@ public class ServerThread extends Thread {
          // If successfull downloaded, replace:
          // hide notes
          CategoryManager.getInstance().hideAllNotes();
-         
+
          // link and save new notes
          CategoryManager.getInstance().removeAllCategories();
          CategoryManager.getInstance().append(newCats);
-         
+
          // show all notes which are not hidden
          CategoryManager.getInstance().showAllNotesNotHidden();
-         
+
          //save to file
          NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
       }

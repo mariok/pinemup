@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,32 +21,34 @@
 
 package net.sourceforge.pinemup.logic;
 
-import java.io.*;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.awt.*;
 
 public class ResourceLoader {
-   private static ResourceLoader instance;
-   
+   private static ResourceLoader instance = new ResourceLoader();
+
    private Image closeIcon1;
    private Image closeIcon2;
    private Image trayIcon;
    private Image scrollImage;
-   
+
    public static ResourceLoader getInstance() {
-      if (ResourceLoader.instance == null) {
-         ResourceLoader.instance = new ResourceLoader();
-      }
       return ResourceLoader.instance;
    }
-   
+
    private ResourceLoader() {
-      closeIcon1 = loadImage("net.sourceforge.pinemup.resources","closeicon.png");
-      closeIcon2 = loadImage("net.sourceforge.pinemup.resources","closeicon2.png");
-      trayIcon = loadImage("net.sourceforge.pinemup.resources","icon" + getTrayIconSize() + ".png");
-      scrollImage = loadImage("net.sourceforge.pinemup.resources","scroll.png");
+      closeIcon1 = loadImage("net.sourceforge.pinemup.resources", "closeicon.png");
+      closeIcon2 = loadImage("net.sourceforge.pinemup.resources", "closeicon2.png");
+      trayIcon = loadImage("net.sourceforge.pinemup.resources", "icon" + getTrayIconSize() + ".png");
+      scrollImage = loadImage("net.sourceforge.pinemup.resources", "scroll.png");
    }
-   
+
    private long getTrayIconSize() {
       long size = Math.round(SystemTray.getSystemTray().getTrayIconSize().getHeight());
       if ((size < 16)) {
@@ -58,22 +60,22 @@ public class ResourceLoader {
       }
       return size;
    }
-   
+
    private InputStream getResourceStream(String pkg, String filename) {
       String name = "/" + pkg.replace('.', '/') + "/" + filename;
       InputStream is = getClass().getResourceAsStream(name);
       return is;
    }
-   
+
    private Image loadImage(String pkg, String filename) {
       Image img = null;
       try {
          InputStream is = getResourceStream(pkg, filename);
-         
+
          if (is != null) {
             byte[] buffer = new byte[0];
             byte[] temp = new byte[1024];
-            while(true) {
+            while (true) {
                int len = is.read(temp);
                if (len <= 0) {
                   break;
@@ -85,14 +87,14 @@ public class ResourceLoader {
             }
             img = Toolkit.getDefaultToolkit().createImage(buffer);
             is.close();
-         }         
+         }
       } catch (IOException e) {
          // do nothing
       }
 
       return img;
    }
-   
+
    public Image getCloseIcon(int nr) {
       switch(nr) {
       case 1: return closeIcon1;
@@ -100,15 +102,15 @@ public class ResourceLoader {
       default: return closeIcon1;
       }
    }
-   
+
    public Image getTrayIcon() {
       return trayIcon;
    }
-   
+
    public Image getScrollImage() {
       return scrollImage;
    }
-   
+
    public String getLicense() {
       String s = "";
       try {
@@ -116,7 +118,7 @@ public class ResourceLoader {
          String filename = "COPYING";
          String name = "/" + pkg.replace('.', '/') + "/" + filename;
          InputStream is = getClass().getResourceAsStream(name);
-         BufferedReader br = new BufferedReader(new InputStreamReader(is));         
+         BufferedReader br = new BufferedReader(new InputStreamReader(is));
          String nextLine = br.readLine();
          while (nextLine != null) {
             s += nextLine + "\r\n";
@@ -129,7 +131,7 @@ public class ResourceLoader {
 
       return s;
    }
-   
+
    public URL getSchemaFile(String version) {
       String pkg = "net.sourceforge.pinemup.resources";
       String filename = "notesfile-" + version + ".xsd";

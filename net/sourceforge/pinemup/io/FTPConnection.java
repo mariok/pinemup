@@ -1,3 +1,24 @@
+/*
+ * pin 'em up
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package net.sourceforge.pinemup.io;
 
 import java.io.File;
@@ -14,6 +35,8 @@ import net.sourceforge.pinemup.gui.I18N;
 import net.sourceforge.pinemup.logic.UserSettings;
 
 public class FTPConnection extends ServerConnection {
+
+   @Override
    public void importNotesFromServer() {
       boolean downloaded = true;
       try {
@@ -28,7 +51,7 @@ public class FTPConnection extends ServerConnection {
          URLConnection urlc = url.openConnection();
          InputStream is = urlc.getInputStream();
          int nextByte = is.read();
-         while(nextByte != -1) {
+         while (nextByte != -1) {
             fos.write(nextByte);
             nextByte = is.read();
          }
@@ -45,6 +68,7 @@ public class FTPConnection extends ServerConnection {
       }
    }
 
+   @Override
    public void exportNotesToServer() {
       boolean uploaded = true;
       try {
@@ -58,7 +82,7 @@ public class FTPConnection extends ServerConnection {
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
          OutputStream  os = urlc.getOutputStream();
-         
+
          int nextByte = fis.read();
          while (nextByte != -1) {
             os.write(nextByte);

@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,7 +21,7 @@
 
 package net.sourceforge.pinemup.logic;
 
-import net.sourceforge.pinemup.gui.*;
+import net.sourceforge.pinemup.gui.NoteWindow;
 
 public class Note {
    private String text;
@@ -31,26 +31,26 @@ public class Note {
    private NoteWindow window;
 
    private short xpos, ypos, xsize, ysize, fontsize;
-   
+
    private byte bgColor;
-   
+
    private Category category;
-   
+
    public void setAlwaysOnTop(boolean b) {
       alwaysOnTop = b;
       if (window != null) {
          window.setAlwaysOnTop(alwaysOnTop);
       }
    }
-   
+
    public boolean isAlwaysOnTop() {
       return alwaysOnTop;
    }
-   
+
    public void setFontSize(short size) {
       fontsize = size;
    }
-   
+
    public short getFontSize() {
       return fontsize;
    }
@@ -60,7 +60,7 @@ public class Note {
       hidden = true;
       text = "";
    }
-   
+
    public void setHidden(boolean b) {
       hidden = b;
    }
@@ -83,14 +83,14 @@ public class Note {
          window = new NoteWindow(this);
       }
    }
-   
+
    public void unhideAndShow() {
       if (window == null) {
          window = new NoteWindow(this);
       }
       hidden = false;
    }
-   
+
    public void hide() {
       if (window != null) {
          window.setVisible(false);
@@ -103,7 +103,7 @@ public class Note {
    public void setText(String t) {
       text = t;
    }
-   
+
    public String getText() {
       return text;
    }
@@ -133,21 +133,21 @@ public class Note {
    public short getYSize() {
       return ysize;
    }
-   
+
    public Category getCategory() {
       return category;
    }
-   
+
    public void setCategory(Category c) {
       category = c;
    }
-   
+
    public void jumpInto() {
       if (window != null) {
          window.jumpIntoTextArea();
       }
    }
-   
+
    public void moveToCategory(Category newCat) {
       if (newCat != null) {
          //remove from old category
@@ -162,25 +162,25 @@ public class Note {
          updateCategoryInWindow();
       }
    }
-   
+
    public void updateCategoryInWindow() {
       if (!hidden && window != null) {
          window.updateCategory();
       }
    }
-   
+
    public boolean isHidden() {
       return hidden;
    }
-   
+
    public void setWindow(NoteWindow w) {
       window = w;
    }
-   
+
    public void setBGColor(byte c) {
       bgColor = c;
    }
-   
+
    public byte getBGColor() {
       return bgColor;
    }

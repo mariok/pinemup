@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,22 +21,25 @@
 
 package net.sourceforge.pinemup.logic;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.AWTException;
+import java.awt.SystemTray;
+
+import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.gui.I18N;
+import net.sourceforge.pinemup.io.NoteIO;
 
 public class PinEmUp {
-   private static final String VERSION = "0.6-svn";
+   public static final String VERSION = "0.6-git";
 
-   public PinEmUp() {
+   private PinEmUp() {
       if (SystemTray.isSupported()) {
          //set locale
          I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
-         
+
          //load notes from file
          CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());
-         
+
          // add trayicon
          SystemTray tray = SystemTray.getSystemTray();
          try {
@@ -47,7 +50,7 @@ public class PinEmUp {
 
          //show all notes that are set visible
          CategoryManager.getInstance().showAllNotesNotHidden();
-         
+
          //udate check
          if (UserSettings.getInstance().isUpdateCheckEnabled()) {
             new UpdateCheckThread(false);
@@ -58,11 +61,7 @@ public class PinEmUp {
       }
    }
 
-   public static void main(String args[]) {
+   public static void main(String[] args) {
       new PinEmUp();
-   }
-   
-   public static String getVersion() {
-      return VERSION;
    }
 }

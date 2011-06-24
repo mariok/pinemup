@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -22,21 +22,17 @@
 package net.sourceforge.pinemup.logic;
 
 import java.util.prefs.Preferences;
-import javax.swing.*;
+
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 
 import net.sourceforge.pinemup.gui.I18N;
 
 public class UserSettings {
-   /**
-    * 
-    */
-   
    private Preferences prefs;
-   private static UserSettings instance; //Singleton
-   
-   private static final long serialVersionUID = 1L;
-   
-   private final String PREFIX = "peu_dev_";
+   private static UserSettings instance = new UserSettings(); //Singleton
+
+   private static final String PREFIX = "peu_dev_";
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;
@@ -58,83 +54,83 @@ public class UserSettings {
    private short serverType;
    private String locale;
    private boolean confirmUpDownload;
-   
+
    public boolean getConfirmUpDownload() {
-	   return confirmUpDownload;
+      return confirmUpDownload;
    }
-   
+
    public void setConfirmUpDownload(boolean b) {
       confirmUpDownload = b;
    }
-   
+
    public void setServerType(short st) {
       serverType = st;
    }
-   
+
    public short getServerType() {
       return serverType;
    }
-   
+
    public void setUpdateCheckEnabled(boolean b) {
       updateCheckEnabled = b;
    }
-   
+
    public boolean isUpdateCheckEnabled() {
       return updateCheckEnabled;
    }
-   
+
    public void setConfirmDeletion(boolean b) {
       confirmDeletion = b;
    }
-   
+
    public boolean getConfirmDeletion() {
       return confirmDeletion;
    }
-   
+
    public void setShowCategory(boolean sc) {
       showCategory = sc;
    }
-   
+
    public boolean getShowCategory() {
       return showCategory;
    }
-   
+
    public byte getCloseIcon() {
       return closeicon;
    }
-   
+
    public void setCloseIcon(byte ci) {
       closeicon = ci;
    }
-   
+
    public String getNotesFile() {
       return notesFile;
    }
-   
+
    public void setNotesFile(String s) {
       notesFile = s;
    }
-   
+
    public boolean getDefaultAlwaysOnTop() {
       return defaultAlwaysOnTop;
    }
-   
+
    public void setDefaultAlwaysOnTop(boolean b) {
       defaultAlwaysOnTop = b;
    }
-   
+
    public short getDefaultFontSize() {
       return defaultFontSize;
    }
-   
+
    public void setDefaultFontSize(short size) {
       defaultFontSize = size;
    }
-   
+
    public byte getTempDef() {
       return tempDef;
    }
-   
+
    public void setTempDef(byte td) {
       tempDef = td;
    }
@@ -202,7 +198,7 @@ public class UserSettings {
       if (storeServerPass) {
          for (int i = 0; i < serverPasswd.length; i++) {
             tempString += serverPasswd[i];
-         }         
+         }
       } else {
          JPasswordField p = new JPasswordField(12);
          JOptionPane.showMessageDialog(null,p,I18N.getInstance().getString("confirm.enterserverpassword"),JOptionPane.PLAIN_MESSAGE);
@@ -222,23 +218,23 @@ public class UserSettings {
    public void setServerDir(String d) {
       serverDir = d;
    }
-   
+
    public void setStoreServerPass(boolean b) {
       storeServerPass = b;
    }
-   
+
    public boolean getStoreServerPass() {
       return storeServerPass;
    }
-   
+
    public String getLocale() {
       return locale;
    }
-   
+
    public void setLocale(String l) {
       locale = l;
    }
-   
+
    public void saveSettings() {
       // save preferences
       prefs.putInt(PREFIX + "defaultWindowWidth", defaultWindowWidth);
@@ -251,7 +247,7 @@ public class UserSettings {
       prefs.put(PREFIX + "serverAddress", serverAddress);
       prefs.put(PREFIX + "serverUser", serverUser);
       if (storeServerPass) {
-         prefs.put(PREFIX + "serverPasswd", getServerPasswdString());         
+         prefs.put(PREFIX + "serverPasswd", getServerPasswdString());
       } else {
          prefs.put(PREFIX + "serverPasswd", "");
       }
@@ -273,7 +269,7 @@ public class UserSettings {
       if (homeDir.charAt(homeDir.length()-1) != '\\' && homeDir.charAt(homeDir.length()-1) != '/') {
          homeDir = homeDir + "/";
       }
-      
+
       defaultWindowWidth = Short.parseShort(prefs.get(PREFIX + "defaultWindowWidth", "170"));
       defaultWindowHeight = Short.parseShort(prefs.get(PREFIX + "defaultWindowHeight", "150"));
       defaultWindowXPosition = Short.parseShort(prefs.get(PREFIX + "defaultWindowXPosition", "0"));
@@ -294,11 +290,8 @@ public class UserSettings {
       locale = prefs.get(PREFIX + "locale", "en_US");
       confirmUpDownload = prefs.getBoolean(PREFIX + "confirmUpDownload", true);
    }
-   
+
    public static UserSettings getInstance() {
-      if (UserSettings.instance == null) {
-         UserSettings.instance = new UserSettings();
-      }
       return UserSettings.instance;
    }
 }

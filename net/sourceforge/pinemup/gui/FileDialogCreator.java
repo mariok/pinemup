@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -29,8 +29,10 @@ public class FileDialogCreator {
    private static JFileChooser fileDialog;
    private static JFileChooser exportFileDialog;
 
-   private FileDialogCreator() {}
-   
+   private FileDialogCreator() {
+
+   }
+
    public static JFileChooser getFileDialogInstance() {
       if (FileDialogCreator.fileDialog == null) {
          FileDialogCreator.fileDialog = new JFileChooser();
@@ -41,7 +43,7 @@ public class FileDialogCreator {
       }
       return FileDialogCreator.fileDialog;
    }
-   
+
    public static JFileChooser getExportFileDialogInstance() {
       if (FileDialogCreator.exportFileDialog == null) {
          FileDialogCreator.exportFileDialog = new JFileChooser();

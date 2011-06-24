@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -26,8 +26,8 @@ import java.awt.TrayIcon;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
 public class PinEmUpTrayIcon extends TrayIcon {
-   private static PinEmUpTrayIcon instance;
-   
+   private static PinEmUpTrayIcon instance = new PinEmUpTrayIcon();
+
    private PinEmUpTrayIcon() {
       super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", new TrayMenu());
       setImageAutoSize(false);
@@ -37,11 +37,8 @@ public class PinEmUpTrayIcon extends TrayIcon {
       // add mouselistener for traymenu
       addMouseListener(myIconListener);
    }
-   
+
    public static PinEmUpTrayIcon getInstance() {
-      if (PinEmUpTrayIcon.instance == null) {
-         PinEmUpTrayIcon.instance = new PinEmUpTrayIcon();
-      }
       return PinEmUpTrayIcon.instance;
    }
 }

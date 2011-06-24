@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -24,24 +24,32 @@ package net.sourceforge.pinemup.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import net.sourceforge.pinemup.logic.*;
+import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.logic.Category;
+import net.sourceforge.pinemup.logic.CategoryManager;
 
 public class ExportDialog extends JDialog implements ActionListener {
-
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = 1L;
+
    private JButton okButton, cancelButton;
    private JCheckBox[] catBox;
    private JCheckBox allCatsBox;
-   
+
    public ExportDialog() {
       super();
       setTitle(I18N.getInstance().getString("exportdialog.title"));
@@ -53,10 +61,10 @@ public class ExportDialog extends JDialog implements ActionListener {
       topPanel.add(new JLabel(I18N.getInstance().getString("exportdialog.toplabel")));
       main.add(topPanel, BorderLayout.NORTH);
       main.add(sp, BorderLayout.CENTER);
-            
+
       // Category Checkboxes
       int rows = CategoryManager.getInstance().getNumberOfCategories();
-      JPanel checkBoxPanel = new JPanel (new GridLayout(rows+2,1));
+      JPanel checkBoxPanel = new JPanel (new GridLayout(rows+2, 1));
       String[] cats = CategoryManager.getInstance().getCategoryNames();
       JPanel[] catPanel = new JPanel[rows];
       catBox = new JCheckBox[rows];
@@ -68,14 +76,14 @@ public class ExportDialog extends JDialog implements ActionListener {
       checkBoxPanel.add(allCatsPanel);
       for (int i=0; i<rows; i++) {
          catPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
-         catBox[i] = new JCheckBox((i+1)+": "+cats[i]);
+         catBox[i] = new JCheckBox((i+1) + ": " + cats[i]);
          catBox[i].setSelected(true);
          catBox[i].addActionListener(this);
          catPanel[i].add(catBox[i]);
          checkBoxPanel.add(catPanel[i]);
       }
       sp.setViewportView(checkBoxPanel);
-      
+
       JPanel buttonPanel = new JPanel();
       okButton = new JButton(I18N.getInstance().getString("okbutton"));
       okButton.addActionListener(this);
@@ -84,10 +92,10 @@ public class ExportDialog extends JDialog implements ActionListener {
       buttonPanel.add(okButton);
       buttonPanel.add(cancelButton);
       main.add(buttonPanel, BorderLayout.SOUTH);
-      
+
       setContentPane(main);
-      setSize(250,300);
-      
+      setSize(250, 300);
+
       // center on screen
       int screenHeight = (int)getToolkit().getScreenSize().getHeight();
       int screenWidth = (int)getToolkit().getScreenSize().getWidth();
@@ -99,6 +107,7 @@ public class ExportDialog extends JDialog implements ActionListener {
       setVisible(true);
    }
 
+   @Override
    public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
       if (src == cancelButton) {
@@ -107,11 +116,11 @@ public class ExportDialog extends JDialog implements ActionListener {
       } else if (src == okButton) {
          List<Category> catsToExport = new LinkedList<Category>();
          for (int i=0; i<catBox.length; i++) {
-            if(catBox[i].isSelected()) {
+            if (catBox[i].isSelected()) {
                catsToExport.add(CategoryManager.getInstance().getCategoryByNumber(i));
             }
          }
-         
+
          NoteIO.exportCategoriesToTextFile(catsToExport.listIterator());
          setVisible(false);
          dispose();
@@ -127,5 +136,5 @@ public class ExportDialog extends JDialog implements ActionListener {
          }
       }
    }
-   
+
 }

@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -22,17 +22,18 @@
 package net.sourceforge.pinemup.logic;
 
 import java.io.File;
-import javax.swing.filechooser.*;
+
+import javax.swing.filechooser.FileFilter;
 
 public class MyFileFilter extends FileFilter {
    private String ending;
-   
+
    public boolean accept(File f) {
-      return f.getName().toUpperCase().endsWith("."+ending) || f.isDirectory();
+      return f.getName().toUpperCase().endsWith("." + ending) || f.isDirectory();
    }
 
    public String getDescription() {
-      return "*."+ending.toLowerCase();
+      return "*." + ending.toLowerCase();
    }
 
    public MyFileFilter(String ending) {

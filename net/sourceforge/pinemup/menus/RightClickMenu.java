@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -24,52 +24,59 @@ package net.sourceforge.pinemup.menus;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 
-import net.sourceforge.pinemup.gui.*;
-import net.sourceforge.pinemup.logic.*;
+import net.sourceforge.pinemup.gui.BackgroundLabel;
+import net.sourceforge.pinemup.gui.I18N;
+import net.sourceforge.pinemup.gui.NoteWindow;
+import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.logic.Category;
+import net.sourceforge.pinemup.logic.CategoryManager;
+import net.sourceforge.pinemup.logic.UserSettings;
 
 public class RightClickMenu extends JPopupMenu implements ActionListener {
-
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = 1L;
-   
+
    private static final String ACTIVE_SYMBOL = "->";
 
    private NoteWindow parentWindow;
-   
+
    private Category myCat;
-   
+
    private JMenuItem deleteNoteItem, alwaysOnTopOnItem, alwaysOnTopOffItem;
-   
+
    private JMenuItem[] setFontSizeItem, setCategoryItem, setBGColorItem;
-   
+
    public RightClickMenu(NoteWindow w) {
       super();
       parentWindow = w;
       myCat = parentWindow.getParentNote().getCategory();
 
       //create MenuCreator
-      MenuCreator myMenuCreator = new MenuCreator();      
-      
+      MenuCreator myMenuCreator = new MenuCreator();
+
       //add basic items
       JMenuItem[] basicItems = myMenuCreator.getBasicJMenuItems();
-      for (int i=0; i<basicItems.length;i++) {
+      for (int i=0; i<basicItems.length; i++) {
          add(basicItems[i]);
       }
       addSeparator();
-      
+
       //add additional items
       deleteNoteItem = new JMenuItem(I18N.getInstance().getString("menu.deletenoteitem"));
       deleteNoteItem.addActionListener(this);
       add(deleteNoteItem);
       addSeparator();
-      
+
       // settings menu
       JMenu settingsMenu = new JMenu(I18N.getInstance().getString("menu.notesettings"));
-      
+
       JMenu setFontSizeMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.fontsize"));
       setFontSizeItem = new JMenuItem[26];
       for (int i=0; i<26; i++) {
@@ -77,12 +84,12 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          if (i+5 == parentWindow.getParentNote().getFontSize()) {
             setFontSizeItem[i].setText(ACTIVE_SYMBOL + " " + setFontSizeItem[i].getText());
          } else {
-            setFontSizeItem[i].setText("  "+setFontSizeItem[i].getText());
+            setFontSizeItem[i].setText("  " + setFontSizeItem[i].getText());
          }
          setFontSizeItem[i].addActionListener(this);
          setFontSizeMenu.add(setFontSizeItem[i]);
       }
-      
+
       JMenu setBGColorMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.color"));
       setBGColorItem = new JMenuItem[BackgroundLabel.getNumberOfColors()];
       for (byte i=0; i<setBGColorItem.length; i++) {
@@ -95,7 +102,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
          setBGColorItem[i].addActionListener(this);
          setBGColorMenu.add(setBGColorItem[i]);
       }
-      
+
       JMenu setCategoryMenu = new JMenu(I18N.getInstance().getString("category"));
       setCategoryItem = new JMenuItem[CategoryManager.getInstance().getNumberOfCategories()];
       for (int i=0; i<setCategoryItem.length; i++) {
@@ -105,26 +112,26 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       }
 
       JMenu alwaysOnTopMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.alwaysontop"));
-      String[] aot = {"  ","  "};
-      if(parentWindow.getParentNote().isAlwaysOnTop()) {
+      String[] aot = {"  ", "  "};
+      if (parentWindow.getParentNote().isAlwaysOnTop()) {
          aot[0] = ACTIVE_SYMBOL + " ";
       } else {
          aot[1] = ACTIVE_SYMBOL + " ";
       }
-      alwaysOnTopOnItem = new JMenuItem(aot[0]+I18N.getInstance().getString("enabled"));
-      alwaysOnTopOffItem = new JMenuItem(aot[1]+I18N.getInstance().getString("disabled"));
+      alwaysOnTopOnItem = new JMenuItem(aot[0] + I18N.getInstance().getString("enabled"));
+      alwaysOnTopOffItem = new JMenuItem(aot[1] + I18N.getInstance().getString("disabled"));
       alwaysOnTopOnItem.addActionListener(this);
       alwaysOnTopOffItem.addActionListener(this);
       alwaysOnTopMenu.add(alwaysOnTopOnItem);
       alwaysOnTopMenu.add(alwaysOnTopOffItem);
-                 
+
       settingsMenu.add(alwaysOnTopMenu);
       settingsMenu.add(setCategoryMenu);
       settingsMenu.add(setFontSizeMenu);
       settingsMenu.add(setBGColorMenu);
       add(settingsMenu);
       addSeparator();
-      
+
       // category menu
       add(myMenuCreator.getCategoryActionsJMenu(I18N.getInstance().getString("category") + " '" + myCat.getName() + "'", myCat));
    }
@@ -134,7 +141,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       if (src == deleteNoteItem) {
          boolean confirmed = true;
          if (UserSettings.getInstance().getConfirmDeletion()) {
-            confirmed = JOptionPane.showConfirmDialog(this, I18N.getInstance().getString("confirm.deletenote"), I18N.getInstance().getString("confirm.title"),JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            confirmed = JOptionPane.showConfirmDialog(this, I18N.getInstance().getString("confirm.deletenote"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
          if (confirmed && myCat != null) {
             parentWindow.getParentNote().hide();
@@ -150,14 +157,14 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
                parentWindow.getParentNote().moveToCategory(CategoryManager.getInstance().getCategoryByNumber(i));
             }
          }
-         
+
          for (int i=0; i<setFontSizeItem.length; i++) {
             if (src == setFontSizeItem[i]) {
                parentWindow.getParentNote().setFontSize((short)(i+5));
                parentWindow.updateFontSize();
             }
          }
-         
+
          for (byte i=0; i<setBGColorItem.length; i++) {
             if (src == setBGColorItem[i]) {
                parentWindow.getParentNote().setBGColor(i);
@@ -165,7 +172,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
             }
          }
       }
-      
+
       // save notes to file after every change
       NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }

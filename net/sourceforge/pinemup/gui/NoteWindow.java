@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2010 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,23 +21,50 @@
 
 package net.sourceforge.pinemup.gui;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.text.View;
 
-import net.sourceforge.pinemup.logic.*;
-import net.sourceforge.pinemup.menus.*;
-
-import java.awt.event.*;
-import java.awt.*;
+import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.logic.Category;
+import net.sourceforge.pinemup.logic.CategoryManager;
+import net.sourceforge.pinemup.logic.Note;
+import net.sourceforge.pinemup.logic.ResourceLoader;
+import net.sourceforge.pinemup.logic.UserSettings;
+import net.sourceforge.pinemup.menus.RightClickMenu;
 
 public class NoteWindow extends JDialog implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener, KeyListener {
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = 1L;
 
    private static final int OFFSET = 35;
-   
+
    private JScrollPane textPanel;
 
    private JPanel topPanel, catPanel, mainPanel;
@@ -53,20 +80,22 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private boolean dragging; // required to make the window movable
 
    private boolean resizeCursor, resizing; // required to make window resizable
-   
+
    private BackgroundLabel bgLabel;
-   
+
    public NoteWindow(Note pn) {
       super(
-         new JFrame(){
+         (new JFrame() {
             /**
-            * 
+            *
             */
             private static final long serialVersionUID = 1L;
+
+            @Override
             public boolean isShowing() {
                return true;
             }
-         },
+         }),
          "note:"
       );
       parentNote = pn;
@@ -83,7 +112,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       mainPanel.add(topPanel, BorderLayout.NORTH);
       dragging = false;
       catButton = null;
-      
+
       //create category-label, if option is enabled
       if (UserSettings.getInstance().getShowCategory()) {
          Category cat = parentNote.getCategory();
@@ -92,10 +121,10 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             catButton.setRolloverEnabled(false);
             catButton.setEnabled(false);
             catButton.setFocusable(false);
-            catButton.setPreferredSize(new Dimension(100,15));
+            catButton.setPreferredSize(new Dimension(100, 15));
             catButton.setMargin(new Insets(0, 0, 0, 0));
-            catButton.setBackground(new Color(255,255,255,0));
-            
+            catButton.setBackground(new Color(255, 255, 255, 0));
+
             catPanel = new JPanel(new FlowLayout());
             catPanel.add(catButton);
             catPanel.setOpaque(false);
@@ -119,31 +148,31 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       textPanel.setBorder(null);
       textPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
       mainPanel.add(textPanel, BorderLayout.CENTER);
-      
+
       //add area to show if note is scrollable
       ImageIcon scrollImage = new ImageIcon(ResourceLoader.getInstance().getScrollImage());
       scrollButton = new JButton(scrollImage);
-      mainPanel.add(scrollButton,BorderLayout.SOUTH);
+      mainPanel.add(scrollButton, BorderLayout.SOUTH);
       scrollButton.setRolloverEnabled(false);
       scrollButton.setEnabled(false);
       scrollButton.setFocusable(false);
       scrollButton.setMargin(new Insets(0, 0, 0, 0));
-      scrollButton.setPreferredSize(new Dimension(10,5));
+      scrollButton.setPreferredSize(new Dimension(10, 5));
       scrollButton.setBorder(null);
-      scrollButton.setBackground(new Color(255,255,255,0));
+      scrollButton.setBackground(new Color(255, 255, 255, 0));
       scrollButton.setVisible(false);
       scrollButton.setDisabledIcon(new ImageIcon(ResourceLoader.getInstance().getScrollImage()));
-      
+
       // adjust and add buttons to the topPanel
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       topPanel.setFocusable(true);
-      
+
       ImageIcon closeIcon = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(UserSettings.getInstance().getCloseIcon()));
       closeButton = new JButton(closeIcon);
-      closeButton.setBackground(new Color(255,255,255,0));
+      closeButton.setBackground(new Color(255, 255, 255, 0));
       closeButton.setRolloverEnabled(false);
-      
+
       closeButton.setToolTipText(I18N.getInstance().getString("notewindow.hidebuttontooltip"));
       closeButton.addActionListener(this);
       closeButton.addMouseListener(this);
@@ -153,36 +182,36 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       closeButton.setPreferredSize(new Dimension(20, 20));
       closeButton.setMargin(new Insets(3, 0, 0, 3));
       topPanel.add(closeButton, BorderLayout.EAST);
-      
+
       setUndecorated(true);
-      setLocation(parentNote.getXPos(),parentNote.getYPos());
-      setSize(parentNote.getXSize(),parentNote.getYSize());
+      setLocation(parentNote.getXPos(), parentNote.getYPos());
+      setSize(parentNote.getXSize(), parentNote.getYSize());
 
       // menu and doubleclick
       topPanel.addMouseListener(this);
-      
+
       // resize listener
       resizing = false;
       resizeCursor = false;
       textArea.addMouseListener(this);
       textArea.addMouseMotionListener(this);
-      
+
       setAlwaysOnTop(parentNote.isAlwaysOnTop());
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       addWindowListener(this);
       textArea.setFocusable(false);
-      
+
       bgLabel = new BackgroundLabel(this, parentNote.getBGColor());
-      
+
       getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
-      
+
       textPanel.getVerticalScrollBar().setOpaque(false);
-      
+
       //add keylisteners (for keyboard shortcuts)
       topPanel.addKeyListener(this);
       textArea.addKeyListener(this);
-      
+
       updateCategory();
       setVisible(true);
       toBack();
@@ -190,12 +219,14 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       setTitle(I18N.getInstance().getString("note") + ": " + getShortText());
    }
 
+   @Override
    public void focusGained(FocusEvent e) {
       if (e.getSource() == textArea) {
-         showScrollBarIfNeeded();   
+         showScrollBarIfNeeded();
       }
    }
 
+   @Override
    public void focusLost(FocusEvent e) {
       if (e.getSource() == textArea) {
          if (!resizing) { //resizing would call showScrollBarIfNeeded() and thus revert the effect
@@ -204,50 +235,59 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          setTitle("note: " + getShortText());
          parentNote.setText(textArea.getText());
          textArea.setFocusable(false);
-         
+
          // write notes to file after every change
          NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
       }
    }
 
+   @Override
    public void windowActivated(WindowEvent arg0) {
       // do nothing
    }
 
+   @Override
    public void windowClosed(WindowEvent arg0) {
       parentNote.hide();
    }
 
+   @Override
    public void windowClosing(WindowEvent arg0) {
       // do nothing
    }
 
+   @Override
    public void windowDeactivated(WindowEvent arg0) {
       // do nothing
    }
 
+   @Override
    public void windowDeiconified(WindowEvent arg0) {
       // do nothing
    }
 
+   @Override
    public void windowIconified(WindowEvent arg0) {
       // do nothing
    }
 
+   @Override
    public void windowOpened(WindowEvent arg0) {
       // do nothing
    }
 
+   @Override
    public void actionPerformed(ActionEvent e) {
       if (e.getSource() == closeButton) {
          parentNote.hide();
-         
+
          // write notes to file after every change
          NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
       }
 
    }
 
+   @Override
    public void mouseClicked(MouseEvent e) {
       if (e.getSource() == topPanel || e.getSource() == catButton) {
          if (e.getClickCount() == 2) { // doubleclick on topPanel
@@ -259,38 +299,41 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          }
       } else if (e.getSource() == textArea) {
          textArea.setFocusable(true);
-         textArea.requestFocus();         
+         textArea.requestFocus();
       }
    }
-   
+
    private void autoSizeY() {
       int sizeX = getWidth();
       int sizeY = OFFSET;
-            
+
       //get number of lines (incl. wrapped lines)
       int lineHeight = textArea.getFontMetrics(textArea.getFont()).getHeight();
       View view = textArea.getUI().getRootView(textArea).getView(0);
       int prefHeight = (int)view.getPreferredSpan(View.Y_AXIS);
       int lines = prefHeight / lineHeight;
-      
+
       //calculate new height
-      sizeY += lineHeight*lines;
-      
+      sizeY += lineHeight * lines;
+
       //apply new size
-      setSize(sizeX,sizeY);
-      parentNote.setSize((short)sizeX,(short)sizeY);
+      setSize(sizeX, sizeY);
+      parentNote.setSize((short)sizeX, (short)sizeY);
       scrollButton.setVisible(false);
    }
 
+   @Override
    public void mouseEntered(MouseEvent e) {
       // do nothing
    }
 
+   @Override
    public void mouseExited(MouseEvent e) {
       // do nothing
 
    }
 
+   @Override
    public void mousePressed(MouseEvent e) {
       Object src = e.getSource();
       if (src == topPanel || src == catButton) {
@@ -308,7 +351,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             dy = getY() + getHeight() - e.getYOnScreen();
             resizing = true;
             textArea.setFocusable(false);
-            showScrollBarIfNeeded();            
+            showScrollBarIfNeeded();
          } else {
             textArea.setFocusable(true);
             textArea.requestFocus();
@@ -316,6 +359,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       }
    }
 
+   @Override
    public void mouseReleased(MouseEvent e) {
       if (e.getSource() == topPanel || e.getSource() == catButton) {
          checkPopupMenu(e);
@@ -340,7 +384,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          textArea.setFocusable(true);
          textArea.requestFocus();
       }
-      
+
       if (changeMade) {
          // write notes to file after every change
          NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
@@ -358,6 +402,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       return parentNote;
    }
 
+   @Override
    public void mouseDragged(MouseEvent e) {
       if (dragging) {
          setLocation(e.getXOnScreen() - dx, e.getYOnScreen() - dy);
@@ -373,7 +418,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          setSize(sx, sy);
       }
    }
-   
+
    public void updateCategory() {
       Category cat = parentNote.getCategory();
       if (cat != null) {
@@ -386,6 +431,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       }
    }
 
+   @Override
    public void mouseMoved(MouseEvent e) {
       if (!resizing) {
          // if in lower right corner, start resizing or change cursor
@@ -402,11 +448,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          }
       }
    }
-   
+
    public void updateFontSize() {
       textArea.setFont(new java.awt.Font("SANSSERIF", 1, parentNote.getFontSize()));
    }
-   
+
    public void jumpIntoTextArea() {
       toFront();
       requestFocus();
@@ -420,17 +466,17 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          scrollButton.setVisible(true);
       }
    }
-   
+
    private void showScrollBarIfNeeded() {
       scrollButton.setVisible(false);
       textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
    }
-   
+
    public void setBGColor(byte c) {
       bgLabel.setMyColor(c);
       repaint();
    }
-   
+
    private String getShortText() { //returns short text for the window titles
       int l = textArea.getText().length();
       String dots = "";
@@ -464,7 +510,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
                catNumber--;
             }
             if (CategoryManager.getInstance().getCategoryByNumber(catNumber) != null) {
-               parentNote.moveToCategory(CategoryManager.getInstance().getCategoryByNumber(catNumber));               
+               parentNote.moveToCategory(CategoryManager.getInstance().getCategoryByNumber(catNumber));
             }
             break;
          }

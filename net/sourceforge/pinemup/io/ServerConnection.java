@@ -1,3 +1,24 @@
+/*
+ * pin 'em up
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package net.sourceforge.pinemup.io;
 
 import java.io.File;
@@ -16,7 +37,7 @@ public abstract class ServerConnection {
       "WebDAVs"
    };
    protected String type;
-   
+
    public static ServerConnection createServerConnection(int serverType) {
       switch (serverType) {
       case FTP_CONNECTION: return new FTPConnection();
@@ -25,11 +46,11 @@ public abstract class ServerConnection {
       default: return new FTPConnection();
       }
    }
-   
+
    public String getType() {
       return type;
    }
-   
+
    protected void makeBackupFile() { //to create a backup before downloading from server
       File f = new File(UserSettings.getInstance().getNotesFile());
       File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
@@ -38,7 +59,7 @@ public abstract class ServerConnection {
          FileInputStream fis = new FileInputStream(f);
          FileOutputStream fos = new FileOutputStream(bf);
          int nextByte;
-         while((nextByte = fis.read()) != -1) {
+         while ((nextByte = fis.read()) != -1) {
             fos.write(nextByte);
          }
          fis.close();
@@ -47,14 +68,14 @@ public abstract class ServerConnection {
          //do nothing
       }
    }
-   
+
    protected void deleteBackupFile() { //to delete backup file after successful download
       File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
       if (bf.exists()) {
          bf.delete();
       }
    }
-   
+
    protected void restoreFileFromBackup() { //to restore original file after download failed
       File f = new File(UserSettings.getInstance().getNotesFile());
       File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
@@ -63,8 +84,7 @@ public abstract class ServerConnection {
       }
       bf.renameTo(f);
    }
-   
-   
+
    public abstract void exportNotesToServer();
    public abstract void importNotesFromServer();
 }

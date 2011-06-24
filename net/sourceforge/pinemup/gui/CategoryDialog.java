@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,49 +21,69 @@
 
 package net.sourceforge.pinemup.gui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ListIterator;
 
-import javax.swing.*;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import net.sourceforge.pinemup.logic.*;
+
+import net.sourceforge.pinemup.logic.Category;
+import net.sourceforge.pinemup.logic.CategoryManager;
+import net.sourceforge.pinemup.logic.PinEmUpTrayIcon;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
-public class CategoryDialog extends JDialog implements ActionListener,DocumentListener,ListSelectionListener {
+public class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = 1L;
-   
+
    private static CategoryDialog instance;
-   
+
    private JButton closeButton, moveUpButton, moveDownButton, deleteButton, addButton;
-   
+
    private JTable catTable;
    private DefaultTableModel catTableModel;
    private JTextField catNameField;
    private JCheckBox defaultBox;
    private JComboBox colorBox;
-   
+
    private int noOfCategories;
    private int defCat;
    private int selectedRow;
    private Category selectedCat;
-   
+
    private boolean trackChanges;
-   
+
    public static void showInstance() {
       if (CategoryDialog.instance == null || !CategoryDialog.instance.isVisible()) {
          instance = new CategoryDialog();
       }
    }
-   
+
    private CategoryDialog() {
       super();
       setTitle(I18N.getInstance().getString("categorydialog.title"));
@@ -76,13 +96,13 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       closeButton = new JButton(I18N.getInstance().getString("closebutton"));
       closeButton.addActionListener(this);
       buttonPanel.add(closeButton);
-      main.add(buttonPanel,BorderLayout.SOUTH);
-      
+      main.add(buttonPanel, BorderLayout.SOUTH);
+
       GridBagLayout gbl = new GridBagLayout();
       JPanel centerPanel = new JPanel(gbl);
-      main.add(centerPanel,BorderLayout.CENTER);
+      main.add(centerPanel, BorderLayout.CENTER);
       GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(1,1,1,1);
+      gbc.insets = new Insets(1, 1, 1, 1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
 
       JScrollPane sp = new JScrollPane();
@@ -99,7 +119,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       gbl.setConstraints(sp, gbc);
       centerPanel.add(sp);
-      
+
       //create items
       JPanel catEditPanel = makeCatEditPanel();
       JPanel moveUpPanel = new JPanel();
@@ -124,7 +144,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       moveDownPanel.add(moveDownButton);
       deletePanel.add(deleteButton);
       addPanel.add(addButton);
-      
+
       //place items on panel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
@@ -163,10 +183,10 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       gbc.gridheight = 2;
       gbl.setConstraints(catEditPanel, gbc);
       centerPanel.add(catEditPanel);
-  
+
       //automatically set window-size
       pack();
-      
+
       // center on screen
       int screenHeight = (int)getToolkit().getScreenSize().getHeight();
       int screenWidth = (int)getToolkit().getScreenSize().getWidth();
@@ -177,27 +197,32 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       setVisible(true);
    }
-   
+
    private JTable makeCatTable() {
       catTableModel = new DefaultTableModel() {
          /**
-          * 
+          *
           */
          private static final long serialVersionUID = 1L;
-         
+
          // prevent all cells from being edited
-         public boolean isCellEditable(int row,int column) {
+         @Override
+         public boolean isCellEditable(int row, int column) {
            return false;
          }
       };
-      
-      String[] columnNames = {I18N.getInstance().getString("categorydialog.defaultcolumn"),I18N.getInstance().getString("categorydialog.namecolumn"),I18N.getInstance().getString("categorydialog.colorcolumn")};
+
+      String[] columnNames = {
+         I18N.getInstance().getString("categorydialog.defaultcolumn"),
+         I18N.getInstance().getString("categorydialog.namecolumn"),
+         I18N.getInstance().getString("categorydialog.colorcolumn")
+      };
       catTableModel.setColumnIdentifiers(columnNames);
       Object[][] rowData = makeDataArray();
-      for (int i=0;i<rowData.length;i++) {
+      for (int i=0; i<rowData.length; i++) {
          catTableModel.addRow(rowData[i]);
       }
-      
+
       JTable jt = new JTable(catTableModel);
       jt.setColumnSelectionAllowed(false);
       jt.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
@@ -208,7 +233,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       jt.getColumnModel().getColumn(2).setPreferredWidth(70);
       return jt;
    }
-   
+
    private Object[][] makeDataArray() {
       int anz = CategoryManager.getInstance().getNumberOfCategories();
       Object[][] data = new Object[anz][3];
@@ -229,7 +254,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       }
       return data;
    }
-   
+
    private JPanel makeCatEditPanel() {
       JPanel p = new JPanel();
       catNameField = new JTextField(15);
@@ -240,16 +265,17 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       defaultBox.addActionListener(this);
       defaultBox.setEnabled(false);
       p.add(defaultBox);
-      
+
       DefaultListCellRenderer cr = new DefaultListCellRenderer() {
          /**
-          * 
+          *
           */
          private static final long serialVersionUID = 1L;
 
+         @Override
          public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected,hasFocus);
-            if (index>=0) {
+            if (index >= 0) {
                c.setBackground(BackgroundLabel.getColor((byte)index));
             }
             return c;
@@ -259,17 +285,18 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       colorBox.setRenderer(cr);
       colorBox.addActionListener(this);
       colorBox.setEnabled(false);
-      
+
       p.add(colorBox);
-            
+
       p.setBorder(new TitledBorder(I18N.getInstance().getString("categorydialog.editborder")));
-            
+
       return p;
    }
 
+   @Override
    public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
-      
+
       if (src == closeButton) {
          setVisible(false);
          dispose();
@@ -288,13 +315,13 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          updateCatColor();
       }
    }
-   
+
    private void deleteSelectedCategory() {
       boolean confirmed = true;
       if (selectedCat.getNumberOfNotes() > 0) {
-         confirmed = JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("categorydialog.deletemessagespart1") + selectedCat.getNumberOfNotes() + I18N.getInstance().getString("categorydialog.deletemessagespart2"),I18N.getInstance().getString("categorydialog.deletemessagestitle"),JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+         confirmed = JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("categorydialog.deletemessagespart1") + selectedCat.getNumberOfNotes() + I18N.getInstance().getString("categorydialog.deletemessagespart2"), I18N.getInstance().getString("categorydialog.deletemessagestitle"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
       }
-      
+
       if (confirmed) {
          boolean isDef = selectedCat.isDefaultCategory();
          selectedCat.hideAllNotes();
@@ -308,7 +335,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
          noOfCategories--;
          selectedCat = null;
-         
+
          //disable all Buttons and fields
          moveUpButton.setEnabled(false);
          moveDownButton.setEnabled(false);
@@ -321,7 +348,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
 
    private void moveSelectedCategory(boolean moveUp) {
       if (moveUp) {
-         if(selectedCat.isDefaultCategory()) {
+         if (selectedCat.isDefaultCategory()) {
             defCat--;
          } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow-1).isDefaultCategory()) {
             defCat++;
@@ -330,7 +357,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          catTableModel.moveRow(selectedRow, selectedRow, selectedRow-1);
          catTable.setRowSelectionInterval(selectedRow-1, selectedRow-1);
       } else {
-         if(selectedCat.isDefaultCategory()) {
+         if (selectedCat.isDefaultCategory()) {
             defCat++;
          } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow+1).isDefaultCategory()) {
             defCat--;
@@ -341,7 +368,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       }
       PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
    }
-   
+
    private void makeSelectedCategoryDefault() {
       if (trackChanges) {
          catTableModel.setValueAt("", defCat, 0);
@@ -350,16 +377,16 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          catTableModel.setValueAt("!", defCat, 0);
       }
    }
-   
+
    private void addCategory() {
       trackChanges = false;
       String catName = "<" + I18N.getInstance().getString("categorydialog.defaultcategoryname") + ">";
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
-      CategoryManager.getInstance().addCategory(new Category(catName,false,(byte)(0)));
+      CategoryManager.getInstance().addCategory(new Category(catName, false, (byte)(0)));
       PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
-      Object[] rowData = {"",catName,"0"};
+      Object[] rowData = {"", catName, "0"};
       catTableModel.addRow(rowData);
       noOfCategories++;
       catTable.setRowSelectionInterval(noOfCategories-1, noOfCategories-1);
@@ -368,19 +395,22 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       catNameField.requestFocus();
       trackChanges = true;
    }
-   
+
+   @Override
    public void changedUpdate(DocumentEvent arg0) {
       updateCatName();
    }
 
+   @Override
    public void insertUpdate(DocumentEvent arg0) {
       updateCatName();
    }
 
+   @Override
    public void removeUpdate(DocumentEvent arg0) {
       updateCatName();
    }
-   
+
    private void updateCatName() {
       if (trackChanges) {
          String name = catNameField.getText();
@@ -389,7 +419,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
          PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       }
    }
-   
+
    private void updateCatColor() {
       if (trackChanges) {
          byte c = (byte)colorBox.getSelectedIndex();
@@ -399,6 +429,7 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       }
    }
 
+   @Override
    public void valueChanged(ListSelectionEvent e) {
       selectedRow = catTable.getSelectedRow();
       if (selectedRow != -1) {
@@ -413,24 +444,24 @@ public class CategoryDialog extends JDialog implements ActionListener,DocumentLi
       } else {
          moveDownButton.setEnabled(true);
       }
-      
+
       //ENABLE OR DISABLE MOVEUP BUTTON
       if (selectedRow == 0) {
          moveUpButton.setEnabled(false);
       } else {
          moveUpButton.setEnabled(true);
       }
-      
+
       //ENABLE DELETE BUTTON?
       if (noOfCategories > 1) {
          deleteButton.setEnabled(true);
       }
-      
+
       //ENABLE EDIT-FIELDS
       catNameField.setEnabled(true);
       defaultBox.setEnabled(true);
       colorBox.setEnabled(true);
-      
+
       //Insert values in fields
       if (selectedCat != null) {
          trackChanges = false;

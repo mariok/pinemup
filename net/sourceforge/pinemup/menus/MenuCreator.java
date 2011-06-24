@@ -1,7 +1,7 @@
 /*
  * pin 'em up
- * 
- * Copyright (C) 2007-2009 by Mario Ködding
+ *
+ * Copyright (C) 2007-2011 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -25,22 +25,22 @@ import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import net.sourceforge.pinemup.gui.I18N;
-import net.sourceforge.pinemup.logic.*;
+import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.logic.Category;
+import net.sourceforge.pinemup.logic.CategoryManager;
+import net.sourceforge.pinemup.logic.Note;
 
 public class MenuCreator implements ActionListener {
-   /**
-    * 
-    */
-   private static final long serialVersionUID = 1L;
-   
    private CategoryJMenuItem[] categoryItemJ = null;
    private CategoryMenuItem[] categoryItem = null;
    private JMenuItem[] basicItemJ = null;
    private MenuItem[] basicItem = null;
-   
+
    private String[] getBasicItemTexts() {
       String[] s = {
             I18N.getInstance().getString("menu.addnoteitem"),
@@ -59,7 +59,7 @@ public class MenuCreator implements ActionListener {
       };
       return s;
    }
-   
+
    public JMenuItem[] getBasicJMenuItems() {
       String[] texts = getBasicItemTexts();
       basicItemJ = new JMenuItem[texts.length];
@@ -69,7 +69,7 @@ public class MenuCreator implements ActionListener {
       }
       return basicItemJ;
    }
-   
+
    public MenuItem[] getBasicMenuItems() {
       String[] texts = getBasicItemTexts();
       basicItem = new MenuItem[texts.length];
@@ -78,14 +78,14 @@ public class MenuCreator implements ActionListener {
          basicItem[i].addActionListener(this);
       }
       return basicItem;
-   }   
-   
+   }
+
    public JMenu getCategoryActionsJMenu(String title, Category c) {
       JMenu menu = new JMenu(title);
       String[] texts = getCategoryItemTexts();
       categoryItemJ = new CategoryJMenuItem[texts.length];
       for (int i=0; i<texts.length; i++) {
-         categoryItemJ[i] = new CategoryJMenuItem(texts[i],c);
+         categoryItemJ[i] = new CategoryJMenuItem(texts[i], c);
          categoryItemJ[i].addActionListener(this);
          menu.add(categoryItemJ[i]);
          switch(i) {
@@ -98,7 +98,7 @@ public class MenuCreator implements ActionListener {
       }
       return menu;
    }
-   
+
    public Menu getCategoryActionsMenu(String title, Category c) {
       Menu menu = new Menu(title);
       String[] texts = getCategoryItemTexts();
@@ -123,7 +123,7 @@ public class MenuCreator implements ActionListener {
       if ((basicItem != null && src == basicItem[0]) || (basicItemJ != null && src == basicItemJ[0])) {
          Category defCat = CategoryManager.getInstance().getDefaultCategory();
          if (defCat != null) {
-            Note newNote = new Note("",defCat.getDefaultNoteColor());
+            Note newNote = new Note("", defCat.getDefaultNoteColor());
             defCat.addNote(newNote);
             newNote.showIfNotHidden();
             newNote.jumpInto();
@@ -141,47 +141,48 @@ public class MenuCreator implements ActionListener {
       } else if ((categoryItem != null && src == categoryItem[3]) || (categoryItemJ != null && src == categoryItemJ[3])) {
          CategoryManager.getInstance().setDefaultCategory(((MenuItemWithCategory)src).getCategory());
       }
-      
+
       // save notes to file after every change
       NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }
-   
+
    class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {
       /**
-       * 
+       *
        */
       private static final long serialVersionUID = 1L;
+
       private Category myCat;
-      
+
       public CategoryMenuItem(String title, Category c) {
          super(title);
          myCat = c;
       }
-      
+
       public Category getCategory() {
          return myCat;
       }
    }
-   
+
    class CategoryJMenuItem extends JMenuItem implements MenuItemWithCategory {
       /**
-       * 
+       *
        */
       private static final long serialVersionUID = 1L;
+
       private Category myCat;
-      
+
       public CategoryJMenuItem(String title, Category c) {
          super(title);
          myCat = c;
       }
-      
+
       public Category getCategory() {
          return myCat;
       }
    }
-   
-   interface MenuItemWithCategory {
-      public Category getCategory();
-   }
 
+   interface MenuItemWithCategory {
+      Category getCategory();
+   }
 }
