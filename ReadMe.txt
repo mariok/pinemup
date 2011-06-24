@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.6-svn
+version 0.6-git
 
 Contents
 ------------------------
@@ -50,6 +50,7 @@ Contents
     - added czech translation (thanks to Petr Masek)
     - BUGFIX: dialog for managing categories is now sized correctly (no controls out of sight)
     - BUGFIX: update category name in note-window if it is changed in category dialog
+    - some internal refactoring
 
 
   0.5:
