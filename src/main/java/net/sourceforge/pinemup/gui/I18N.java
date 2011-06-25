@@ -46,7 +46,7 @@ public class I18N {
       String language = locale.substring(0, locale.indexOf("_"));
       String country = locale.substring(locale.indexOf("_") + 1);
       Locale myLocale = new Locale(language, country);
-      res = ResourceBundle.getBundle("net.sourceforge.pinemup.resources.i18n.messages", myLocale);
+      res = ResourceBundle.getBundle("i18n.messages", myLocale);
       Locale.setDefault(myLocale);
    }
 
@@ -55,7 +55,7 @@ public class I18N {
    }
 
    private I18N() {
-      res = ResourceBundle.getBundle("net.sourceforge.pinemup.resources.i18n.messages", new Locale("en", "US"));
+      res = ResourceBundle.getBundle("i18n.messages", new Locale("en", "US"));
    }
 
    public String getString(String key) {

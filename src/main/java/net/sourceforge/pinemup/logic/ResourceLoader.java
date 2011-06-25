@@ -33,6 +33,9 @@ import java.net.URL;
 public class ResourceLoader {
    private static ResourceLoader instance = new ResourceLoader();
 
+   private static final String IMG_DIR = "img/";
+   private static final String SCHEMA_DIR = "xsd/";
+
    private Image closeIcon1;
    private Image closeIcon2;
    private Image trayIcon;
@@ -43,10 +46,10 @@ public class ResourceLoader {
    }
 
    private ResourceLoader() {
-      closeIcon1 = loadImage("net.sourceforge.pinemup.resources", "closeicon.png");
-      closeIcon2 = loadImage("net.sourceforge.pinemup.resources", "closeicon2.png");
-      trayIcon = loadImage("net.sourceforge.pinemup.resources", "icon" + getTrayIconSize() + ".png");
-      scrollImage = loadImage("net.sourceforge.pinemup.resources", "scroll.png");
+      closeIcon1 = loadImage("closeicon.png");
+      closeIcon2 = loadImage("closeicon2.png");
+      trayIcon = loadImage("icon" + getTrayIconSize() + ".png");
+      scrollImage = loadImage("scroll.png");
    }
 
    private long getTrayIconSize() {
@@ -61,16 +64,20 @@ public class ResourceLoader {
       return size;
    }
 
-   private InputStream getResourceStream(String pkg, String filename) {
-      String name = "/" + pkg.replace('.', '/') + "/" + filename;
+   private InputStream getResourceStream(String filename) {
+      return getResourceStream(filename, "");
+   }
+
+   private InputStream getResourceStream(String filename, String dirname) {
+      String name = "/" + dirname + filename;
       InputStream is = getClass().getResourceAsStream(name);
       return is;
    }
 
-   private Image loadImage(String pkg, String filename) {
+   private Image loadImage(String filename) {
       Image img = null;
       try {
-         InputStream is = getResourceStream(pkg, filename);
+         InputStream is = getResourceStream(filename, IMG_DIR);
 
          if (is != null) {
             byte[] buffer = new byte[0];
@@ -114,10 +121,8 @@ public class ResourceLoader {
    public String getLicense() {
       String s = "";
       try {
-         String pkg = "net.sourceforge.pinemup.resources";
          String filename = "COPYING";
-         String name = "/" + pkg.replace('.', '/') + "/" + filename;
-         InputStream is = getClass().getResourceAsStream(name);
+         InputStream is = getResourceStream(filename);
          BufferedReader br = new BufferedReader(new InputStreamReader(is));
          String nextLine = br.readLine();
          while (nextLine != null) {
@@ -133,10 +138,8 @@ public class ResourceLoader {
    }
 
    public URL getSchemaFile(String version) {
-      String pkg = "net.sourceforge.pinemup.resources";
       String filename = "notesfile-" + version + ".xsd";
-      String name = "/" + pkg.replace('.', '/') + "/" + filename;
-      URL u = getClass().getResource(name);
+      URL u = getClass().getResource("/" + SCHEMA_DIR +  filename);
       return u;
    }
 }

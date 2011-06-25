@@ -1,6 +1,6 @@
 pin 'em up
 
-version 0.6-git
+version 0.6-SNAPSHOT
 
 Contents
 ------------------------
