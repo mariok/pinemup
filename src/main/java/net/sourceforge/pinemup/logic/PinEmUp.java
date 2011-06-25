@@ -30,7 +30,16 @@ import net.sourceforge.pinemup.gui.I18N;
 import net.sourceforge.pinemup.io.NoteIO;
 
 public class PinEmUp {
-   public static final String VERSION = "0.6-SNAPSHOT";
+   public static final String VERSION;
+
+   static {
+      if (PinEmUp.class.getPackage().getImplementationVersion() != null) {
+         VERSION = PinEmUp.class.getPackage().getImplementationVersion();
+      } else {
+         VERSION = "devel";
+      }
+
+   }
 
    private PinEmUp() {
       if (SystemTray.isSupported()) {

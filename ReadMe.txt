@@ -1,7 +1,5 @@
 pin 'em up
 
-version 0.6-SNAPSHOT
-
 Contents
 ------------------------
 1. About
@@ -121,7 +119,7 @@ Contents
 ------------------------
   Author: Mario Ködding
   Email: dev-mario@web.de
-  ICQ: 77590604
+  Jabber: dev-mario@web.de
 
   Project-Homepage:
   http://pinemup.sourceforge.net
