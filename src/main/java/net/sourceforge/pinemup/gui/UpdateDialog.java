@@ -45,11 +45,14 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
     */
    private static final long serialVersionUID = 1L;
 
+   private static final int DIALOG_WIDTH = 400;
+   private static final int DIALOG_HEIGHT = 350;
+
    private JButton closeButton;
 
    public UpdateDialog(String updateText) {
       super(I18N.getInstance().getString("updatedialog.title"));
-      setSize(new Dimension(400, 350));
+      setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 
       // PREPARE ALL PANELS
       // ---------------------
@@ -76,8 +79,8 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
       // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
+      int screenHeight = (int) getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int) getToolkit().getScreenSize().getWidth();
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
@@ -99,7 +102,7 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
       if (e.getEventType().toString().equals("ACTIVATED")) {
          if (e.getURL().toString().startsWith("mailto:")) {
             try {
-               URI mailURI = new URI("mailto", e.getURL().toString().substring(7), null);
+               URI mailURI = new URI("mailto", e.getURL().toString().substring("mailto:".length()), null);
                Desktop.getDesktop().mail(mailURI);
             } catch (URISyntaxException err1) {
                //do nothing

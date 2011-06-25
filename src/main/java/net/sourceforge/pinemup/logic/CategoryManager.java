@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class CategoryManager {
+public final class CategoryManager {
    private LinkedList<Category> categories;
    private static CategoryManager instance = new CategoryManager();
 

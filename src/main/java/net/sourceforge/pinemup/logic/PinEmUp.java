@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 import net.sourceforge.pinemup.gui.I18N;
 import net.sourceforge.pinemup.io.NoteIO;
 
-public class PinEmUp {
+public final class PinEmUp {
    public static final String VERSION;
 
    static {

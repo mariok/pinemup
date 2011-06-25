@@ -58,7 +58,7 @@ import net.sourceforge.pinemup.logic.UserSettings;
 
 import org.xml.sax.SAXException;
 
-public class NoteIO {
+public final class NoteIO {
    public static final String LATEST_NOTESFILE_VERSION = "0.2";
 
    public static void writeCategoriesToFile(ListIterator<Category> l) {
@@ -188,7 +188,7 @@ public class NoteIO {
                   currentCategory = new Category(name, def, defNoteColor);
                   c.add(currentCategory);
                } else if (ename.equals("note")) {
-                  currentNote = new Note("", (byte)0);
+                  currentNote = new Note("", (byte) 0);
                   for (int i=0; i<parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");
@@ -246,8 +246,8 @@ public class NoteIO {
          in.close();
       } catch (FileNotFoundException e) {
          //neu erstellen
-         c.add(new Category("Home", true, (byte)0));
-         c.add(new Category("Office", false, (byte)0));
+         c.add(new Category("Home", true, (byte) 0));
+         c.add(new Category("Office", false, (byte) 0));
       } catch (XMLStreamException e) {
          //Meldung ausgeben
          System.out.println("XML Error");
@@ -376,5 +376,9 @@ public class NoteIO {
          System.err.println("IO Error");
       }
       return version;
+   }
+
+   private NoteIO() {
+
    }
 }

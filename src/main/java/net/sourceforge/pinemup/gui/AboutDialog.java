@@ -42,12 +42,16 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Calendar;
 
 public class AboutDialog extends JFrame implements ActionListener, HyperlinkListener {
    /**
     *
     */
    private static final long serialVersionUID = 1L;
+
+   private static final int DIALOG_WIDTH = 600;
+   private static final int DIALOG_HEIGHT = 350;
 
    private JButton okButton;
 
@@ -56,7 +60,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       msg += "<html>";
       msg += "<p>pin 'em up</p>";
       msg += "<p>version " + PinEmUp.VERSION + "</p>";
-      msg += "<p>(C) 2007 - 2010 Mario Ködding</p>";
+      msg += "<p>(C) 2007 - " + Calendar.getInstance().get(Calendar.YEAR) + " Mario Ködding</p>";
       msg += "<p><a href=\"http://pinemup.sourceforge.net\" target=\"blank\">http://pinemup.sourceforge.net</a></p>";
       msg += "</html>";
       JEditorPane p = new JEditorPane("text/html", msg);
@@ -70,7 +74,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       msg += "<html>";
       msg += "<h1>Developers</h1>";
       msg += "<p>Mario Ködding<br />";
-      msg += "<a href=\"mailto:mario@koedding.net\">mario@koedding.net</a><br />";
+      msg += "<a href=\"mailto:dev-mario@web.de\">dev-mario@web.de</a><br />";
       msg += "developer &amp; founder of the project</p>";
       msg += "<p>&nbsp;</p>";
       msg += "<h1>Translators:</h1>";
@@ -84,7 +88,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
 
    private JScrollPane makeLicenseTab() {
       String msg = "";
-      msg += "(C) 2007 - 2010 Mario Ködding\r\n\r\n";
+      msg += "(C) 2007 - " + Calendar.getInstance().get(Calendar.YEAR) + " Mario Ködding\r\n\r\n";
       msg += "This program is licensed under the terms of the GNU GPL V3 or any later version.\r\n\r\n\r\n";
       msg += ResourceLoader.getInstance().getLicense();
       JEditorPane p = new JEditorPane("text/plain", msg);
@@ -97,7 +101,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
 
    public AboutDialog() {
       super(I18N.getInstance().getString("aboutdialog.title"));
-      setSize(new Dimension(600, 350));
+      setSize(new Dimension(DIALOG_WIDTH, DIALOG_HEIGHT));
 
       // PREPARE ALL PANELS
       // ---------------------
@@ -124,8 +128,8 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
       // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
+      int screenHeight = (int) getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int) getToolkit().getScreenSize().getWidth();
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
@@ -147,7 +151,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       if (e.getEventType().toString().equals("ACTIVATED")) {
          if (e.getURL().toString().startsWith("mailto:")) {
             try {
-               URI mailURI = new URI("mailto", e.getURL().toString().substring(7), null);
+               URI mailURI = new URI("mailto", e.getURL().toString().substring("mailto:".length()), null);
                Desktop.getDesktop().mail(mailURI);
             } catch (URISyntaxException err1) {
                //do nothing

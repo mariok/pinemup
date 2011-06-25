@@ -46,6 +46,9 @@ public class ExportDialog extends JDialog implements ActionListener {
     */
    private static final long serialVersionUID = 1L;
 
+   private static final int DIALOG_WIDTH = 250;
+   private static final int DIALOG_HEIGHT = 300;
+
    private JButton okButton, cancelButton;
    private JCheckBox[] catBox;
    private JCheckBox allCatsBox;
@@ -64,7 +67,7 @@ public class ExportDialog extends JDialog implements ActionListener {
 
       // Category Checkboxes
       int rows = CategoryManager.getInstance().getNumberOfCategories();
-      JPanel checkBoxPanel = new JPanel (new GridLayout(rows+2, 1));
+      JPanel checkBoxPanel = new JPanel(new GridLayout(rows+2, 1));
       String[] cats = CategoryManager.getInstance().getCategoryNames();
       JPanel[] catPanel = new JPanel[rows];
       catBox = new JCheckBox[rows];
@@ -94,11 +97,11 @@ public class ExportDialog extends JDialog implements ActionListener {
       main.add(buttonPanel, BorderLayout.SOUTH);
 
       setContentPane(main);
-      setSize(250, 300);
+      setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 
       // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
+      int screenHeight = (int) getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int) getToolkit().getScreenSize().getWidth();
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);

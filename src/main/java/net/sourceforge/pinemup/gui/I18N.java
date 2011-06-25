@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 
-public class I18N {
+public final class I18N {
    private static I18N instance = new I18N();
    private ResourceBundle res;
 

@@ -25,7 +25,7 @@ import javax.swing.JFileChooser;
 
 import net.sourceforge.pinemup.logic.MyFileFilter;
 
-public class FileDialogCreator {
+public final class FileDialogCreator {
    private static JFileChooser fileDialog;
    private static JFileChooser exportFileDialog;
 

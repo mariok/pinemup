@@ -55,7 +55,7 @@ import net.sourceforge.pinemup.logic.CategoryManager;
 import net.sourceforge.pinemup.logic.PinEmUpTrayIcon;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
-public class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {
+public final class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {
    /**
     *
     */
@@ -188,8 +188,8 @@ public class CategoryDialog extends JDialog implements ActionListener, DocumentL
       pack();
 
       // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
+      int screenHeight = (int) getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int) getToolkit().getScreenSize().getWidth();
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
@@ -274,9 +274,9 @@ public class CategoryDialog extends JDialog implements ActionListener, DocumentL
 
          @Override
          public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
-            Component c = super.getListCellRendererComponent(list, value, index, isSelected,hasFocus);
+            Component c = super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
             if (index >= 0) {
-               c.setBackground(BackgroundLabel.getColor((byte)index));
+               c.setBackground(BackgroundLabel.getColor((byte) index));
             }
             return c;
          }
@@ -384,7 +384,7 @@ public class CategoryDialog extends JDialog implements ActionListener, DocumentL
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
-      CategoryManager.getInstance().addCategory(new Category(catName, false, (byte)(0)));
+      CategoryManager.getInstance().addCategory(new Category(catName, false, (byte) 0));
       PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       Object[] rowData = {"", catName, "0"};
       catTableModel.addRow(rowData);
@@ -422,7 +422,7 @@ public class CategoryDialog extends JDialog implements ActionListener, DocumentL
 
    private void updateCatColor() {
       if (trackChanges) {
-         byte c = (byte)colorBox.getSelectedIndex();
+         byte c = (byte) colorBox.getSelectedIndex();
          catTable.getModel().setValueAt(String.valueOf(c), selectedRow, 2);
          selectedCat.setDefaultNoteColor(c);
          colorBox.setBackground(BackgroundLabel.getColor(selectedCat.getDefaultNoteColor()));
@@ -439,7 +439,7 @@ public class CategoryDialog extends JDialog implements ActionListener, DocumentL
       }
 
       //ENABLE OR DISABLE MOVEDOWN BUTTON
-      if (selectedRow == noOfCategories-1) {
+      if (selectedRow == noOfCategories - 1) {
          moveDownButton.setEnabled(false);
       } else {
          moveDownButton.setEnabled(true);

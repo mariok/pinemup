@@ -69,7 +69,7 @@ public class WebdavConnection extends ServerConnection {
          String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
-         HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
+         HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
          InputStream is = urlc.getInputStream();
          int nextByte = is.read();
          while (nextByte != -1) {
@@ -77,7 +77,7 @@ public class WebdavConnection extends ServerConnection {
             nextByte = is.read();
          }
          fos.close();
-         if (urlc.getResponseCode() != 200) {
+         if (urlc.getResponseCode() != HttpURLConnection.HTTP_OK) {
             downloaded = false;
          }
       } catch (SSLHandshakeException e) { //Certificate error (self-signed?)
@@ -103,7 +103,7 @@ public class WebdavConnection extends ServerConnection {
          String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
-         HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
+         HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
          urlc.setDoOutput(true);
          urlc.setRequestMethod("PUT");
          OutputStream  os = urlc.getOutputStream();
@@ -113,7 +113,7 @@ public class WebdavConnection extends ServerConnection {
             nextByte = fis.read();
          }
          os.close();
-         if (urlc.getResponseCode() != 201 && urlc.getResponseCode() != 204) {
+         if (urlc.getResponseCode() != HttpURLConnection.HTTP_CREATED && urlc.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
             uploaded = false;
          }
       } catch (SSLHandshakeException e) { //Certificate error (self-signed?)

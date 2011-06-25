@@ -104,7 +104,7 @@ public class MenuCreator implements ActionListener {
       String[] texts = getCategoryItemTexts();
       categoryItem = new CategoryMenuItem[texts.length];
       for (int i=0; i<texts.length; i++) {
-         categoryItem[i] = new CategoryMenuItem(texts[i],c);
+         categoryItem[i] = new CategoryMenuItem(texts[i], c);
          categoryItem[i].addActionListener(this);
          menu.add(categoryItem[i]);
          switch(i) {
@@ -133,13 +133,13 @@ public class MenuCreator implements ActionListener {
       } else if ((basicItem != null && src == basicItem[2]) || (basicItemJ != null && src == basicItemJ[2])) {
          CategoryManager.getInstance().hideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[0]) || (categoryItemJ != null && src == categoryItemJ[0])) {
-         ((MenuItemWithCategory)src).getCategory().hideAllNotes();
+         ((MenuItemWithCategory) src).getCategory().hideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[1]) || (categoryItemJ != null && src == categoryItemJ[1])) {
-         ((MenuItemWithCategory)src).getCategory().unhideAndShowAllNotes();
+         ((MenuItemWithCategory) src).getCategory().unhideAndShowAllNotes();
       } else if ((categoryItem != null && src == categoryItem[2]) || (categoryItemJ != null && src == categoryItemJ[2])) {
-         CategoryManager.getInstance().showOnlyNotesOfCategory(((MenuItemWithCategory)src).getCategory());
+         CategoryManager.getInstance().showOnlyNotesOfCategory(((MenuItemWithCategory) src).getCategory());
       } else if ((categoryItem != null && src == categoryItem[3]) || (categoryItemJ != null && src == categoryItemJ[3])) {
-         CategoryManager.getInstance().setDefaultCategory(((MenuItemWithCategory)src).getCategory());
+         CategoryManager.getInstance().setDefaultCategory(((MenuItemWithCategory) src).getCategory());
       }
 
       // save notes to file after every change

@@ -69,6 +69,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
     */
    private static final long serialVersionUID = 1L;
 
+   private static final int DIALOG_WIDTH = 640;
+   private static final int DIALOG_HEIGHT = 480;
+
    private static SettingsDialog instance;
 
    private JButton okButton, cancelButton, applyButton, browseButton;
@@ -97,7 +100,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       GridBagLayout gbl = new GridBagLayout();
       generalPanel.setLayout(gbl);
       GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(1,1,1,1);
+      gbc.insets = new Insets(1, 1, 1, 1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
@@ -109,12 +112,12 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.gridx = 0;
       gbc.gridy = 0;
       gbc.weighty = 0;
-      generalPanel.add(updateCheckPanel,gbc);
+      generalPanel.add(updateCheckPanel, gbc);
 
       //Add Panel for language
       JPanel languagePanel = makeLanguagePanel();
       gbc.gridy = 1;
-      generalPanel.add(languagePanel,gbc);
+      generalPanel.add(languagePanel, gbc);
 
       //Add empty panel to tab
       JPanel emptyPanel = new JPanel();
@@ -131,7 +134,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       GridBagLayout gbl = new GridBagLayout();
       lookAndFeelPanel.setLayout(gbl);
       GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(1,1,1,1);
+      gbc.insets = new Insets(1, 1, 1, 1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
 
       //Add Panel for size and Position
@@ -782,18 +785,18 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.gridy = 4;
       serverPanel.add(storeServerPassBox, gbc);
       gbc.gridy = 5;
-      serverPanel.add(serverDirField,gbc);
+      serverPanel.add(serverDirField, gbc);
       gbc.gridy = 6;
-      serverPanel.add(new JLabel(" "),gbc);
+      serverPanel.add(new JLabel(" "), gbc);
       gbc.gridy = 7;
-      serverPanel.add(confirmUpDownloadBox,gbc);
+      serverPanel.add(confirmUpDownloadBox, gbc);
 
       return serverPanel;
    }
 
    private SettingsDialog() {
       super();
-      setSize(new Dimension(640, 480));
+      setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 
       // PREPARE ALL PANELS
       // ---------------------
@@ -841,8 +844,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
       // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
+      int screenHeight = (int) getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int) getToolkit().getScreenSize().getWidth();
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
@@ -884,7 +887,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    }
 
    private int getIndexForLocale(String locale) {
-      int index=0;
+      int index = 0;
       for (int i=0; i<I18N.LOCALES.length; i++) {
          if (I18N.LOCALES[i].equals(locale)) {
             index = i;
@@ -937,7 +940,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       short defaultHeight = Short.parseShort(defaultHeightField.getText());
       short defaultXPosition = Short.parseShort(defaultXPositionField.getText());
       short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
-      short defaultFontSize = ((Integer)((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
+      short defaultFontSize = ((Integer) ((SpinnerNumberModel) defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
       boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
       boolean showCat = showCatBox.isSelected();
       boolean confirmDel = confirmDeleteBox.isSelected();
@@ -948,7 +951,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          ci = 2;
       }
       String notesFile = notesFileField.getText();
-      short serverType = (short)serverTypeBox.getSelectedIndex();
+      short serverType = (short) serverTypeBox.getSelectedIndex();
       String serverAddress = serverAddressField.getText();
       String serverUser = serverUserField.getText();
       char[] serverPasswd = serverPasswdField.getPassword();

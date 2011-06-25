@@ -98,7 +98,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
             prefix = ACTIVE_SYMBOL + " ";
          }
          setBGColorItem[i] = new JMenuItem(prefix + BackgroundLabel.getColorName(i));
-         setBGColorItem[i].setText("  "+setBGColorItem[i].getText());
+         setBGColorItem[i].setText("  " + setBGColorItem[i].getText());
          setBGColorItem[i].addActionListener(this);
          setBGColorMenu.add(setBGColorItem[i]);
       }

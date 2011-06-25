@@ -36,7 +36,6 @@ public abstract class ServerConnection {
       "WebDAV",
       "WebDAVs"
    };
-   protected String type;
 
    public static ServerConnection createServerConnection(int serverType) {
       switch (serverType) {
@@ -45,10 +44,6 @@ public abstract class ServerConnection {
       case WEBDAVS_CONNECTION: return new WebdavConnection(true);
       default: return new FTPConnection();
       }
-   }
-
-   public String getType() {
-      return type;
    }
 
    protected void makeBackupFile() { //to create a backup before downloading from server

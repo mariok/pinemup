@@ -70,7 +70,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       int i;
       while (l.hasNext()) {
          i = l.nextIndex();
-         catMenu[i] = (new MenuCreator()).getCategoryActionsMenu((i+1) + " " + CategoryManager.getInstance().getCategoryNames()[i],l.next());
+         catMenu[i] = (new MenuCreator()).getCategoryActionsMenu((i+1) + " " + CategoryManager.getInstance().getCategoryNames()[i], l.next());
          categoriesMenu.add(catMenu[i]);
       }
 

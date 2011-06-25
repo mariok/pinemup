@@ -65,6 +65,10 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private static final int OFFSET = 35;
 
+   private static final Color COLOR_TRANSPARENT = new Color(255, 255, 255, 0);
+
+   private static final Dimension CLOSEBUTTON_SIZE = new Dimension(20, 20);
+
    private JScrollPane textPanel;
 
    private JPanel topPanel, catPanel, mainPanel;
@@ -105,7 +109,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       mainPanel = new JPanel(new BorderLayout());
       mainPanel.setOpaque(false);
       topPanel = new JPanel(new BorderLayout());
-      topPanel.setPreferredSize(new Dimension(UserSettings.getInstance().getDefaultWindowWidth(),26));
+      topPanel.setPreferredSize(new Dimension(UserSettings.getInstance().getDefaultWindowWidth(), 26));
       topPanel.setBorder(null);
       topPanel.setOpaque(false);
       mainPanel.add(textPanel, BorderLayout.CENTER);
@@ -123,7 +127,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             catButton.setFocusable(false);
             catButton.setPreferredSize(new Dimension(100, 15));
             catButton.setMargin(new Insets(0, 0, 0, 0));
-            catButton.setBackground(new Color(255, 255, 255, 0));
+            catButton.setBackground(COLOR_TRANSPARENT);
 
             catPanel = new JPanel(new FlowLayout());
             catPanel.add(catButton);
@@ -159,7 +163,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       scrollButton.setMargin(new Insets(0, 0, 0, 0));
       scrollButton.setPreferredSize(new Dimension(10, 5));
       scrollButton.setBorder(null);
-      scrollButton.setBackground(new Color(255, 255, 255, 0));
+      scrollButton.setBackground(COLOR_TRANSPARENT);
       scrollButton.setVisible(false);
       scrollButton.setDisabledIcon(new ImageIcon(ResourceLoader.getInstance().getScrollImage()));
 
@@ -170,7 +174,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
       ImageIcon closeIcon = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(UserSettings.getInstance().getCloseIcon()));
       closeButton = new JButton(closeIcon);
-      closeButton.setBackground(new Color(255, 255, 255, 0));
+      closeButton.setBackground(COLOR_TRANSPARENT);
       closeButton.setRolloverEnabled(false);
 
       closeButton.setToolTipText(I18N.getInstance().getString("notewindow.hidebuttontooltip"));
@@ -179,7 +183,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       closeButton.setFocusable(false);
       closeButton.setBorderPainted(false);
       closeButton.setHorizontalAlignment(SwingConstants.CENTER);
-      closeButton.setPreferredSize(new Dimension(20, 20));
+      closeButton.setPreferredSize(CLOSEBUTTON_SIZE);
       closeButton.setMargin(new Insets(3, 0, 0, 3));
       topPanel.add(closeButton, BorderLayout.EAST);
 
@@ -310,7 +314,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       //get number of lines (incl. wrapped lines)
       int lineHeight = textArea.getFontMetrics(textArea.getFont()).getHeight();
       View view = textArea.getUI().getRootView(textArea).getView(0);
-      int prefHeight = (int)view.getPreferredSpan(View.Y_AXIS);
+      int prefHeight = (int) view.getPreferredSpan(View.Y_AXIS);
       int lines = prefHeight / lineHeight;
 
       //calculate new height
@@ -318,7 +322,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
       //apply new size
       setSize(sizeX, sizeY);
-      parentNote.setSize((short)sizeX, (short)sizeY);
+      parentNote.setSize((short) sizeX, (short) sizeY);
       scrollButton.setVisible(false);
    }
 
@@ -369,12 +373,12 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       if (dragging && e.getButton() == MouseEvent.BUTTON1) {
          // stop moving and save position
          dragging = false;
-         parentNote.setPosition((short)getX(), (short)getY());
+         parentNote.setPosition((short) getX(), (short) getY());
          changeMade = true;
       } else if (resizing && e.getButton() == MouseEvent.BUTTON1) {
          // stop resizing and save size
          resizing = false;
-         parentNote.setSize((short)getWidth(), (short)getHeight());
+         parentNote.setSize((short) getWidth(), (short) getHeight());
          showScrollButtonIfNeeded();
          changeMade = true;
       } else if (e.getSource() == closeButton) {
@@ -480,7 +484,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private String getShortText() { //returns short text for the window titles
       int l = textArea.getText().length();
       String dots = "";
-      if (l>30) {
+      if (l > 30) {
          l = 30;
          dots = "...";
       }

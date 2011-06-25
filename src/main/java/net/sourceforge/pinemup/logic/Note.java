@@ -79,7 +79,7 @@ public class Note {
    }
 
    public void showIfNotHidden() {
-      if (hidden == false && window == null) {
+      if (!hidden && window == null) {
          window = new NoteWindow(this);
       }
    }

@@ -28,11 +28,14 @@ import javax.swing.JPasswordField;
 
 import net.sourceforge.pinemup.gui.I18N;
 
-public class UserSettings {
+public final class UserSettings {
    private Preferences prefs;
    private static UserSettings instance = new UserSettings(); //Singleton
 
    private static final String PREFIX = "peu_dev_";
+
+   private static final int MIN_NOTEWINDOW_WIDTH = 30;
+   private static final int MIN_NOTEWINDOW_HEIGHT = 30;
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;
@@ -140,8 +143,8 @@ public class UserSettings {
    }
 
    public void setDefaultWindowWidth(short x) {
-      if (x < 30) {
-         x = 30;
+      if (x < MIN_NOTEWINDOW_WIDTH) {
+         x = MIN_NOTEWINDOW_WIDTH;
       }
       defaultWindowWidth = x;
    }
@@ -151,8 +154,8 @@ public class UserSettings {
    }
 
    public void setDefaultWindowHeight(short y) {
-      if (y < 30) {
-         y = 30;
+      if (y < MIN_NOTEWINDOW_HEIGHT) {
+         y = MIN_NOTEWINDOW_HEIGHT;
       }
       defaultWindowHeight = y;
    }
@@ -201,7 +204,7 @@ public class UserSettings {
          }
       } else {
          JPasswordField p = new JPasswordField(12);
-         JOptionPane.showMessageDialog(null,p,I18N.getInstance().getString("confirm.enterserverpassword"),JOptionPane.PLAIN_MESSAGE);
+         JOptionPane.showMessageDialog(null, p, I18N.getInstance().getString("confirm.enterserverpassword"), JOptionPane.PLAIN_MESSAGE);
          tempString = String.copyValueOf(p.getPassword());
       }
       return tempString;

@@ -88,5 +88,4 @@ public class UpdateCheckThread extends Thread {
       }
 
    }
-
 }

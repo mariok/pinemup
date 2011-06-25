@@ -91,7 +91,7 @@ public class BackgroundLabel extends JLabel {
        setBounds(0, 0, parentWindow.getWidth(), parentWindow.getHeight());
        int h = getHeight();
        int w = getWidth();
-       Graphics2D g2 = (Graphics2D)g;
+       Graphics2D g2 = (Graphics2D) g;
 
        for (int i=1; i<=w; i++) {
           int startX = i;
@@ -118,7 +118,7 @@ public class BackgroundLabel extends JLabel {
    }
 
    public static String getColorName(byte nr) {
-      return I18N.getInstance().getString("color." + (String)COLORS[nr][0]);
+      return I18N.getInstance().getString("color." + (String) COLORS[nr][0]);
    }
 
    public static int getNumberOfColors() {
@@ -126,7 +126,7 @@ public class BackgroundLabel extends JLabel {
    }
 
    public static Color getColor(byte nr) {
-      return (Color)COLORS[nr][1];
+      return (Color) COLORS[nr][1];
    }
 
    public static String[] getColorNames() {
