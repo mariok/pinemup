@@ -96,9 +96,9 @@ public class BackgroundLabel extends JLabel {
        for (int i=1; i<=w; i++) {
           int startX = i;
           int startY = 0;
-          int endX = startX+1;
-          int endY = startY+h;
-          GradientPaint gradient = new GradientPaint(startX, startY, (Color)COLORS[myColor][1], endX, endY, (Color)COLORS[myColor][2]);
+          int endX = startX + 1;
+          int endY = startY + h;
+          GradientPaint gradient = new GradientPaint(startX, startY, (Color) COLORS[myColor][1], endX, endY, (Color) COLORS[myColor][2]);
           g2.setPaint(gradient);
        }
        g2.fillRect(0, 0, w, h);

@@ -32,6 +32,7 @@ import javax.swing.table.TableCellRenderer;
 
 public class ColoredTableCellRenderer implements TableCellRenderer {
    private static final Color SELECTION_COLOR = new Color(160, 160, 255);
+   private static final int BORDER_THICKNESS = 3;
 
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       JLabel myCell = new JLabel((String) value);
@@ -49,7 +50,7 @@ public class ColoredTableCellRenderer implements TableCellRenderer {
          Color myColor = BackgroundLabel.getColor(Byte.parseByte((String) value));
          if (hasFocus || isSelected) {
             myCell.setBackground(myColor);
-            myCell.setBorder(BorderFactory.createLineBorder(SELECTION_COLOR, 3));
+            myCell.setBorder(BorderFactory.createLineBorder(SELECTION_COLOR, BORDER_THICKNESS));
             myCell.setForeground(myColor);
          } else {
             myCell.setBackground(myColor);

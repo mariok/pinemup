@@ -59,7 +59,7 @@ public final class ResourceLoader {
       } else if (size > 48) {
          size = 48;
       } else if (size % 8 != 0) {
-         size = Math.round(size/8) * 8;
+         size = Math.round(size / 8) * 8;
       }
       return size;
    }

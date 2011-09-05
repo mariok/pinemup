@@ -58,9 +58,14 @@ import net.sourceforge.pinemup.logic.UserSettings;
 import net.sourceforge.pinemup.menus.RightClickMenu;
 
 public class NoteWindow extends JDialog implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener, KeyListener {
-   /**
-    *
-    */
+   private static final int MIN_WINDOW_HEIGHT = 40;
+   private static final int MIN_WINDOW_WIDTH = 30;
+
+   private static final int SHORT_TEXT_LENGTH = 30;
+   private static final int RESIZE_AREA_SIZE = 10;
+
+   private static final Dimension SCROLLBUTTON_SIZE = new Dimension(10, 5);
+
    private static final long serialVersionUID = 1L;
 
    private static final int OFFSET = 35;
@@ -68,6 +73,10 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private static final Color COLOR_TRANSPARENT = new Color(255, 255, 255, 0);
 
    private static final Dimension CLOSEBUTTON_SIZE = new Dimension(20, 20);
+
+   private static final Dimension CATBUTTON_SIZE = new Dimension(100, 15);
+
+   private static final int TOPPANEL_HEIGHT = 26;
 
    private JScrollPane textPanel;
 
@@ -109,7 +118,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       mainPanel = new JPanel(new BorderLayout());
       mainPanel.setOpaque(false);
       topPanel = new JPanel(new BorderLayout());
-      topPanel.setPreferredSize(new Dimension(UserSettings.getInstance().getDefaultWindowWidth(), 26));
+      topPanel.setPreferredSize(new Dimension(UserSettings.getInstance().getDefaultWindowWidth(), TOPPANEL_HEIGHT));
       topPanel.setBorder(null);
       topPanel.setOpaque(false);
       mainPanel.add(textPanel, BorderLayout.CENTER);
@@ -125,7 +134,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             catButton.setRolloverEnabled(false);
             catButton.setEnabled(false);
             catButton.setFocusable(false);
-            catButton.setPreferredSize(new Dimension(100, 15));
+            catButton.setPreferredSize(CATBUTTON_SIZE);
             catButton.setMargin(new Insets(0, 0, 0, 0));
             catButton.setBackground(COLOR_TRANSPARENT);
 
@@ -161,7 +170,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       scrollButton.setEnabled(false);
       scrollButton.setFocusable(false);
       scrollButton.setMargin(new Insets(0, 0, 0, 0));
-      scrollButton.setPreferredSize(new Dimension(10, 5));
+      scrollButton.setPreferredSize(SCROLLBUTTON_SIZE);
       scrollButton.setBorder(null);
       scrollButton.setBackground(COLOR_TRANSPARENT);
       scrollButton.setVisible(false);
@@ -413,11 +422,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       } else if (resizing) {
          int sx = e.getXOnScreen() - getX() + dx;
          int sy = e.getYOnScreen() - getY() + dy;
-         if (sx < 30) {
-            sx = 30;
+         if (sx < MIN_WINDOW_WIDTH) {
+            sx = MIN_WINDOW_WIDTH;
          }
-         if (sy < 40) {
-            sy = 40;
+         if (sy < MIN_WINDOW_HEIGHT) {
+            sy = MIN_WINDOW_HEIGHT;
          }
          setSize(sx, sy);
       }
@@ -439,7 +448,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    public void mouseMoved(MouseEvent e) {
       if (!resizing) {
          // if in lower right corner, start resizing or change cursor
-         if ((e.getSource() == textArea && (e.getX() >= textArea.getWidth() - 10 && e.getY() >= textPanel.getHeight() - 10)) || (e.getSource() == scrollButton && (e.getX() >= scrollButton.getWidth() - 10))) { // height from panel because of vertical scrolling
+         if ((e.getSource() == textArea && (e.getX() >= textArea.getWidth() - RESIZE_AREA_SIZE && e.getY() >= textPanel.getHeight() - RESIZE_AREA_SIZE)) || (e.getSource() == scrollButton && (e.getX() >= scrollButton.getWidth() - RESIZE_AREA_SIZE))) { // height from panel because of vertical scrolling
             if (!resizeCursor) {
                resizeCursor = true;
                textArea.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
@@ -484,8 +493,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private String getShortText() { //returns short text for the window titles
       int l = textArea.getText().length();
       String dots = "";
-      if (l > 30) {
-         l = 30;
+      if (l > SHORT_TEXT_LENGTH) {
+         l = SHORT_TEXT_LENGTH;
          dots = "...";
       }
       String t = textArea.getText().substring(0, l);

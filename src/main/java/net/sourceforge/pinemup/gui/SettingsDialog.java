@@ -22,7 +22,6 @@
 package net.sourceforge.pinemup.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -64,9 +63,6 @@ import net.sourceforge.pinemup.logic.UserSettings;
 import net.sourceforge.pinemup.menus.TrayMenu;
 
 public class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
-   /**
-    *
-    */
    private static final long serialVersionUID = 1L;
 
    private static final int DIALOG_WIDTH = 640;
