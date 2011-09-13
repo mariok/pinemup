@@ -70,6 +70,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private static SettingsDialog instance;
 
+   private boolean settingsChanged;
+
    private JButton okButton, cancelButton, applyButton, browseButton;
    private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, serverAddressField, serverUserField, serverDirField, notesFileField;
    private JPasswordField serverPasswdField;
@@ -834,8 +836,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
       // Load Settings Into Fields
       loadSettings();
+      markSettingsChanged(false);
 
-      applyButton.setEnabled(false);
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -859,8 +861,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          dispose();
       } else if (src == applyButton) {
          saveSettings();
+         markSettingsChanged(false);
          loadLocaleTexts();
-         applyButton.setEnabled(false);
       } else if (src == cancelButton) {
          setVisible(false);
          dispose();
@@ -875,10 +877,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       } else if (src == updateCheckButton) {
          new UpdateCheckThread(true);
       } else if (src == updateCheckBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox || src == serverTypeBox || src == languageBox) {
-         applyButton.setEnabled(true);
+         markSettingsChanged(true);
       } else if (src == storeServerPassBox) {
-         applyButton.setEnabled(true);
          serverPasswdField.setEnabled(storeServerPassBox.isSelected());
+         markSettingsChanged(true);
       }
    }
 
@@ -926,98 +928,100 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    }
 
    private void saveSettings() {
-      //save old notesfile
-      NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
+      if (settingsChanged) {
+         //save old notesfile
+         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
 
-      // load settings from fields
-      boolean updateCheckEnabled = updateCheckBox.isSelected();
-      String locale = I18N.LOCALES[languageBox.getSelectedIndex()];
-      short defaultWidth = Short.parseShort(defaultWidthField.getText());
-      short defaultHeight = Short.parseShort(defaultHeightField.getText());
-      short defaultXPosition = Short.parseShort(defaultXPositionField.getText());
-      short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
-      short defaultFontSize = ((Integer) ((SpinnerNumberModel) defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
-      boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
-      boolean showCat = showCatBox.isSelected();
-      boolean confirmDel = confirmDeleteBox.isSelected();
-      byte ci = 1;
-      if (closeIcon1Button.isSelected()) {
-         ci = 1;
-      } else if (closeIcon2Button.isSelected()) {
-         ci = 2;
+         // load settings from fields
+         boolean updateCheckEnabled = updateCheckBox.isSelected();
+         String locale = I18N.LOCALES[languageBox.getSelectedIndex()];
+         short defaultWidth = Short.parseShort(defaultWidthField.getText());
+         short defaultHeight = Short.parseShort(defaultHeightField.getText());
+         short defaultXPosition = Short.parseShort(defaultXPositionField.getText());
+         short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
+         short defaultFontSize = ((Integer) ((SpinnerNumberModel) defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
+         boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
+         boolean showCat = showCatBox.isSelected();
+         boolean confirmDel = confirmDeleteBox.isSelected();
+         byte ci = 1;
+         if (closeIcon1Button.isSelected()) {
+            ci = 1;
+         } else if (closeIcon2Button.isSelected()) {
+            ci = 2;
+         }
+         String notesFile = notesFileField.getText();
+         short serverType = (short) serverTypeBox.getSelectedIndex();
+         String serverAddress = serverAddressField.getText();
+         String serverUser = serverUserField.getText();
+         char[] serverPasswd = serverPasswdField.getPassword();
+         boolean storeServerPass = storeServerPassBox.isSelected();
+         String serverDir = serverDirField.getText();
+         boolean confirmUpDownload = confirmUpDownloadBox.isSelected();
+
+         // write settings into object
+         UserSettings.getInstance().setUpdateCheckEnabled(updateCheckEnabled);
+         UserSettings.getInstance().setLocale(locale);
+         UserSettings.getInstance().setDefaultWindowHeight(defaultHeight);
+         UserSettings.getInstance().setDefaultWindowWidth(defaultWidth);
+         UserSettings.getInstance().setDefaultWindowXPosition(defaultXPosition);
+         UserSettings.getInstance().setDefaultWindowYPosition(defaultYPosition);
+         UserSettings.getInstance().setDefaultFontSize(defaultFontSize);
+         UserSettings.getInstance().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
+         UserSettings.getInstance().setCloseIcon(ci);
+         UserSettings.getInstance().setShowCategory(showCat);
+         UserSettings.getInstance().setConfirmDeletion(confirmDel);
+         UserSettings.getInstance().setNotesFile(notesFile);
+         UserSettings.getInstance().setServerType(serverType);
+         UserSettings.getInstance().setServerAddress(serverAddress);
+         UserSettings.getInstance().setServerUser(serverUser);
+         UserSettings.getInstance().setStoreServerPass(storeServerPass);
+         if (storeServerPass) {
+            UserSettings.getInstance().setServerPasswd(serverPasswd);
+         } else {
+            UserSettings.getInstance().setServerPasswd(null);
+         }
+         UserSettings.getInstance().setServerDir(serverDir);
+         UserSettings.getInstance().setConfirmUpDownload(confirmUpDownload);
+
+         //set new locale
+         I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
+
+         // load new notes from file
+         CategoryManager.getInstance().hideAllNotes();
+         CategoryManager.getInstance().removeAllCategories();
+         List<Category> cl = NoteIO.readCategoriesFromFile();
+         notesFileField.setText(UserSettings.getInstance().getNotesFile()); //if file has not been valid and new one has been selected
+         CategoryManager.getInstance().append(cl);
+
+         // show all visible notes
+         CategoryManager.getInstance().showAllNotesNotHidden();
+
+         // replace Traymenu (because of new categories)
+         PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
+
+         // save settings permanentely
+         UserSettings.getInstance().saveSettings();
       }
-      String notesFile = notesFileField.getText();
-      short serverType = (short) serverTypeBox.getSelectedIndex();
-      String serverAddress = serverAddressField.getText();
-      String serverUser = serverUserField.getText();
-      char[] serverPasswd = serverPasswdField.getPassword();
-      boolean storeServerPass = storeServerPassBox.isSelected();
-      String serverDir = serverDirField.getText();
-      boolean confirmUpDownload = confirmUpDownloadBox.isSelected();
-
-      // write settings into object
-      UserSettings.getInstance().setUpdateCheckEnabled(updateCheckEnabled);
-      UserSettings.getInstance().setLocale(locale);
-      UserSettings.getInstance().setDefaultWindowHeight(defaultHeight);
-      UserSettings.getInstance().setDefaultWindowWidth(defaultWidth);
-      UserSettings.getInstance().setDefaultWindowXPosition(defaultXPosition);
-      UserSettings.getInstance().setDefaultWindowYPosition(defaultYPosition);
-      UserSettings.getInstance().setDefaultFontSize(defaultFontSize);
-      UserSettings.getInstance().setDefaultAlwaysOnTop(defaultAlwaysOnTop);
-      UserSettings.getInstance().setCloseIcon(ci);
-      UserSettings.getInstance().setShowCategory(showCat);
-      UserSettings.getInstance().setConfirmDeletion(confirmDel);
-      UserSettings.getInstance().setNotesFile(notesFile);
-      UserSettings.getInstance().setServerType(serverType);
-      UserSettings.getInstance().setServerAddress(serverAddress);
-      UserSettings.getInstance().setServerUser(serverUser);
-      UserSettings.getInstance().setStoreServerPass(storeServerPass);
-      if (storeServerPass) {
-         UserSettings.getInstance().setServerPasswd(serverPasswd);
-      } else {
-         UserSettings.getInstance().setServerPasswd(null);
-      }
-      UserSettings.getInstance().setServerDir(serverDir);
-      UserSettings.getInstance().setConfirmUpDownload(confirmUpDownload);
-
-      //set new locale
-      I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
-
-      // load new notes from file
-      CategoryManager.getInstance().hideAllNotes();
-      CategoryManager.getInstance().removeAllCategories();
-      List<Category> cl = NoteIO.readCategoriesFromFile();
-      notesFileField.setText(UserSettings.getInstance().getNotesFile()); //if file has not been valid and new one has been selected
-      CategoryManager.getInstance().append(cl);
-
-      // show all visible notes
-      CategoryManager.getInstance().showAllNotesNotHidden();
-
-      // replace Traymenu (because of new categories)
-      PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
-
-      // save settings permanentely
-      UserSettings.getInstance().saveSettings();
    }
 
    @Override
    public void changedUpdate(DocumentEvent arg0) {
-      applyButton.setEnabled(true);
+      markSettingsChanged(true);
    }
 
    @Override
    public void insertUpdate(DocumentEvent arg0) {
-      applyButton.setEnabled(true);
+      markSettingsChanged(true);
    }
 
    @Override
    public void removeUpdate(DocumentEvent arg0) {
-      applyButton.setEnabled(true);
+      markSettingsChanged(true);
    }
 
    @Override
    public void stateChanged(ChangeEvent arg0) {
-      applyButton.setEnabled(true);
+      markSettingsChanged(true);
    }
 
    private void loadLocaleTexts() {
@@ -1070,5 +1074,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverDirLabel.setText(I18N.getInstance().getString("settingsdialog.server.directory") + ":");
       storeServerPassBox.setText(I18N.getInstance().getString("settingsdialog.server.storepwcheckbox"));
       confirmUpDownloadBox.setText(I18N.getInstance().getString("settingsdialog.server.confirmupdownloadcheckbox"));
+   }
+
+   private void markSettingsChanged(boolean settingsChanged) {
+      this.settingsChanged = settingsChanged;
+      applyButton.setEnabled(settingsChanged);
    }
 }
