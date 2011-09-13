@@ -24,6 +24,7 @@ package net.sourceforge.pinemup.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import net.sourceforge.pinemup.logic.UserSettings;
 
@@ -59,8 +60,8 @@ public abstract class ServerConnection {
          }
          fis.close();
          fos.close();
-      } catch (Exception e) {
-         //do nothing
+      } catch (IOException e) {
+         e.printStackTrace();
       }
    }
 

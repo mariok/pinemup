@@ -902,7 +902,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       defaultHeightField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowHeight()));
       defaultXPositionField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowXPostition()));
       defaultYPositionField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowYPostition()));
-      defaultFontSizeSpinner.getModel().setValue(new Integer(UserSettings.getInstance().getDefaultFontSize()));
+      defaultFontSizeSpinner.getModel().setValue(Integer.valueOf(UserSettings.getInstance().getDefaultFontSize()));
       if (UserSettings.getInstance().getCloseIcon() == 1) {
          closeIcon1Button.setSelected(true);
       } else if (UserSettings.getInstance().getCloseIcon() == 2) {

@@ -112,6 +112,7 @@ public class WebdavConnection extends ServerConnection {
             os.write(nextByte);
             nextByte = fis.read();
          }
+         fis.close();
          os.close();
          if (urlc.getResponseCode() != HttpURLConnection.HTTP_CREATED && urlc.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
             uploaded = false;

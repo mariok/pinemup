@@ -146,7 +146,7 @@ public class MenuCreator implements ActionListener {
       NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }
 
-   class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {
+   private static class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {
       /**
        *
        */
@@ -164,7 +164,7 @@ public class MenuCreator implements ActionListener {
       }
    }
 
-   class CategoryJMenuItem extends JMenuItem implements MenuItemWithCategory {
+   private static class CategoryJMenuItem extends JMenuItem implements MenuItemWithCategory {
       /**
        *
        */
@@ -182,7 +182,7 @@ public class MenuCreator implements ActionListener {
       }
    }
 
-   interface MenuItemWithCategory {
+   private interface MenuItemWithCategory {
       Category getCategory();
    }
 }

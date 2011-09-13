@@ -63,8 +63,8 @@ public final class I18N {
       try {
          s = res.getString(key);
       } catch (MissingResourceException e) {
-         System.err.println("Missing Resource: " + key);
          s = key;
+         e.printStackTrace();
       }
       return s;
    }

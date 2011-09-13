@@ -59,7 +59,7 @@ public final class ResourceLoader {
       } else if (size > 48) {
          size = 48;
       } else if (size % 8 != 0) {
-         size = Math.round(size / 8) * 8;
+         size = (size / 8) * 8;
       }
       return size;
    }
@@ -96,7 +96,7 @@ public final class ResourceLoader {
             is.close();
          }
       } catch (IOException e) {
-         // do nothing
+         e.printStackTrace();
       }
 
       return img;
@@ -119,14 +119,16 @@ public final class ResourceLoader {
    }
 
    public String getLicense() {
-      String s = "";
+      StringBuilder s = new StringBuilder();
       try {
          String filename = "COPYING";
          InputStream is = getResourceStream(filename);
          BufferedReader br = new BufferedReader(new InputStreamReader(is));
          String nextLine = br.readLine();
+
          while (nextLine != null) {
-            s += nextLine + "\r\n";
+            s.append(nextLine);
+            s.append("\r\n");
             nextLine = br.readLine();
          }
          br.close();
@@ -134,7 +136,7 @@ public final class ResourceLoader {
          e.printStackTrace();
       }
 
-      return s;
+      return s.toString();
    }
 
    public URL getSchemaFile(String version) {

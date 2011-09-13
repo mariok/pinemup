@@ -121,7 +121,7 @@ public final class NoteIO {
       } catch (FileNotFoundException e) {
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       } catch (IOException e) {
-         System.err.println("IO Error");
+         e.printStackTrace();
       }
    }
 
@@ -245,14 +245,13 @@ public final class NoteIO {
          parser.close();
          in.close();
       } catch (FileNotFoundException e) {
-         //neu erstellen
+         //create default categories
          c.add(new Category("Home", true, (byte) 0));
          c.add(new Category("Office", false, (byte) 0));
       } catch (XMLStreamException e) {
-         //Meldung ausgeben
-         System.out.println("XML Error");
+         e.printStackTrace();
       } catch (IOException e) {
-         System.out.println("IO Error");
+         e.printStackTrace();
       }
       return c;
    }
@@ -288,7 +287,6 @@ public final class NoteIO {
             ostream.flush();
             ostream.close();
          } catch (IOException e) {
-            System.out.println("IOERROR: " + e.getMessage() + "\n");
             e.printStackTrace();
          }
       }
@@ -369,11 +367,11 @@ public final class NoteIO {
          parser.close();
          in.close();
       } catch (FileNotFoundException e) {
-         // do nothing
+         e.printStackTrace();
       } catch (XMLStreamException e) {
-         System.err.println("XML Error");
+         e.printStackTrace();
       } catch (IOException e) {
-         System.err.println("IO Error");
+         e.printStackTrace();
       }
       return version;
    }

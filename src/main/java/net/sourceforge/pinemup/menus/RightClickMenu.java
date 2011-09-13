@@ -160,7 +160,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
 
          for (int i=0; i<setFontSizeItem.length; i++) {
             if (src == setFontSizeItem[i]) {
-               parentWindow.getParentNote().setFontSize((short)(i+5));
+               parentWindow.getParentNote().setFontSize((short) (i+5));
                parentWindow.updateFontSize();
             }
          }

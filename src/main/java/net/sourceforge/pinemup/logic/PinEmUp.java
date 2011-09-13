@@ -38,7 +38,6 @@ public final class PinEmUp {
       } else {
          VERSION = "devel";
       }
-
    }
 
    private PinEmUp() {
@@ -54,7 +53,7 @@ public final class PinEmUp {
          try {
             tray.add(PinEmUpTrayIcon.getInstance());
          } catch (AWTException e) {
-            System.err.println(e);
+            e.printStackTrace();
          }
 
          //show all notes that are set visible

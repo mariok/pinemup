@@ -199,13 +199,11 @@ public final class UserSettings {
    public String getServerPasswdString() {
       String tempString = "";
       if (storeServerPass) {
-         for (int i = 0; i < serverPasswd.length; i++) {
-            tempString += serverPasswd[i];
-         }
+         tempString = String.valueOf(serverPasswd);
       } else {
          JPasswordField p = new JPasswordField(12);
          JOptionPane.showMessageDialog(null, p, I18N.getInstance().getString("confirm.enterserverpassword"), JOptionPane.PLAIN_MESSAGE);
-         tempString = String.copyValueOf(p.getPassword());
+         tempString = String.valueOf(p.getPassword());
       }
       return tempString;
    }

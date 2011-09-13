@@ -24,6 +24,7 @@ package net.sourceforge.pinemup.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -56,7 +57,7 @@ public class FTPConnection extends ServerConnection {
             nextByte = is.read();
          }
          fos.close();
-      } catch (Exception e) {
+      } catch (IOException e) {
          downloaded = false;
       }
       if (downloaded) {
@@ -71,14 +72,15 @@ public class FTPConnection extends ServerConnection {
    @Override
    public void exportNotesToServer() {
       boolean uploaded = true;
+      String completeFilename = UserSettings.getInstance().getNotesFile();
+      File f = new File(completeFilename);
+      String filename = f.getName();
+      String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":"
+      + UserSettings.getInstance().getServerPasswdString() + "@" + UserSettings.getInstance().getServerAddress()
+      + UserSettings.getInstance().getServerDir() + filename + ";type=i";
+      FileInputStream fis;
       try {
-         String completeFilename = UserSettings.getInstance().getNotesFile();
-         File f = new File(completeFilename);
-         String filename = f.getName();
-         FileInputStream fis = new FileInputStream(f);
-         String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":"
-         + UserSettings.getInstance().getServerPasswdString() + "@" + UserSettings.getInstance().getServerAddress()
-         + UserSettings.getInstance().getServerDir() + filename + ";type=i";
+         fis = new FileInputStream(f);
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
          OutputStream  os = urlc.getOutputStream();
@@ -88,8 +90,9 @@ public class FTPConnection extends ServerConnection {
             os.write(nextByte);
             nextByte = fis.read();
          }
+         fis.close();
          os.close();
-      } catch (Exception e) {
+      } catch (IOException e) {
          uploaded = false;
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
