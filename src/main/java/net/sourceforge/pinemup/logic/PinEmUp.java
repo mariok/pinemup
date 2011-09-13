@@ -41,6 +41,14 @@ public final class PinEmUp {
    }
 
    private PinEmUp() {
+      // wait for a moment for SystemTray to be initialized
+      // (to prevent problems with autostart on some systems)
+      try {
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
       if (SystemTray.isSupported()) {
          //set locale
          I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
