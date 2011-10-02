@@ -119,8 +119,8 @@ Contents
 4. Contact information
 ------------------------
   Author: Mario Ködding
-  Email: dev-mario@web.de
-  Jabber: dev-mario@web.de
+  Email: mario.koedding@web.de
+  Jabber: mario.koedding@web.de
 
   Project-Homepage:
   http://pinemup.sourceforge.net

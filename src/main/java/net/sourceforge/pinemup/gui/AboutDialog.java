@@ -74,7 +74,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       msg += "<html>";
       msg += "<h1>Developers</h1>";
       msg += "<p>Mario Ködding<br />";
-      msg += "<a href=\"mailto:dev-mario@web.de\">dev-mario@web.de</a><br />";
+      msg += "<a href=\"mailto:mario.koedding@web.de\">mario.koedding@web.de</a><br />";
       msg += "developer &amp; founder of the project</p>";
       msg += "<p>&nbsp;</p>";
       msg += "<h1>Translators:</h1>";
