@@ -38,12 +38,9 @@ import net.sourceforge.pinemup.logic.CategoryManager;
 import net.sourceforge.pinemup.logic.UserSettings;
 
 public class RightClickMenu extends JPopupMenu implements ActionListener {
-   /**
-    *
-    */
    private static final long serialVersionUID = 1L;
-
    private static final String ACTIVE_SYMBOL = "->";
+   private static final int NUMBER_OF_FONTSIZES = 26;
 
    private NoteWindow parentWindow;
 
@@ -63,7 +60,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
 
       //add basic items
       JMenuItem[] basicItems = myMenuCreator.getBasicJMenuItems();
-      for (int i=0; i<basicItems.length; i++) {
+      for (int i = 0; i < basicItems.length; i++) {
          add(basicItems[i]);
       }
       addSeparator();
@@ -78,10 +75,10 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       JMenu settingsMenu = new JMenu(I18N.getInstance().getString("menu.notesettings"));
 
       JMenu setFontSizeMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.fontsize"));
-      setFontSizeItem = new JMenuItem[26];
-      for (int i=0; i<26; i++) {
-         setFontSizeItem[i] = new JMenuItem(String.valueOf(i+5));
-         if (i+5 == parentWindow.getParentNote().getFontSize()) {
+      setFontSizeItem = new JMenuItem[NUMBER_OF_FONTSIZES];
+      for (int i = 0; i < NUMBER_OF_FONTSIZES; i++) {
+         setFontSizeItem[i] = new JMenuItem(String.valueOf(i + 5));
+         if (i + 5 == parentWindow.getParentNote().getFontSize()) {
             setFontSizeItem[i].setText(ACTIVE_SYMBOL + " " + setFontSizeItem[i].getText());
          } else {
             setFontSizeItem[i].setText("  " + setFontSizeItem[i].getText());
@@ -92,7 +89,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
 
       JMenu setBGColorMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.color"));
       setBGColorItem = new JMenuItem[BackgroundLabel.getNumberOfColors()];
-      for (byte i=0; i<setBGColorItem.length; i++) {
+      for (byte i = 0; i < setBGColorItem.length; i++) {
          String prefix = " ";
          if (i == parentWindow.getParentNote().getBGColor()) {
             prefix = ACTIVE_SYMBOL + " ";
@@ -105,8 +102,8 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
 
       JMenu setCategoryMenu = new JMenu(I18N.getInstance().getString("category"));
       setCategoryItem = new JMenuItem[CategoryManager.getInstance().getNumberOfCategories()];
-      for (int i=0; i<setCategoryItem.length; i++) {
-         setCategoryItem[i] = new JMenuItem((i+1) + " " + CategoryManager.getInstance().getCategoryNames()[i]);
+      for (int i = 0; i < setCategoryItem.length; i++) {
+         setCategoryItem[i] = new JMenuItem((i + 1) + " " + CategoryManager.getInstance().getCategoryNames()[i]);
          setCategoryItem[i].addActionListener(this);
          setCategoryMenu.add(setCategoryItem[i]);
       }
@@ -152,20 +149,20 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       } else if (src == alwaysOnTopOffItem) {
          parentWindow.getParentNote().setAlwaysOnTop(false);
       } else {
-         for (int i=0; i<setCategoryItem.length; i++) {
+         for (int i = 0; i < setCategoryItem.length; i++) {
             if (src == setCategoryItem[i]) {
                parentWindow.getParentNote().moveToCategory(CategoryManager.getInstance().getCategoryByNumber(i));
             }
          }
 
-         for (int i=0; i<setFontSizeItem.length; i++) {
+         for (int i = 0; i < setFontSizeItem.length; i++) {
             if (src == setFontSizeItem[i]) {
-               parentWindow.getParentNote().setFontSize((short) (i+5));
+               parentWindow.getParentNote().setFontSize((short) (i + 5));
                parentWindow.updateFontSize();
             }
          }
 
-         for (byte i=0; i<setBGColorItem.length; i++) {
+         for (byte i = 0; i < setBGColorItem.length; i++) {
             if (src == setBGColorItem[i]) {
                parentWindow.getParentNote().setBGColor(i);
                parentWindow.setBGColor(i);

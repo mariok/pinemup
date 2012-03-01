@@ -96,16 +96,16 @@ public final class NoteIO {
                writer.writeAttribute("size", String.valueOf(n.getFontSize()));
                String noteText = n.getText();
                String[] textParts = noteText.split("\n");
-               for (int i = 0; i<textParts.length; i++) {
+               for (int i = 0; i < textParts.length; i++) {
                   writer.writeCharacters(textParts[i]);
-                  if (i < textParts.length-1) {
+                  if (i < textParts.length - 1) {
                      writer.writeEmptyElement("newline");
                   }
                }
                //newlines at the end
                while (noteText.endsWith("\n")) {
                   writer.writeEmptyElement("newline");
-                  noteText = noteText.substring(0, noteText.length()-1);
+                  noteText = noteText.substring(0, noteText.length() - 1);
                }
                writer.writeEndElement();
                writer.writeEndElement();
@@ -173,7 +173,7 @@ public final class NoteIO {
                   String name = "";
                   boolean def = false;
                   byte defNoteColor = 0;
-                  for (int i=0; i<parser.getAttributeCount(); i++) {
+                  for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("name")) {
                         name = parser.getAttributeValue(i);
                      } else if (parser.getAttributeLocalName(i).equals("default")) {
@@ -189,7 +189,7 @@ public final class NoteIO {
                   c.add(currentCategory);
                } else if (ename.equals("note")) {
                   currentNote = new Note("", (byte) 0);
-                  for (int i=0; i<parser.getAttributeCount(); i++) {
+                  for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");
                         currentNote.setHidden(h);
@@ -217,7 +217,7 @@ public final class NoteIO {
                      currentCategory.addNote(currentNote);
                   }
                } else if (ename.equals("text")) {
-                  for (int i=0; i<parser.getAttributeCount(); i++) {
+                  for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("size")) {
                         short fontSize = Short.parseShort(parser.getAttributeValue(i));
                         currentNote.setFontSize(fontSize);
@@ -294,7 +294,7 @@ public final class NoteIO {
 
    public static String checkAndAddExtension(String s, String xt) {
       int len = s.length();
-      String ext = s.substring(len-4, len);
+      String ext = s.substring(len - 4, len);
       if (!ext.toLowerCase().equals(xt.toLowerCase())) {
          s = s + xt.toLowerCase();
       }
@@ -352,7 +352,7 @@ public final class NoteIO {
             case XMLStreamConstants.START_ELEMENT:
                String ename = parser.getLocalName();
                if (ename.equals("notesfile")) {
-                  for (int i=0; i<parser.getAttributeCount(); i++) {
+                  for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("version")) {
                         version = parser.getAttributeValue(i);
                      }

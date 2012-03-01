@@ -219,7 +219,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       };
       catTableModel.setColumnIdentifiers(columnNames);
       Object[][] rowData = makeDataArray();
-      for (int i=0; i<rowData.length; i++) {
+      for (int i = 0; i < rowData.length; i++) {
          catTableModel.addRow(rowData[i]);
       }
 
@@ -350,21 +350,21 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       if (moveUp) {
          if (selectedCat.isDefaultCategory()) {
             defCat--;
-         } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow-1).isDefaultCategory()) {
+         } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow - 1).isDefaultCategory()) {
             defCat++;
          }
          CategoryManager.getInstance().moveCategoryUp(selectedCat);
-         catTableModel.moveRow(selectedRow, selectedRow, selectedRow-1);
-         catTable.setRowSelectionInterval(selectedRow-1, selectedRow-1);
+         catTableModel.moveRow(selectedRow, selectedRow, selectedRow - 1);
+         catTable.setRowSelectionInterval(selectedRow - 1, selectedRow - 1);
       } else {
          if (selectedCat.isDefaultCategory()) {
             defCat++;
-         } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow+1).isDefaultCategory()) {
+         } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow + 1).isDefaultCategory()) {
             defCat--;
          }
          CategoryManager.getInstance().moveCategoryDown(selectedCat);
-         catTableModel.moveRow(selectedRow, selectedRow, selectedRow+1);
-         catTable.setRowSelectionInterval(selectedRow+1, selectedRow+1);
+         catTableModel.moveRow(selectedRow, selectedRow, selectedRow + 1);
+         catTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
       }
       PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
    }
@@ -389,7 +389,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       Object[] rowData = {"", catName, "0"};
       catTableModel.addRow(rowData);
       noOfCategories++;
-      catTable.setRowSelectionInterval(noOfCategories-1, noOfCategories-1);
+      catTable.setRowSelectionInterval(noOfCategories - 1, noOfCategories - 1);
       catNameField.setSelectionStart(0);
       catNameField.setSelectionEnd(catNameField.getText().length());
       catNameField.requestFocus();

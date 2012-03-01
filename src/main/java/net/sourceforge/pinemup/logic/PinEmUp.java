@@ -31,6 +31,7 @@ import net.sourceforge.pinemup.io.NoteIO;
 
 public final class PinEmUp {
    public static final String VERSION;
+   private static final int STARTUP_SLEEP_TIME = 1000;
 
    static {
       if (PinEmUp.class.getPackage().getImplementationVersion() != null) {
@@ -44,7 +45,7 @@ public final class PinEmUp {
       // wait for a moment for SystemTray to be initialized
       // (to prevent problems with autostart on some systems)
       try {
-         Thread.sleep(1000);
+         Thread.sleep(STARTUP_SLEEP_TIME);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }

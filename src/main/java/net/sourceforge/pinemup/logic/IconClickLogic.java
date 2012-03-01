@@ -25,7 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 
-public class IconClickLogic extends MouseAdapter implements ActionListener {
+class IconClickLogic extends MouseAdapter implements ActionListener {
    public void actionPerformed(ActionEvent arg0) {
       Category defCat = CategoryManager.getInstance().getDefaultCategory();
       if (defCat != null) {

@@ -63,7 +63,7 @@ public class MenuCreator implements ActionListener {
    public JMenuItem[] getBasicJMenuItems() {
       String[] texts = getBasicItemTexts();
       basicItemJ = new JMenuItem[texts.length];
-      for (int i=0; i<texts.length; i++) {
+      for (int i = 0; i < texts.length; i++) {
          basicItemJ[i] = new JMenuItem(texts[i]);
          basicItemJ[i].addActionListener(this);
       }
@@ -73,7 +73,7 @@ public class MenuCreator implements ActionListener {
    public MenuItem[] getBasicMenuItems() {
       String[] texts = getBasicItemTexts();
       basicItem = new MenuItem[texts.length];
-      for (int i=0; i<texts.length; i++) {
+      for (int i = 0; i < texts.length; i++) {
          basicItem[i] = new MenuItem(texts[i]);
          basicItem[i].addActionListener(this);
       }
@@ -84,7 +84,7 @@ public class MenuCreator implements ActionListener {
       JMenu menu = new JMenu(title);
       String[] texts = getCategoryItemTexts();
       categoryItemJ = new CategoryJMenuItem[texts.length];
-      for (int i=0; i<texts.length; i++) {
+      for (int i = 0; i < texts.length; i++) {
          categoryItemJ[i] = new CategoryJMenuItem(texts[i], c);
          categoryItemJ[i].addActionListener(this);
          menu.add(categoryItemJ[i]);
@@ -103,7 +103,7 @@ public class MenuCreator implements ActionListener {
       Menu menu = new Menu(title);
       String[] texts = getCategoryItemTexts();
       categoryItem = new CategoryMenuItem[texts.length];
-      for (int i=0; i<texts.length; i++) {
+      for (int i = 0; i < texts.length; i++) {
          categoryItem[i] = new CategoryMenuItem(texts[i], c);
          categoryItem[i].addActionListener(this);
          menu.add(categoryItem[i]);

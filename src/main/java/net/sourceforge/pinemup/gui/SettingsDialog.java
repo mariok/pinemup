@@ -68,6 +68,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private static final int DIALOG_WIDTH = 640;
    private static final int DIALOG_HEIGHT = 480;
 
+   private static final int DEFAULT_TEXTFIELD_SIZE = 20;
+
    private static SettingsDialog instance;
 
    private boolean settingsChanged;
@@ -688,7 +690,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       notesFileBorder = new TitledBorder("");
       notesFilePanel.setBorder(notesFileBorder);
       //Add fields
-      notesFileField = new JTextField(20);
+      notesFileField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       notesFileField.getDocument().addDocumentListener(this);
       browseButton = new JButton();
       browseButton.addActionListener(this);
@@ -751,15 +753,15 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       //Create fields
       serverTypeBox = new JComboBox(ServerConnection.SERVERTYPE_NAMES);
       serverTypeBox.addActionListener(this);
-      serverAddressField = new JTextField(20);
+      serverAddressField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverAddressField.getDocument().addDocumentListener(this);
-      serverUserField = new JTextField(20);
+      serverUserField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverUserField.getDocument().addDocumentListener(this);
-      serverPasswdField = new JPasswordField(20);
+      serverPasswdField = new JPasswordField(DEFAULT_TEXTFIELD_SIZE);
       serverPasswdField.getDocument().addDocumentListener(this);
       storeServerPassBox = new JCheckBox();
       storeServerPassBox.addActionListener(this);
-      serverDirField = new JTextField(20);
+      serverDirField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverDirField.getDocument().addDocumentListener(this);
       confirmUpDownloadBox = new JCheckBox();
 
@@ -886,7 +888,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private int getIndexForLocale(String locale) {
       int index = 0;
-      for (int i=0; i<I18N.LOCALES.length; i++) {
+      for (int i = 0; i < I18N.LOCALES.length; i++) {
          if (I18N.LOCALES[i].equals(locale)) {
             index = i;
             break;

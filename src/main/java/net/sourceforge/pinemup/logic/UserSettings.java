@@ -267,7 +267,7 @@ public final class UserSettings {
       prefs = Preferences.userNodeForPackage(PinEmUp.class);
 
       String homeDir = System.getProperty("user.home");
-      if (homeDir.charAt(homeDir.length()-1) != '\\' && homeDir.charAt(homeDir.length()-1) != '/') {
+      if (homeDir.charAt(homeDir.length() - 1) != '\\' && homeDir.charAt(homeDir.length() - 1) != '/') {
          homeDir = homeDir + "/";
       }
 

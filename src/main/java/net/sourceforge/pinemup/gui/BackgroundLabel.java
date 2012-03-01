@@ -93,7 +93,7 @@ public class BackgroundLabel extends JLabel {
        int w = getWidth();
        Graphics2D g2 = (Graphics2D) g;
 
-       for (int i=1; i<=w; i++) {
+       for (int i = 1; i <= w; i++) {
           int startX = i;
           int startY = 0;
           int endX = startX + 1;
@@ -131,7 +131,7 @@ public class BackgroundLabel extends JLabel {
 
    public static String[] getColorNames() {
       String[] names = new String[COLORS.length];
-      for (byte i=0; i<COLORS.length; i++) {
+      for (byte i = 0; i < COLORS.length; i++) {
          names[i] = BackgroundLabel.getColorName(i);
       }
       return names;

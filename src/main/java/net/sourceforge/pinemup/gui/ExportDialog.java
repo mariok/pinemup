@@ -67,7 +67,7 @@ public class ExportDialog extends JDialog implements ActionListener {
 
       // Category Checkboxes
       int rows = CategoryManager.getInstance().getNumberOfCategories();
-      JPanel checkBoxPanel = new JPanel(new GridLayout(rows+2, 1));
+      JPanel checkBoxPanel = new JPanel(new GridLayout(rows + 2, 1));
       String[] cats = CategoryManager.getInstance().getCategoryNames();
       JPanel[] catPanel = new JPanel[rows];
       catBox = new JCheckBox[rows];
@@ -77,9 +77,9 @@ public class ExportDialog extends JDialog implements ActionListener {
       allCatsBox.addActionListener(this);
       allCatsPanel.add(allCatsBox);
       checkBoxPanel.add(allCatsPanel);
-      for (int i=0; i<rows; i++) {
+      for (int i = 0; i < rows; i++) {
          catPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
-         catBox[i] = new JCheckBox((i+1) + ": " + cats[i]);
+         catBox[i] = new JCheckBox((i + 1) + ": " + cats[i]);
          catBox[i].setSelected(true);
          catBox[i].addActionListener(this);
          catPanel[i].add(catBox[i]);
@@ -118,7 +118,7 @@ public class ExportDialog extends JDialog implements ActionListener {
          dispose();
       } else if (src == okButton) {
          List<Category> catsToExport = new LinkedList<Category>();
-         for (int i=0; i<catBox.length; i++) {
+         for (int i = 0; i < catBox.length; i++) {
             if (catBox[i].isSelected()) {
                catsToExport.add(CategoryManager.getInstance().getCategoryByNumber(i));
             }
@@ -128,11 +128,11 @@ public class ExportDialog extends JDialog implements ActionListener {
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {
-        for (int i=0; i<catBox.length; i++) {
+        for (int i = 0; i < catBox.length; i++) {
            catBox[i].setSelected(allCatsBox.isSelected());
         }
       } else {
-         for (int i=0; i<catBox.length; i++) {
+         for (int i = 0; i < catBox.length; i++) {
             if (src == catBox[i] && allCatsBox.isSelected() && !catBox[i].isSelected()) {
                allCatsBox.setSelected(false);
             }

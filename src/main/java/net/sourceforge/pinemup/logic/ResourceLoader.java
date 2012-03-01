@@ -35,6 +35,11 @@ public final class ResourceLoader {
 
    private static final String IMG_DIR = "img/";
    private static final String SCHEMA_DIR = "xsd/";
+   private static final int TEMP_BUFFER_SIZE = 1024;
+
+   private static final int TRAYICON_SIZE_STEP = 8;
+   private static final int TRAYICON_MIN_SIZE = 16;
+   private static final int TRAYICON_MAX_SIZE = 48;
 
    private Image closeIcon1;
    private Image closeIcon2;
@@ -54,12 +59,12 @@ public final class ResourceLoader {
 
    private long getTrayIconSize() {
       long size = Math.round(SystemTray.getSystemTray().getTrayIconSize().getHeight());
-      if ((size < 16)) {
-         size = 16;
-      } else if (size > 48) {
-         size = 48;
-      } else if (size % 8 != 0) {
-         size = (size / 8) * 8;
+      if ((size < TRAYICON_MIN_SIZE)) {
+         size = TRAYICON_MIN_SIZE;
+      } else if (size > TRAYICON_MAX_SIZE) {
+         size = TRAYICON_MAX_SIZE;
+      } else if (size % TRAYICON_SIZE_STEP != 0) {
+         size = (size / TRAYICON_SIZE_STEP) * TRAYICON_SIZE_STEP;
       }
       return size;
    }
@@ -81,7 +86,7 @@ public final class ResourceLoader {
 
          if (is != null) {
             byte[] buffer = new byte[0];
-            byte[] temp = new byte[1024];
+            byte[] temp = new byte[TEMP_BUFFER_SIZE];
             while (true) {
                int len = is.read(temp);
                if (len <= 0) {

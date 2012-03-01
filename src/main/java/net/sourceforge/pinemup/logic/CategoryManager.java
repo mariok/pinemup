@@ -131,16 +131,16 @@ public final class CategoryManager {
    public void moveCategoryUp(Category c) {
       int index = categories.indexOf(c);
       if (index > 0) {
-         categories.set(index, categories.get(index-1));
-         categories.set(index-1, c);
+         categories.set(index, categories.get(index - 1));
+         categories.set(index - 1, c);
       }
    }
 
    public void moveCategoryDown(Category c) {
       int index = categories.indexOf(c);
-      if (index < categories.size()-1) {
-         categories.set(index, categories.get(index+1));
-         categories.set(index+1, c);
+      if (index < categories.size() - 1) {
+         categories.set(index, categories.get(index + 1));
+         categories.set(index + 1, c);
       }
    }
 

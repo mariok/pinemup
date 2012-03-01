@@ -55,7 +55,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
 
       //add basic items
       MenuItem[] basicItems = (new MenuCreator()).getBasicMenuItems();
-      for (int i=0; i<basicItems.length; i++) {
+      for (int i = 0; i < basicItems.length; i++) {
          add(basicItems[i]);
       }
       addSeparator();
@@ -70,7 +70,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       int i;
       while (l.hasNext()) {
          i = l.nextIndex();
-         catMenu[i] = (new MenuCreator()).getCategoryActionsMenu((i+1) + " " + CategoryManager.getInstance().getCategoryNames()[i], l.next());
+         catMenu[i] = (new MenuCreator()).getCategoryActionsMenu((i + 1) + " " + CategoryManager.getInstance().getCategoryNames()[i], l.next());
          categoriesMenu.add(catMenu[i]);
       }
 
