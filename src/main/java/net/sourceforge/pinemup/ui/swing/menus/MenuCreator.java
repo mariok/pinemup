@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,8 +32,9 @@ import javax.swing.JMenuItem;
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.io.NoteIO;
 import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.swing.NoteWindow;
+import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 
 public class MenuCreator implements ActionListener {
    private CategoryJMenuItem[] categoryItemJ = null;
@@ -42,21 +43,15 @@ public class MenuCreator implements ActionListener {
    private MenuItem[] basicItem = null;
 
    private String[] getBasicItemTexts() {
-      String[] s = {
-            I18N.getInstance().getString("menu.addnoteitem"),
-            I18N.getInstance().getString("menu.showallnotesitem"),
-            I18N.getInstance().getString("menu.hideallnotesitem")
-      };
+      String[] s = { I18N.getInstance().getString("menu.addnoteitem"), I18N.getInstance().getString("menu.showallnotesitem"),
+            I18N.getInstance().getString("menu.hideallnotesitem") };
       return s;
    }
 
    private String[] getCategoryItemTexts() {
-      String[] s = {
-            I18N.getInstance().getString("menu.categorymenu.hidenotes"),
-            I18N.getInstance().getString("menu.categorymenu.shownotes"),
-            I18N.getInstance().getString("menu.categorymenu.showonlynotes"),
-            I18N.getInstance().getString("menu.categorymenu.setasdefault")
-      };
+      String[] s = { I18N.getInstance().getString("menu.categorymenu.hidenotes"),
+            I18N.getInstance().getString("menu.categorymenu.shownotes"), I18N.getInstance().getString("menu.categorymenu.showonlynotes"),
+            I18N.getInstance().getString("menu.categorymenu.setasdefault") };
       return s;
    }
 
@@ -88,7 +83,7 @@ public class MenuCreator implements ActionListener {
          categoryItemJ[i] = new CategoryJMenuItem(texts[i], c);
          categoryItemJ[i].addActionListener(this);
          menu.add(categoryItemJ[i]);
-         switch(i) {
+         switch (i) {
          case 2:
             menu.addSeparator();
             break;
@@ -107,7 +102,7 @@ public class MenuCreator implements ActionListener {
          categoryItem[i] = new CategoryMenuItem(texts[i], c);
          categoryItem[i].addActionListener(this);
          menu.add(categoryItem[i]);
-         switch(i) {
+         switch (i) {
          case 2:
             menu.addSeparator();
             break;
@@ -125,8 +120,8 @@ public class MenuCreator implements ActionListener {
          if (defCat != null) {
             Note newNote = new Note("", defCat.getDefaultNoteColor());
             defCat.addNote(newNote);
-            newNote.showIfNotHidden();
-            newNote.jumpInto();
+            NoteWindow window = NoteWindowManager.getInstance().createNoteWindowForNote(newNote);
+            window.jumpIntoTextArea();
          }
       } else if ((basicItem != null && src == basicItem[1]) || (basicItemJ != null && src == basicItemJ[1])) {
          CategoryManager.getInstance().unhideAndShowAllNotes();
@@ -141,9 +136,6 @@ public class MenuCreator implements ActionListener {
       } else if ((categoryItem != null && src == categoryItem[3]) || (categoryItemJ != null && src == categoryItemJ[3])) {
          CategoryManager.getInstance().setDefaultCategory(((MenuItemWithCategory) src).getCategory());
       }
-
-      // save notes to file after every change
-      NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }
 
    private static class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {

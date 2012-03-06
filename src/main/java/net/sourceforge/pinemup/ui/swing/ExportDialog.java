@@ -124,13 +124,13 @@ public class ExportDialog extends JDialog implements ActionListener {
             }
          }
 
-         NoteIO.exportCategoriesToTextFile(catsToExport.listIterator());
+         NoteIO.exportCategoriesToTextFile(catsToExport);
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {
-        for (int i = 0; i < catBox.length; i++) {
-           catBox[i].setSelected(allCatsBox.isSelected());
-        }
+         for (int i = 0; i < catBox.length; i++) {
+            catBox[i].setSelected(allCatsBox.isSelected());
+         }
       } else {
          for (int i = 0; i < catBox.length; i++) {
             if (src == catBox[i] && allCatsBox.isSelected() && !catBox[i].isSelected()) {

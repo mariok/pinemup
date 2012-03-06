@@ -33,7 +33,6 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -61,8 +60,8 @@ import org.xml.sax.SAXException;
 public final class NoteIO {
    public static final String LATEST_NOTESFILE_VERSION = "0.2";
 
-   public static void writeCategoriesToFile(ListIterator<Category> l) {
-      //write notes to xml file
+   public static void writeCategoriesToFile(List<Category> l) {
+      // write notes to xml file
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
          FileOutputStream f = new FileOutputStream(UserSettings.getInstance().getNotesFile());
@@ -72,18 +71,13 @@ public final class NoteIO {
          writer.writeStartElement("notesfile");
          writer.writeAttribute("version", LATEST_NOTESFILE_VERSION);
 
-         Category tc;
-         while (l.hasNext()) {
-            tc = l.next();
+         for (Category cat : l) {
             writer.writeStartElement("category");
-            writer.writeAttribute("name", tc.getName());
-            writer.writeAttribute("default", String.valueOf(tc.isDefaultCategory()));
-            writer.writeAttribute("defaultnotecolor", String.valueOf(tc.getDefaultNoteColor()));
+            writer.writeAttribute("name", cat.getName());
+            writer.writeAttribute("default", String.valueOf(cat.isDefaultCategory()));
+            writer.writeAttribute("defaultnotecolor", String.valueOf(cat.getDefaultNoteColor()));
 
-            ListIterator<Note> nl = tc.getListIterator();
-            Note n;
-            while (nl.hasNext()) {
-               n = nl.next();
+            for (Note n : cat.getNotes()) {
                writer.writeStartElement("note");
                writer.writeAttribute("hidden", String.valueOf(n.isHidden()));
                writer.writeAttribute("alwaysontop", String.valueOf(n.isAlwaysOnTop()));
@@ -102,7 +96,7 @@ public final class NoteIO {
                      writer.writeEmptyElement("newline");
                   }
                }
-               //newlines at the end
+               // newlines at the end
                while (noteText.endsWith("\n")) {
                   writer.writeEmptyElement("newline");
                   noteText = noteText.substring(0, noteText.length() - 1);
@@ -117,9 +111,11 @@ public final class NoteIO {
          writer.close();
          f.close();
       } catch (XMLStreamException e) {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       } catch (FileNotFoundException e) {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       } catch (IOException e) {
          e.printStackTrace();
       }
@@ -132,7 +128,8 @@ public final class NoteIO {
       boolean defaultNotAdded = true;
       File nfile = new File(UserSettings.getInstance().getNotesFile());
       while (nfile.exists() && !fileIsValid(UserSettings.getInstance().getNotesFile())) {
-         if (JOptionPane.showConfirmDialog(null,  I18N.getInstance().getString("error.notesfilenotvalid"), I18N.getInstance().getString("error.title"), JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("error.notesfilenotvalid"),
+               I18N.getInstance().getString("error.title"), JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
             System.exit(0);
          }
 
@@ -155,7 +152,7 @@ public final class NoteIO {
          int event;
          while (parser.hasNext()) {
             event = parser.next();
-            switch(event) {
+            switch (event) {
             case XMLStreamConstants.START_DOCUMENT:
                // do nothing
                break;
@@ -168,7 +165,7 @@ public final class NoteIO {
             case XMLStreamConstants.START_ELEMENT:
                String ename = parser.getLocalName();
                if (ename.equals("notesfile")) {
-                  //do nothing yet
+                  // do nothing yet
                } else if (ename.equals("category")) {
                   String name = "";
                   boolean def = false;
@@ -245,7 +242,7 @@ public final class NoteIO {
          parser.close();
          in.close();
       } catch (FileNotFoundException e) {
-         //create default categories
+         // create default categories
          c.add(new Category("Home", true, (byte) 0));
          c.add(new Category("Office", false, (byte) 0));
       } catch (XMLStreamException e) {
@@ -256,25 +253,21 @@ public final class NoteIO {
       return c;
    }
 
-   public static void exportCategoriesToTextFile(ListIterator<Category> l) {
+   public static void exportCategoriesToTextFile(List<Category> l) {
       File f = null;
       if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         String name = NoteIO.checkAndAddExtension(FileDialogCreator.getExportFileDialogInstance().getSelectedFile().getAbsolutePath(), ".txt");
+         String name = NoteIO.checkAndAddExtension(FileDialogCreator.getExportFileDialogInstance().getSelectedFile().getAbsolutePath(),
+               ".txt");
          f = new File(name);
       }
       if (f != null) {
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
             // write text of notes to file
-            Category tc;
-            while (l.hasNext()) {
-               tc = l.next();
-               ostream.println(I18N.getInstance().getString("category") + ": " + tc.getName());
+            for (Category cat : l) {
+               ostream.println(I18N.getInstance().getString("category") + ": " + cat.getName());
                ostream.println();
-               ListIterator<Note> nl = tc.getListIterator();
-               Note n;
-               while (nl.hasNext()) {
-                  n = nl.next();
+               for (Note n : cat.getNotes()) {
                   ostream.println(n.getText());
                   ostream.println();
                   ostream.println("---------------------");
@@ -303,37 +296,37 @@ public final class NoteIO {
 
    private static boolean fileIsValid(String filename) {
       try {
-      // 1. Lookup a factory for the W3C XML Schema language
-      SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+         // 1. Lookup a factory for the W3C XML Schema language
+         SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 
-      // 2. Compile the schema.
-      // Here the schema is loaded from a java.io.File, but you could use
-      // a java.net.URL or a javax.xml.transform.Source instead.
-      //File schemaLocation = ResourceLoader.getSchemaFile();
-      String version = getNotesFileVersion(filename);
-      if (version == null) {
-         return false;
-      }
-      URL schemaLocation = ResourceLoader.getInstance().getSchemaFile(version);
-      Schema schema;
-      schema = factory.newSchema(schemaLocation);
+         // 2. Compile the schema.
+         // Here the schema is loaded from a java.io.File, but you could use
+         // a java.net.URL or a javax.xml.transform.Source instead.
+         // File schemaLocation = ResourceLoader.getSchemaFile();
+         String version = getNotesFileVersion(filename);
+         if (version == null) {
+            return false;
+         }
+         URL schemaLocation = ResourceLoader.getInstance().getSchemaFile(version);
+         Schema schema;
+         schema = factory.newSchema(schemaLocation);
 
-      // 3. Get a validator from the schema.
-      Validator validator = schema.newValidator();
+         // 3. Get a validator from the schema.
+         Validator validator = schema.newValidator();
 
-      // 4. Parse the document you want to check.
-      Source source = new StreamSource(new FileInputStream(filename));
+         // 4. Parse the document you want to check.
+         Source source = new StreamSource(new FileInputStream(filename));
 
-      // 5. Check the document
-      validator.validate(source);
+         // 5. Check the document
+         validator.validate(source);
 
-      return true;
+         return true;
       } catch (IOException e) {
-         //e.printStackTrace();
+         // e.printStackTrace();
          return false;
       } catch (SAXException e) {
-         //System.out.println(filename + " is not valid!");
-         //System.out.println(e.getMessage());
+         // System.out.println(filename + " is not valid!");
+         // System.out.println(e.getMessage());
          return false;
       }
    }
@@ -348,7 +341,7 @@ public final class NoteIO {
          int event;
          while (parser.hasNext()) {
             event = parser.next();
-            switch(event) {
+            switch (event) {
             case XMLStreamConstants.START_ELEMENT:
                String ename = parser.getLocalName();
                if (ename.equals("notesfile")) {

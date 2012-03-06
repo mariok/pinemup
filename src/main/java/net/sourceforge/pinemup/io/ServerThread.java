@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ import java.util.List;
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.UserSettings;
+import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 
 public class ServerThread extends Thread {
    public static final boolean UPLOAD = true;
@@ -45,7 +46,7 @@ public class ServerThread extends Thread {
       } else { // download notes
          // download Notes
          ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).importNotesFromServer();
-         //load new file
+         // load new file
          List<Category> newCats = NoteIO.readCategoriesFromFile();
          // If successfull downloaded, replace:
          // hide notes
@@ -56,10 +57,10 @@ public class ServerThread extends Thread {
          CategoryManager.getInstance().append(newCats);
 
          // show all notes which are not hidden
-         CategoryManager.getInstance().showAllNotesNotHidden();
+         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
 
-         //save to file
-         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
+         // save to file
+         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getCategories());
       }
    }
 

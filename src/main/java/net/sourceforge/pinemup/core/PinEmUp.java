@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.io.NoteIO;
 import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 
 public final class PinEmUp {
    public static final String VERSION;
@@ -51,10 +52,10 @@ public final class PinEmUp {
       }
 
       if (SystemTray.isSupported()) {
-         //set locale
+         // set locale
          I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
-         //load notes from file
+         // load notes from file
          CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());
 
          // add trayicon
@@ -65,15 +66,16 @@ public final class PinEmUp {
             e.printStackTrace();
          }
 
-         //show all notes that are set visible
-         CategoryManager.getInstance().showAllNotesNotHidden();
+         // show all notes that are set visible
+         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
 
-         //udate check
+         // udate check
          if (UserSettings.getInstance().isUpdateCheckEnabled()) {
             new UpdateCheckThread(false);
          }
-      } else { //tray icon not supported
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.trayiconnotsupported"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+      } else { // tray icon not supported
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.trayiconnotsupported"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
          System.exit(1);
       }
    }

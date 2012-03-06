@@ -23,10 +23,9 @@ package net.sourceforge.pinemup.core;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 public final class CategoryManager {
-   private LinkedList<Category> categories;
+   private List<Category> categories;
    private static CategoryManager instance = new CategoryManager();
 
    private CategoryManager() {
@@ -46,41 +45,24 @@ public final class CategoryManager {
    }
 
    public void hideAllNotes() {
-      ListIterator<Category> l = categories.listIterator();
-      while (l.hasNext()) {
-         l.next().hideAllNotes();
-      }
-   }
-
-   public void showAllNotesNotHidden() {
-      ListIterator<Category> l = categories.listIterator();
-      while (l.hasNext()) {
-         l.next().showAllNotesNotHidden();
+      for (Category cat : categories) {
+         cat.hideAllNotes();
       }
    }
 
    public void unhideAndShowAllNotes() {
-      ListIterator<Category> l = categories.listIterator();
-      while (l.hasNext()) {
-         l.next().unhideAndShowAllNotes();
-      }
-   }
-
-   public void updateAllCategoriesInWindows() {
-      ListIterator<Category> l = categories.listIterator();
-      while (l.hasNext()) {
-         l.next().updateCategoryInWindows();
+      for (Category cat : categories) {
+         cat.unhideAndShowAllNotes();
       }
    }
 
    public String[] getCategoryNames() {
       int n = getNumberOfCategories();
       String[] s = new String[n];
-      ListIterator<Category> l = categories.listIterator();
-      int ni;
-      while (l.hasNext()) {
-         ni = l.nextIndex();
-         s[ni] = l.next().getName();
+      int ni = 0;
+      for (Category cat : categories) {
+         s[ni] = cat.getName();
+         ni++;
       }
       return s;
    }
@@ -90,40 +72,28 @@ public final class CategoryManager {
    }
 
    public Category getDefaultCategory() {
-      Category c = null;
-      ListIterator<Category> l = categories.listIterator();
-      Category tc;
-      while (l.hasNext() && c == null) {
-         tc = l.next();
-         if (tc.isDefaultCategory()) {
-            c = tc;
+      for (Category cat : categories) {
+         if (cat.isDefaultCategory()) {
+            return cat;
          }
       }
-      return c;
+      return null;
    }
 
    public void setDefaultCategory(Category c) {
-      ListIterator<Category> l = categories.listIterator();
-      Category tc;
-      while (l.hasNext()) {
-         tc = l.next();
-         if (tc == c) {
-            tc.setDefault(true);
-         } else {
-            tc.setDefault(false);
+      c.setDefault(true);
+      for (Category cat : categories) {
+         if (cat != c) {
+            cat.setDefault(false);
          }
       }
    }
 
    public void showOnlyNotesOfCategory(Category c) {
-      ListIterator<Category> l = categories.listIterator();
-      Category tc;
-      while (l.hasNext()) {
-         tc = l.next();
-         if (tc == c) {
-            tc.unhideAndShowAllNotes();
-         } else {
-            tc.hideAllNotes();
+      c.unhideAndShowAllNotes();
+      for (Category cat : categories) {
+         if (cat != c) {
+            cat.hideAllNotes();
          }
       }
    }
@@ -151,8 +121,16 @@ public final class CategoryManager {
       return categories.get(n);
    }
 
-   public ListIterator<Category> getListIterator() {
-      return categories.listIterator();
+   public List<Category> getCategories() {
+      return categories;
+   }
+
+   public List<Note> getAllVisibleNotes() {
+      List<Note> visibleNotes = new LinkedList<Note>();
+      for (Category cat : categories) {
+         visibleNotes.addAll(cat.getVisibleNotes());
+      }
+      return visibleNotes;
    }
 
    public void removeAllCategories() {
@@ -160,9 +138,6 @@ public final class CategoryManager {
    }
 
    public void append(List<Category> cl) {
-      ListIterator<Category> l = cl.listIterator();
-      while (l.hasNext()) {
-         categories.add(l.next());
-      }
+      categories.addAll(cl);
    }
 }

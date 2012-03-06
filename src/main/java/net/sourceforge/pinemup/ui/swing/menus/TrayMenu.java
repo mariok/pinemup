@@ -26,7 +26,6 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 
@@ -48,12 +47,13 @@ public class TrayMenu extends PopupMenu implements ActionListener {
     */
    private static final long serialVersionUID = 1L;
 
-   private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, serverUploadItem, serverDownloadItem;
+   private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, serverUploadItem,
+         serverDownloadItem;
 
    public TrayMenu() {
       super("pin 'em up");
 
-      //add basic items
+      // add basic items
       MenuItem[] basicItems = (new MenuCreator()).getBasicMenuItems();
       for (int i = 0; i < basicItems.length; i++) {
          add(basicItems[i]);
@@ -65,16 +65,15 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       add(categoriesMenu);
       Menu[] catMenu = new Menu[CategoryManager.getInstance().getNumberOfCategories()];
 
-      //Category menu items
-      ListIterator<Category> l = CategoryManager.getInstance().getListIterator();
-      int i;
-      while (l.hasNext()) {
-         i = l.nextIndex();
-         catMenu[i] = (new MenuCreator()).getCategoryActionsMenu((i + 1) + " " + CategoryManager.getInstance().getCategoryNames()[i], l.next());
+      // Category menu items
+      int i = 0;
+      for (Category cat : CategoryManager.getInstance().getCategories()) {
+         catMenu[i] = (new MenuCreator()).getCategoryActionsMenu((i + 1) + " " + CategoryManager.getInstance().getCategoryNames()[i], cat);
          categoriesMenu.add(catMenu[i]);
+         i++;
       }
 
-      //other category actions
+      // other category actions
       categoriesMenu.addSeparator();
       manageCategoriesItem = new MenuItem(I18N.getInstance().getString("menu.categorymenu.managecategoriesitem"));
       manageCategoriesItem.addActionListener(this);
@@ -113,7 +112,7 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       add(helpMenu);
       addSeparator();
 
-      //close item
+      // close item
       closeItem = new MenuItem(I18N.getInstance().getString("menu.exititem"));
       closeItem.addActionListener(this);
       add(closeItem);
@@ -126,18 +125,22 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       } else if (src == showSettingsDialogItem) {
          SettingsDialog.showInstance();
       } else if (src == closeItem) {
-         //save notes to file and exit
-         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
+         // save notes to file and exit
+         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getCategories());
          System.exit(0);
       } else if (src == serverUploadItem) {
-         if (!UserSettings.getInstance().getConfirmUpDownload() || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            //save notes to file
-            NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
-            //copy file to server
+         if (!UserSettings.getInstance().getConfirmUpDownload()
+               || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance()
+                     .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            // save notes to file
+            NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+            // copy file to server
             new ServerThread(ServerThread.UPLOAD);
          }
       } else if (src == serverDownloadItem) {
-         if (!UserSettings.getInstance().getConfirmUpDownload() || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacelocalfile"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+         if (!UserSettings.getInstance().getConfirmUpDownload()
+               || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacelocalfile"), I18N.getInstance()
+                     .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             new ServerThread(ServerThread.DOWNLOAD);
          }
       } else if (src == exportItem) {
@@ -147,8 +150,5 @@ public class TrayMenu extends PopupMenu implements ActionListener {
       } else if (src == updateItem) {
          new UpdateCheckThread(true);
       }
-
-      // save notes to file after every change
-      NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }
 }

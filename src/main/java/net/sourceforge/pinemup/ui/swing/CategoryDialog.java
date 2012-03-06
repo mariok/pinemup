@@ -29,7 +29,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ListIterator;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListSelectionModel;
@@ -120,7 +119,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       gbl.setConstraints(sp, gbc);
       centerPanel.add(sp);
 
-      //create items
+      // create items
       JPanel catEditPanel = makeCatEditPanel();
       JPanel moveUpPanel = new JPanel();
       JPanel moveDownPanel = new JPanel();
@@ -145,7 +144,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       deletePanel.add(deleteButton);
       addPanel.add(addButton);
 
-      //place items on panel
+      // place items on panel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
@@ -184,7 +183,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       gbl.setConstraints(catEditPanel, gbc);
       centerPanel.add(catEditPanel);
 
-      //automatically set window-size
+      // automatically set window-size
       pack();
 
       // center on screen
@@ -208,15 +207,12 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          // prevent all cells from being edited
          @Override
          public boolean isCellEditable(int row, int column) {
-           return false;
+            return false;
          }
       };
 
-      String[] columnNames = {
-         I18N.getInstance().getString("categorydialog.defaultcolumn"),
-         I18N.getInstance().getString("categorydialog.namecolumn"),
-         I18N.getInstance().getString("categorydialog.colorcolumn")
-      };
+      String[] columnNames = { I18N.getInstance().getString("categorydialog.defaultcolumn"),
+            I18N.getInstance().getString("categorydialog.namecolumn"), I18N.getInstance().getString("categorydialog.colorcolumn") };
       catTableModel.setColumnIdentifiers(columnNames);
       Object[][] rowData = makeDataArray();
       for (int i = 0; i < rowData.length; i++) {
@@ -237,20 +233,17 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
    private Object[][] makeDataArray() {
       int anz = CategoryManager.getInstance().getNumberOfCategories();
       Object[][] data = new Object[anz][3];
-      ListIterator<Category> l = CategoryManager.getInstance().getListIterator();
-      Category tc;
-      int index;
-      while (l.hasNext()) {
-         index = l.nextIndex();
-         tc = l.next();
-         if (tc.isDefaultCategory()) {
+      int index = 0;
+      for (Category cat : CategoryManager.getInstance().getCategories()) {
+         if (cat.isDefaultCategory()) {
             data[index][0] = "!";
             defCat = index;
          } else {
             data[index][0] = "";
          }
-         data[index][1] = tc.getName();
-         data[index][2] = String.valueOf(tc.getDefaultNoteColor());
+         data[index][1] = cat.getName();
+         data[index][2] = String.valueOf(cat.getDefaultNoteColor());
+         index++;
       }
       return data;
    }
@@ -319,7 +312,10 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
    private void deleteSelectedCategory() {
       boolean confirmed = true;
       if (selectedCat.getNumberOfNotes() > 0) {
-         confirmed = JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("categorydialog.deletemessagespart1") + selectedCat.getNumberOfNotes() + I18N.getInstance().getString("categorydialog.deletemessagespart2"), I18N.getInstance().getString("categorydialog.deletemessagestitle"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+         confirmed = JOptionPane.showConfirmDialog(null,
+               I18N.getInstance().getString("categorydialog.deletemessagespart1") + selectedCat.getNumberOfNotes()
+                     + I18N.getInstance().getString("categorydialog.deletemessagespart2"),
+               I18N.getInstance().getString("categorydialog.deletemessagestitle"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
       }
 
       if (confirmed) {
@@ -328,7 +324,8 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          CategoryManager.getInstance().removeCategory(selectedCat);
          catTableModel.removeRow(selectedRow);
          if (isDef) {
-            CategoryManager.getInstance().getListIterator().next().setDefault(true); //set first category as default
+            // set first category as default
+            CategoryManager.getInstance().getCategories().get(0).setDefault(true);
             catTableModel.setValueAt("!", 0, 0);
             defCat = 0;
          }
@@ -336,7 +333,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          noOfCategories--;
          selectedCat = null;
 
-         //disable all Buttons and fields
+         // disable all Buttons and fields
          moveUpButton.setEnabled(false);
          moveDownButton.setEnabled(false);
          deleteButton.setEnabled(false);
@@ -386,7 +383,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       colorBox.setSelectedIndex(0);
       CategoryManager.getInstance().addCategory(new Category(catName, false, (byte) 0));
       PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
-      Object[] rowData = {"", catName, "0"};
+      Object[] rowData = { "", catName, "0" };
       catTableModel.addRow(rowData);
       noOfCategories++;
       catTable.setRowSelectionInterval(noOfCategories - 1, noOfCategories - 1);
@@ -438,31 +435,31 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          selectedCat = null;
       }
 
-      //ENABLE OR DISABLE MOVEDOWN BUTTON
+      // ENABLE OR DISABLE MOVEDOWN BUTTON
       if (selectedRow == noOfCategories - 1) {
          moveDownButton.setEnabled(false);
       } else {
          moveDownButton.setEnabled(true);
       }
 
-      //ENABLE OR DISABLE MOVEUP BUTTON
+      // ENABLE OR DISABLE MOVEUP BUTTON
       if (selectedRow == 0) {
          moveUpButton.setEnabled(false);
       } else {
          moveUpButton.setEnabled(true);
       }
 
-      //ENABLE DELETE BUTTON?
+      // ENABLE DELETE BUTTON?
       if (noOfCategories > 1) {
          deleteButton.setEnabled(true);
       }
 
-      //ENABLE EDIT-FIELDS
+      // ENABLE EDIT-FIELDS
       catNameField.setEnabled(true);
       defaultBox.setEnabled(true);
       colorBox.setEnabled(true);
 
-      //Insert values in fields
+      // Insert values in fields
       if (selectedCat != null) {
          trackChanges = false;
          catNameField.setText(selectedCat.getName());

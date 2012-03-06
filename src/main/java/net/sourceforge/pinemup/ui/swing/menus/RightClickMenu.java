@@ -32,7 +32,6 @@ import javax.swing.JPopupMenu;
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.io.NoteIO;
 import net.sourceforge.pinemup.ui.swing.BackgroundLabel;
 import net.sourceforge.pinemup.ui.swing.I18N;
 import net.sourceforge.pinemup.ui.swing.NoteWindow;
@@ -55,17 +54,17 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       parentWindow = w;
       myCat = parentWindow.getParentNote().getCategory();
 
-      //create MenuCreator
+      // create MenuCreator
       MenuCreator myMenuCreator = new MenuCreator();
 
-      //add basic items
+      // add basic items
       JMenuItem[] basicItems = myMenuCreator.getBasicJMenuItems();
       for (int i = 0; i < basicItems.length; i++) {
          add(basicItems[i]);
       }
       addSeparator();
 
-      //add additional items
+      // add additional items
       deleteNoteItem = new JMenuItem(I18N.getInstance().getString("menu.deletenoteitem"));
       deleteNoteItem.addActionListener(this);
       add(deleteNoteItem);
@@ -109,7 +108,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       }
 
       JMenu alwaysOnTopMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.alwaysontop"));
-      String[] aot = {"  ", "  "};
+      String[] aot = { "  ", "  " };
       if (parentWindow.getParentNote().isAlwaysOnTop()) {
          aot[0] = ACTIVE_SYMBOL + " ";
       } else {
@@ -138,10 +137,11 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       if (src == deleteNoteItem) {
          boolean confirmed = true;
          if (UserSettings.getInstance().getConfirmDeletion()) {
-            confirmed = JOptionPane.showConfirmDialog(this, I18N.getInstance().getString("confirm.deletenote"), I18N.getInstance().getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            confirmed = JOptionPane.showConfirmDialog(this, I18N.getInstance().getString("confirm.deletenote"), I18N.getInstance()
+                  .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
          if (confirmed && myCat != null) {
-            parentWindow.getParentNote().hide();
+            parentWindow.getParentNote().setHidden(true);
             myCat.removeNote(parentWindow.getParentNote());
          }
       } else if (src == alwaysOnTopOnItem) {
@@ -169,8 +169,5 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
             }
          }
       }
-
-      // save notes to file after every change
-      NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
    }
 }

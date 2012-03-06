@@ -22,11 +22,11 @@
 package net.sourceforge.pinemup.core;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.List;
 
 public class Category {
    private String name;
-   private LinkedList<Note> notes;
+   private List<Note> notes;
    private boolean defaultCategory;
    private byte defaultNoteColor;
 
@@ -43,7 +43,7 @@ public class Category {
 
    public void rename(String s) {
       name = s;
-      updateCategoryInWindows();
+      notifyNoteObservers();
    }
 
    public boolean isDefaultCategory() {
@@ -67,14 +67,23 @@ public class Category {
    }
 
    public void hideAllNotes() {
-      ListIterator<Note> l = notes.listIterator();
-      while (l.hasNext()) {
-         l.next().hide();
+      for (Note note : notes) {
+         note.setHidden(true);
       }
    }
 
-   public ListIterator<Note> getListIterator() {
-      return notes.listIterator();
+   public List<Note> getNotes() {
+      return notes;
+   }
+
+   public List<Note> getVisibleNotes() {
+      List<Note> visibleNotes = new LinkedList<Note>();
+      for (Note note : notes) {
+         if (!note.isHidden()) {
+            visibleNotes.add(note);
+         }
+      }
+      return visibleNotes;
    }
 
    public void addNote(Note n) {
@@ -87,24 +96,15 @@ public class Category {
       notes.remove(n);
    }
 
-   public void showAllNotesNotHidden() {
-      ListIterator<Note> l = notes.listIterator();
-      while (l.hasNext()) {
-         l.next().showIfNotHidden();
-      }
-   }
-
    public void unhideAndShowAllNotes() {
-      ListIterator<Note> l = notes.listIterator();
-      while (l.hasNext()) {
-         l.next().unhideAndShow();
+      for (Note note : notes) {
+         note.setHidden(false);
       }
    }
 
-   public void updateCategoryInWindows() {
-      ListIterator<Note> l = notes.listIterator();
-      while (l.hasNext()) {
-         l.next().updateCategoryInWindow();
+   public void notifyNoteObservers() {
+      for (Note note : notes) {
+         note.notifyObservers();
       }
    }
 }

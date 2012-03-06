@@ -75,7 +75,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private boolean settingsChanged;
 
    private JButton okButton, cancelButton, applyButton, browseButton;
-   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, serverAddressField, serverUserField, serverDirField, notesFileField;
+   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, serverAddressField,
+         serverUserField, serverDirField, notesFileField;
    private JPasswordField serverPasswdField;
    private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeServerPassBox, updateCheckBox, confirmUpDownloadBox;
    private JSpinner defaultFontSizeSpinner;
@@ -83,8 +84,11 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private ButtonGroup closeIconGroup;
    private JButton updateCheckButton;
    private JComboBox serverTypeBox, languageBox;
-   private TitledBorder updateCheckBorder, languageBorder, titleBarBorder, behaviorBorder, sizeBorder, fontBorder, visibilityBorder, notesFileBorder, serverBorder;
-   private JLabel updateCheckLabel, languageLabel, closeIconLabel, showCatLabel, confirmDeleteLabel, defaultWidthLabel, defaultHeightLabel, defaultXPositionLabel, defaultYPositionLabel, defaultFontSizeLabel, alwaysOnTopLabel, serverTypeLabel, serverAddressLabel, serverUserLabel, serverPasswdLabel, serverDirLabel;
+   private TitledBorder updateCheckBorder, languageBorder, titleBarBorder, behaviorBorder, sizeBorder, fontBorder, visibilityBorder,
+         notesFileBorder, serverBorder;
+   private JLabel updateCheckLabel, languageLabel, closeIconLabel, showCatLabel, confirmDeleteLabel, defaultWidthLabel, defaultHeightLabel,
+         defaultXPositionLabel, defaultYPositionLabel, defaultFontSizeLabel, alwaysOnTopLabel, serverTypeLabel, serverAddressLabel,
+         serverUserLabel, serverPasswdLabel, serverDirLabel;
    private JTabbedPane tpane;
 
    public static void showInstance() {
@@ -107,19 +111,19 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.weightx = 100;
       gbc.fill = GridBagConstraints.BOTH;
 
-      //Add Panel for update check
+      // Add Panel for update check
       JPanel updateCheckPanel = makeUpdateCheckPanel();
       gbc.gridx = 0;
       gbc.gridy = 0;
       gbc.weighty = 0;
       generalPanel.add(updateCheckPanel, gbc);
 
-      //Add Panel for language
+      // Add Panel for language
       JPanel languagePanel = makeLanguagePanel();
       gbc.gridy = 1;
       generalPanel.add(languagePanel, gbc);
 
-      //Add empty panel to tab
+      // Add empty panel to tab
       JPanel emptyPanel = new JPanel();
       gbc.gridy = 2;
       gbc.weighty = 100;
@@ -137,7 +141,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1, 1, 1, 1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
 
-      //Add Panel for size and Position
+      // Add Panel for size and Position
       JPanel titleBarPanel = makeTitleBarPanel();
       gbc.gridx = 0;
       gbc.gridy = 0;
@@ -148,7 +152,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       lookAndFeelPanel.add(titleBarPanel, gbc);
 
-      //Add Panel for behavior
+      // Add Panel for behavior
       JPanel behaviorPanel = makeBehaviorPanel();
       gbc.gridx = 0;
       gbc.gridy = 1;
@@ -159,7 +163,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       lookAndFeelPanel.add(behaviorPanel, gbc);
 
-      //Add empty panel to tab
+      // Add empty panel to tab
       JPanel emptyPanel = new JPanel();
       gbc.gridx = 0;
       gbc.gridy = 2;
@@ -182,7 +186,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1, 1, 1, 1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
 
-      //Add Panel for size and Position
+      // Add Panel for size and Position
       JPanel sizePosPanel = makeSizePosPanel();
       gbc.gridx = 0;
       gbc.gridy = 0;
@@ -193,7 +197,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       defaultsPanel.add(sizePosPanel, gbc);
 
-      //Add Panel for Font
+      // Add Panel for Font
       JPanel fontPanel = makeFontPanel();
       gbc.gridx = 0;
       gbc.gridy = 1;
@@ -204,7 +208,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       defaultsPanel.add(fontPanel, gbc);
 
-      //Add Panel for Visibility Settings
+      // Add Panel for Visibility Settings
       JPanel visibilityPanel = makeVisibilityPanel();
       gbc.gridx = 0;
       gbc.gridy = 2;
@@ -215,7 +219,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       defaultsPanel.add(visibilityPanel, gbc);
 
-      //Add empty panel to tab
+      // Add empty panel to tab
       JPanel emptyPanel = new JPanel();
       gbc.gridx = 0;
       gbc.gridy = 3;
@@ -238,7 +242,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.insets = new Insets(1, 1, 1, 1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
 
-      //Add Panel for notes file settings
+      // Add Panel for notes file settings
       JPanel notesFilePanel = makeNotesFilePanel();
       gbc.gridx = 0;
       gbc.gridy = 0;
@@ -249,7 +253,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       loadSavePanel.add(notesFilePanel, gbc);
 
-      //Add Panel for FTP settings
+      // Add Panel for FTP settings
       JPanel serverPanel = makeServerPanel();
       gbc.gridx = 0;
       gbc.gridy = 1;
@@ -260,7 +264,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.fill = GridBagConstraints.BOTH;
       loadSavePanel.add(serverPanel, gbc);
 
-      //Add empty panel to tab
+      // Add empty panel to tab
       JPanel emptyPanel = new JPanel();
       gbc.gridx = 0;
       gbc.gridy = 2;
@@ -284,7 +288,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       updateCheckBorder = new TitledBorder("");
       updateCheckPanel.setBorder(updateCheckBorder);
 
-      //create all Labels
+      // create all Labels
       updateCheckLabel = new JLabel();
       JLabel emptyLabel1 = new JLabel(" ");
       JLabel emptyLabel2 = new JLabel(" ");
@@ -292,13 +296,13 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JLabel emptyLabel4 = new JLabel(" ");
       JLabel emptyLabel5 = new JLabel(" ");
 
-      //Set settings for all Labels
+      // Set settings for all Labels
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add Labels with their positions
+      // Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       updateCheckPanel.add(updateCheckLabel, gbc);
@@ -322,21 +326,20 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.gridx = 1;
       gbc.gridy = 2;
       updateCheckPanel.add(emptyLabel5, gbc);
-      //Add fields
+      // Add fields
       updateCheckBox = new JCheckBox("");
       updateCheckBox.addActionListener(this);
       updateCheckButton = new JButton();
       updateCheckButton.addActionListener(this);
 
-
-      //Set settings for all fields
+      // Set settings for all fields
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
 
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
       updateCheckPanel.add(updateCheckBox, gbc);
@@ -348,7 +351,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       return updateCheckPanel;
    }
 
-   private JPanel makeLanguagePanel() { //panel for language selection
+   private JPanel makeLanguagePanel() { // panel for language selection
       GridBagLayout gbl = new GridBagLayout();
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.insets = new Insets(1, 1, 1, 1);
@@ -357,18 +360,18 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       languageBorder = new TitledBorder("");
       languagePanel.setBorder(languageBorder);
 
-      //Create labels
+      // Create labels
       languageLabel = new JLabel();
       JLabel emptyLabel = new JLabel(" ");
 
-      //Set settings for all labels
+      // Set settings for all labels
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
 
-      //Add labels with their positions
+      // Add labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       languagePanel.add(languageLabel, gbc);
@@ -376,18 +379,18 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.gridx = 1;
       languagePanel.add(emptyLabel, gbc);
 
-      //Create fields
+      // Create fields
       languageBox = new JComboBox(I18N.LOCALE_NAMES);
       languageBox.addActionListener(this);
 
-      //Set settings for all fields
+      // Set settings for all fields
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
 
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
       languagePanel.add(languageBox, gbc);
@@ -403,18 +406,18 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JPanel titleBarPanel = new JPanel(gbl);
       titleBarBorder = new TitledBorder("");
       titleBarPanel.setBorder(titleBarBorder);
-      //Add all Labels
+      // Add all Labels
       closeIconLabel = new JLabel();
       showCatLabel = new JLabel();
       JLabel emptyLabel = new JLabel(" ");
       JLabel emptyLabel2 = new JLabel(" ");
-      //Set settings for all Labels
+      // Set settings for all Labels
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add Labels with their positions
+      // Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       titleBarPanel.add(closeIconLabel, gbc);
@@ -434,7 +437,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.gridy = 3;
       titleBarPanel.add(showCatLabel, gbc);
 
-      //Add fields
+      // Add fields
       closeIconGroup = new ButtonGroup();
       ImageIcon closeIcon1 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(1));
       ImageIcon closeIcon2 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(2));
@@ -449,13 +452,13 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       showCatBox = new JCheckBox("");
       showCatBox.addActionListener(this);
 
-      //Set settings for all fields
+      // Set settings for all fields
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
       titleBarPanel.add(closeIcon1Button, gbc);
@@ -485,16 +488,16 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JPanel behaviorPanel = new JPanel(gbl);
       behaviorBorder = new TitledBorder("");
       behaviorPanel.setBorder(behaviorBorder);
-      //Add all Labels
+      // Add all Labels
       confirmDeleteLabel = new JLabel();
       JLabel emptyLabel = new JLabel(" ");
-      //Set settings for all Labels
+      // Set settings for all Labels
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add Labels with their positions
+      // Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       behaviorPanel.add(confirmDeleteLabel, gbc);
@@ -503,17 +506,17 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.gridy = 0;
       behaviorPanel.add(emptyLabel, gbc);
 
-      //Add fields
+      // Add fields
       confirmDeleteBox = new JCheckBox("");
       confirmDeleteBox.addActionListener(this);
 
-      //Set settings for all fields
+      // Set settings for all fields
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.weightx = 100;
       gbc.gridx = 1;
       gbc.gridy = 0;
@@ -532,19 +535,19 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       sizeBorder = new TitledBorder("");
       sizePanel.setBorder(sizeBorder);
 
-      //create labels
+      // create labels
       defaultWidthLabel = new JLabel();
       defaultHeightLabel = new JLabel();
       defaultXPositionLabel = new JLabel();
       defaultYPositionLabel = new JLabel();
 
-      //Set settings for all labels
+      // Set settings for all labels
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add labels with their positions
+      // Add labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       gbl.setConstraints(defaultWidthLabel, gbc);
@@ -562,7 +565,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbl.setConstraints(defaultYPositionLabel, gbc);
       sizePanel.add(defaultYPositionLabel);
 
-      //Add textfields
+      // Add textfields
       defaultWidthField = new JTextField(4);
       defaultWidthField.getDocument().addDocumentListener(this);
       defaultHeightField = new JTextField(4);
@@ -571,13 +574,13 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       defaultXPositionField.getDocument().addDocumentListener(this);
       defaultYPositionField = new JTextField(4);
       defaultYPositionField.getDocument().addDocumentListener(this);
-      //Set settings for all textfields
+      // Set settings for all textfields
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
       gbl.setConstraints(defaultWidthField, gbc);
@@ -606,32 +609,32 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JPanel fontPanel = new JPanel(gbl);
       fontBorder = new TitledBorder("");
       fontPanel.setBorder(fontBorder);
-      //Create labels
+      // Create labels
       defaultFontSizeLabel = new JLabel();
 
-      //Set settings for all labels
+      // Set settings for all labels
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
 
-      //Add Labels with their positions
+      // Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       fontPanel.add(defaultFontSizeLabel, gbc);
 
-      //Add fields
+      // Add fields
       defaultFontSizeSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
       defaultFontSizeSpinner.addChangeListener(this);
 
-      //Set settings for all fields
+      // Set settings for all fields
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
       fontPanel.add(defaultFontSizeSpinner, gbc);
@@ -647,32 +650,32 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JPanel visibilityPanel = new JPanel(gbl);
       visibilityBorder = new TitledBorder("");
       visibilityPanel.setBorder(visibilityBorder);
-      //create labels
+      // create labels
       alwaysOnTopLabel = new JLabel();
 
-      //Set settings for all Labels
+      // Set settings for all Labels
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
 
-      //Add Labels with their positions
+      // Add Labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       visibilityPanel.add(alwaysOnTopLabel, gbc);
 
-      //Add fields
+      // Add fields
       alwaysOnTopBox = new JCheckBox("");
       alwaysOnTopBox.addActionListener(this);
 
-      //Set settings for all fields
+      // Set settings for all fields
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
       visibilityPanel.add(alwaysOnTopBox, gbc);
@@ -689,18 +692,18 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       JPanel notesFilePanel = new JPanel(gbl);
       notesFileBorder = new TitledBorder("");
       notesFilePanel.setBorder(notesFileBorder);
-      //Add fields
+      // Add fields
       notesFileField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       notesFileField.getDocument().addDocumentListener(this);
       browseButton = new JButton();
       browseButton.addActionListener(this);
-      //Set settings for all fields
+      // Set settings for all fields
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       notesFilePanel.add(notesFileField, gbc);
@@ -722,21 +725,21 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverBorder = new TitledBorder("");
       serverPanel.setBorder(serverBorder);
 
-      //create all labels
+      // create all labels
       serverTypeLabel = new JLabel();
       serverAddressLabel = new JLabel();
       serverUserLabel = new JLabel();
       serverPasswdLabel = new JLabel();
       serverDirLabel = new JLabel();
 
-      //set settings for all labels
+      // set settings for all labels
       gbc.weightx = 0;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
 
-      //add labels with their positions
+      // add labels with their positions
       gbc.gridx = 0;
       gbc.gridy = 0;
       serverPanel.add(serverTypeLabel, gbc);
@@ -749,8 +752,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       gbc.gridy = 5;
       serverPanel.add(serverDirLabel, gbc);
 
-
-      //Create fields
+      // Create fields
       serverTypeBox = new JComboBox(ServerConnection.SERVERTYPE_NAMES);
       serverTypeBox.addActionListener(this);
       serverAddressField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
@@ -765,14 +767,14 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverDirField.getDocument().addDocumentListener(this);
       confirmUpDownloadBox = new JCheckBox();
 
-      //Set settings for all fields
+      // Set settings for all fields
       gbc.weightx = 100;
       gbc.weighty = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.NONE;
 
-      //Add fields with their positions
+      // Add fields with their positions
       gbc.gridx = 1;
       gbc.gridy = 0;
       serverPanel.add(serverTypeBox, gbc);
@@ -802,7 +804,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       // ---------------------
       JPanel mainPanel = new JPanel(new BorderLayout());
 
-      //tabbed pane and tabs
+      // tabbed pane and tabs
       tpane = new JTabbedPane();
       JPanel generalTab = makeGeneralTab();
       JPanel lookAndFeelTab = makeLookAndFeelTab();
@@ -833,7 +835,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       buttonPanel.add(applyButton);
       mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-      //Load language-specific labels
+      // Load language-specific labels
       loadLocaleTexts();
 
       // Load Settings Into Fields
@@ -878,7 +880,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          }
       } else if (src == updateCheckButton) {
          new UpdateCheckThread(true);
-      } else if (src == updateCheckBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox || src == confirmDeleteBox || src == serverTypeBox || src == languageBox) {
+      } else if (src == updateCheckBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox
+            || src == confirmDeleteBox || src == serverTypeBox || src == languageBox) {
          markSettingsChanged(true);
       } else if (src == storeServerPassBox) {
          serverPasswdField.setEnabled(storeServerPassBox.isSelected());
@@ -922,7 +925,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverUserField.setText(UserSettings.getInstance().getServerUser());
       storeServerPassBox.setSelected(UserSettings.getInstance().getStoreServerPass());
       if (UserSettings.getInstance().getStoreServerPass() && UserSettings.getInstance().getServerPasswd() != null) {
-            serverPasswdField.setText(String.copyValueOf(UserSettings.getInstance().getServerPasswd()));
+         serverPasswdField.setText(String.copyValueOf(UserSettings.getInstance().getServerPasswd()));
       }
       serverPasswdField.setEnabled(UserSettings.getInstance().getStoreServerPass());
       serverDirField.setText(UserSettings.getInstance().getServerDir());
@@ -931,8 +934,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
    private void saveSettings() {
       if (settingsChanged) {
-         //save old notesfile
-         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getListIterator());
+         // save old notesfile
+         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getCategories());
 
          // load settings from fields
          boolean updateCheckEnabled = updateCheckBox.isSelected();
@@ -985,18 +988,19 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          UserSettings.getInstance().setServerDir(serverDir);
          UserSettings.getInstance().setConfirmUpDownload(confirmUpDownload);
 
-         //set new locale
+         // set new locale
          I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
          // load new notes from file
          CategoryManager.getInstance().hideAllNotes();
          CategoryManager.getInstance().removeAllCategories();
          List<Category> cl = NoteIO.readCategoriesFromFile();
-         notesFileField.setText(UserSettings.getInstance().getNotesFile()); //if file has not been valid and new one has been selected
+         // if file has not been valid and new one has been selected:
+         notesFileField.setText(UserSettings.getInstance().getNotesFile());
          CategoryManager.getInstance().append(cl);
 
          // show all visible notes
-         CategoryManager.getInstance().showAllNotesNotHidden();
+         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
 
          // replace Traymenu (because of new categories)
          PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
@@ -1040,14 +1044,14 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       cancelButton.setText(I18N.getInstance().getString("cancelbutton"));
       applyButton.setText(I18N.getInstance().getString("applybutton"));
 
-      //general tab
+      // general tab
       updateCheckBorder.setTitle(I18N.getInstance().getString("settingsdialog.update.border"));
       updateCheckLabel.setText(I18N.getInstance().getString("settingsdialog.update.checkbox") + ": ");
       updateCheckButton.setText(I18N.getInstance().getString("settingsdialog.update.button"));
       languageBorder.setTitle(I18N.getInstance().getString("settingsdialog.language.border"));
       languageLabel.setText(I18N.getInstance().getString("settingsdialog.language.language") + ": ");
 
-      //look and feel tab
+      // look and feel tab
       titleBarBorder.setTitle(I18N.getInstance().getString("settingsdialog.notetitlebar.border"));
       closeIconLabel.setText(I18N.getInstance().getString("settingsdialog.notetitlebar.closeicon") + ": ");
       showCatLabel.setText(I18N.getInstance().getString("settingsdialog.notetitlebar.showcategory") + ": ");
@@ -1055,7 +1059,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       confirmDeleteLabel.setText(I18N.getInstance().getString("settingsdialog.behavior.confirmnotdeletion") + ": ");
       sizeBorder.setTitle(I18N.getInstance().getString("settingsdialog.sizepos.border"));
 
-      //default settings tab
+      // default settings tab
       defaultWidthLabel.setText(I18N.getInstance().getString("settingsdialog.sizepos.defaultnotewidth") + ": ");
       defaultHeightLabel.setText(I18N.getInstance().getString("settingsdialog.sizepos.defaultnoteheight") + ": ");
       defaultXPositionLabel.setText(I18N.getInstance().getString("settingsdialog.sizepos.defaultnotexpos") + ": ");
@@ -1065,7 +1069,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       visibilityBorder.setTitle(I18N.getInstance().getString("settingsdialog.visibility.border"));
       alwaysOnTopLabel.setText(I18N.getInstance().getString("settingsdialog.visibility.defaultalwaysontop") + ": ");
 
-      //load/save tab
+      // load/save tab
       notesFileBorder.setTitle(I18N.getInstance().getString("settingsdialog.notesfile.border"));
       browseButton.setText(I18N.getInstance().getString("settingsdialog.notesfile.browsebutton"));
       serverBorder.setTitle(I18N.getInstance().getString("settingsdialog.server.border"));
