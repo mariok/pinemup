@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.gui;
+package net.sourceforge.pinemup.ui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -36,9 +36,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.io.NoteIO;
-import net.sourceforge.pinemup.logic.Category;
-import net.sourceforge.pinemup.logic.CategoryManager;
 
 public class ExportDialog extends JDialog implements ActionListener {
    /**

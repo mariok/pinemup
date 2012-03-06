@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.gui;
+package net.sourceforge.pinemup.ui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -52,15 +52,15 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.PinEmUpTrayIcon;
+import net.sourceforge.pinemup.core.ResourceLoader;
+import net.sourceforge.pinemup.core.UpdateCheckThread;
+import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NoteIO;
 import net.sourceforge.pinemup.io.ServerConnection;
-import net.sourceforge.pinemup.logic.Category;
-import net.sourceforge.pinemup.logic.CategoryManager;
-import net.sourceforge.pinemup.logic.PinEmUpTrayIcon;
-import net.sourceforge.pinemup.logic.ResourceLoader;
-import net.sourceforge.pinemup.logic.UpdateCheckThread;
-import net.sourceforge.pinemup.logic.UserSettings;
-import net.sourceforge.pinemup.menus.TrayMenu;
+import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
 public class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
    private static final long serialVersionUID = 1L;

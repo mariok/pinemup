@@ -19,14 +19,14 @@
  *
  */
 
-package net.sourceforge.pinemup.logic;
+package net.sourceforge.pinemup.core;
 
 import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
-import net.sourceforge.pinemup.gui.I18N;
+import net.sourceforge.pinemup.ui.swing.I18N;
 
 public final class UserSettings {
    private Preferences prefs;

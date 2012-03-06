@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.gui;
+package net.sourceforge.pinemup.ui.swing;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -31,8 +31,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import net.sourceforge.pinemup.logic.PinEmUp;
-import net.sourceforge.pinemup.logic.ResourceLoader;
+import net.sourceforge.pinemup.core.PinEmUp;
+import net.sourceforge.pinemup.core.ResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;

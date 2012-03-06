@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.menus;
+package net.sourceforge.pinemup.ui.swing.menus;
 
 import java.awt.Menu;
 import java.awt.MenuItem;
@@ -29,11 +29,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import net.sourceforge.pinemup.gui.I18N;
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.io.NoteIO;
-import net.sourceforge.pinemup.logic.Category;
-import net.sourceforge.pinemup.logic.CategoryManager;
-import net.sourceforge.pinemup.logic.Note;
+import net.sourceforge.pinemup.ui.swing.I18N;
 
 public class MenuCreator implements ActionListener {
    private CategoryJMenuItem[] categoryItemJ = null;

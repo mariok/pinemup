@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.logic;
+package net.sourceforge.pinemup.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,8 +29,8 @@ import java.net.URLConnection;
 
 import javax.swing.JOptionPane;
 
-import net.sourceforge.pinemup.gui.I18N;
-import net.sourceforge.pinemup.gui.UpdateDialog;
+import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.swing.UpdateDialog;
 
 public class UpdateCheckThread extends Thread {
    private static final String UPDATE_URL = "http://pinemup.sourceforge.net/version.php?version=" + PinEmUp.VERSION;

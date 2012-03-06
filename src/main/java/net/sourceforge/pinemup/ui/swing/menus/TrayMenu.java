@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.menus;
+package net.sourceforge.pinemup.ui.swing.menus;
 
 import java.awt.Menu;
 import java.awt.MenuItem;
@@ -30,17 +30,17 @@ import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 
-import net.sourceforge.pinemup.gui.AboutDialog;
-import net.sourceforge.pinemup.gui.CategoryDialog;
-import net.sourceforge.pinemup.gui.ExportDialog;
-import net.sourceforge.pinemup.gui.I18N;
-import net.sourceforge.pinemup.gui.SettingsDialog;
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.UpdateCheckThread;
+import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NoteIO;
 import net.sourceforge.pinemup.io.ServerThread;
-import net.sourceforge.pinemup.logic.Category;
-import net.sourceforge.pinemup.logic.CategoryManager;
-import net.sourceforge.pinemup.logic.UpdateCheckThread;
-import net.sourceforge.pinemup.logic.UserSettings;
+import net.sourceforge.pinemup.ui.swing.AboutDialog;
+import net.sourceforge.pinemup.ui.swing.CategoryDialog;
+import net.sourceforge.pinemup.ui.swing.ExportDialog;
+import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.swing.SettingsDialog;
 
 public class TrayMenu extends PopupMenu implements ActionListener {
    /**

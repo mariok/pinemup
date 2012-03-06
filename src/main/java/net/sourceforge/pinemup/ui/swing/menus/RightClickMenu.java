@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.menus;
+package net.sourceforge.pinemup.ui.swing.menus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,13 +29,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import net.sourceforge.pinemup.gui.BackgroundLabel;
-import net.sourceforge.pinemup.gui.I18N;
-import net.sourceforge.pinemup.gui.NoteWindow;
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NoteIO;
-import net.sourceforge.pinemup.logic.Category;
-import net.sourceforge.pinemup.logic.CategoryManager;
-import net.sourceforge.pinemup.logic.UserSettings;
+import net.sourceforge.pinemup.ui.swing.BackgroundLabel;
+import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.swing.NoteWindow;
 
 public class RightClickMenu extends JPopupMenu implements ActionListener {
    private static final long serialVersionUID = 1L;

@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.gui;
+package net.sourceforge.pinemup.ui.swing;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

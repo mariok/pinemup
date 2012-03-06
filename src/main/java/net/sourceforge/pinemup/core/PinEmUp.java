@@ -19,15 +19,15 @@
  *
  */
 
-package net.sourceforge.pinemup.logic;
+package net.sourceforge.pinemup.core;
 
 import java.awt.AWTException;
 import java.awt.SystemTray;
 
 import javax.swing.JOptionPane;
 
-import net.sourceforge.pinemup.gui.I18N;
 import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.ui.swing.I18N;
 
 public final class PinEmUp {
    public static final String VERSION;

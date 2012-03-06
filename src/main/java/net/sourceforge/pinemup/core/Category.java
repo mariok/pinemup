@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.logic;
+package net.sourceforge.pinemup.core;
 
 import java.util.LinkedList;
 import java.util.ListIterator;

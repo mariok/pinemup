@@ -49,12 +49,12 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import net.sourceforge.pinemup.gui.FileDialogCreator;
-import net.sourceforge.pinemup.gui.I18N;
-import net.sourceforge.pinemup.logic.Category;
-import net.sourceforge.pinemup.logic.Note;
-import net.sourceforge.pinemup.logic.ResourceLoader;
-import net.sourceforge.pinemup.logic.UserSettings;
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.Note;
+import net.sourceforge.pinemup.core.ResourceLoader;
+import net.sourceforge.pinemup.core.UserSettings;
+import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
+import net.sourceforge.pinemup.ui.swing.I18N;
 
 import org.xml.sax.SAXException;
 

@@ -23,9 +23,9 @@ package net.sourceforge.pinemup.io;
 
 import java.util.List;
 
-import net.sourceforge.pinemup.logic.Category;
-import net.sourceforge.pinemup.logic.CategoryManager;
-import net.sourceforge.pinemup.logic.UserSettings;
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.UserSettings;
 
 public class ServerThread extends Thread {
    public static final boolean UPLOAD = true;

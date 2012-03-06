@@ -19,9 +19,9 @@
  *
  */
 
-package net.sourceforge.pinemup.logic;
+package net.sourceforge.pinemup.core;
 
-import net.sourceforge.pinemup.gui.NoteWindow;
+import net.sourceforge.pinemup.ui.swing.NoteWindow;
 
 public class Note {
    private String text;

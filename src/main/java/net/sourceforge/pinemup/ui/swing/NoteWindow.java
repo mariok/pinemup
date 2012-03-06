@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.gui;
+package net.sourceforge.pinemup.ui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -49,13 +49,13 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.text.View;
 
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.Note;
+import net.sourceforge.pinemup.core.ResourceLoader;
+import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NoteIO;
-import net.sourceforge.pinemup.logic.Category;
-import net.sourceforge.pinemup.logic.CategoryManager;
-import net.sourceforge.pinemup.logic.Note;
-import net.sourceforge.pinemup.logic.ResourceLoader;
-import net.sourceforge.pinemup.logic.UserSettings;
-import net.sourceforge.pinemup.menus.RightClickMenu;
+import net.sourceforge.pinemup.ui.swing.menus.RightClickMenu;
 
 public class NoteWindow extends JDialog implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener, KeyListener {
    private static final int MIN_WINDOW_HEIGHT = 40;

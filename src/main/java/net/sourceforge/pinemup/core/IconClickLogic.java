@@ -19,26 +19,20 @@
  *
  */
 
-package net.sourceforge.pinemup.logic;
+package net.sourceforge.pinemup.core;
 
-import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 
-import net.sourceforge.pinemup.menus.TrayMenu;
-
-public final class PinEmUpTrayIcon extends TrayIcon {
-   private static PinEmUpTrayIcon instance = new PinEmUpTrayIcon();
-
-   private PinEmUpTrayIcon() {
-      super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", new TrayMenu());
-      setImageAutoSize(false);
-      IconClickLogic myIconListener = new IconClickLogic();
-      // add actionlistener for doubleclick on icon
-      addActionListener(myIconListener);
-      // add mouselistener for traymenu
-      addMouseListener(myIconListener);
-   }
-
-   public static PinEmUpTrayIcon getInstance() {
-      return PinEmUpTrayIcon.instance;
+class IconClickLogic extends MouseAdapter implements ActionListener {
+   public void actionPerformed(ActionEvent arg0) {
+      Category defCat = CategoryManager.getInstance().getDefaultCategory();
+      if (defCat != null) {
+         Note newNote = new Note("", defCat.getDefaultNoteColor());
+         defCat.addNote(newNote);
+         newNote.showIfNotHidden();
+         newNote.jumpInto();
+      }
    }
 }

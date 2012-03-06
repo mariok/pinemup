@@ -26,7 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import net.sourceforge.pinemup.logic.UserSettings;
+import net.sourceforge.pinemup.core.UserSettings;
 
 public abstract class ServerConnection {
    public static final int FTP_CONNECTION = 0;
