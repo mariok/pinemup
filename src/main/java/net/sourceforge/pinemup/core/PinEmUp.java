@@ -26,7 +26,7 @@ import java.awt.SystemTray;
 
 import javax.swing.JOptionPane;
 
-import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.io.NotesFileManager;
 import net.sourceforge.pinemup.ui.swing.I18N;
 import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 
@@ -56,7 +56,7 @@ public final class PinEmUp {
          I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
          // load notes from file
-         CategoryManager.getInstance().append(NoteIO.readCategoriesFromFile());
+         CategoryManager.getInstance().append(NotesFileManager.getInstance().readCategoriesFromFile());
 
          // add trayicon
          SystemTray tray = SystemTray.getSystemTray();

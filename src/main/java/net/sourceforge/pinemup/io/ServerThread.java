@@ -47,7 +47,7 @@ public class ServerThread extends Thread {
          // download Notes
          ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).importNotesFromServer();
          // load new file
-         List<Category> newCats = NoteIO.readCategoriesFromFile();
+         List<Category> newCats = NotesFileManager.getInstance().readCategoriesFromFile();
          // If successfull downloaded, replace:
          // hide notes
          CategoryManager.getInstance().hideAllNotes();
@@ -60,7 +60,7 @@ public class ServerThread extends Thread {
          NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
 
          // save to file
-         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
       }
    }
 

@@ -38,7 +38,7 @@ import javax.swing.JScrollPane;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.io.NotesFileManager;
 
 public class ExportDialog extends JDialog implements ActionListener {
    /**
@@ -124,7 +124,7 @@ public class ExportDialog extends JDialog implements ActionListener {
             }
          }
 
-         NoteIO.exportCategoriesToTextFile(catsToExport);
+         NotesFileManager.getInstance().exportCategoriesToTextFile(catsToExport);
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {

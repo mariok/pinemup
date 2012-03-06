@@ -33,7 +33,7 @@ import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.io.NotesFileManager;
 import net.sourceforge.pinemup.io.ServerThread;
 import net.sourceforge.pinemup.ui.swing.AboutDialog;
 import net.sourceforge.pinemup.ui.swing.CategoryDialog;
@@ -126,14 +126,14 @@ public class TrayMenu extends PopupMenu implements ActionListener {
          SettingsDialog.showInstance();
       } else if (src == closeItem) {
          // save notes to file and exit
-         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
          System.exit(0);
       } else if (src == serverUploadItem) {
          if (!UserSettings.getInstance().getConfirmUpDownload()
                || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance()
                      .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             // save notes to file
-            NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
             // copy file to server
             new ServerThread(ServerThread.UPLOAD);
          }

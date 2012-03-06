@@ -58,7 +58,7 @@ import net.sourceforge.pinemup.core.PinEmUpTrayIcon;
 import net.sourceforge.pinemup.core.ResourceLoader;
 import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.io.NoteIO;
+import net.sourceforge.pinemup.io.NotesFileManager;
 import net.sourceforge.pinemup.io.ServerConnection;
 import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
@@ -876,7 +876,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
             f = FileDialogCreator.getFileDialogInstance().getSelectedFile();
          }
          if (f != null) {
-            notesFileField.setText(NoteIO.checkAndAddExtension(f.getAbsolutePath(), ".xml"));
+            notesFileField.setText(NotesFileManager.checkAndAddExtension(f.getAbsolutePath(), ".xml"));
          }
       } else if (src == updateCheckButton) {
          new UpdateCheckThread(true);
@@ -935,7 +935,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private void saveSettings() {
       if (settingsChanged) {
          // save old notesfile
-         NoteIO.writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
 
          // load settings from fields
          boolean updateCheckEnabled = updateCheckBox.isSelected();
@@ -994,7 +994,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          // load new notes from file
          CategoryManager.getInstance().hideAllNotes();
          CategoryManager.getInstance().removeAllCategories();
-         List<Category> cl = NoteIO.readCategoriesFromFile();
+         List<Category> cl = NotesFileManager.getInstance().readCategoriesFromFile();
          // if file has not been valid and new one has been selected:
          notesFileField.setText(UserSettings.getInstance().getNotesFile());
          CategoryManager.getInstance().append(cl);

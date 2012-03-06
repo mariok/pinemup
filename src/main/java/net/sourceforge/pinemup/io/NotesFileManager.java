@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,10 +57,20 @@ import net.sourceforge.pinemup.ui.swing.I18N;
 
 import org.xml.sax.SAXException;
 
-public final class NoteIO {
-   public static final String LATEST_NOTESFILE_VERSION = "0.2";
+public class NotesFileManager {
+   private static final String LATEST_NOTESFILE_VERSION = "0.2";
 
-   public static void writeCategoriesToFile(List<Category> l) {
+   private static NotesFileManager instance = new NotesFileManager();
+
+   private NotesFileManager() {
+
+   }
+
+   public static NotesFileManager getInstance() {
+      return NotesFileManager.instance;
+   }
+
+   public void writeCategoriesToFile(List<Category> l) {
       // write notes to xml file
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
@@ -121,7 +131,7 @@ public final class NoteIO {
       }
    }
 
-   public static List<Category> readCategoriesFromFile() {
+   public List<Category> readCategoriesFromFile() {
       List<Category> c = new LinkedList<Category>();
       Category currentCategory = null;
       Note currentNote = null;
@@ -138,7 +148,7 @@ public final class NoteIO {
             f = FileDialogCreator.getFileDialogInstance().getSelectedFile();
          }
          if (f != null) {
-            UserSettings.getInstance().setNotesFile((NoteIO.checkAndAddExtension(f.getAbsolutePath(), ".xml")));
+            UserSettings.getInstance().setNotesFile((NotesFileManager.checkAndAddExtension(f.getAbsolutePath(), ".xml")));
          }
          nfile = new File(UserSettings.getInstance().getNotesFile());
       }
@@ -253,11 +263,11 @@ public final class NoteIO {
       return c;
    }
 
-   public static void exportCategoriesToTextFile(List<Category> l) {
+   public void exportCategoriesToTextFile(List<Category> l) {
       File f = null;
       if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         String name = NoteIO.checkAndAddExtension(FileDialogCreator.getExportFileDialogInstance().getSelectedFile().getAbsolutePath(),
-               ".txt");
+         String name = NotesFileManager.checkAndAddExtension(FileDialogCreator.getExportFileDialogInstance().getSelectedFile()
+               .getAbsolutePath(), ".txt");
          f = new File(name);
       }
       if (f != null) {
@@ -294,7 +304,7 @@ public final class NoteIO {
       return s;
    }
 
-   private static boolean fileIsValid(String filename) {
+   private boolean fileIsValid(String filename) {
       try {
          // 1. Lookup a factory for the W3C XML Schema language
          SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
@@ -331,7 +341,7 @@ public final class NoteIO {
       }
    }
 
-   private static String getNotesFileVersion(String filename) {
+   private String getNotesFileVersion(String filename) {
       String version = null;
       try {
          InputStream in = new FileInputStream(filename);
@@ -367,9 +377,5 @@ public final class NoteIO {
          e.printStackTrace();
       }
       return version;
-   }
-
-   private NoteIO() {
-
    }
 }
