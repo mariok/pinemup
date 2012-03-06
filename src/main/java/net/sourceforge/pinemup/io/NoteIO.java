@@ -301,7 +301,7 @@ public final class NoteIO {
       return s;
    }
 
-   public static boolean fileIsValid(String filename) {
+   private static boolean fileIsValid(String filename) {
       try {
       // 1. Lookup a factory for the W3C XML Schema language
       SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
