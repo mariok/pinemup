@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@
 package net.sourceforge.pinemup.ui.swing;
 
 import javax.swing.JFileChooser;
-
 
 public final class FileDialogCreator {
    private static JFileChooser fileDialog;

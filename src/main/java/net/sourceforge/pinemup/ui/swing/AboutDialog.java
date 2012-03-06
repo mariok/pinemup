@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,16 @@
 
 package net.sourceforge.pinemup.ui.swing;
 
+import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Calendar;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -33,16 +43,6 @@ import javax.swing.event.HyperlinkListener;
 
 import net.sourceforge.pinemup.core.PinEmUp;
 import net.sourceforge.pinemup.io.ResourceLoader;
-
-import java.awt.BorderLayout;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Calendar;
 
 public class AboutDialog extends JFrame implements ActionListener, HyperlinkListener {
    /**
@@ -95,7 +95,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       p.setEditable(false);
       p.addHyperlinkListener(this);
       JScrollPane myScrollPane = new JScrollPane(p);
-      p.setCaretPosition(0); //scroll back to the top
+      p.setCaretPosition(0); // scroll back to the top
       return myScrollPane;
    }
 
@@ -107,11 +107,14 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       // ---------------------
       JPanel mainPanel = new JPanel(new BorderLayout());
 
-      //tabbed pane and tabs
+      // tabbed pane and tabs
       JTabbedPane tpane = new JTabbedPane();
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(), I18N.getInstance().getString("aboutdialog.abouttab"));
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(), I18N.getInstance().getString("aboutdialog.authorstab"));
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(), I18N.getInstance().getString("aboutdialog.licensetab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(),
+            I18N.getInstance().getString("aboutdialog.abouttab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(),
+            I18N.getInstance().getString("aboutdialog.authorstab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(),
+            I18N.getInstance().getString("aboutdialog.licensetab"));
       mainPanel.add(tpane, BorderLayout.CENTER);
 
       // PANEL WITH BUTTONS
@@ -154,20 +157,19 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
                URI mailURI = new URI("mailto", e.getURL().toString().substring("mailto:".length()), null);
                Desktop.getDesktop().mail(mailURI);
             } catch (URISyntaxException err1) {
-               //do nothing
+               // do nothing
             } catch (IOException err2) {
-               //do nothing
+               // do nothing
             }
          } else {
             try {
                Desktop.getDesktop().browse(e.getURL().toURI());
             } catch (IOException ioe) {
-               //do nothing
+               // do nothing
             } catch (URISyntaxException urie) {
-               //do nothing
+               // do nothing
             }
          }
       }
    }
 }
-

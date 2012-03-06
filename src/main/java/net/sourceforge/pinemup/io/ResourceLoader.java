@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -108,10 +108,13 @@ public final class ResourceLoader {
    }
 
    public Image getCloseIcon(int nr) {
-      switch(nr) {
-      case 1: return closeIcon1;
-      case 2: return closeIcon2;
-      default: return closeIcon1;
+      switch (nr) {
+      case 1:
+         return closeIcon1;
+      case 2:
+         return closeIcon2;
+      default:
+         return closeIcon1;
       }
    }
 
@@ -146,7 +149,7 @@ public final class ResourceLoader {
 
    public URL getSchemaFile(String version) {
       String filename = "notesfile-" + version + ".xsd";
-      URL u = getClass().getResource("/" + SCHEMA_DIR +  filename);
+      URL u = getClass().getResource("/" + SCHEMA_DIR + filename);
       return u;
    }
 }

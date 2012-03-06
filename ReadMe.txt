@@ -120,7 +120,6 @@ Contents
 ------------------------
   Author: Mario Ködding
   Email: mario.koedding@web.de
-  Jabber: mario.koedding@web.de
 
   Project-Homepage:
   http://pinemup.sourceforge.net

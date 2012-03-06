@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import net.sourceforge.pinemup.ui.swing.I18N;
 
 public final class UserSettings {
    private Preferences prefs;
-   private static UserSettings instance = new UserSettings(); //Singleton
+   private static UserSettings instance = new UserSettings(); // Singleton
 
    private static final String PREFIX = "peu_dev_";
 

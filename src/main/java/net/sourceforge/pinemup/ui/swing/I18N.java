@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,25 +22,18 @@
 package net.sourceforge.pinemup.ui.swing;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 public final class I18N {
    private static I18N instance = new I18N();
    private ResourceBundle res;
 
-   public static final String[] LOCALES = {
-         "cs_CZ",
-         "de_DE",
-         "en_US"
+   public static final String[] LOCALES = { "cs_CZ", "de_DE", "en_US"
 
    };
 
-   public static final String[] LOCALE_NAMES = {
-         "Česky",
-         "Deutsch",
-         "English"
-   };
+   public static final String[] LOCALE_NAMES = { "Česky", "Deutsch", "English" };
 
    public void setLocale(String locale) {
       String language = locale.substring(0, locale.indexOf("_"));

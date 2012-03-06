@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,14 @@
 
 package net.sourceforge.pinemup.ui.swing;
 
+import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -29,14 +37,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-
-import java.awt.BorderLayout;
-import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class UpdateDialog extends JFrame implements ActionListener, HyperlinkListener {
    /**
@@ -60,7 +60,7 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
       p.setEditable(false);
       p.addHyperlinkListener(this);
       JScrollPane myScrollPane = new JScrollPane(p);
-      p.setCaretPosition(0); //scroll back to the top
+      p.setCaretPosition(0); // scroll back to the top
 
       mainPanel.add(myScrollPane, BorderLayout.CENTER);
 
@@ -104,20 +104,19 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
                URI mailURI = new URI("mailto", e.getURL().toString().substring("mailto:".length()), null);
                Desktop.getDesktop().mail(mailURI);
             } catch (URISyntaxException err1) {
-               //do nothing
+               // do nothing
             } catch (IOException err2) {
-               //do nothing
+               // do nothing
             }
          } else {
             try {
                Desktop.getDesktop().browse(e.getURL().toURI());
             } catch (IOException ioe) {
-               //do nothing
+               // do nothing
             } catch (URISyntaxException urie) {
-               //do nothing
+               // do nothing
             }
          }
       }
    }
 }
-

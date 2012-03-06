@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2011 by Mario Ködding
+ * Copyright (C) 2007-2012 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -55,7 +55,8 @@ public class UpdateCheckThread extends Thread {
             changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part1") + "</p>");
             changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part2") + " " + PinEmUp.VERSION + "<br />");
             changelogString.append(I18N.getInstance().getString("info.updateavailable.part3") + " " + versionString + "</p>");
-            changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part4") + " <a href=\"http://pinemup.sourceforge.net\">http://pinemup.sourceforge.net</a></p>");
+            changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part4")
+                  + " <a href=\"http://pinemup.sourceforge.net\">http://pinemup.sourceforge.net</a></p>");
             changelogString.append("<p>&nbsp;</p>");
             changelogString.append("<p>Changelog:<br />");
             changelogString.append("--------------------------------</p><p>");
@@ -81,11 +82,12 @@ public class UpdateCheckThread extends Thread {
 
             new UpdateDialog(changelogString.toString());
          } else if (showUpToDateMessage) {
-            JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.versionuptodate"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.versionuptodate"),
+                  I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
          }
          br.close();
       } catch (IOException e) {
-         //do nothing
+         // do nothing
       }
 
    }
