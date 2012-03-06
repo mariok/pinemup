@@ -51,7 +51,6 @@ import javax.swing.table.DefaultTableModel;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.PinEmUpTrayIcon;
 import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
 public final class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {

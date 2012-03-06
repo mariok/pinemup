@@ -19,14 +19,15 @@
  *
  */
 
-package net.sourceforge.pinemup.core;
+package net.sourceforge.pinemup.ui.swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 
-import net.sourceforge.pinemup.ui.swing.NoteWindow;
-import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.Note;
 
 class IconClickLogic extends MouseAdapter implements ActionListener {
    public void actionPerformed(ActionEvent arg0) {

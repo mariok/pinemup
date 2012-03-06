@@ -32,7 +32,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import net.sourceforge.pinemup.core.PinEmUp;
-import net.sourceforge.pinemup.core.ResourceLoader;
+import net.sourceforge.pinemup.io.ResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;

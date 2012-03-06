@@ -35,7 +35,7 @@ import javax.swing.JOptionPane;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.ui.swing.I18N;
 
-public class FTPConnection extends ServerConnection {
+class FTPConnection extends ServerConnection {
 
    @Override
    public void importNotesFromServer() {
@@ -62,10 +62,12 @@ public class FTPConnection extends ServerConnection {
       }
       if (downloaded) {
          deleteBackupFile();
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfiledownloaded"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfiledownloaded"),
+               I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
       } else {
          restoreFileFromBackup();
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotdownloaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotdownloaded"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
    }
 
@@ -75,15 +77,14 @@ public class FTPConnection extends ServerConnection {
       String completeFilename = UserSettings.getInstance().getNotesFile();
       File f = new File(completeFilename);
       String filename = f.getName();
-      String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":"
-      + UserSettings.getInstance().getServerPasswdString() + "@" + UserSettings.getInstance().getServerAddress()
-      + UserSettings.getInstance().getServerDir() + filename + ";type=i";
+      String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswdString()
+            + "@" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + filename + ";type=i";
       FileInputStream fis;
       try {
          fis = new FileInputStream(f);
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
-         OutputStream  os = urlc.getOutputStream();
+         OutputStream os = urlc.getOutputStream();
 
          int nextByte = fis.read();
          while (nextByte != -1) {
@@ -94,10 +95,12 @@ public class FTPConnection extends ServerConnection {
          os.close();
       } catch (IOException e) {
          uploaded = false;
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
       if (uploaded) {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"),
+               I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
       }
    }
 }

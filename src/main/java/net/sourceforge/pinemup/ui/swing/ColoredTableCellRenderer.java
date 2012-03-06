@@ -30,7 +30,7 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-public class ColoredTableCellRenderer implements TableCellRenderer {
+class ColoredTableCellRenderer implements TableCellRenderer {
    private static final Color SELECTION_COLOR = new Color(160, 160, 255);
    private static final int BORDER_THICKNESS = 3;
 
@@ -45,7 +45,7 @@ public class ColoredTableCellRenderer implements TableCellRenderer {
 
       column = table.convertColumnIndexToModel(column);
 
-      //set colors
+      // set colors
       if (column == 2) {
          Color myColor = BackgroundLabel.getColor(Byte.parseByte((String) value));
          if (hasFocus || isSelected) {
@@ -58,12 +58,12 @@ public class ColoredTableCellRenderer implements TableCellRenderer {
          }
       } else {
          if (hasFocus || isSelected) {
-               myCell.setBackground(SELECTION_COLOR);
-               myCell.setForeground(Color.white);
+            myCell.setBackground(SELECTION_COLOR);
+            myCell.setForeground(Color.white);
          }
       }
 
-      //change alignment for first column
+      // change alignment for first column
       if (column == 0) {
          myCell.setHorizontalAlignment(JLabel.CENTER);
       }

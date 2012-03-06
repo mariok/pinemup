@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.core;
+package net.sourceforge.pinemup.ui.swing;
 
 import java.io.File;
 

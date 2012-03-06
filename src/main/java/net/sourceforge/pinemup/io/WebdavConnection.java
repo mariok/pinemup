@@ -30,14 +30,14 @@ import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+
 import javax.net.ssl.SSLHandshakeException;
 import javax.swing.JOptionPane;
-
 
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.ui.swing.I18N;
 
-public class WebdavConnection extends ServerConnection {
+class WebdavConnection extends ServerConnection {
    private String protocol;
 
    public WebdavConnection(boolean sslEnabled) {
@@ -48,14 +48,15 @@ public class WebdavConnection extends ServerConnection {
       }
    }
 
-   public WebdavConnection() { //default without ssl
+   public WebdavConnection() { // default without ssl
       protocol = "http";
    }
 
    private void setDefaultAuthenticator() {
       Authenticator.setDefault(new Authenticator() {
          protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), UserSettings.getInstance().getServerPasswdString().toCharArray());
+            return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), UserSettings.getInstance()
+                  .getServerPasswdString().toCharArray());
          }
       });
    }
@@ -66,7 +67,8 @@ public class WebdavConnection extends ServerConnection {
          makeBackupFile();
          File f = new File(UserSettings.getInstance().getNotesFile());
          FileOutputStream fos = new FileOutputStream(f);
-         String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + f.getName();
+         String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir()
+               + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
          HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
@@ -80,18 +82,21 @@ public class WebdavConnection extends ServerConnection {
          if (urlc.getResponseCode() != HttpURLConnection.HTTP_OK) {
             downloaded = false;
          }
-      } catch (SSLHandshakeException e) { //Certificate error (self-signed?)
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.sslcertificateerror"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+      } catch (SSLHandshakeException e) { // Certificate error (self-signed?)
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.sslcertificateerror"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
          downloaded = false;
       } catch (Exception e) {
          downloaded = false;
       }
       if (downloaded) {
          deleteBackupFile();
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfiledownloaded"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfiledownloaded"),
+               I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
       } else {
          restoreFileFromBackup();
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotdownloaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotdownloaded"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
    }
 
@@ -100,13 +105,14 @@ public class WebdavConnection extends ServerConnection {
       try {
          File f = new File(UserSettings.getInstance().getNotesFile());
          FileInputStream fis = new FileInputStream(f);
-         String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + f.getName();
+         String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir()
+               + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
          HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
          urlc.setDoOutput(true);
          urlc.setRequestMethod("PUT");
-         OutputStream  os = urlc.getOutputStream();
+         OutputStream os = urlc.getOutputStream();
          int nextByte = fis.read();
          while (nextByte != -1) {
             os.write(nextByte);
@@ -117,16 +123,19 @@ public class WebdavConnection extends ServerConnection {
          if (urlc.getResponseCode() != HttpURLConnection.HTTP_CREATED && urlc.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
             uploaded = false;
          }
-      } catch (SSLHandshakeException e) { //Certificate error (self-signed?)
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.sslcertificateerror"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+      } catch (SSLHandshakeException e) { // Certificate error (self-signed?)
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.sslcertificateerror"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
          uploaded = false;
       } catch (Exception e) {
          uploaded = false;
       }
       if (uploaded) {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"), I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"),
+               I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
       } else {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"), I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"),
+               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       }
    }
 }

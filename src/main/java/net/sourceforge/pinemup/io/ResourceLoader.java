@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.core;
+package net.sourceforge.pinemup.io;
 
 import java.awt.Image;
 import java.awt.SystemTray;

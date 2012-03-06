@@ -36,7 +36,7 @@ import net.sourceforge.pinemup.ui.swing.I18N;
 import net.sourceforge.pinemup.ui.swing.NoteWindow;
 import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 
-public class MenuCreator implements ActionListener {
+class MenuCreator implements ActionListener {
    private CategoryJMenuItem[] categoryItemJ = null;
    private CategoryMenuItem[] categoryItem = null;
    private JMenuItem[] basicItemJ = null;

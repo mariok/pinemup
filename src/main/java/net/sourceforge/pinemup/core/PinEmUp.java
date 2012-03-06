@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import net.sourceforge.pinemup.io.NotesFileManager;
 import net.sourceforge.pinemup.ui.swing.I18N;
 import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
+import net.sourceforge.pinemup.ui.swing.PinEmUpTrayIcon;
 
 public final class PinEmUp {
    public static final String VERSION;
