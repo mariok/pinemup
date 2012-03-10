@@ -38,8 +38,8 @@ import javax.swing.JScrollPane;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.io.ExportFileManager;
-import net.sourceforge.pinemup.ui.I18N;
 
 public class ExportDialog extends JDialog implements ActionListener {
    private static final long serialVersionUID = 1L;

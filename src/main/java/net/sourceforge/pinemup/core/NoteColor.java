@@ -1,8 +1,8 @@
 package net.sourceforge.pinemup.core;
 
 import java.awt.Color;
-
-import net.sourceforge.pinemup.ui.I18N;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum NoteColor {
    YELLOW((byte)0, "yellow", new Color(254, 255, 204), new Color(255, 255, 154)),
@@ -16,7 +16,6 @@ public enum NoteColor {
    RED((byte)8, "red", new Color(255, 166, 167), new Color(255, 115, 115));
 
    public static final NoteColor DEFAULT_COLOR = NoteColor.YELLOW;
-   private static final String I18N_PREFIX = "color.";
 
    private byte code;
    private String name;
@@ -35,7 +34,7 @@ public enum NoteColor {
    }
 
    public String getLocalizedName() {
-      return I18N.getInstance().getString(I18N_PREFIX + name);
+      return name;
    }
 
    public Color getColor1() {
@@ -46,21 +45,19 @@ public enum NoteColor {
       return color2;
    }
 
-   public static String[] getLocalizedNames() {
-      String[] names = new String[NoteColor.values().length];
-      int i = 0;
-      for (NoteColor color : NoteColor.values()) {
-         names[i] = color.getLocalizedName();
-         i++;
-      }
-      return names;
-   }
-
    public static NoteColor getNoteColorByCode(byte code) {
       if (code >= 0 && code < NoteColor.values().length) {
          return NoteColor.values()[code];
       } else {
          return NoteColor.DEFAULT_COLOR;
       }
+   }
+
+   public static String[] getLocalizedColorNames() {
+      List<String> names = new ArrayList<String>(NoteColor.values().length);
+      for (NoteColor color : NoteColor.values()) {
+         names.add(color.getLocalizedName());
+      }
+      return names.toArray(new String[NoteColor.values().length]);
    }
 }

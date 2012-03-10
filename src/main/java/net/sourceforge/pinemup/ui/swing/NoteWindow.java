@@ -53,11 +53,11 @@ import javax.swing.text.View;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.ResourceLoader;
-import net.sourceforge.pinemup.ui.I18N;
 import net.sourceforge.pinemup.ui.swing.menus.RightClickMenu;
 
 public class NoteWindow extends JDialog implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,

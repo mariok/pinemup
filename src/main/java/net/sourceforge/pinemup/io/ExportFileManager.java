@@ -10,8 +10,8 @@ import java.util.List;
 import javax.swing.JFileChooser;
 
 import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.ui.I18N;
 import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
 
 public class ExportFileManager {

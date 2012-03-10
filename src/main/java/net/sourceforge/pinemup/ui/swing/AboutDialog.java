@@ -41,9 +41,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.PinEmUp;
 import net.sourceforge.pinemup.io.ResourceLoader;
-import net.sourceforge.pinemup.ui.I18N;
 
 public class AboutDialog extends JFrame implements ActionListener, HyperlinkListener {
    /**

@@ -31,10 +31,10 @@ import javax.swing.JPopupMenu;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.ui.I18N;
 
 public class RightClickMenu extends JPopupMenu implements ActionListener {
    private static final long serialVersionUID = 1L;

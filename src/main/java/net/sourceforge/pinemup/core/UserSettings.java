@@ -23,7 +23,6 @@ package net.sourceforge.pinemup.core;
 
 import java.util.prefs.Preferences;
 
-import net.sourceforge.pinemup.ui.I18N;
 import net.sourceforge.pinemup.ui.UserPasswordRetriever;
 
 public final class UserSettings {
@@ -202,7 +201,7 @@ public final class UserSettings {
          tempString = String.valueOf(serverPasswd);
       } else {
          if (userPasswordRetriever != null) {
-            tempString = userPasswordRetriever.retrievePasswordFromUser(I18N.getInstance().getString("confirm.enterserverpassword"));
+            tempString = userPasswordRetriever.retrievePasswordFromUser();
          }
       }
       return tempString;

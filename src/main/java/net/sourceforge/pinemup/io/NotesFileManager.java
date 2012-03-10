@@ -46,10 +46,10 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.ui.I18N;
 import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
 
 import org.xml.sax.SAXException;
