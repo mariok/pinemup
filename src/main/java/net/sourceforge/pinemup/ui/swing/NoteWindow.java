@@ -392,7 +392,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private void checkPopupMenu(MouseEvent event) {
       if (event.isPopupTrigger()) {
-         RightClickMenu popup = new RightClickMenu(this);
+         RightClickMenu popup = new RightClickMenu(parentNote);
          popup.show(event.getComponent(), event.getX(), event.getY());
       }
    }

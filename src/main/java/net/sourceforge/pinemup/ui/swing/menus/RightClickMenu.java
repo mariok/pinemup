@@ -31,28 +31,25 @@ import javax.swing.JPopupMenu;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.ui.swing.I18N;
-import net.sourceforge.pinemup.ui.swing.NoteWindow;
 
 public class RightClickMenu extends JPopupMenu implements ActionListener {
    private static final long serialVersionUID = 1L;
+
    private static final String ACTIVE_SYMBOL = "->";
    private static final int NUMBER_OF_FONTSIZES = 26;
 
-   private NoteWindow parentWindow;
-
-   private Category myCat;
+   private Note parentNote;
 
    private JMenuItem deleteNoteItem, alwaysOnTopOnItem, alwaysOnTopOffItem;
-
    private JMenu fontSizeMenu, colorMenu, categoryMenu;
 
-   public RightClickMenu(NoteWindow w) {
+   public RightClickMenu(Note n) {
       super();
-      parentWindow = w;
-      myCat = parentWindow.getParentNote().getCategory();
+      parentNote = n;
 
       // create MenuCreator
       MenuCreator myMenuCreator = new MenuCreator();
@@ -76,7 +73,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       fontSizeMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.fontsize"));
       for (int i = 0; i < NUMBER_OF_FONTSIZES; i++) {
          JMenuItem fontSizeItem = new JMenuItem(String.valueOf(i + 5));
-         if (i + 5 == parentWindow.getParentNote().getFontSize()) {
+         if (i + 5 == parentNote.getFontSize()) {
             fontSizeItem.setText(ACTIVE_SYMBOL + " " + fontSizeItem.getText());
          } else {
             fontSizeItem.setText("  " + fontSizeItem.getText());
@@ -89,7 +86,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       colorMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.color"));
       for (NoteColor color : NoteColor.values()) {
          String prefix = " ";
-         if (color.equals(parentWindow.getParentNote().getColor())) {
+         if (color.equals(parentNote.getColor())) {
             prefix = ACTIVE_SYMBOL + " ";
          }
          JMenuItem colorItem = new JMenuItem(prefix + color.getLocalizedName());
@@ -100,14 +97,18 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
 
       categoryMenu = new JMenu(I18N.getInstance().getString("category"));
       for (Category cat : CategoryManager.getInstance().getCategories()) {
-         JMenuItem categoryItem = new JMenuItem(cat.getName());
+         String prefix = " ";
+         if (cat == parentNote.getCategory()) {
+            prefix = ACTIVE_SYMBOL + " ";
+         }
+         JMenuItem categoryItem = new JMenuItem(prefix + cat.getName());
          categoryItem.addActionListener(this);
          categoryMenu.add(categoryItem);
       }
 
       JMenu alwaysOnTopMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.alwaysontop"));
       String[] aot = {"  ", "  "};
-      if (parentWindow.getParentNote().isAlwaysOnTop()) {
+      if (parentNote.isAlwaysOnTop()) {
          aot[0] = ACTIVE_SYMBOL + " ";
       } else {
          aot[1] = ACTIVE_SYMBOL + " ";
@@ -127,7 +128,8 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       addSeparator();
 
       // category menu
-      add(myMenuCreator.getCategoryActionsJMenu(I18N.getInstance().getString("category") + " '" + myCat.getName() + "'", myCat));
+      Category currentCat = parentNote.getCategory();
+      add(myMenuCreator.getCategoryActionsJMenu(I18N.getInstance().getString("category") + " '" + currentCat.getName() + "'", currentCat));
    }
 
    public void actionPerformed(ActionEvent e) {
@@ -138,30 +140,31 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
             confirmed = JOptionPane.showConfirmDialog(this, I18N.getInstance().getString("confirm.deletenote"), I18N.getInstance()
                   .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
-         if (confirmed && myCat != null) {
-            parentWindow.getParentNote().setHidden(true);
-            myCat.removeNote(parentWindow.getParentNote());
+         Category currentCat = parentNote.getCategory();
+         if (confirmed && currentCat != null) {
+            parentNote.setHidden(true);
+            currentCat.removeNote(parentNote);
          }
       } else if (src == alwaysOnTopOnItem) {
-         parentWindow.getParentNote().setAlwaysOnTop(true);
+         parentNote.setAlwaysOnTop(true);
       } else if (src == alwaysOnTopOffItem) {
-         parentWindow.getParentNote().setAlwaysOnTop(false);
+         parentNote.setAlwaysOnTop(false);
       } else {
          for (int i = 0; i < categoryMenu.getItemCount(); i++) {
             if (src == categoryMenu.getItem(i)) {
-               parentWindow.getParentNote().moveToCategory(CategoryManager.getInstance().getCategoryByNumber(i));
+               parentNote.moveToCategory(CategoryManager.getInstance().getCategoryByNumber(i));
             }
          }
 
          for (int i = 0; i < fontSizeMenu.getItemCount(); i++) {
             if (src == fontSizeMenu.getItem(i)) {
-               parentWindow.getParentNote().setFontSize((short)(i + 5));
+               parentNote.setFontSize((short)(i + 5));
             }
          }
 
          for (byte i = 0; i < colorMenu.getItemCount(); i++) {
             if (src == colorMenu.getItem(i)) {
-               parentWindow.getParentNote().setColor(NoteColor.getNoteColorByCode(i));
+               parentNote.setColor(NoteColor.getNoteColorByCode(i));
             }
          }
       }
