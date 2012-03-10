@@ -71,7 +71,7 @@ class WebdavConnection extends ServerConnection {
                + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
-         HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
+         HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
          InputStream is = urlc.getInputStream();
          int nextByte = is.read();
          while (nextByte != -1) {
@@ -109,7 +109,7 @@ class WebdavConnection extends ServerConnection {
                + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
-         HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
+         HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
          urlc.setDoOutput(true);
          urlc.setRequestMethod("PUT");
          OutputStream os = urlc.getOutputStream();

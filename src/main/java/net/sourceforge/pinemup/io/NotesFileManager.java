@@ -194,7 +194,7 @@ public class NotesFileManager {
                   currentCategory = new Category(name, def, defNoteColor);
                   c.add(currentCategory);
                } else if (ename.equals("note")) {
-                  currentNote = new Note("", (byte) 0);
+                  currentNote = new Note("", (byte)0);
                   for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");
@@ -252,8 +252,8 @@ public class NotesFileManager {
          in.close();
       } catch (FileNotFoundException e) {
          // create default categories
-         c.add(new Category("Home", true, (byte) 0));
-         c.add(new Category("Office", false, (byte) 0));
+         c.add(new Category("Home", true, (byte)0));
+         c.add(new Category("Office", false, (byte)0));
       } catch (XMLStreamException e) {
          e.printStackTrace();
       } catch (IOException e) {

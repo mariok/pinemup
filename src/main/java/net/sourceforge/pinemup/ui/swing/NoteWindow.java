@@ -316,7 +316,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       // get number of lines (incl. wrapped lines)
       int lineHeight = textArea.getFontMetrics(textArea.getFont()).getHeight();
       View view = textArea.getUI().getRootView(textArea).getView(0);
-      int prefHeight = (int) view.getPreferredSpan(View.Y_AXIS);
+      int prefHeight = (int)view.getPreferredSpan(View.Y_AXIS);
       int lines = prefHeight / lineHeight;
 
       // calculate new height
@@ -324,7 +324,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
       // apply new size
       setSize(sizeX, sizeY);
-      parentNote.setSize((short) sizeX, (short) sizeY);
+      parentNote.setSize((short)sizeX, (short)sizeY);
       scrollButton.setVisible(false);
    }
 
@@ -374,11 +374,11 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       if (dragging && e.getButton() == MouseEvent.BUTTON1) {
          // stop moving and save position
          dragging = false;
-         parentNote.setPosition((short) getX(), (short) getY());
+         parentNote.setPosition((short)getX(), (short)getY());
       } else if (resizing && e.getButton() == MouseEvent.BUTTON1) {
          // stop resizing and save size
          resizing = false;
-         parentNote.setSize((short) getWidth(), (short) getHeight());
+         parentNote.setSize((short)getWidth(), (short)getHeight());
          showScrollButtonIfNeeded();
       } else if (e.getSource() == closeButton) {
          // restore button background if not pressed

@@ -102,7 +102,7 @@ public class Category {
       }
    }
 
-   public void notifyNoteObservers() {
+   private void notifyNoteObservers() {
       for (Note note : notes) {
          note.notifyObservers();
       }

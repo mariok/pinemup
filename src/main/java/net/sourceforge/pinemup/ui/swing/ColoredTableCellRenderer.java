@@ -35,7 +35,7 @@ class ColoredTableCellRenderer implements TableCellRenderer {
    private static final int BORDER_THICKNESS = 3;
 
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      JLabel myCell = new JLabel((String) value);
+      JLabel myCell = new JLabel((String)value);
       myCell.setOpaque(true);
       Border b = BorderFactory.createEmptyBorder(1, 1, 1, 1);
       myCell.setBorder(b);
@@ -47,7 +47,7 @@ class ColoredTableCellRenderer implements TableCellRenderer {
 
       // set colors
       if (column == 2) {
-         Color myColor = BackgroundLabel.getColor(Byte.parseByte((String) value));
+         Color myColor = BackgroundLabel.getColor(Byte.parseByte((String)value));
          if (hasFocus || isSelected) {
             myCell.setBackground(myColor);
             myCell.setBorder(BorderFactory.createLineBorder(SELECTION_COLOR, BORDER_THICKNESS));

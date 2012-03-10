@@ -186,8 +186,8 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       pack();
 
       // center on screen
-      int screenHeight = (int) getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int) getToolkit().getScreenSize().getWidth();
+      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
@@ -210,8 +210,8 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          }
       };
 
-      String[] columnNames = { I18N.getInstance().getString("categorydialog.defaultcolumn"),
-            I18N.getInstance().getString("categorydialog.namecolumn"), I18N.getInstance().getString("categorydialog.colorcolumn") };
+      String[] columnNames = {I18N.getInstance().getString("categorydialog.defaultcolumn"),
+            I18N.getInstance().getString("categorydialog.namecolumn"), I18N.getInstance().getString("categorydialog.colorcolumn")};
       catTableModel.setColumnIdentifiers(columnNames);
       Object[][] rowData = makeDataArray();
       for (int i = 0; i < rowData.length; i++) {
@@ -268,7 +268,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
             if (index >= 0) {
-               c.setBackground(BackgroundLabel.getColor((byte) index));
+               c.setBackground(BackgroundLabel.getColor((byte)index));
             }
             return c;
          }
@@ -380,9 +380,9 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
-      CategoryManager.getInstance().addCategory(new Category(catName, false, (byte) 0));
+      CategoryManager.getInstance().addCategory(new Category(catName, false, (byte)0));
       PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
-      Object[] rowData = { "", catName, "0" };
+      Object[] rowData = {"", catName, "0"};
       catTableModel.addRow(rowData);
       noOfCategories++;
       catTable.setRowSelectionInterval(noOfCategories - 1, noOfCategories - 1);
@@ -418,7 +418,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
 
    private void updateCatColor() {
       if (trackChanges) {
-         byte c = (byte) colorBox.getSelectedIndex();
+         byte c = (byte)colorBox.getSelectedIndex();
          catTable.getModel().setValueAt(String.valueOf(c), selectedRow, 2);
          selectedCat.setDefaultNoteColor(c);
          colorBox.setBackground(BackgroundLabel.getColor(selectedCat.getDefaultNoteColor()));

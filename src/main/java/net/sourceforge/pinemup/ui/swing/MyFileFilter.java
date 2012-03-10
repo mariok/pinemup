@@ -25,7 +25,7 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
-public class MyFileFilter extends FileFilter {
+class MyFileFilter extends FileFilter {
    private String ending;
 
    public boolean accept(File f) {

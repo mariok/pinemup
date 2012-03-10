@@ -29,11 +29,11 @@ public final class I18N {
    private static I18N instance = new I18N();
    private ResourceBundle res;
 
-   public static final String[] LOCALES = { "cs_CZ", "de_DE", "en_US"
+   public static final String[] LOCALES = {"cs_CZ", "de_DE", "en_US"
 
    };
 
-   public static final String[] LOCALE_NAMES = { "Česky", "Deutsch", "English" };
+   public static final String[] LOCALE_NAMES = {"Česky", "Deutsch", "English"};
 
    public void setLocale(String locale) {
       String language = locale.substring(0, locale.indexOf("_"));

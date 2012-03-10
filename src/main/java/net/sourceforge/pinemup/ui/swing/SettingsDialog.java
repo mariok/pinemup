@@ -845,8 +845,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
       // center on screen
-      int screenHeight = (int) getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int) getToolkit().getScreenSize().getWidth();
+      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
+      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
       int x = (screenWidth - getWidth()) / 2;
       int y = (screenHeight - getHeight()) / 2;
       setLocation(x, y);
@@ -943,7 +943,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          short defaultHeight = Short.parseShort(defaultHeightField.getText());
          short defaultXPosition = Short.parseShort(defaultXPositionField.getText());
          short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
-         short defaultFontSize = ((Integer) ((SpinnerNumberModel) defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
+         short defaultFontSize = ((Integer)((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
          boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
          boolean showCat = showCatBox.isSelected();
          boolean confirmDel = confirmDeleteBox.isSelected();
@@ -954,7 +954,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
             ci = 2;
          }
          String notesFile = notesFileField.getText();
-         short serverType = (short) serverTypeBox.getSelectedIndex();
+         short serverType = (short)serverTypeBox.getSelectedIndex();
          String serverAddress = serverAddressField.getText();
          String serverUser = serverUserField.getText();
          char[] serverPasswd = serverPasswdField.getPassword();

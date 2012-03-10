@@ -108,7 +108,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       }
 
       JMenu alwaysOnTopMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.alwaysontop"));
-      String[] aot = { "  ", "  " };
+      String[] aot = {"  ", "  "};
       if (parentWindow.getParentNote().isAlwaysOnTop()) {
          aot[0] = ACTIVE_SYMBOL + " ";
       } else {
@@ -157,7 +157,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
 
          for (int i = 0; i < setFontSizeItem.length; i++) {
             if (src == setFontSizeItem[i]) {
-               parentWindow.getParentNote().setFontSize((short) (i + 5));
+               parentWindow.getParentNote().setFontSize((short)(i + 5));
                parentWindow.updateFontSize();
             }
          }
