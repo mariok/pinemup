@@ -240,7 +240,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
             data[index][0] = "";
          }
          data[index][1] = cat.getName();
-         data[index][2] = String.valueOf(cat.getDefaultNoteColor());
+         data[index][2] = String.valueOf(cat.getDefaultNoteColor().getCode());
          index++;
       }
       return data;
