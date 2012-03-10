@@ -82,7 +82,7 @@ public class NotesFileManager {
             writer.writeStartElement("category");
             writer.writeAttribute("name", cat.getName());
             writer.writeAttribute("default", String.valueOf(cat.isDefaultCategory()));
-            writer.writeAttribute("defaultnotecolor", String.valueOf(cat.getDefaultNoteColor()));
+            writer.writeAttribute("defaultnotecolor", String.valueOf(cat.getDefaultNoteColor().getCode()));
 
             for (Note n : cat.getNotes()) {
                writer.writeStartElement("note");
