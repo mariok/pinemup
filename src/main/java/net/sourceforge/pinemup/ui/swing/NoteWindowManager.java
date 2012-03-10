@@ -21,8 +21,9 @@
 
 package net.sourceforge.pinemup.ui.swing;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
@@ -30,10 +31,10 @@ import net.sourceforge.pinemup.core.Note;
 public class NoteWindowManager {
    private static NoteWindowManager instance = new NoteWindowManager();
 
-   private List<NoteWindow> noteWindows;
+   private Map<Note, NoteWindow> noteWindows;
 
    private NoteWindowManager() {
-
+      noteWindows = new HashMap<Note, NoteWindow>();
    }
 
    public static NoteWindowManager getInstance() {
@@ -41,21 +42,22 @@ public class NoteWindowManager {
    }
 
    public void createNoteWindowsForAllVisibleNotes() {
-      noteWindows = new LinkedList<NoteWindow>();
 
       List<Note> visibleNotes = CategoryManager.getInstance().getAllVisibleNotes();
       for (Note note : visibleNotes) {
-         createNoteWindowForNote(note);
+         if (noteWindows.get(note) == null) {
+            createNoteWindowForNote(note);
+         }
       }
    }
 
    public NoteWindow createNoteWindowForNote(Note note) {
       NoteWindow window = new NoteWindow(note);
-      noteWindows.add(window);
+      noteWindows.put(note, window);
       return window;
    }
 
-   public void removeNoteWindow(NoteWindow noteWindow) {
-      noteWindows.remove(noteWindow);
+   public void removeNoteWindowForNote(Note note) {
+      noteWindows.remove(note);
    }
 }

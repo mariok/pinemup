@@ -50,9 +50,9 @@ public final class CategoryManager {
       }
    }
 
-   public void unhideAndShowAllNotes() {
+   public void unhideAllNotes() {
       for (Category cat : categories) {
-         cat.unhideAndShowAllNotes();
+         cat.unhideAllNotes();
       }
    }
 
@@ -90,7 +90,7 @@ public final class CategoryManager {
    }
 
    public void showOnlyNotesOfCategory(Category c) {
-      c.unhideAndShowAllNotes();
+      c.unhideAllNotes();
       for (Category cat : categories) {
          if (cat != c) {
             cat.hideAllNotes();
@@ -123,6 +123,14 @@ public final class CategoryManager {
 
    public List<Category> getCategories() {
       return categories;
+   }
+
+   public List<Note> getAllNotes() {
+      List<Note> notes = new LinkedList<Note>();
+      for (Category cat : categories) {
+         notes.addAll(cat.getNotes());
+      }
+      return notes;
    }
 
    public List<Note> getAllVisibleNotes() {

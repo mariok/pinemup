@@ -284,7 +284,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    @Override
    public void actionPerformed(ActionEvent e) {
       if (e.getSource() == closeButton) {
-         hideNote();
+         parentNote.setHidden(true);
       }
 
    }
@@ -305,8 +305,8 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private void hideNote() {
       parentNote.deleteObserver(this);
-      NoteWindowManager.getInstance().removeNoteWindow(this);
-      parentNote.setHidden(true);
+      NoteWindowManager.getInstance().removeNoteWindowForNote(parentNote);
+      setVisible(false);
    }
 
    private void autoSizeY() {
@@ -457,7 +457,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private void updateVisibility() {
       if (parentNote.isHidden()) {
          hideNote();
-         setVisible(false);
       }
    }
 

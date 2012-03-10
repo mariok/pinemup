@@ -124,13 +124,14 @@ class MenuCreator implements ActionListener {
             window.jumpIntoTextArea();
          }
       } else if ((basicItem != null && src == basicItem[1]) || (basicItemJ != null && src == basicItemJ[1])) {
-         CategoryManager.getInstance().unhideAndShowAllNotes();
+         CategoryManager.getInstance().unhideAllNotes();
+         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
       } else if ((basicItem != null && src == basicItem[2]) || (basicItemJ != null && src == basicItemJ[2])) {
          CategoryManager.getInstance().hideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[0]) || (categoryItemJ != null && src == categoryItemJ[0])) {
          ((MenuItemWithCategory)src).getCategory().hideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[1]) || (categoryItemJ != null && src == categoryItemJ[1])) {
-         ((MenuItemWithCategory)src).getCategory().unhideAndShowAllNotes();
+         ((MenuItemWithCategory)src).getCategory().unhideAllNotes();
       } else if ((categoryItem != null && src == categoryItem[2]) || (categoryItemJ != null && src == categoryItemJ[2])) {
          CategoryManager.getInstance().showOnlyNotesOfCategory(((MenuItemWithCategory)src).getCategory());
       } else if ((categoryItem != null && src == categoryItem[3]) || (categoryItemJ != null && src == categoryItemJ[3])) {

@@ -96,7 +96,7 @@ public class Category {
       notes.remove(n);
    }
 
-   public void unhideAndShowAllNotes() {
+   public void unhideAllNotes() {
       for (Note note : notes) {
          note.setHidden(false);
       }
