@@ -28,9 +28,9 @@ public class Category {
    private String name;
    private List<Note> notes;
    private boolean defaultCategory;
-   private byte defaultNoteColor;
+   private NoteColor defaultNoteColor;
 
-   public Category(String name, boolean def, byte defNoteColor) {
+   public Category(String name, boolean def, NoteColor defNoteColor) {
       this.name = name;
       this.defaultCategory = def;
       this.defaultNoteColor = defNoteColor;
@@ -54,11 +54,11 @@ public class Category {
       defaultCategory = b;
    }
 
-   public void setDefaultNoteColor(byte c) {
+   public void setDefaultNoteColor(NoteColor c) {
       defaultNoteColor = c;
    }
 
-   public byte getDefaultNoteColor() {
+   public NoteColor getDefaultNoteColor() {
       return defaultNoteColor;
    }
 

@@ -47,6 +47,7 @@ import javax.xml.validation.Validator;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.Note;
+import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
 import net.sourceforge.pinemup.ui.swing.I18N;
@@ -91,7 +92,7 @@ public class NotesFileManager {
                writer.writeAttribute("yposition", String.valueOf(n.getYPos()));
                writer.writeAttribute("width", String.valueOf(n.getXSize()));
                writer.writeAttribute("height", String.valueOf(n.getYSize()));
-               writer.writeAttribute("color", String.valueOf(n.getBGColor()));
+               writer.writeAttribute("color", String.valueOf(n.getColor().getCode()));
                writer.writeStartElement("text");
                writer.writeAttribute("size", String.valueOf(n.getFontSize()));
                String noteText = n.getText();
@@ -175,7 +176,7 @@ public class NotesFileManager {
                } else if (ename.equals("category")) {
                   String name = "";
                   boolean def = false;
-                  byte defNoteColor = 0;
+                  NoteColor defNoteColor = NoteColor.DEFAULT_COLOR;
                   for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("name")) {
                         name = parser.getAttributeValue(i);
@@ -185,13 +186,13 @@ public class NotesFileManager {
                            defaultNotAdded = false;
                         }
                      } else if (parser.getAttributeLocalName(i).equals("defaultnotecolor")) {
-                        defNoteColor = Byte.parseByte(parser.getAttributeValue(i));
+                        defNoteColor = NoteColor.getNoteColorByCode(Byte.parseByte(parser.getAttributeValue(i)));
                      }
                   }
                   currentCategory = new Category(name, def, defNoteColor);
                   c.add(currentCategory);
                } else if (ename.equals("note")) {
-                  currentNote = new Note("", (byte)0);
+                  currentNote = new Note("", NoteColor.DEFAULT_COLOR);
                   for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");
@@ -212,8 +213,8 @@ public class NotesFileManager {
                         boolean a = parser.getAttributeValue(i).equals("true");
                         currentNote.setAlwaysOnTop(a);
                      } else if (parser.getAttributeLocalName(i).equals("color")) {
-                        byte clr = Byte.parseByte(parser.getAttributeValue(i));
-                        currentNote.setBGColor(clr);
+                        NoteColor color = NoteColor.getNoteColorByCode(Byte.parseByte(parser.getAttributeValue(i)));
+                        currentNote.setColor(color);
                      }
                   }
                   if (currentCategory != null) {
@@ -249,8 +250,8 @@ public class NotesFileManager {
          in.close();
       } catch (FileNotFoundException e) {
          // create default categories
-         c.add(new Category("Home", true, (byte)0));
-         c.add(new Category("Office", false, (byte)0));
+         c.add(new Category("Home", true, NoteColor.YELLOW));
+         c.add(new Category("Office", false, NoteColor.GREEN));
       } catch (XMLStreamException e) {
          e.printStackTrace();
       } catch (IOException e) {

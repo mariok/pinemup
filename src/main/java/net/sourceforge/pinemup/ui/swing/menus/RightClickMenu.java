@@ -31,8 +31,8 @@ import javax.swing.JPopupMenu;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.ui.swing.BackgroundLabel;
 import net.sourceforge.pinemup.ui.swing.I18N;
 import net.sourceforge.pinemup.ui.swing.NoteWindow;
 
@@ -47,7 +47,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
 
    private JMenuItem deleteNoteItem, alwaysOnTopOnItem, alwaysOnTopOffItem;
 
-   private JMenuItem[] setFontSizeItem, setCategoryItem, setBGColorItem;
+   private JMenu fontSizeMenu, colorMenu, categoryMenu;
 
    public RightClickMenu(NoteWindow w) {
       super();
@@ -73,38 +73,36 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       // settings menu
       JMenu settingsMenu = new JMenu(I18N.getInstance().getString("menu.notesettings"));
 
-      JMenu setFontSizeMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.fontsize"));
-      setFontSizeItem = new JMenuItem[NUMBER_OF_FONTSIZES];
+      fontSizeMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.fontsize"));
       for (int i = 0; i < NUMBER_OF_FONTSIZES; i++) {
-         setFontSizeItem[i] = new JMenuItem(String.valueOf(i + 5));
+         JMenuItem fontSizeItem = new JMenuItem(String.valueOf(i + 5));
          if (i + 5 == parentWindow.getParentNote().getFontSize()) {
-            setFontSizeItem[i].setText(ACTIVE_SYMBOL + " " + setFontSizeItem[i].getText());
+            fontSizeItem.setText(ACTIVE_SYMBOL + " " + fontSizeItem.getText());
          } else {
-            setFontSizeItem[i].setText("  " + setFontSizeItem[i].getText());
+            fontSizeItem.setText("  " + fontSizeItem.getText());
          }
-         setFontSizeItem[i].addActionListener(this);
-         setFontSizeMenu.add(setFontSizeItem[i]);
+         fontSizeItem.addActionListener(this);
+
+         fontSizeMenu.add(fontSizeItem);
       }
 
-      JMenu setBGColorMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.color"));
-      setBGColorItem = new JMenuItem[BackgroundLabel.getNumberOfColors()];
-      for (byte i = 0; i < setBGColorItem.length; i++) {
+      colorMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.color"));
+      for (NoteColor color : NoteColor.values()) {
          String prefix = " ";
-         if (i == parentWindow.getParentNote().getBGColor()) {
+         if (color.equals(parentWindow.getParentNote().getColor())) {
             prefix = ACTIVE_SYMBOL + " ";
          }
-         setBGColorItem[i] = new JMenuItem(prefix + BackgroundLabel.getColorName(i));
-         setBGColorItem[i].setText("  " + setBGColorItem[i].getText());
-         setBGColorItem[i].addActionListener(this);
-         setBGColorMenu.add(setBGColorItem[i]);
+         JMenuItem colorItem = new JMenuItem(prefix + color.getLocalizedName());
+         colorItem.setText("  " + colorItem.getText());
+         colorItem.addActionListener(this);
+         colorMenu.add(colorItem);
       }
 
-      JMenu setCategoryMenu = new JMenu(I18N.getInstance().getString("category"));
-      setCategoryItem = new JMenuItem[CategoryManager.getInstance().getNumberOfCategories()];
-      for (int i = 0; i < setCategoryItem.length; i++) {
-         setCategoryItem[i] = new JMenuItem((i + 1) + " " + CategoryManager.getInstance().getCategoryNames()[i]);
-         setCategoryItem[i].addActionListener(this);
-         setCategoryMenu.add(setCategoryItem[i]);
+      categoryMenu = new JMenu(I18N.getInstance().getString("category"));
+      for (Category cat : CategoryManager.getInstance().getCategories()) {
+         JMenuItem categoryItem = new JMenuItem(cat.getName());
+         categoryItem.addActionListener(this);
+         categoryMenu.add(categoryItem);
       }
 
       JMenu alwaysOnTopMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.alwaysontop"));
@@ -122,9 +120,9 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       alwaysOnTopMenu.add(alwaysOnTopOffItem);
 
       settingsMenu.add(alwaysOnTopMenu);
-      settingsMenu.add(setCategoryMenu);
-      settingsMenu.add(setFontSizeMenu);
-      settingsMenu.add(setBGColorMenu);
+      settingsMenu.add(categoryMenu);
+      settingsMenu.add(fontSizeMenu);
+      settingsMenu.add(colorMenu);
       add(settingsMenu);
       addSeparator();
 
@@ -149,23 +147,21 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       } else if (src == alwaysOnTopOffItem) {
          parentWindow.getParentNote().setAlwaysOnTop(false);
       } else {
-         for (int i = 0; i < setCategoryItem.length; i++) {
-            if (src == setCategoryItem[i]) {
+         for (int i = 0; i < categoryMenu.getItemCount(); i++) {
+            if (src == categoryMenu.getItem(i)) {
                parentWindow.getParentNote().moveToCategory(CategoryManager.getInstance().getCategoryByNumber(i));
             }
          }
 
-         for (int i = 0; i < setFontSizeItem.length; i++) {
-            if (src == setFontSizeItem[i]) {
+         for (int i = 0; i < fontSizeMenu.getItemCount(); i++) {
+            if (src == fontSizeMenu.getItem(i)) {
                parentWindow.getParentNote().setFontSize((short)(i + 5));
-               parentWindow.updateFontSize();
             }
          }
 
-         for (byte i = 0; i < setBGColorItem.length; i++) {
-            if (src == setBGColorItem[i]) {
-               parentWindow.getParentNote().setBGColor(i);
-               parentWindow.setBGColor(i);
+         for (byte i = 0; i < colorMenu.getItemCount(); i++) {
+            if (src == colorMenu.getItem(i)) {
+               parentWindow.getParentNote().setColor(NoteColor.getNoteColorByCode(i));
             }
          }
       }

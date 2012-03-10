@@ -47,6 +47,7 @@ Contents
     - added keyboard shortcuts for changing a note's category (first 10 categories: ctrl+0 - ctrl+9)
     - added czech translation (thanks to Petr Masek)
     - Settings are only being saved if something has been changed
+    - removed numbers from category items in menus
     - BUGFIX: dialog for managing categories is now sized correctly (no controls out of sight)
     - BUGFIX: update category name in note-window if it is changed in category dialog
     - some internal refactoring

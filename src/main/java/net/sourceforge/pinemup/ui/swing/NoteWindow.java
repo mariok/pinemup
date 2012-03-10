@@ -54,6 +54,7 @@ import javax.swing.text.View;
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
+import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.ResourceLoader;
 import net.sourceforge.pinemup.ui.swing.menus.RightClickMenu;
@@ -208,7 +209,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       addWindowListener(this);
       textArea.setFocusable(false);
 
-      bgLabel = new BackgroundLabel(this, parentNote.getBGColor());
+      bgLabel = new BackgroundLabel(this, parentNote.getColor());
 
       getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
 
@@ -446,7 +447,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             catButton.setText(cat.getName());
             repaint();
          }
-         setBGColor(parentNote.getBGColor());
+         setBGColor(parentNote.getColor());
       }
    }
 
@@ -479,7 +480,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
    }
 
-   public void setBGColor(byte c) {
+   public void setBGColor(NoteColor c) {
       bgLabel.setMyColor(c);
       repaint();
    }

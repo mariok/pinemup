@@ -31,7 +31,7 @@ public class Note extends Observable {
 
    private short xpos, ypos, xsize, ysize, fontsize;
 
-   private byte bgColor;
+   private NoteColor color;
 
    private Category category;
 
@@ -70,7 +70,7 @@ public class Note extends Observable {
       return hidden;
    }
 
-   public Note(String text, byte bgColor) {
+   public Note(String text, NoteColor color) {
       this.text = text;
       hidden = false;
       xpos = UserSettings.getInstance().getDefaultWindowXPostition();
@@ -79,7 +79,7 @@ public class Note extends Observable {
       ysize = UserSettings.getInstance().getDefaultWindowHeight();
       fontsize = UserSettings.getInstance().getDefaultFontSize();
       alwaysOnTop = UserSettings.getInstance().getDefaultAlwaysOnTop();
-      this.bgColor = bgColor;
+      this.color = color;
    }
 
    public void setText(String t) {
@@ -141,20 +141,20 @@ public class Note extends Observable {
          // add to new category
          newCat.addNote(this);
          // set color to default color of the new category
-         setBGColor(newCat.getDefaultNoteColor());
+         setColor(newCat.getDefaultNoteColor());
          // update Category name and color in Window
          setChanged();
          notifyObservers();
       }
    }
 
-   public void setBGColor(byte c) {
-      bgColor = c;
+   public void setColor(NoteColor color) {
+      this.color = color;
       setChanged();
       notifyObservers();
    }
 
-   public byte getBGColor() {
-      return bgColor;
+   public NoteColor getColor() {
+      return color;
    }
 }

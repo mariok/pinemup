@@ -51,12 +51,10 @@ import javax.swing.table.DefaultTableModel;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
 public final class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {
-   /**
-    *
-    */
    private static final long serialVersionUID = 1L;
 
    private static CategoryDialog instance;
@@ -259,21 +257,18 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       p.add(defaultBox);
 
       DefaultListCellRenderer cr = new DefaultListCellRenderer() {
-         /**
-          *
-          */
          private static final long serialVersionUID = 1L;
 
          @Override
          public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
             if (index >= 0) {
-               c.setBackground(BackgroundLabel.getColor((byte)index));
+               c.setBackground(NoteColor.values()[index].getColor1());
             }
             return c;
          }
       };
-      colorBox = new JComboBox(BackgroundLabel.getColorNames());
+      colorBox = new JComboBox(NoteColor.getLocalizedNames());
       colorBox.setRenderer(cr);
       colorBox.addActionListener(this);
       colorBox.setEnabled(false);
@@ -380,7 +375,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
-      CategoryManager.getInstance().addCategory(new Category(catName, false, (byte)0));
+      CategoryManager.getInstance().addCategory(new Category(catName, false, NoteColor.DEFAULT_COLOR));
       PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       Object[] rowData = {"", catName, "0"};
       catTableModel.addRow(rowData);
@@ -418,10 +413,11 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
 
    private void updateCatColor() {
       if (trackChanges) {
-         byte c = (byte)colorBox.getSelectedIndex();
-         catTable.getModel().setValueAt(String.valueOf(c), selectedRow, 2);
-         selectedCat.setDefaultNoteColor(c);
-         colorBox.setBackground(BackgroundLabel.getColor(selectedCat.getDefaultNoteColor()));
+         byte colorCode = (byte)colorBox.getSelectedIndex();
+         catTable.getModel().setValueAt(String.valueOf(colorCode), selectedRow, 2);
+         NoteColor catColor = NoteColor.getNoteColorByCode(colorCode);
+         selectedCat.setDefaultNoteColor(catColor);
+         colorBox.setBackground(catColor.getColor1());
       }
    }
 
@@ -468,8 +464,8 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          } else {
             defaultBox.setEnabled(true);
          }
-         colorBox.setSelectedIndex(selectedCat.getDefaultNoteColor());
-         colorBox.setBackground(BackgroundLabel.getColor(selectedCat.getDefaultNoteColor()));
+         colorBox.setSelectedIndex(selectedCat.getDefaultNoteColor().getCode());
+         colorBox.setBackground(selectedCat.getDefaultNoteColor().getColor1());
          trackChanges = true;
       }
    }

@@ -30,6 +30,8 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
+import net.sourceforge.pinemup.core.NoteColor;
+
 class ColoredTableCellRenderer implements TableCellRenderer {
    private static final Color SELECTION_COLOR = new Color(160, 160, 255);
    private static final int BORDER_THICKNESS = 3;
@@ -47,7 +49,7 @@ class ColoredTableCellRenderer implements TableCellRenderer {
 
       // set colors
       if (column == 2) {
-         Color myColor = BackgroundLabel.getColor(Byte.parseByte((String)value));
+         Color myColor = NoteColor.getNoteColorByCode(Byte.parseByte((String)value)).getColor1();
          if (hasFocus || isSelected) {
             myCell.setBackground(myColor);
             myCell.setBorder(BorderFactory.createLineBorder(SELECTION_COLOR, BORDER_THICKNESS));
