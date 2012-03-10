@@ -38,12 +38,9 @@ import javax.swing.JScrollPane;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.io.NotesFileManager;
+import net.sourceforge.pinemup.io.ExportFileManager;
 
 public class ExportDialog extends JDialog implements ActionListener {
-   /**
-    *
-    */
    private static final long serialVersionUID = 1L;
 
    private static final int DIALOG_WIDTH = 250;
@@ -65,7 +62,7 @@ public class ExportDialog extends JDialog implements ActionListener {
       main.add(topPanel, BorderLayout.NORTH);
       main.add(sp, BorderLayout.CENTER);
 
-      // Category Checkboxes
+      // category checkboxes
       int rows = CategoryManager.getInstance().getNumberOfCategories();
       JPanel checkBoxPanel = new JPanel(new GridLayout(rows + 2, 1));
       String[] cats = CategoryManager.getInstance().getCategoryNames();
@@ -124,7 +121,7 @@ public class ExportDialog extends JDialog implements ActionListener {
             }
          }
 
-         NotesFileManager.getInstance().exportCategoriesToTextFile(catsToExport);
+         ExportFileManager.getInstance().exportCategoriesToTextFile(catsToExport);
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {

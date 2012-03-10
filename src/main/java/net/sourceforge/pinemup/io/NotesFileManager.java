@@ -21,15 +21,12 @@
 
 package net.sourceforge.pinemup.io;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -260,38 +257,6 @@ public class NotesFileManager {
          e.printStackTrace();
       }
       return c;
-   }
-
-   public void exportCategoriesToTextFile(List<Category> l) {
-      File f = null;
-      if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         String name = NotesFileManager.checkAndAddExtension(FileDialogCreator.getExportFileDialogInstance().getSelectedFile()
-               .getAbsolutePath(), ".txt");
-         f = new File(name);
-      }
-      if (f != null) {
-         try {
-            PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
-            // write text of notes to file
-            for (Category cat : l) {
-               ostream.println(I18N.getInstance().getString("category") + ": " + cat.getName());
-               ostream.println();
-               for (Note n : cat.getNotes()) {
-                  ostream.println(n.getText());
-                  ostream.println();
-                  ostream.println("---------------------");
-                  ostream.println();
-               }
-               ostream.println();
-               ostream.println("################################################################");
-               ostream.println();
-            }
-            ostream.flush();
-            ostream.close();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      }
    }
 
    public static String checkAndAddExtension(String s, String xt) {
