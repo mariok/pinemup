@@ -59,7 +59,7 @@ import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
 import net.sourceforge.pinemup.io.ResourceLoader;
-import net.sourceforge.pinemup.io.ServerConnection;
+import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
 public class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
@@ -753,7 +753,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverPanel.add(serverDirLabel, gbc);
 
       // Create fields
-      serverTypeBox = new JComboBox(ServerConnection.SERVERTYPE_NAMES);
+      serverTypeBox = new JComboBox(ConnectionType.getConnectionTypeNames());
       serverTypeBox.addActionListener(this);
       serverAddressField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverAddressField.getDocument().addDocumentListener(this);
@@ -920,7 +920,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       confirmDeleteBox.setSelected(UserSettings.getInstance().getConfirmDeletion());
 
       notesFileField.setText(UserSettings.getInstance().getNotesFile());
-      serverTypeBox.setSelectedIndex(UserSettings.getInstance().getServerType());
+      serverTypeBox.setSelectedIndex(UserSettings.getInstance().getServerType().getCode());
       serverAddressField.setText(UserSettings.getInstance().getServerAddress());
       serverUserField.setText(UserSettings.getInstance().getServerUser());
       storeServerPassBox.setSelected(UserSettings.getInstance().getStoreServerPass());
@@ -955,7 +955,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
             ci = 2;
          }
          String notesFile = notesFileField.getText();
-         short serverType = (short)serverTypeBox.getSelectedIndex();
+         short serverTypeCode = (short)serverTypeBox.getSelectedIndex();
          String serverAddress = serverAddressField.getText();
          String serverUser = serverUserField.getText();
          char[] serverPasswd = serverPasswdField.getPassword();
@@ -976,7 +976,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          UserSettings.getInstance().setShowCategory(showCat);
          UserSettings.getInstance().setConfirmDeletion(confirmDel);
          UserSettings.getInstance().setNotesFile(notesFile);
-         UserSettings.getInstance().setServerType(serverType);
+         UserSettings.getInstance().setServerType(ConnectionType.getConnectionTypeByCode(serverTypeCode));
          UserSettings.getInstance().setServerAddress(serverAddress);
          UserSettings.getInstance().setServerUser(serverUser);
          UserSettings.getInstance().setStoreServerPass(storeServerPass);

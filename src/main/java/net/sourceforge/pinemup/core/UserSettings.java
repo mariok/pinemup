@@ -23,6 +23,7 @@ package net.sourceforge.pinemup.core;
 
 import java.util.prefs.Preferences;
 
+import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.UserPasswordRetriever;
 
 public final class UserSettings {
@@ -53,7 +54,7 @@ public final class UserSettings {
    private boolean confirmDeletion;
    private boolean storeServerPass;
    private boolean updateCheckEnabled;
-   private short serverType;
+   private ConnectionType serverType;
    private String locale;
    private boolean confirmUpDownload;
 
@@ -65,11 +66,11 @@ public final class UserSettings {
       confirmUpDownload = b;
    }
 
-   public void setServerType(short st) {
+   public void setServerType(ConnectionType st) {
       serverType = st;
    }
 
-   public short getServerType() {
+   public ConnectionType getServerType() {
       return serverType;
    }
 
@@ -257,7 +258,7 @@ public final class UserSettings {
       prefs.putBoolean(PREFIX + "confirmDeletion", confirmDeletion);
       prefs.putBoolean(PREFIX + "storeServerPass", storeServerPass);
       prefs.putBoolean(PREFIX + "updateCheckEnabled", updateCheckEnabled);
-      prefs.putInt(PREFIX + "serverType", serverType);
+      prefs.putInt(PREFIX + "serverType", serverType.getCode());
       prefs.put(PREFIX + "locale", locale);
       prefs.putBoolean(PREFIX + "confirmUpDownload", confirmUpDownload);
    }
@@ -286,7 +287,7 @@ public final class UserSettings {
       confirmDeletion = prefs.getBoolean(PREFIX + "confirmDeletion", true);
       storeServerPass = prefs.getBoolean(PREFIX + "storeServerPass", false);
       updateCheckEnabled = prefs.getBoolean(PREFIX + "updateCheckEnabled", true);
-      serverType = Short.parseShort(prefs.get(PREFIX + "serverType", "0"));
+      serverType = ConnectionType.getConnectionTypeByCode(Short.parseShort(prefs.get(PREFIX + "serverType", "0")));
       locale = prefs.get(PREFIX + "locale", "en_US");
       confirmUpDownload = prefs.getBoolean(PREFIX + "confirmUpDownload", true);
    }

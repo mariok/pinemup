@@ -25,30 +25,57 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.sourceforge.pinemup.core.UserSettings;
 
 public abstract class ServerConnection {
-   public static final int FTP_CONNECTION = 0;
-   public static final int WEBDAV_CONNECTION = 1;
-   public static final int WEBDAVS_CONNECTION = 2;
-   public static final String[] SERVERTYPE_NAMES = { "FTP", "WebDAV", "WebDAVs" };
+   public enum ConnectionType {
+      FTP((short)0, "FTP"),
+      WEBDAV((short)1, "WebDAV"),
+      WEBDAVS((short)2, "WebDAVs");
 
-   public static ServerConnection createServerConnection(int serverType) {
-      switch (serverType) {
-      case FTP_CONNECTION:
-         return new FTPConnection();
-      case WEBDAV_CONNECTION:
+      private short code;
+      private String name;
+
+      private ConnectionType(short code, String name) {
+         this.code = code;
+         this.name = name;
+      }
+
+      public short getCode() {
+         return code;
+      }
+
+      public String getName() {
+         return name;
+      }
+
+      public static ConnectionType getConnectionTypeByCode(short code) {
+         return ConnectionType.values()[code];
+      }
+
+      public static String[] getConnectionTypeNames() {
+         List<String> names = new ArrayList<String>(ConnectionType.values().length);
+         for (ConnectionType ct : ConnectionType.values()) {
+            names.add(ct.getName());
+         }
+         return names.toArray(new String[ConnectionType.values().length]);
+      }
+   }
+
+   public static ServerConnection createServerConnection(ConnectionType serverType) {
+      if (serverType == ConnectionType.WEBDAV) {
          return new WebdavConnection(false);
-      case WEBDAVS_CONNECTION:
+      } else if (serverType == ConnectionType.WEBDAVS) {
          return new WebdavConnection(true);
-      default:
+      } else {
          return new FTPConnection();
       }
    }
 
-   protected void makeBackupFile() { // to create a backup before downloading
-                                     // from server
+   protected void makeBackupFile() {
       File f = new File(UserSettings.getInstance().getNotesFile());
       File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
 
@@ -66,16 +93,14 @@ public abstract class ServerConnection {
       }
    }
 
-   protected void deleteBackupFile() { // to delete backup file after successful
-                                       // download
+   protected void deleteBackupFile() {
       File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
       if (bf.exists()) {
          bf.delete();
       }
    }
 
-   protected void restoreFileFromBackup() { // to restore original file after
-                                            // download failed
+   protected void restoreFileFromBackup() {
       File f = new File(UserSettings.getInstance().getNotesFile());
       File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
       if (f.exists()) {
