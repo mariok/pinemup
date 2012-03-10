@@ -33,7 +33,7 @@ import java.net.URLConnection;
 import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.I18N;
 
 class FTPConnection extends ServerConnection {
 

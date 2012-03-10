@@ -2,7 +2,7 @@ package net.sourceforge.pinemup.core;
 
 import java.awt.Color;
 
-import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.I18N;
 
 public enum NoteColor {
    YELLOW((byte)0, "yellow", new Color(254, 255, 204), new Color(255, 255, 154)),

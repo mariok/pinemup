@@ -27,8 +27,9 @@ import java.awt.SystemTray;
 import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.I18N;
 import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
+import net.sourceforge.pinemup.ui.swing.PasswordDialog;
 import net.sourceforge.pinemup.ui.swing.PinEmUpTrayIcon;
 
 public final class PinEmUp {
@@ -66,6 +67,9 @@ public final class PinEmUp {
          } catch (AWTException e) {
             e.printStackTrace();
          }
+
+         // define user interface for retrieving the server password
+         UserSettings.getInstance().setUserPasswordRetriever(new PasswordDialog());
 
          // show all notes that are set visible
          NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();

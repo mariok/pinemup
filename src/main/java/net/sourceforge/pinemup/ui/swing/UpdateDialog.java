@@ -38,6 +38,8 @@ import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import net.sourceforge.pinemup.ui.I18N;
+
 public class UpdateDialog extends JFrame implements ActionListener, HyperlinkListener {
    /**
     *

@@ -23,10 +23,8 @@ package net.sourceforge.pinemup.core;
 
 import java.util.prefs.Preferences;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-
-import net.sourceforge.pinemup.ui.swing.I18N;
+import net.sourceforge.pinemup.ui.I18N;
+import net.sourceforge.pinemup.ui.UserPasswordRetriever;
 
 public final class UserSettings {
    private Preferences prefs;
@@ -36,6 +34,8 @@ public final class UserSettings {
 
    private static final int MIN_NOTEWINDOW_WIDTH = 30;
    private static final int MIN_NOTEWINDOW_HEIGHT = 30;
+
+   private UserPasswordRetriever userPasswordRetriever;
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;
@@ -201,9 +201,9 @@ public final class UserSettings {
       if (storeServerPass) {
          tempString = String.valueOf(serverPasswd);
       } else {
-         JPasswordField p = new JPasswordField(12);
-         JOptionPane.showMessageDialog(null, p, I18N.getInstance().getString("confirm.enterserverpassword"), JOptionPane.PLAIN_MESSAGE);
-         tempString = String.valueOf(p.getPassword());
+         if (userPasswordRetriever != null) {
+            tempString = userPasswordRetriever.retrievePasswordFromUser(I18N.getInstance().getString("confirm.enterserverpassword"));
+         }
       }
       return tempString;
    }
@@ -294,5 +294,9 @@ public final class UserSettings {
 
    public static UserSettings getInstance() {
       return UserSettings.instance;
+   }
+
+   public void setUserPasswordRetriever(UserPasswordRetriever userPasswordRetriever) {
+      this.userPasswordRetriever = userPasswordRetriever;
    }
 }

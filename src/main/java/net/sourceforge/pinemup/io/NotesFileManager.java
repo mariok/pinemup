@@ -49,8 +49,8 @@ import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
+import net.sourceforge.pinemup.ui.I18N;
 import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
-import net.sourceforge.pinemup.ui.swing.I18N;
 
 import org.xml.sax.SAXException;
 

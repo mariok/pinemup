@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
