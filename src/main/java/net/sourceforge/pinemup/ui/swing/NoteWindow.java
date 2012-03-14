@@ -448,15 +448,15 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             catButton.setText(cat.getName());
             repaint();
          }
-         setBGColor(parentNote.getColor());
       }
    }
 
-   public void updateFontSize() {
+   private void updateFontSize() {
       textArea.setFont(new java.awt.Font("SANSSERIF", 1, parentNote.getFontSize()));
    }
 
    private void updateVisibility() {
+      setAlwaysOnTop(parentNote.isAlwaysOnTop());
       if (parentNote.isHidden()) {
          hideNote();
       }
@@ -540,8 +540,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    @Override
    public void update(Observable o, Object arg) {
-      updateVisibility();
+      setBGColor(parentNote.getColor());
       updateCategory();
       updateFontSize();
+      updateVisibility();
    }
 }
