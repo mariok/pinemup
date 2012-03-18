@@ -148,4 +148,18 @@ public final class CategoryManager {
    public void append(List<Category> cl) {
       categories.addAll(cl);
    }
+
+   public void moveNoteToCategory(Note note, int catNumber) {
+      Category newCat = getCategoryByNumber(catNumber);
+      if (newCat != null) {
+         // remove from old category
+         if (note.getCategory() != null) {
+            note.getCategory().removeNote(note);
+         }
+         // add to new category
+         newCat.addNote(note);
+         // set note color to default color of the new category
+         note.setColor(newCat.getDefaultNoteColor());
+      }
+   }
 }

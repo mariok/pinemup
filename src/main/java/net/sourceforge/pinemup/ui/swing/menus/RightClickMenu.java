@@ -152,7 +152,7 @@ public class RightClickMenu extends JPopupMenu implements ActionListener {
       } else {
          for (int i = 0; i < categoryMenu.getItemCount(); i++) {
             if (src == categoryMenu.getItem(i)) {
-               parentNote.moveToCategory(CategoryManager.getInstance().getCategoryByNumber(i));
+               CategoryManager.getInstance().moveNoteToCategory(parentNote, i);
             }
          }
 

@@ -29,41 +29,42 @@ public class Note extends Observable {
    private boolean hidden;
    private boolean alwaysOnTop;
 
-   private short xpos, ypos, xsize, ysize, fontsize;
+   private short xpos, ypos, xsize, ysize, fontSize;
 
    private NoteColor color;
 
    private Category category;
 
-   public void setAlwaysOnTop(boolean b) {
-      alwaysOnTop = b;
-      setChanged();
-      notifyObservers();
+   public void setAlwaysOnTop(boolean alwaysOnTop) {
+      if (alwaysOnTop != this.alwaysOnTop) {
+         this.alwaysOnTop = alwaysOnTop;
+         setChanged();
+         notifyObservers();
+      }
    }
 
    public boolean isAlwaysOnTop() {
       return alwaysOnTop;
    }
 
-   public void setFontSize(short size) {
-      fontsize = size;
-      setChanged();
-      notifyObservers();
+   public void setFontSize(short fontSize) {
+      if (fontSize != this.fontSize) {
+         this.fontSize = fontSize;
+         setChanged();
+         notifyObservers();
+      }
    }
 
    public short getFontSize() {
-      return fontsize;
+      return fontSize;
    }
 
-   public Note() { // for failnote
-      hidden = true;
-      text = "";
-   }
-
-   public void setHidden(boolean b) {
-      hidden = b;
-      setChanged();
-      notifyObservers();
+   public void setHidden(boolean hidden) {
+      if (hidden != this.hidden) {
+         this.hidden = hidden;
+         setChanged();
+         notifyObservers();
+      }
    }
 
    public boolean isHidden() {
@@ -77,15 +78,17 @@ public class Note extends Observable {
       ypos = UserSettings.getInstance().getDefaultWindowYPostition();
       xsize = UserSettings.getInstance().getDefaultWindowWidth();
       ysize = UserSettings.getInstance().getDefaultWindowHeight();
-      fontsize = UserSettings.getInstance().getDefaultFontSize();
+      fontSize = UserSettings.getInstance().getDefaultFontSize();
       alwaysOnTop = UserSettings.getInstance().getDefaultAlwaysOnTop();
       this.color = color;
    }
 
-   public void setText(String t) {
-      text = t;
-      setChanged();
-      notifyObservers();
+   public void setText(String text) {
+      if (!text.equals(this.text)) {
+         this.text = text;
+         setChanged();
+         notifyObservers();
+      }
    }
 
    public String getText() {
@@ -93,17 +96,12 @@ public class Note extends Observable {
    }
 
    public void setPosition(short x, short y) {
-      xpos = x;
-      ypos = y;
-      setChanged();
-      notifyObservers();
-   }
-
-   public void setSize(short x, short y) {
-      xsize = x;
-      ysize = y;
-      setChanged();
-      notifyObservers();
+      if (x != xpos || y != ypos) {
+         xpos = x;
+         ypos = y;
+         setChanged();
+         notifyObservers();
+      }
    }
 
    public short getXPos() {
@@ -112,6 +110,15 @@ public class Note extends Observable {
 
    public short getYPos() {
       return ypos;
+   }
+
+   public void setSize(short x, short y) {
+      if (x != xsize || y != ysize) {
+         xsize = x;
+         ysize = y;
+         setChanged();
+         notifyObservers();
+      }
    }
 
    public short getXSize() {
@@ -126,23 +133,9 @@ public class Note extends Observable {
       return category;
    }
 
-   public void setCategory(Category c) {
-      category = c;
-      setChanged();
-      notifyObservers();
-   }
-
-   public void moveToCategory(Category newCat) {
-      if (newCat != null) {
-         // remove from old category
-         if (category != null) {
-            category.removeNote(this);
-         }
-         // add to new category
-         newCat.addNote(this);
-         // set color to default color of the new category
-         setColor(newCat.getDefaultNoteColor());
-         // update Category name and color in Window
+   public void setCategory(Category category) {
+      if (category != this.category) {
+         this.category = category;
          setChanged();
          notifyObservers();
       }

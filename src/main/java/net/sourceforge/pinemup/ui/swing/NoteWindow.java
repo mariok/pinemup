@@ -518,9 +518,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             } else {
                catNumber--;
             }
-            if (CategoryManager.getInstance().getCategoryByNumber(catNumber) != null) {
-               parentNote.moveToCategory(CategoryManager.getInstance().getCategoryByNumber(catNumber));
-            }
+            CategoryManager.getInstance().moveNoteToCategory(parentNote, catNumber);
             break;
          default:
             break;
