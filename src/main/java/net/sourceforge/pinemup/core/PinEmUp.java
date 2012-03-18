@@ -21,15 +21,8 @@
 
 package net.sourceforge.pinemup.core;
 
-import java.awt.AWTException;
-import java.awt.SystemTray;
-
-import javax.swing.JOptionPane;
-
-import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
-import net.sourceforge.pinemup.ui.swing.PasswordDialog;
-import net.sourceforge.pinemup.ui.swing.PinEmUpTrayIcon;
+import net.sourceforge.pinemup.ui.PinEmUpUI;
+import net.sourceforge.pinemup.ui.swing.SwingUI;
 
 public final class PinEmUp {
    public static final String VERSION;
@@ -39,11 +32,15 @@ public final class PinEmUp {
       if (PinEmUp.class.getPackage().getImplementationVersion() != null) {
          VERSION = PinEmUp.class.getPackage().getImplementationVersion();
       } else {
-         VERSION = "devel";
+         VERSION = "dev-SNAPSHOT";
       }
    }
 
    private PinEmUp() {
+
+   }
+
+   public static void main(String[] args) {
       // wait for a moment for SystemTray to be initialized
       // (to prevent problems with autostart on some systems)
       try {
@@ -52,39 +49,8 @@ public final class PinEmUp {
          e.printStackTrace();
       }
 
-      if (SystemTray.isSupported()) {
-         // set locale
-         I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
-
-         // load notes from file
-         CategoryManager.getInstance().append(NotesFileManager.getInstance().readCategoriesFromFile());
-
-         // add trayicon
-         SystemTray tray = SystemTray.getSystemTray();
-         try {
-            tray.add(PinEmUpTrayIcon.getInstance());
-         } catch (AWTException e) {
-            e.printStackTrace();
-         }
-
-         // define user interface for retrieving the server password
-         UserSettings.getInstance().setUserPasswordRetriever(new PasswordDialog());
-
-         // show all notes that are set visible
-         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
-
-         // udate check
-         if (UserSettings.getInstance().isUpdateCheckEnabled()) {
-            new UpdateCheckThread(false);
-         }
-      } else { // tray icon not supported
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.trayiconnotsupported"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
-         System.exit(1);
-      }
-   }
-
-   public static void main(String[] args) {
-      new PinEmUp();
+      // create Swing UI
+      PinEmUpUI pinEmUpUi = new SwingUI();
+      pinEmUpUi.initializeUI();
    }
 }
