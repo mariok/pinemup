@@ -25,18 +25,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 
-import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
 
 class IconClickLogic extends MouseAdapter implements ActionListener {
    public void actionPerformed(ActionEvent arg0) {
-      Category defCat = CategoryManager.getInstance().getDefaultCategory();
-      if (defCat != null) {
-         Note newNote = new Note("", defCat.getDefaultNoteColor());
-         defCat.addNote(newNote);
-         NoteWindow window = NoteWindowManager.getInstance().createNoteWindowForNote(newNote);
-         window.jumpIntoTextArea();
-      }
+      Note newNote = CategoryManager.getInstance().createNoteAndAddToDefaultCategory();
+      NoteWindow window = NoteWindowManager.getInstance().createNoteWindowForNote(newNote);
+      window.jumpIntoTextArea();
    }
 }

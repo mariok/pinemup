@@ -42,7 +42,6 @@ public class NoteWindowManager {
    }
 
    public void createNoteWindowsForAllVisibleNotes() {
-
       List<Note> visibleNotes = CategoryManager.getInstance().getAllVisibleNotes();
       for (Note note : visibleNotes) {
          if (noteWindows.get(note) == null) {
@@ -57,7 +56,19 @@ public class NoteWindowManager {
       return window;
    }
 
-   public void removeNoteWindowForNote(Note note) {
-      noteWindows.remove(note);
+   public void hideAndRemoveNoteWindow(NoteWindow window) {
+      if (window != null) {
+         window.getParentNote().deleteObserver(window);
+         window.setVisible(false);
+         noteWindows.remove(window.getParentNote());
+      }
+   }
+
+   public void hideAndRemoveAllNoteWindows() {
+      for (NoteWindow window : noteWindows.values()) {
+         window.getParentNote().deleteObserver(window);
+         window.setVisible(false);
+      }
+      noteWindows.clear();
    }
 }

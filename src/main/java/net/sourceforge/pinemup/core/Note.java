@@ -71,8 +71,8 @@ public class Note extends Observable {
       return hidden;
    }
 
-   public Note(String text, NoteColor color) {
-      this.text = text;
+   public Note() {
+      text = "";
       hidden = false;
       xpos = UserSettings.getInstance().getDefaultWindowXPostition();
       ypos = UserSettings.getInstance().getDefaultWindowYPostition();
@@ -80,7 +80,7 @@ public class Note extends Observable {
       ysize = UserSettings.getInstance().getDefaultWindowHeight();
       fontSize = UserSettings.getInstance().getDefaultFontSize();
       alwaysOnTop = UserSettings.getInstance().getDefaultAlwaysOnTop();
-      this.color = color;
+      color = NoteColor.DEFAULT_COLOR;
    }
 
    public void setText(String text) {
@@ -149,5 +149,10 @@ public class Note extends Observable {
 
    public NoteColor getColor() {
       return color;
+   }
+
+   public void refreshCategoryInfo() {
+      setChanged();
+      notifyObservers();
    }
 }

@@ -26,7 +26,7 @@ import java.awt.TrayIcon;
 import net.sourceforge.pinemup.io.ResourceLoader;
 import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
-public final class PinEmUpTrayIcon extends TrayIcon {
+final class PinEmUpTrayIcon extends TrayIcon {
    private static PinEmUpTrayIcon instance = new PinEmUpTrayIcon();
 
    private PinEmUpTrayIcon() {

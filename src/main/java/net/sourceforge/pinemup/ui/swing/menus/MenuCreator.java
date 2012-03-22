@@ -116,13 +116,9 @@ class MenuCreator implements ActionListener {
    public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
       if ((basicItem != null && src == basicItem[0]) || (basicItemJ != null && src == basicItemJ[0])) {
-         Category defCat = CategoryManager.getInstance().getDefaultCategory();
-         if (defCat != null) {
-            Note newNote = new Note("", defCat.getDefaultNoteColor());
-            defCat.addNote(newNote);
-            NoteWindow window = NoteWindowManager.getInstance().createNoteWindowForNote(newNote);
-            window.jumpIntoTextArea();
-         }
+         Note newNote = CategoryManager.getInstance().createNoteAndAddToDefaultCategory();
+         NoteWindow window = NoteWindowManager.getInstance().createNoteWindowForNote(newNote);
+         window.jumpIntoTextArea();
       } else if ((basicItem != null && src == basicItem[1]) || (basicItemJ != null && src == basicItemJ[1])) {
          CategoryManager.getInstance().unhideAllNotes();
          NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
@@ -140,10 +136,7 @@ class MenuCreator implements ActionListener {
    }
 
    private static class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {
-      /**
-       *
-       */
-      private static final long serialVersionUID = 1L;
+      private static final long serialVersionUID = -8783854932523988763L;
 
       private Category myCat;
 
@@ -152,16 +145,14 @@ class MenuCreator implements ActionListener {
          myCat = c;
       }
 
+      @Override
       public Category getCategory() {
          return myCat;
       }
    }
 
    private static class CategoryJMenuItem extends JMenuItem implements MenuItemWithCategory {
-      /**
-       *
-       */
-      private static final long serialVersionUID = 1L;
+      private static final long serialVersionUID = 7661460974200116943L;
 
       private Category myCat;
 
@@ -170,6 +161,7 @@ class MenuCreator implements ActionListener {
          myCat = c;
       }
 
+      @Override
       public Category getCategory() {
          return myCat;
       }

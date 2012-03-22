@@ -21,6 +21,8 @@
 
 package net.sourceforge.pinemup.core;
 
+import net.sourceforge.pinemup.io.NotesFileManager;
+import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
 
@@ -49,8 +51,21 @@ public final class PinEmUp {
          e.printStackTrace();
       }
 
+      // set locale
+      I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
+
       // create Swing UI
-      PinEmUpUI pinEmUpUi = new SwingUI();
-      pinEmUpUi.initializeUI();
+      PinEmUpUI.setUI(new SwingUI());
+      PinEmUpUI.getUI().initialize();
+
+      // load notes from file
+      NotesFileSaveTrigger.getInstance().setDisabled(true);
+      CategoryManager.getInstance().replaceWithNewCategories(NotesFileManager.getInstance().readCategoriesFromFile());
+      NotesFileSaveTrigger.getInstance().setDisabled(false);
+
+      // update check
+      if (UserSettings.getInstance().isUpdateCheckEnabled()) {
+         new UpdateCheckThread(false);
+      }
    }
 }

@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class NotesFileManager {
    }
 
    public void writeCategoriesToFile(List<Category> l) {
-      // write notes to xml file
+      System.out.println(new Date() + " writing notes to file...");
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
          FileOutputStream f = new FileOutputStream(UserSettings.getInstance().getNotesFile());
@@ -129,7 +130,7 @@ public class NotesFileManager {
    }
 
    public List<Category> readCategoriesFromFile() {
-      List<Category> c = new LinkedList<Category>();
+      List<Category> categories = new LinkedList<Category>();
       Category currentCategory = null;
       Note currentNote = null;
       boolean defaultNotAdded = true;
@@ -171,9 +172,7 @@ public class NotesFileManager {
                break;
             case XMLStreamConstants.START_ELEMENT:
                String ename = parser.getLocalName();
-               if (ename.equals("notesfile")) {
-                  // do nothing yet
-               } else if (ename.equals("category")) {
+               if (ename.equals("category")) {
                   String name = "";
                   boolean def = false;
                   NoteColor defNoteColor = NoteColor.DEFAULT_COLOR;
@@ -190,9 +189,9 @@ public class NotesFileManager {
                      }
                   }
                   currentCategory = new Category(name, def, defNoteColor);
-                  c.add(currentCategory);
+                  categories.add(currentCategory);
                } else if (ename.equals("note")) {
-                  currentNote = new Note("", NoteColor.DEFAULT_COLOR);
+                  currentNote = new Note();
                   for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("hidden")) {
                         boolean h = parser.getAttributeValue(i).equals("true");
@@ -250,14 +249,15 @@ public class NotesFileManager {
          in.close();
       } catch (FileNotFoundException e) {
          // create default categories
-         c.add(new Category("Home", true, NoteColor.YELLOW));
-         c.add(new Category("Office", false, NoteColor.GREEN));
+         categories.add(new Category("Home", true, NoteColor.YELLOW));
+         categories.add(new Category("Office", false, NoteColor.GREEN));
       } catch (XMLStreamException e) {
          e.printStackTrace();
       } catch (IOException e) {
          e.printStackTrace();
       }
-      return c;
+      observeAllNotesAndCategories(categories);
+      return categories;
    }
 
    public static String checkAndAddExtension(String s, String xt) {
@@ -342,5 +342,18 @@ public class NotesFileManager {
          e.printStackTrace();
       }
       return version;
+   }
+
+   public void observeNote(Note note) {
+      note.addObserver(NotesFileSaveTrigger.getInstance());
+   }
+
+   private void observeAllNotesAndCategories(List<Category> categories) {
+      for (Category cat : categories) {
+         cat.addObserver(NotesFileSaveTrigger.getInstance());
+         for (Note note : cat.getNotes()) {
+            note.addObserver(NotesFileSaveTrigger.getInstance());
+         }
+      }
    }
 }

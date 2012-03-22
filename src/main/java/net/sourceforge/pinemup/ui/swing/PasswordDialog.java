@@ -6,7 +6,7 @@ import javax.swing.JPasswordField;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.ui.UserPasswordRetriever;
 
-public class PasswordDialog implements UserPasswordRetriever {
+class PasswordDialog implements UserPasswordRetriever {
    private static final int PASSWORD_FIELD_LENGTH = 12;
 
    @Override

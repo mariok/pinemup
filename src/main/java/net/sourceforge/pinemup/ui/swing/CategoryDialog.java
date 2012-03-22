@@ -53,6 +53,7 @@ import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.NoteColor;
+import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
 import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
 public final class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {
@@ -376,7 +377,9 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       catNameField.setText(catName);
       defaultBox.setSelected(false);
       colorBox.setSelectedIndex(0);
-      CategoryManager.getInstance().addCategory(new Category(catName, false, NoteColor.DEFAULT_COLOR));
+      Category newCat = new Category(catName, false, NoteColor.DEFAULT_COLOR);
+      CategoryManager.getInstance().addCategory(newCat);
+      newCat.addObserver(NotesFileSaveTrigger.getInstance());
       PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       Object[] rowData = {"", catName, "0"};
       catTableModel.addRow(rowData);
@@ -407,7 +410,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       if (trackChanges) {
          String name = catNameField.getText();
          catTable.getModel().setValueAt(name, selectedRow, 1);
-         selectedCat.rename(name);
+         selectedCat.setName(name);
          PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());
       }
    }

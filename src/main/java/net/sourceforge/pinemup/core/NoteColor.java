@@ -16,6 +16,7 @@ public enum NoteColor {
    RED((byte)8, "red", new Color(255, 166, 167), new Color(255, 115, 115));
 
    public static final NoteColor DEFAULT_COLOR = NoteColor.YELLOW;
+   private static final String I18N_PREFIX = "color.";
 
    private byte code;
    private String name;
@@ -34,7 +35,7 @@ public enum NoteColor {
    }
 
    public String getLocalizedName() {
-      return name;
+      return I18N.getInstance().getString(I18N_PREFIX + name);
    }
 
    public Color getColor1() {

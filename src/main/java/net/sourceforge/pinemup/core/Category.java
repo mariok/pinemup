@@ -23,8 +23,9 @@ package net.sourceforge.pinemup.core;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 
-public class Category {
+public class Category extends Observable {
    private String name;
    private List<Note> notes;
    private boolean defaultCategory;
@@ -41,9 +42,11 @@ public class Category {
       return name;
    }
 
-   public void rename(String s) {
-      name = s;
-      notifyNoteObservers();
+   public void setName(String name) {
+      if (!name.equals(this.name)) {
+         this.name = name;
+         notifyNotes();
+      }
    }
 
    public boolean isDefaultCategory() {
@@ -51,11 +54,19 @@ public class Category {
    }
 
    public void setDefault(boolean b) {
-      defaultCategory = b;
+      if (b != defaultCategory) {
+         defaultCategory = b;
+         setChanged();
+         notifyObservers();
+      }
    }
 
    public void setDefaultNoteColor(NoteColor c) {
-      defaultNoteColor = c;
+      if (!c.equals(defaultNoteColor)) {
+         defaultNoteColor = c;
+         setChanged();
+         notifyObservers();
+      }
    }
 
    public NoteColor getDefaultNoteColor() {
@@ -89,11 +100,15 @@ public class Category {
    public void addNote(Note n) {
       n.setCategory(this);
       notes.add(n);
+      setChanged();
+      notifyObservers();
    }
 
    public void removeNote(Note n) {
       n.setCategory(null);
       notes.remove(n);
+      setChanged();
+      notifyObservers();
    }
 
    public void unhideAllNotes() {
@@ -102,9 +117,9 @@ public class Category {
       }
    }
 
-   private void notifyNoteObservers() {
+   private void notifyNotes() {
       for (Note note : notes) {
-         note.notifyObservers();
+         note.refreshCategoryInfo();
       }
    }
 }

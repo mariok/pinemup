@@ -29,8 +29,6 @@ public final class I18N {
    public static final String[] LOCALES = {"cs_CZ", "de_DE", "en_US"};
    public static final String[] LOCALE_NAMES = {"Česky", "Deutsch", "English"};
 
-   public static final String COLOR_PREFIX = "color.";
-
    private static I18N instance = new I18N();
    private ResourceBundle res;
 

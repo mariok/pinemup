@@ -96,7 +96,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    private BackgroundLabel bgLabel;
 
-   public NoteWindow(Note pn) {
+   NoteWindow(Note pn) {
       super((new JFrame() {
          private static final long serialVersionUID = 1L;
 
@@ -255,7 +255,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    @Override
    public void windowClosed(WindowEvent arg0) {
-      hideNote();
+      NoteWindowManager.getInstance().hideAndRemoveNoteWindow(this);
    }
 
    @Override
@@ -303,12 +303,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          textArea.setFocusable(true);
          textArea.requestFocus();
       }
-   }
-
-   private void hideNote() {
-      parentNote.deleteObserver(this);
-      NoteWindowManager.getInstance().removeNoteWindowForNote(parentNote);
-      setVisible(false);
    }
 
    private void autoSizeY() {
@@ -458,7 +452,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    private void updateVisibility() {
       setAlwaysOnTop(parentNote.isAlwaysOnTop());
       if (parentNote.isHidden()) {
-         hideNote();
+         NoteWindowManager.getInstance().hideAndRemoveNoteWindow(this);
       }
    }
 

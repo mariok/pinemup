@@ -46,10 +46,7 @@ import net.sourceforge.pinemup.core.PinEmUp;
 import net.sourceforge.pinemup.io.ResourceLoader;
 
 public class AboutDialog extends JFrame implements ActionListener, HyperlinkListener {
-   /**
-    *
-    */
-   private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = -6786897911342420374L;
 
    private static final int DIALOG_WIDTH = 600;
    private static final int DIALOG_HEIGHT = 350;

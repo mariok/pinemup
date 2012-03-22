@@ -58,6 +58,7 @@ import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
+import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
 import net.sourceforge.pinemup.io.ResourceLoader;
 import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
@@ -992,15 +993,13 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
          // load new notes from file
-         CategoryManager.getInstance().hideAllNotes();
-         CategoryManager.getInstance().removeAllCategories();
          List<Category> cl = NotesFileManager.getInstance().readCategoriesFromFile();
+         NotesFileSaveTrigger.getInstance().setDisabled(true);
          // if file has not been valid and new one has been selected:
          notesFileField.setText(UserSettings.getInstance().getNotesFile());
-         CategoryManager.getInstance().append(cl);
 
-         // show all visible notes
-         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
+         CategoryManager.getInstance().replaceWithNewCategories(cl);
+         NotesFileSaveTrigger.getInstance().setDisabled(false);
 
          // replace Traymenu (because of new categories)
          PinEmUpTrayIcon.getInstance().setPopupMenu(new TrayMenu());

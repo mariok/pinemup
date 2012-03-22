@@ -23,13 +23,18 @@ package net.sourceforge.pinemup.core;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 
-public final class CategoryManager {
+import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
+import net.sourceforge.pinemup.ui.PinEmUpUI;
+
+public final class CategoryManager extends Observable {
    private List<Category> categories;
    private static CategoryManager instance = new CategoryManager();
 
    private CategoryManager() {
       categories = new LinkedList<Category>();
+      addObserver(NotesFileSaveTrigger.getInstance());
    }
 
    public static CategoryManager getInstance() {
@@ -38,10 +43,14 @@ public final class CategoryManager {
 
    public void addCategory(Category c) {
       categories.add(c);
+      setChanged();
+      notifyObservers();
    }
 
    public void removeCategory(Category c) {
       categories.remove(c);
+      setChanged();
+      notifyObservers();
    }
 
    public void hideAllNotes() {
@@ -103,6 +112,8 @@ public final class CategoryManager {
       if (index > 0) {
          categories.set(index, categories.get(index - 1));
          categories.set(index - 1, c);
+         setChanged();
+         notifyObservers();
       }
    }
 
@@ -111,6 +122,8 @@ public final class CategoryManager {
       if (index < categories.size() - 1) {
          categories.set(index, categories.get(index + 1));
          categories.set(index + 1, c);
+         setChanged();
+         notifyObservers();
       }
    }
 
@@ -141,12 +154,15 @@ public final class CategoryManager {
       return visibleNotes;
    }
 
-   public void removeAllCategories() {
-      categories.clear();
-   }
+   public void replaceWithNewCategories(List<Category> newCategories) {
+      PinEmUpUI.getUI().hideNotes();
 
-   public void append(List<Category> cl) {
-      categories.addAll(cl);
+      // link and save new notes
+      categories.clear();
+      categories.addAll(newCategories);
+
+      // show all notes which are not hidden
+      PinEmUpUI.getUI().showNotes();
    }
 
    public void moveNoteToCategory(Note note, int catNumber) {
@@ -161,5 +177,13 @@ public final class CategoryManager {
          // set note color to default color of the new category
          note.setColor(newCat.getDefaultNoteColor());
       }
+   }
+
+   public Note createNoteAndAddToDefaultCategory() {
+      Category defCat = getDefaultCategory();
+      Note newNote = new Note();
+      defCat.addNote(newNote);
+      newNote.addObserver(NotesFileSaveTrigger.getInstance());
+      return newNote;
    }
 }

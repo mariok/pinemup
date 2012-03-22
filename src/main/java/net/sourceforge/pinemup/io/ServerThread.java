@@ -26,7 +26,6 @@ import java.util.List;
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 
 public class ServerThread extends Thread {
    public static final boolean UPLOAD = true;
@@ -48,19 +47,12 @@ public class ServerThread extends Thread {
          ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).importNotesFromServer();
          // load new file
          List<Category> newCats = NotesFileManager.getInstance().readCategoriesFromFile();
-         // If successfull downloaded, replace:
-         // hide notes
-         CategoryManager.getInstance().hideAllNotes();
+         // if downloaded successfully, replace:
 
-         // link and save new notes
-         CategoryManager.getInstance().removeAllCategories();
-         CategoryManager.getInstance().append(newCats);
-
-         // show all notes which are not hidden
-         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
-
-         // save to file
+         NotesFileSaveTrigger.getInstance().setDisabled(true);
+         CategoryManager.getInstance().replaceWithNewCategories(newCats);
          NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+         NotesFileSaveTrigger.getInstance().setDisabled(false);
       }
    }
 
