@@ -128,7 +128,7 @@ public final class CategoryManager extends Observable {
    }
 
    public Category getCategoryByNumber(int n) {
-      if (n >= categories.size()) {
+      if (n < 0 || n >= categories.size()) {
          return null;
       }
       return categories.get(n);
@@ -160,6 +160,8 @@ public final class CategoryManager extends Observable {
       // link and save new notes
       categories.clear();
       categories.addAll(newCategories);
+
+      PinEmUpUI.getUI().refreshCategories();
 
       // show all notes which are not hidden
       PinEmUpUI.getUI().showNotes();

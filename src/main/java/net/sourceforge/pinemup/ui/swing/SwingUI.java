@@ -8,15 +8,19 @@ import javax.swing.JOptionPane;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
+import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
 public class SwingUI extends PinEmUpUI {
+   private TrayMenu trayMenu;
+
    @Override
    public void initialize() {
       if (SystemTray.isSupported()) {
          // add trayicon
          SystemTray tray = SystemTray.getSystemTray();
          try {
-            tray.add(PinEmUpTrayIcon.getInstance());
+            trayMenu = new TrayMenu();
+            tray.add(new PinEmUpTrayIcon(trayMenu));
          } catch (AWTException e) {
             e.printStackTrace();
          }
@@ -38,5 +42,10 @@ public class SwingUI extends PinEmUpUI {
    @Override
    public void showNotes() {
       NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
+   }
+
+   @Override
+   public void refreshCategories() {
+      trayMenu.createCategoriesMenu();
    }
 }

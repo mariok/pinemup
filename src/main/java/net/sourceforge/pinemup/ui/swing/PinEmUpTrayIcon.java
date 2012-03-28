@@ -21,25 +21,19 @@
 
 package net.sourceforge.pinemup.ui.swing;
 
+import java.awt.PopupMenu;
 import java.awt.TrayIcon;
 
 import net.sourceforge.pinemup.io.ResourceLoader;
-import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
 final class PinEmUpTrayIcon extends TrayIcon {
-   private static PinEmUpTrayIcon instance = new PinEmUpTrayIcon();
-
-   private PinEmUpTrayIcon() {
-      super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", new TrayMenu());
+   public PinEmUpTrayIcon(PopupMenu popupMenu) {
+      super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", popupMenu);
       setImageAutoSize(false);
       IconClickLogic myIconListener = new IconClickLogic();
       // add actionlistener for doubleclick on icon
       addActionListener(myIconListener);
       // add mouselistener for traymenu
       addMouseListener(myIconListener);
-   }
-
-   public static PinEmUpTrayIcon getInstance() {
-      return PinEmUpTrayIcon.instance;
    }
 }

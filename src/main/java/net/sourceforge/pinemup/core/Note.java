@@ -24,6 +24,9 @@ package net.sourceforge.pinemup.core;
 import java.util.Observable;
 
 public class Note extends Observable {
+   public static final short MIN_FONT_SIZE = 5;
+   public static final short MAX_FONT_SIZE = 31;
+
    private String text;
 
    private boolean hidden;

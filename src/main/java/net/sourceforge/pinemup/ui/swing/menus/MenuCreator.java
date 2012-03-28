@@ -23,8 +23,8 @@ package net.sourceforge.pinemup.ui.swing.menus;
 
 import java.awt.Menu;
 import java.awt.MenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -32,19 +32,16 @@ import javax.swing.JMenuItem;
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.ui.swing.NoteWindow;
-import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 
-class MenuCreator implements ActionListener {
-   private CategoryJMenuItem[] categoryItemJ = null;
-   private CategoryMenuItem[] categoryItem = null;
-   private JMenuItem[] basicItemJ = null;
-   private MenuItem[] basicItem = null;
-
+class MenuCreator {
    private String[] getBasicItemTexts() {
       String[] s = {I18N.getInstance().getString("menu.addnoteitem"), I18N.getInstance().getString("menu.showallnotesitem"),
             I18N.getInstance().getString("menu.hideallnotesitem")};
+      return s;
+   }
+
+   private String[] getBasicActionCommands() {
+      String[] s = {GeneralMenuLogic.ACTION_ADD_NOTE, GeneralMenuLogic.ACTION_SHOW_ALL_NOTES, GeneralMenuLogic.ACTION_HIDE_ALL_NOTES};
       return s;
    }
 
@@ -55,40 +52,52 @@ class MenuCreator implements ActionListener {
       return s;
    }
 
-   public JMenuItem[] getBasicJMenuItems() {
-      String[] texts = getBasicItemTexts();
-      basicItemJ = new JMenuItem[texts.length];
-      for (int i = 0; i < texts.length; i++) {
-         basicItemJ[i] = new JMenuItem(texts[i]);
-         basicItemJ[i].addActionListener(this);
-      }
-      return basicItemJ;
+   private String[] getCategoryActionCommands() {
+      String[] s = {CategoryMenuLogic.ACTION_HIDE_ALL_NOTES, CategoryMenuLogic.ACTION_SHOW_ALL_NOTES,
+            CategoryMenuLogic.ACTION_SHOW_ONLY_NOTES_OF_CATEGORY, CategoryMenuLogic.ACTION_SET_AS_DEFAULT_CATEGORY};
+      return s;
    }
 
-   public MenuItem[] getBasicMenuItems() {
+   public List<JMenuItem> getBasicJMenuItems() {
       String[] texts = getBasicItemTexts();
-      basicItem = new MenuItem[texts.length];
+      String[] actions = getBasicActionCommands();
+      GeneralMenuLogic basicMenuLogic = new GeneralMenuLogic();
+      List<JMenuItem> menuItems = new ArrayList<JMenuItem>();
       for (int i = 0; i < texts.length; i++) {
-         basicItem[i] = new MenuItem(texts[i]);
-         basicItem[i].addActionListener(this);
+         JMenuItem menuItem = new JMenuItem(texts[i]);
+         menuItem.setActionCommand(actions[i]);
+         menuItem.addActionListener(basicMenuLogic);
+         menuItems.add(menuItem);
       }
-      return basicItem;
+      return menuItems;
+   }
+
+   public List<MenuItem> getBasicMenuItems() {
+      String[] texts = getBasicItemTexts();
+      String[] actions = getBasicActionCommands();
+      GeneralMenuLogic basicMenuLogic = new GeneralMenuLogic();
+      List<MenuItem> menuItems = new ArrayList<MenuItem>();
+      for (int i = 0; i < texts.length; i++) {
+         MenuItem menuItem = new MenuItem(texts[i]);
+         menuItem.setActionCommand(actions[i]);
+         menuItem.addActionListener(basicMenuLogic);
+         menuItems.add(menuItem);
+      }
+      return menuItems;
    }
 
    public JMenu getCategoryActionsJMenu(String title, Category c) {
       JMenu menu = new JMenu(title);
       String[] texts = getCategoryItemTexts();
-      categoryItemJ = new CategoryJMenuItem[texts.length];
+      String[] actions = getCategoryActionCommands();
+      CategoryMenuLogic catMenuLogic = new CategoryMenuLogic(c);
       for (int i = 0; i < texts.length; i++) {
-         categoryItemJ[i] = new CategoryJMenuItem(texts[i], c);
-         categoryItemJ[i].addActionListener(this);
-         menu.add(categoryItemJ[i]);
-         switch (i) {
-         case 2:
+         JMenuItem menuItem = new JMenuItem(texts[i]);
+         menuItem.setActionCommand(actions[i]);
+         menuItem.addActionListener(catMenuLogic);
+         menu.add(menuItem);
+         if (i == 2) {
             menu.addSeparator();
-            break;
-         default:
-            break;
          }
       }
       return menu;
@@ -97,77 +106,28 @@ class MenuCreator implements ActionListener {
    public Menu getCategoryActionsMenu(String title, Category c) {
       Menu menu = new Menu(title);
       String[] texts = getCategoryItemTexts();
-      categoryItem = new CategoryMenuItem[texts.length];
+      String[] actions = getCategoryActionCommands();
+      CategoryMenuLogic catMenuLogic = new CategoryMenuLogic(c);
       for (int i = 0; i < texts.length; i++) {
-         categoryItem[i] = new CategoryMenuItem(texts[i], c);
-         categoryItem[i].addActionListener(this);
-         menu.add(categoryItem[i]);
-         switch (i) {
-         case 2:
+         MenuItem menuItem = new MenuItem(texts[i]);
+         menuItem.setActionCommand(actions[i]);
+         menuItem.addActionListener(catMenuLogic);
+         menu.add(menuItem);
+         if (i == 2) {
             menu.addSeparator();
-            break;
-         default:
-            break;
          }
       }
       return menu;
    }
 
-   public void actionPerformed(ActionEvent e) {
-      Object src = e.getSource();
-      if ((basicItem != null && src == basicItem[0]) || (basicItemJ != null && src == basicItemJ[0])) {
-         Note newNote = CategoryManager.getInstance().createNoteAndAddToDefaultCategory();
-         NoteWindow window = NoteWindowManager.getInstance().createNoteWindowForNote(newNote);
-         window.jumpIntoTextArea();
-      } else if ((basicItem != null && src == basicItem[1]) || (basicItemJ != null && src == basicItemJ[1])) {
-         CategoryManager.getInstance().unhideAllNotes();
-         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
-      } else if ((basicItem != null && src == basicItem[2]) || (basicItemJ != null && src == basicItemJ[2])) {
-         CategoryManager.getInstance().hideAllNotes();
-      } else if ((categoryItem != null && src == categoryItem[0]) || (categoryItemJ != null && src == categoryItemJ[0])) {
-         ((MenuItemWithCategory)src).getCategory().hideAllNotes();
-      } else if ((categoryItem != null && src == categoryItem[1]) || (categoryItemJ != null && src == categoryItemJ[1])) {
-         ((MenuItemWithCategory)src).getCategory().unhideAllNotes();
-      } else if ((categoryItem != null && src == categoryItem[2]) || (categoryItemJ != null && src == categoryItemJ[2])) {
-         CategoryManager.getInstance().showOnlyNotesOfCategory(((MenuItemWithCategory)src).getCategory());
-      } else if ((categoryItem != null && src == categoryItem[3]) || (categoryItemJ != null && src == categoryItemJ[3])) {
-         CategoryManager.getInstance().setDefaultCategory(((MenuItemWithCategory)src).getCategory());
+   public List<Menu> getCategoryMenus() {
+      List<Menu> categoryMenus = new ArrayList<Menu>();
+      int i = 1;
+      for (Category cat : CategoryManager.getInstance().getCategories()) {
+         Menu catMenu = getCategoryActionsMenu(i + " " + cat.getName(), cat);
+         categoryMenus.add(catMenu);
+         i++;
       }
-   }
-
-   private static class CategoryMenuItem extends MenuItem implements MenuItemWithCategory {
-      private static final long serialVersionUID = -8783854932523988763L;
-
-      private Category myCat;
-
-      public CategoryMenuItem(String title, Category c) {
-         super(title);
-         myCat = c;
-      }
-
-      @Override
-      public Category getCategory() {
-         return myCat;
-      }
-   }
-
-   private static class CategoryJMenuItem extends JMenuItem implements MenuItemWithCategory {
-      private static final long serialVersionUID = 7661460974200116943L;
-
-      private Category myCat;
-
-      public CategoryJMenuItem(String title, Category c) {
-         super(title);
-         myCat = c;
-      }
-
-      @Override
-      public Category getCategory() {
-         return myCat;
-      }
-   }
-
-   private interface MenuItemWithCategory {
-      Category getCategory();
+      return categoryMenus;
    }
 }

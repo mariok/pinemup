@@ -24,131 +24,90 @@ package net.sourceforge.pinemup.ui.swing.menus;
 import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JOptionPane;
-
-import net.sourceforge.pinemup.core.Category;
-import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.UpdateCheckThread;
-import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.io.ServerThread;
-import net.sourceforge.pinemup.ui.swing.AboutDialog;
-import net.sourceforge.pinemup.ui.swing.CategoryDialog;
-import net.sourceforge.pinemup.ui.swing.ExportDialog;
-import net.sourceforge.pinemup.ui.swing.SettingsDialog;
 
-public class TrayMenu extends PopupMenu implements ActionListener {
-   /**
-    *
-    */
-   private static final long serialVersionUID = 1L;
+public class TrayMenu extends PopupMenu {
+   private static final long serialVersionUID = 4859510599893727949L;
 
-   private MenuItem manageCategoriesItem, exportItem, aboutItem, updateItem, closeItem, showSettingsDialogItem, serverUploadItem,
-         serverDownloadItem;
+   private Menu categoriesMenu;
+   private MenuItem manageCategoriesItem;
+   private MenuCreator menuCreator;
 
    public TrayMenu() {
       super("pin 'em up");
+      menuCreator = new MenuCreator();
+
+      GeneralMenuLogic menuLogic = new GeneralMenuLogic();
 
       // add basic items
-      MenuItem[] basicItems = (new MenuCreator()).getBasicMenuItems();
-      for (int i = 0; i < basicItems.length; i++) {
-         add(basicItems[i]);
+      for (MenuItem item : menuCreator.getBasicMenuItems()) {
+         add(item);
       }
       addSeparator();
 
       // categories menus
-      Menu categoriesMenu = new Menu(I18N.getInstance().getString("menu.categorymenu"));
+      categoriesMenu = new Menu(I18N.getInstance().getString("menu.categorymenu"));
       add(categoriesMenu);
-      Menu[] catMenu = new Menu[CategoryManager.getInstance().getNumberOfCategories()];
 
-      // Category menu items
-      int i = 0;
-      for (Category cat : CategoryManager.getInstance().getCategories()) {
-         catMenu[i] = (new MenuCreator()).getCategoryActionsMenu((i + 1) + " " + CategoryManager.getInstance().getCategoryNames()[i], cat);
-         categoriesMenu.add(catMenu[i]);
-         i++;
-      }
-
-      // other category actions
-      categoriesMenu.addSeparator();
+      // category actions
       manageCategoriesItem = new MenuItem(I18N.getInstance().getString("menu.categorymenu.managecategoriesitem"));
-      manageCategoriesItem.addActionListener(this);
-      categoriesMenu.add(manageCategoriesItem);
+      manageCategoriesItem.setActionCommand(GeneralMenuLogic.ACTION_MANAGE_CATEGORIES);
+      manageCategoriesItem.addActionListener(menuLogic);
+      createCategoriesMenu();
 
       // im-/export menu
       addSeparator();
       Menu imExMenu = new Menu(I18N.getInstance().getString("menu.notesimexport"));
-      serverUploadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.serveruploaditem"));
-      serverUploadItem.addActionListener(this);
+      MenuItem serverUploadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.serveruploaditem"));
+      serverUploadItem.setActionCommand(GeneralMenuLogic.ACTION_UPLOAD_TO_SERVER);
+      serverUploadItem.addActionListener(menuLogic);
       imExMenu.add(serverUploadItem);
-      serverDownloadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.serverdownloaditem"));
-      serverDownloadItem.addActionListener(this);
+      MenuItem serverDownloadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.serverdownloaditem"));
+      serverDownloadItem.setActionCommand(GeneralMenuLogic.ACTION_DOWNLOAD_FROM_SERVER);
+      serverDownloadItem.addActionListener(menuLogic);
       imExMenu.add(serverDownloadItem);
       imExMenu.addSeparator();
-      exportItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.textexportitem"));
-      exportItem.addActionListener(this);
+      MenuItem exportItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.textexportitem"));
+      exportItem.setActionCommand(GeneralMenuLogic.ACTION_EXPORT);
+      exportItem.addActionListener(menuLogic);
       imExMenu.add(exportItem);
       add(imExMenu);
 
       // other items
       addSeparator();
-      showSettingsDialogItem = new MenuItem(I18N.getInstance().getString("menu.settingsitem"));
-      showSettingsDialogItem.addActionListener(this);
+      MenuItem showSettingsDialogItem = new MenuItem(I18N.getInstance().getString("menu.settingsitem"));
+      showSettingsDialogItem.setActionCommand(GeneralMenuLogic.ACTION_SHOW_SETTINGS_DIALOG);
+      showSettingsDialogItem.addActionListener(menuLogic);
       add(showSettingsDialogItem);
 
       // help menu
       Menu helpMenu = new Menu(I18N.getInstance().getString("menu.help"));
-      updateItem = new MenuItem(I18N.getInstance().getString("menu.help.updatecheckitem"));
-      updateItem.addActionListener(this);
+      MenuItem updateItem = new MenuItem(I18N.getInstance().getString("menu.help.updatecheckitem"));
+      updateItem.setActionCommand(GeneralMenuLogic.ACTION_CHECK_FOR_UPDATES);
+      updateItem.addActionListener(menuLogic);
       helpMenu.add(updateItem);
       helpMenu.addSeparator();
-      aboutItem = new MenuItem(I18N.getInstance().getString("menu.help.aboutitem"));
-      aboutItem.addActionListener(this);
+      MenuItem aboutItem = new MenuItem(I18N.getInstance().getString("menu.help.aboutitem"));
+      aboutItem.setActionCommand(GeneralMenuLogic.ACTION_SHOW_ABOUT_DIALOG);
+      aboutItem.addActionListener(menuLogic);
       helpMenu.add(aboutItem);
       add(helpMenu);
       addSeparator();
 
       // close item
-      closeItem = new MenuItem(I18N.getInstance().getString("menu.exititem"));
-      closeItem.addActionListener(this);
+      MenuItem closeItem = new MenuItem(I18N.getInstance().getString("menu.exititem"));
+      closeItem.setActionCommand(GeneralMenuLogic.ACTION_EXIT_APPLICATION);
+      closeItem.addActionListener(menuLogic);
       add(closeItem);
    }
 
-   public void actionPerformed(ActionEvent e) {
-      Object src = e.getSource();
-      if (src == aboutItem) {
-         new AboutDialog();
-      } else if (src == showSettingsDialogItem) {
-         SettingsDialog.showInstance();
-      } else if (src == closeItem) {
-         // save notes to file and exit
-         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
-         System.exit(0);
-      } else if (src == serverUploadItem) {
-         if (!UserSettings.getInstance().getConfirmUpDownload()
-               || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance()
-                     .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            // save notes to file
-            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
-            // copy file to server
-            new ServerThread(ServerThread.UPLOAD);
-         }
-      } else if (src == serverDownloadItem) {
-         if (!UserSettings.getInstance().getConfirmUpDownload()
-               || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacelocalfile"), I18N.getInstance()
-                     .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            new ServerThread(ServerThread.DOWNLOAD);
-         }
-      } else if (src == exportItem) {
-         new ExportDialog();
-      } else if (src == manageCategoriesItem) {
-         CategoryDialog.showInstance();
-      } else if (src == updateItem) {
-         new UpdateCheckThread(true);
+   public void createCategoriesMenu() {
+      categoriesMenu.removeAll();
+      for (Menu m : menuCreator.getCategoryMenus()) {
+         categoriesMenu.add(m);
       }
+      categoriesMenu.addSeparator();
+      categoriesMenu.add(manageCategoriesItem);
    }
 }

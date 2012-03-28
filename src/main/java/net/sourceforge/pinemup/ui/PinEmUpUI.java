@@ -16,4 +16,6 @@ public abstract class PinEmUpUI {
    public abstract void hideNotes();
 
    public abstract void showNotes();
+
+   public abstract void refreshCategories();
 }
