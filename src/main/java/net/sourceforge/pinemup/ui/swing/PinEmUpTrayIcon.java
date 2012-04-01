@@ -31,9 +31,6 @@ final class PinEmUpTrayIcon extends TrayIcon {
       super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", popupMenu);
       setImageAutoSize(false);
       IconClickLogic myIconListener = new IconClickLogic();
-      // add actionlistener for doubleclick on icon
-      addActionListener(myIconListener);
-      // add mouselistener for traymenu
       addMouseListener(myIconListener);
    }
 }

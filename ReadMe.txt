@@ -22,7 +22,7 @@ Contents
     - Integrates into system-tray
     - freely placeable notes
     - many possibilities to customize the note-design
-    - (nearly) unlimited user-defined categories
+    - (almost) unlimited user-defined categories
     - fast switch between categories (e.g. "home" and "office")
         - via right-click menu
         - via keyboard-shortcuts (ctrl+1, ctrl+2, ..., ctrl+9, crtl+0)
@@ -45,12 +45,13 @@ Contents
 ------------------------
   0.6:
     - added keyboard shortcuts for changing a note's category (first 10 categories: ctrl+0 - ctrl+9)
+    - added single-click action to tray icon: bring notes to front
     - added czech translation (thanks to Petr Masek)
     - Settings are only being saved if something has been changed
     - removed numbers from category items in menus
     - BUGFIX: dialog for managing categories is now sized correctly (no controls out of sight)
     - BUGFIX: update category name in note-window if it is changed in category dialog
-    - some internal refactoring
+    - a lot of internal refactoring
 
 
   0.5:

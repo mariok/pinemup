@@ -71,4 +71,10 @@ public class NoteWindowManager {
       }
       noteWindows.clear();
    }
+
+   public void bringAllWindowsToFront() {
+      for (NoteWindow window : noteWindows.values()) {
+         window.toFront();
+      }
+   }
 }
