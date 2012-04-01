@@ -185,6 +185,7 @@ public final class CategoryManager extends Observable {
       Category defCat = getDefaultCategory();
       Note newNote = new Note();
       defCat.addNote(newNote);
+      newNote.setColor(defCat.getDefaultNoteColor());
       newNote.addObserver(NotesFileSaveTrigger.getInstance());
       return newNote;
    }
