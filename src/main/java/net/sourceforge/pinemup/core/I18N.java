@@ -21,6 +21,7 @@
 
 package net.sourceforge.pinemup.core;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -57,5 +58,10 @@ public final class I18N {
          e.printStackTrace();
       }
       return s;
+   }
+
+   public String getString(String key, Object... args) {
+      String message = getString(key).replace("'", "''");
+      return MessageFormat.format(message, args);
    }
 }

@@ -52,10 +52,11 @@ public class UpdateCheckThread extends Thread {
             StringBuilder changelogString = new StringBuilder();
             changelogString.append("<html>");
             changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part1") + "</p>");
-            changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part2") + " " + PinEmUp.VERSION + "<br />");
-            changelogString.append(I18N.getInstance().getString("info.updateavailable.part3") + " " + versionString + "</p>");
-            changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part4")
-                  + " <a href=\"http://pinemup.sourceforge.net\">http://pinemup.sourceforge.net</a></p>");
+            changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part2", PinEmUp.VERSION) + "<br />");
+            changelogString.append(I18N.getInstance().getString("info.updateavailable.part3", versionString) + "</p>");
+            changelogString.append("<p>"
+                  + I18N.getInstance().getString("info.updateavailable.part4",
+                        "<a href=\"http://pinemup.sourceforge.net\">http://pinemup.sourceforge.net</a>") + "</p>");
             changelogString.append("<p>&nbsp;</p>");
             changelogString.append("<p>Changelog:<br />");
             changelogString.append("--------------------------------</p><p>");

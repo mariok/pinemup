@@ -309,8 +309,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       boolean confirmed = true;
       if (selectedCat.getNumberOfNotes() > 0) {
          confirmed = JOptionPane.showConfirmDialog(null,
-               I18N.getInstance().getString("categorydialog.deletemessagespart1") + selectedCat.getNumberOfNotes()
-                     + I18N.getInstance().getString("categorydialog.deletemessagespart2"),
+               I18N.getInstance().getString("categorydialog.deletemessages", selectedCat.getNumberOfNotes()),
                I18N.getInstance().getString("categorydialog.deletemessagestitle"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
       }
 
