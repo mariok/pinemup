@@ -222,7 +222,9 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
       updateCategory();
       setVisible(true);
-      toBack();
+      if (!isAlwaysOnTop()) {
+         toBack();
+      }
       showScrollButtonIfNeeded();
       setTitle(I18N.getInstance().getString("note") + ": " + getShortText());
    }

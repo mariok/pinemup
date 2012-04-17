@@ -41,9 +41,6 @@ import javax.swing.event.HyperlinkListener;
 import net.sourceforge.pinemup.core.I18N;
 
 public class UpdateDialog extends JFrame implements ActionListener, HyperlinkListener {
-   /**
-    *
-    */
    private static final long serialVersionUID = 1L;
 
    private static final int DIALOG_WIDTH = 400;
@@ -87,6 +84,7 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
       setLocation(x, y);
 
       setVisible(true);
+      toFront();
    }
 
    @Override
