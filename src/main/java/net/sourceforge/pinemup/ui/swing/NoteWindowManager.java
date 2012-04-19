@@ -61,6 +61,7 @@ public class NoteWindowManager {
       if (window != null) {
          window.getParentNote().deleteObserver(window);
          window.setVisible(false);
+         window.dispose();
          noteWindows.remove(window.getParentNote());
       }
    }

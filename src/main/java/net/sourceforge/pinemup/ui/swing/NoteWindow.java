@@ -43,11 +43,11 @@ import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JWindow;
 import javax.swing.SwingConstants;
 import javax.swing.text.View;
 
@@ -60,14 +60,13 @@ import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.ResourceLoader;
 import net.sourceforge.pinemup.ui.swing.menus.RightClickMenu;
 
-public class NoteWindow extends JDialog implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
+public class NoteWindow extends JWindow implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
       KeyListener, Observer {
-   private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = -5228524832353948701L;
 
    private static final int MIN_WINDOW_HEIGHT = 40;
    private static final int MIN_WINDOW_WIDTH = 30;
 
-   private static final int SHORT_TEXT_LENGTH = 30;
    private static final int RESIZE_AREA_SIZE = 10;
 
    private static final int OFFSET = 35;
@@ -98,13 +97,13 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
    NoteWindow(Note pn) {
       super((new JFrame() {
-         private static final long serialVersionUID = 1L;
+         private static final long serialVersionUID = -5528849950380262389L;
 
          @Override
          public boolean isShowing() {
             return true;
          }
-      }), "note:");
+      }));
       parentNote = pn;
       parentNote.addObserver(this);
       textPanel = new JScrollPane();
@@ -191,7 +190,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       closeButton.setMargin(new Insets(3, 0, 0, 3));
       topPanel.add(closeButton, BorderLayout.EAST);
 
-      setUndecorated(true);
       setLocation(parentNote.getXPos(), parentNote.getYPos());
       setSize(parentNote.getXSize(), parentNote.getYSize());
 
@@ -206,7 +204,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
 
       setAlwaysOnTop(parentNote.isAlwaysOnTop());
       setContentPane(mainPanel);
-      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       addWindowListener(this);
       textArea.setFocusable(false);
 
@@ -223,7 +220,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       updateCategory();
       setVisible(true);
       showScrollButtonIfNeeded();
-      setTitle(I18N.getInstance().getString("note") + ": " + getShortText());
    }
 
    @Override
@@ -241,7 +237,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
             // effect
             showScrollButtonIfNeeded();
          }
-         setTitle("note: " + getShortText());
          parentNote.setText(textArea.getText());
          textArea.setFocusable(false);
       }
@@ -331,7 +326,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
    @Override
    public void mouseExited(MouseEvent e) {
       // do nothing
-
    }
 
    @Override
@@ -341,7 +335,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          checkPopupMenu(e);
          textArea.setFocusable(false);
          if (e.getButton() == MouseEvent.BUTTON1) {
-            // Position on Panel
+            // determine position on panel
             dx = e.getXOnScreen() - getX();
             dy = e.getYOnScreen() - getY();
             dragging = true;
@@ -479,18 +473,6 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
       repaint();
    }
 
-   private String getShortText() { // returns short text for the window titles
-      int l = textArea.getText().length();
-      String dots = "";
-      if (l > SHORT_TEXT_LENGTH) {
-         l = SHORT_TEXT_LENGTH;
-         dots = "...";
-      }
-      String t = textArea.getText().substring(0, l);
-      t = t.replace("\n", " ") + dots;
-      return t;
-   }
-
    @Override
    public void keyPressed(KeyEvent e) {
       if (e.isControlDown()) {
@@ -505,7 +487,7 @@ public class NoteWindow extends JDialog implements FocusListener, WindowListener
          case KeyEvent.VK_7:
          case KeyEvent.VK_8:
          case KeyEvent.VK_9:
-            int catNumber = Integer.parseInt(String.valueOf(e.getKeyChar()));
+            int catNumber = e.getKeyCode() - KeyEvent.VK_0;
             if (catNumber == 0) {
                catNumber = 9;
             } else {
