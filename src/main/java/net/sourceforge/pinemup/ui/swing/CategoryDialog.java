@@ -185,13 +185,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       // automatically set window-size
       pack();
 
-      // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
-      int x = (screenWidth - getWidth()) / 2;
-      int y = (screenHeight - getHeight()) / 2;
-      setLocation(x, y);
-
+      SwingUtils.centerWindowOnScreen(this);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       setVisible(true);
    }

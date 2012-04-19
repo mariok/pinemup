@@ -22,12 +22,8 @@
 package net.sourceforge.pinemup.ui.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,12 +31,10 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 
 import net.sourceforge.pinemup.core.I18N;
 
-public class UpdateDialog extends JFrame implements ActionListener, HyperlinkListener {
+public class UpdateDialog extends JFrame implements ActionListener {
    private static final long serialVersionUID = 1L;
 
    private static final int DIALOG_WIDTH = 400;
@@ -57,7 +51,7 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
       JPanel mainPanel = new JPanel(new BorderLayout());
       JEditorPane p = new JEditorPane("text/html", updateText);
       p.setEditable(false);
-      p.addHyperlinkListener(this);
+      p.addHyperlinkListener(new DefaultHyperLinkListener());
       JScrollPane myScrollPane = new JScrollPane(p);
       p.setCaretPosition(0); // scroll back to the top
 
@@ -75,13 +69,7 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
 
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-      // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
-      int x = (screenWidth - getWidth()) / 2;
-      int y = (screenHeight - getHeight()) / 2;
-      setLocation(x, y);
+      SwingUtils.centerWindowOnScreen(this);
 
       setVisible(true);
       toFront();
@@ -93,30 +81,6 @@ public class UpdateDialog extends JFrame implements ActionListener, HyperlinkLis
       if (src == closeButton) {
          setVisible(false);
          dispose();
-      }
-   }
-
-   @Override
-   public void hyperlinkUpdate(HyperlinkEvent e) {
-      if (e.getEventType().toString().equals("ACTIVATED")) {
-         if (e.getURL().toString().startsWith("mailto:")) {
-            try {
-               URI mailURI = new URI("mailto", e.getURL().toString().substring("mailto:".length()), null);
-               Desktop.getDesktop().mail(mailURI);
-            } catch (URISyntaxException err1) {
-               // do nothing
-            } catch (IOException err2) {
-               // do nothing
-            }
-         } else {
-            try {
-               Desktop.getDesktop().browse(e.getURL().toURI());
-            } catch (IOException ioe) {
-               // do nothing
-            } catch (URISyntaxException urie) {
-               // do nothing
-            }
-         }
       }
    }
 }

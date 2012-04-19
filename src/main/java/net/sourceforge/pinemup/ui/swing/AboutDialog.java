@@ -22,13 +22,9 @@
 package net.sourceforge.pinemup.ui.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Calendar;
 
 import javax.swing.BorderFactory;
@@ -38,14 +34,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.PinEmUp;
 import net.sourceforge.pinemup.io.ResourceLoader;
 
-public class AboutDialog extends JFrame implements ActionListener, HyperlinkListener {
+public class AboutDialog extends JFrame implements ActionListener {
    private static final long serialVersionUID = -6786897911342420374L;
 
    private static final int DIALOG_WIDTH = 600;
@@ -53,7 +48,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
 
    private JButton okButton;
 
-   private JEditorPane makeAboutTab() {
+   private JEditorPane makeAboutTab(HyperlinkListener hyperlinkListener) {
       String msg = "";
       msg += "<html>";
       msg += "<p>pin 'em up</p>";
@@ -62,12 +57,12 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       msg += "<p><a href=\"http://pinemup.sourceforge.net\" target=\"blank\">http://pinemup.sourceforge.net</a></p>";
       msg += "</html>";
       JEditorPane p = new JEditorPane("text/html", msg);
-      p.addHyperlinkListener(this);
+      p.addHyperlinkListener(hyperlinkListener);
       p.setEditable(false);
       return p;
    }
 
-   private JEditorPane makeAuthorsTab() {
+   private JScrollPane makeAuthorsTab(HyperlinkListener hyperlinkListener) {
       String msg = "";
       msg += "<html>";
       msg += "<h1>Developers</h1>";
@@ -79,9 +74,11 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       msg += "<p>Petr Mašek (Czech)</p>";
       msg += "</html>";
       JEditorPane p = new JEditorPane("text/html", msg);
-      p.addHyperlinkListener(this);
+      p.addHyperlinkListener(hyperlinkListener);
       p.setEditable(false);
-      return p;
+      JScrollPane myScrollPane = new JScrollPane(p);
+      p.setCaretPosition(0); // scroll back to the top
+      return myScrollPane;
    }
 
    private JScrollPane makeLicenseTab() {
@@ -91,7 +88,6 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       msg += ResourceLoader.getInstance().getLicense();
       JEditorPane p = new JEditorPane("text/plain", msg);
       p.setEditable(false);
-      p.addHyperlinkListener(this);
       JScrollPane myScrollPane = new JScrollPane(p);
       p.setCaretPosition(0); // scroll back to the top
       return myScrollPane;
@@ -101,21 +97,18 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       super(I18N.getInstance().getString("aboutdialog.title"));
       setSize(new Dimension(DIALOG_WIDTH, DIALOG_HEIGHT));
 
-      // PREPARE ALL PANELS
-      // ---------------------
       JPanel mainPanel = new JPanel(new BorderLayout());
 
-      // tabbed pane and tabs
+      HyperlinkListener hyperlinkListener = new DefaultHyperLinkListener();
       JTabbedPane tpane = new JTabbedPane();
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(),
-            I18N.getInstance().getString("aboutdialog.abouttab"));
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(),
-            I18N.getInstance().getString("aboutdialog.authorstab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(hyperlinkListener), I18N.getInstance()
+            .getString("aboutdialog.abouttab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(hyperlinkListener), I18N.getInstance()
+            .getString("aboutdialog.authorstab"));
       tpane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(),
             I18N.getInstance().getString("aboutdialog.licensetab"));
       mainPanel.add(tpane, BorderLayout.CENTER);
 
-      // PANEL WITH BUTTONS
       okButton = new JButton(I18N.getInstance().getString("closebutton"));
       okButton.addActionListener(this);
       okButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
@@ -127,13 +120,7 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
 
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-      // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
-      int x = (screenWidth - getWidth()) / 2;
-      int y = (screenHeight - getHeight()) / 2;
-      setLocation(x, y);
+      SwingUtils.centerWindowOnScreen(this);
 
       setVisible(true);
    }
@@ -144,30 +131,6 @@ public class AboutDialog extends JFrame implements ActionListener, HyperlinkList
       if (src == okButton) {
          setVisible(false);
          dispose();
-      }
-   }
-
-   @Override
-   public void hyperlinkUpdate(HyperlinkEvent e) {
-      if (e.getEventType().toString().equals("ACTIVATED")) {
-         if (e.getURL().toString().startsWith("mailto:")) {
-            try {
-               URI mailURI = new URI("mailto", e.getURL().toString().substring("mailto:".length()), null);
-               Desktop.getDesktop().mail(mailURI);
-            } catch (URISyntaxException err1) {
-               // do nothing
-            } catch (IOException err2) {
-               // do nothing
-            }
-         } else {
-            try {
-               Desktop.getDesktop().browse(e.getURL().toURI());
-            } catch (IOException ioe) {
-               // do nothing
-            } catch (URISyntaxException urie) {
-               // do nothing
-            }
-         }
       }
    }
 }

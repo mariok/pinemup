@@ -846,12 +846,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       setContentPane(mainPanel);
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-      // center on screen
-      int screenHeight = (int)getToolkit().getScreenSize().getHeight();
-      int screenWidth = (int)getToolkit().getScreenSize().getWidth();
-      int x = (screenWidth - getWidth()) / 2;
-      int y = (screenHeight - getHeight()) / 2;
-      setLocation(x, y);
+      SwingUtils.centerWindowOnScreen(this);
 
       setVisible(true);
    }
