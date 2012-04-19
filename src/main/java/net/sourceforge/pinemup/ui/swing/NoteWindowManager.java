@@ -45,7 +45,8 @@ public class NoteWindowManager {
       List<Note> visibleNotes = CategoryManager.getInstance().getAllVisibleNotes();
       for (Note note : visibleNotes) {
          if (noteWindows.get(note) == null) {
-            createNoteWindowForNote(note);
+            NoteWindow window = createNoteWindowForNote(note);
+            window.toBack();
          }
       }
    }
