@@ -49,6 +49,8 @@ Contents
     - added czech translation (thanks to Petr Masek)
     - Settings are only being saved if something has been changed
     - removed numbers from category items in menus
+    - export function does not export empty notes anymore
+    - improved export file style (better category markers and windows-style line breaks)
     - BUGFIX: dialog for managing categories is now sized correctly (no controls out of sight)
     - BUGFIX: update category name in note-window if it is changed in category dialog
     - a lot of internal refactoring

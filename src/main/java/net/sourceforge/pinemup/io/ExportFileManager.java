@@ -15,6 +15,10 @@ import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
 
 public class ExportFileManager {
+   private static final String FILE_EXTENSION = ".txt";
+   private static final String NOTE_SEPARATOR = "---------------------";
+   private static final String CATEGORY_SEPARATOR = "################################################################";
+
    private static ExportFileManager instance = new ExportFileManager();
 
    private ExportFileManager() {
@@ -29,25 +33,32 @@ public class ExportFileManager {
       File f = null;
       if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
          String name = NotesFileManager.checkAndAddExtension(FileDialogCreator.getExportFileDialogInstance().getSelectedFile()
-               .getAbsolutePath(), ".txt");
+               .getAbsolutePath(), FILE_EXTENSION);
          f = new File(name);
       }
       if (f != null) {
          try {
             PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
-            // write text of notes to file
+
             for (Category cat : l) {
+               ostream.println(CATEGORY_SEPARATOR);
                ostream.println(I18N.getInstance().getString("category") + ": " + cat.getName());
+               ostream.println(CATEGORY_SEPARATOR);
                ostream.println();
+
+               boolean firstNote = true;
                for (Note n : cat.getNotes()) {
-                  ostream.println(n.getText());
-                  ostream.println();
-                  ostream.println("---------------------");
-                  ostream.println();
+                  if (n.getText() != null && !n.getText().trim().equals("")) {
+                     if (!firstNote) {
+                        ostream.println();
+                        ostream.println(NOTE_SEPARATOR);
+                     } else {
+                        firstNote = false;
+                     }
+                     ostream.println(n.getText().replaceAll("\n", "\r\n"));
+                     ostream.println();
+                  }
                }
-               ostream.println();
-               ostream.println("################################################################");
-               ostream.println();
             }
             ostream.flush();
             ostream.close();
