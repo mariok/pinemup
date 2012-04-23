@@ -996,6 +996,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          CategoryManager.getInstance().replaceWithNewCategories(cl);
          NotesFileSaveTrigger.getInstance().setDisabled(false);
 
+         PinEmUpUI.getUI().refreshI18NStrings();
          PinEmUpUI.getUI().refreshCategories();
 
          // save settings permanentely

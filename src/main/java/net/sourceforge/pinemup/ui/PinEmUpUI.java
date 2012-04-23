@@ -18,4 +18,6 @@ public abstract class PinEmUpUI {
    public abstract void showNotes();
 
    public abstract void refreshCategories();
+
+   public abstract void refreshI18NStrings();
 }

@@ -48,4 +48,9 @@ public class SwingUI extends PinEmUpUI {
    public void refreshCategories() {
       trayMenu.createCategoriesMenu();
    }
+
+   @Override
+   public void refreshI18NStrings() {
+      trayMenu.init();
+   }
 }
