@@ -21,9 +21,11 @@
 
 package net.sourceforge.pinemup.ui.swing.menus;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
@@ -33,8 +35,6 @@ import net.sourceforge.pinemup.core.NoteColor;
 
 public class RightClickMenu extends JPopupMenu {
    private static final long serialVersionUID = -3437718385990990890L;
-
-   private static final String ACTIVE_SYMBOL = "->";
 
    public RightClickMenu(Note parentNote) {
       super();
@@ -64,12 +64,8 @@ public class RightClickMenu extends JPopupMenu {
       JMenu fontSizeMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.fontsize"));
       settingsMenu.add(fontSizeMenu);
       for (int i = Note.MIN_FONT_SIZE; i < Note.MAX_FONT_SIZE; i++) {
-         JMenuItem fontSizeItem = new JMenuItem(String.valueOf(i));
-         if (i == parentNote.getFontSize()) {
-            fontSizeItem.setText(ACTIVE_SYMBOL + " " + fontSizeItem.getText());
-         } else {
-            fontSizeItem.setText("  " + fontSizeItem.getText());
-         }
+         boolean activeFontSize = i == parentNote.getFontSize();
+         JRadioButtonMenuItem fontSizeItem = new JRadioButtonMenuItem(String.valueOf(i), activeFontSize);
          fontSizeItem.setActionCommand(NoteMenuLogic.ACTION_SET_NOTE_FONT_SIZE + "_" + i);
          fontSizeItem.addActionListener(noteMenuLogic);
          fontSizeMenu.add(fontSizeItem);
@@ -78,11 +74,8 @@ public class RightClickMenu extends JPopupMenu {
       JMenu colorMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.color"));
       settingsMenu.add(colorMenu);
       for (NoteColor color : NoteColor.values()) {
-         String prefix = "   ";
-         if (color.equals(parentNote.getColor())) {
-            prefix = "  " + ACTIVE_SYMBOL + " ";
-         }
-         JMenuItem colorItem = new JMenuItem(prefix + color.getLocalizedName());
+         boolean isActiveColor = color.equals(parentNote.getColor());
+         JRadioButtonMenuItem colorItem = new JRadioButtonMenuItem(color.getLocalizedName(), isActiveColor);
          colorItem.setActionCommand(NoteMenuLogic.ACTION_SET_NOTE_COLOR + "_" + color.getCode());
          colorItem.addActionListener(noteMenuLogic);
          colorMenu.add(colorItem);
@@ -91,11 +84,8 @@ public class RightClickMenu extends JPopupMenu {
       JMenu categoryMenu = new JMenu(I18N.getInstance().getString("category"));
       int i = 0;
       for (Category cat : CategoryManager.getInstance().getCategories()) {
-         String prefix = " ";
-         if (cat == parentNote.getCategory()) {
-            prefix = ACTIVE_SYMBOL + " ";
-         }
-         JMenuItem categoryItem = new JMenuItem(prefix + cat.getName());
+         boolean isActiveCategory = cat == parentNote.getCategory();
+         JRadioButtonMenuItem categoryItem = new JRadioButtonMenuItem(cat.getName(), isActiveCategory);
          categoryItem.setActionCommand(NoteMenuLogic.ACTION_MOVE_NOTE_TO_CATEGORY + "_" + i);
          categoryItem.addActionListener(noteMenuLogic);
          categoryMenu.add(categoryItem);
@@ -103,11 +93,8 @@ public class RightClickMenu extends JPopupMenu {
       }
       settingsMenu.add(categoryMenu);
 
-      String prefix = "";
-      if (parentNote.isAlwaysOnTop()) {
-         prefix = ACTIVE_SYMBOL + " ";
-      }
-      JMenuItem alwaysOnTopItem = new JMenuItem(prefix + I18N.getInstance().getString("menu.notesettings.alwaysontop"));
+      JCheckBoxMenuItem alwaysOnTopItem = new JCheckBoxMenuItem(I18N.getInstance().getString("menu.notesettings.alwaysontop"),
+            parentNote.isAlwaysOnTop());
       alwaysOnTopItem.setActionCommand(NoteMenuLogic.ACTION_TOGGLE_ALWAYS_ON_TOP);
       alwaysOnTopItem.addActionListener(noteMenuLogic);
       settingsMenu.add(alwaysOnTopItem);

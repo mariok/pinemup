@@ -122,11 +122,9 @@ class MenuCreator {
 
    public List<Menu> getCategoryMenus() {
       List<Menu> categoryMenus = new ArrayList<Menu>();
-      int i = 1;
       for (Category cat : CategoryManager.getInstance().getCategories()) {
-         Menu catMenu = getCategoryActionsMenu(i + " " + cat.getName(), cat);
+         Menu catMenu = getCategoryActionsMenu(cat.getName(), cat);
          categoryMenus.add(catMenu);
-         i++;
       }
       return categoryMenus;
    }

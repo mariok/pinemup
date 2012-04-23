@@ -33,12 +33,17 @@ public class TrayMenu extends PopupMenu {
    private Menu categoriesMenu;
    private MenuItem manageCategoriesItem;
    private MenuCreator menuCreator;
+   private GeneralMenuLogic menuLogic;
 
    public TrayMenu() {
       super("pin 'em up");
       menuCreator = new MenuCreator();
+      menuLogic = new GeneralMenuLogic();
+      init();
+   }
 
-      GeneralMenuLogic menuLogic = new GeneralMenuLogic();
+   public void init() {
+      removeAll();
 
       // add basic items
       for (MenuItem item : menuCreator.getBasicMenuItems()) {
