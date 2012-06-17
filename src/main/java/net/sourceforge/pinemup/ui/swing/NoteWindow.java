@@ -43,7 +43,6 @@ import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -96,14 +95,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    private BackgroundLabel bgLabel;
 
    NoteWindow(Note pn) {
-      super((new JFrame() {
-         private static final long serialVersionUID = -5528849950380262389L;
-
-         @Override
-         public boolean isShowing() {
-            return true;
-         }
-      }));
+      super(DummyFrame.getInstance());
       parentNote = pn;
       parentNote.addObserver(this);
       textPanel = new JScrollPane();
