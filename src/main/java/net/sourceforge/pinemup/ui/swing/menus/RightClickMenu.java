@@ -63,7 +63,7 @@ public class RightClickMenu extends JPopupMenu {
 
       JMenu fontSizeMenu = new JMenu(I18N.getInstance().getString("menu.notesettings.fontsize"));
       settingsMenu.add(fontSizeMenu);
-      for (int i = Note.MIN_FONT_SIZE; i < Note.MAX_FONT_SIZE; i++) {
+      for (int i = Note.MIN_FONT_SIZE; i <= Note.MAX_FONT_SIZE; i++) {
          boolean activeFontSize = i == parentNote.getFontSize();
          JRadioButtonMenuItem fontSizeItem = new JRadioButtonMenuItem(String.valueOf(i), activeFontSize);
          fontSizeItem.setActionCommand(NoteMenuLogic.ACTION_SET_NOTE_FONT_SIZE + "_" + i);

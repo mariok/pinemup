@@ -36,6 +36,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Observable;
@@ -60,7 +62,7 @@ import net.sourceforge.pinemup.io.ResourceLoader;
 import net.sourceforge.pinemup.ui.swing.menus.RightClickMenu;
 
 public class NoteWindow extends JWindow implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
-      KeyListener, Observer {
+      MouseWheelListener, KeyListener, Observer {
    private static final long serialVersionUID = -5228524832353948701L;
 
    private static final int MIN_WINDOW_HEIGHT = 40;
@@ -91,6 +93,9 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    private boolean dragging; // required to make the window movable
 
    private boolean resizeCursor, resizing; // required to make window resizable
+
+   private boolean controlPressed; // required for font size change via
+                                   // mousewheel
 
    private BackgroundLabel bgLabel;
 
@@ -193,6 +198,11 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       resizeCursor = false;
       textArea.addMouseListener(this);
       textArea.addMouseMotionListener(this);
+
+      // change text size via mousewheel
+      textArea.addMouseWheelListener(this);
+      topPanel.addMouseWheelListener(this);
+      addMouseWheelListener(this);
 
       setAlwaysOnTop(parentNote.isAlwaysOnTop());
       setContentPane(mainPanel);
@@ -466,8 +476,18 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    }
 
    @Override
+   public void mouseWheelMoved(MouseWheelEvent e) {
+      if (controlPressed) {
+         int diff = -1 * e.getWheelRotation();
+         parentNote.setFontSize((short)(parentNote.getFontSize() + diff));
+      }
+   }
+
+   @Override
    public void keyPressed(KeyEvent e) {
       if (e.isControlDown()) {
+         controlPressed = true;
+
          switch (e.getKeyCode()) {
          case KeyEvent.VK_0:
          case KeyEvent.VK_1:
@@ -487,6 +507,12 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
             }
             CategoryManager.getInstance().moveNoteToCategory(parentNote, catNumber);
             break;
+         case KeyEvent.VK_MINUS:
+            parentNote.setFontSize((short)(parentNote.getFontSize() - 1));
+            break;
+         case KeyEvent.VK_PLUS:
+            parentNote.setFontSize((short)(parentNote.getFontSize() + 1));
+            break;
          default:
             break;
          }
@@ -495,7 +521,9 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    @Override
    public void keyReleased(KeyEvent e) {
-      // do nothing
+      if (!e.isControlDown()) {
+         controlPressed = false;
+      }
    }
 
    @Override

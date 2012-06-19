@@ -25,7 +25,7 @@ import java.util.Observable;
 
 public class Note extends Observable {
    public static final short MIN_FONT_SIZE = 5;
-   public static final short MAX_FONT_SIZE = 31;
+   public static final short MAX_FONT_SIZE = 30;
 
    private String text;
 
@@ -51,7 +51,7 @@ public class Note extends Observable {
    }
 
    public void setFontSize(short fontSize) {
-      if (fontSize != this.fontSize) {
+      if (fontSize != this.fontSize && fontSize >= MIN_FONT_SIZE && fontSize <= MAX_FONT_SIZE) {
          this.fontSize = fontSize;
          setChanged();
          notifyObservers();

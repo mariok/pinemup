@@ -45,6 +45,7 @@ Contents
 ------------------------
   0.6:
     - added keyboard shortcuts for changing a note's category (first 10 categories: ctrl+0 - ctrl+9)
+    - added possibility to change font size via keyboard shortcuts (ctrl++ and ctrl+-) or mousewheel (ctrl+mousewheel up/down)
     - added single-click action to tray icon: bring notes to front
     - added czech translation (thanks to Petr Masek)
     - Settings are only being saved if something has been changed
