@@ -2,7 +2,10 @@ package net.sourceforge.pinemup.ui.swing;
 
 import java.awt.Window;
 
-public class SwingUtils {
+class SwingUtils {
+   private SwingUtils() {
+   }
+
    public static void centerWindowOnScreen(Window window) {
       int screenHeight = (int)window.getToolkit().getScreenSize().getHeight();
       int screenWidth = (int)window.getToolkit().getScreenSize().getWidth();

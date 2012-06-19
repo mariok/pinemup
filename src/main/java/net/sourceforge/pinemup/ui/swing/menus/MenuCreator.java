@@ -103,7 +103,7 @@ class MenuCreator {
       return menu;
    }
 
-   public Menu getCategoryActionsMenu(String title, Category c) {
+   private Menu getCategoryActionsMenu(String title, Category c) {
       Menu menu = new Menu(title);
       String[] texts = getCategoryItemTexts();
       String[] actions = getCategoryActionCommands();

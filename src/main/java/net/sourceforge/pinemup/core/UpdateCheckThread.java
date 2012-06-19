@@ -87,7 +87,7 @@ public class UpdateCheckThread extends Thread {
          }
          br.close();
       } catch (IOException e) {
-         // do nothing
+         System.err.println("Error while trying to check for updates.");
       }
 
    }

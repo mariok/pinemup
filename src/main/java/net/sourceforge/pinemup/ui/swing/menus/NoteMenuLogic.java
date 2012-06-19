@@ -12,7 +12,7 @@ import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 
-public class NoteMenuLogic implements ActionListener {
+class NoteMenuLogic implements ActionListener {
    public static final String ACTION_DELETE_NOTE = "DELETE_NOTE";
    public static final String ACTION_TOGGLE_ALWAYS_ON_TOP = "TOGGLE_ALWAYS_ON_TOP";
    public static final String ACTION_MOVE_NOTE_TO_CATEGORY = "MOVE_NOTE_TO_CATEGORY";

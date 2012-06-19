@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 
-public class CategoryMenuLogic implements ActionListener {
+class CategoryMenuLogic implements ActionListener {
    public static final String ACTION_HIDE_ALL_NOTES = "HIDE_ALL_NOTES";
    public static final String ACTION_SHOW_ALL_NOTES = "SHOW_ALL_NOTES";
    public static final String ACTION_SHOW_ONLY_NOTES_OF_CATEGORY = "SHOW_ONLY_NOTES_OF_CATEGORY";

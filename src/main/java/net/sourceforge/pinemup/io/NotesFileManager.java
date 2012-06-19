@@ -344,10 +344,6 @@ public class NotesFileManager {
       return version;
    }
 
-   public void observeNote(Note note) {
-      note.addObserver(NotesFileSaveTrigger.getInstance());
-   }
-
    private void observeAllNotesAndCategories(List<Category> categories) {
       for (Category cat : categories) {
          cat.addObserver(NotesFileSaveTrigger.getInstance());

@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-public class DefaultHyperLinkListener implements HyperlinkListener {
+class DefaultHyperLinkListener implements HyperlinkListener {
    @Override
    public void hyperlinkUpdate(HyperlinkEvent e) {
       if (e.getEventType().toString().equals("ACTIVATED")) {
@@ -17,19 +17,23 @@ public class DefaultHyperLinkListener implements HyperlinkListener {
                URI mailURI = new URI("mailto", e.getURL().toString().substring("mailto:".length()), null);
                Desktop.getDesktop().mail(mailURI);
             } catch (URISyntaxException err1) {
-               // do nothing
+               printHyperlinkError();
             } catch (IOException err2) {
-               // do nothing
+               printHyperlinkError();
             }
          } else {
             try {
                Desktop.getDesktop().browse(e.getURL().toURI());
             } catch (IOException ioe) {
-               // do nothing
+               printHyperlinkError();
             } catch (URISyntaxException urie) {
-               // do nothing
+               printHyperlinkError();
             }
          }
       }
+   }
+
+   private void printHyperlinkError() {
+      System.err.println("Error while accessing hyperlink.");
    }
 }

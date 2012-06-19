@@ -19,7 +19,7 @@ import net.sourceforge.pinemup.ui.swing.NoteWindow;
 import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 import net.sourceforge.pinemup.ui.swing.SettingsDialog;
 
-public class GeneralMenuLogic implements ActionListener {
+class GeneralMenuLogic implements ActionListener {
    public static final String ACTION_ADD_NOTE = "ADD_NOTE";
    public static final String ACTION_SHOW_ALL_NOTES = "SHOW_ALL_NOTES";
    public static final String ACTION_HIDE_ALL_NOTES = "HIDE_ALL_NOTES";
