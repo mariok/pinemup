@@ -84,7 +84,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private JRadioButton closeIcon1Button, closeIcon2Button;
    private ButtonGroup closeIconGroup;
    private JButton updateCheckButton;
-   private JComboBox<String> serverTypeBox, languageBox;
+   private JComboBox serverTypeBox, languageBox;
    private TitledBorder updateCheckBorder, languageBorder, titleBarBorder, behaviorBorder, sizeBorder, fontBorder, visibilityBorder,
          notesFileBorder, serverBorder;
    private JLabel updateCheckLabel, languageLabel, closeIconLabel, showCatLabel, confirmDeleteLabel, defaultWidthLabel, defaultHeightLabel,
@@ -381,7 +381,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       languagePanel.add(emptyLabel, gbc);
 
       // Create fields
-      languageBox = new JComboBox<String>(I18N.LOCALE_NAMES);
+      languageBox = new JComboBox(I18N.LOCALE_NAMES);
       languageBox.addActionListener(this);
 
       // Set settings for all fields
@@ -754,7 +754,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverPanel.add(serverDirLabel, gbc);
 
       // Create fields
-      serverTypeBox = new JComboBox<String>(ConnectionType.getConnectionTypeNames());
+      serverTypeBox = new JComboBox(ConnectionType.getConnectionTypeNames());
       serverTypeBox.addActionListener(this);
       serverAddressField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverAddressField.getDocument().addDocumentListener(this);

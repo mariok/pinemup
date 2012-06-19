@@ -1,6 +1,8 @@
 package net.sourceforge.pinemup.core;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum NoteColor {
    YELLOW((byte)0, "yellow", new Color(254, 255, 204), new Color(255, 255, 154)),
@@ -52,8 +54,11 @@ public enum NoteColor {
       }
    }
 
-   @Override
-   public String toString() {
-      return getLocalizedName();
+   public static String[] getLocalizedColorNames() {
+      List<String> names = new ArrayList<String>(NoteColor.values().length);
+      for (NoteColor color : NoteColor.values()) {
+         names.add(color.getLocalizedName());
+      }
+      return names.toArray(new String[NoteColor.values().length]);
    }
 }
