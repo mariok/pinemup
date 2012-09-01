@@ -94,13 +94,12 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    private boolean resizeCursor, resizing; // required to make window resizable
 
-   private boolean controlPressed; // required for font size change via
-                                   // mousewheel
+   private boolean controlPressed; // required for font size change via mousewheel
 
    private BackgroundLabel bgLabel;
 
    NoteWindow(Note pn) {
-      super(DummyFrame.getInstance());
+      super(new DummyFrame());
       parentNote = pn;
       parentNote.addObserver(this);
       textPanel = new JScrollPane();
@@ -235,8 +234,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    public void focusLost(FocusEvent e) {
       if (e.getSource() == textArea) {
          if (!resizing) {
-            // resizing would call showScrollBarIfNeeded() and thus revert the
-            // effect
+            // resizing would call showScrollBarIfNeeded() and thus revert the effect
             showScrollButtonIfNeeded();
          }
          parentNote.setText(textArea.getText());
