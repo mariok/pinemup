@@ -31,8 +31,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 public final class ResourceLoader {
-   private static ResourceLoader instance = new ResourceLoader();
-
    private static final String IMG_DIR = "img/";
    private static final String SCHEMA_DIR = "xsd/";
    private static final int TEMP_BUFFER_SIZE = 1024;
@@ -46,8 +44,12 @@ public final class ResourceLoader {
    private Image trayIcon;
    private Image scrollImage;
 
+   private static class Holder {
+      private static final ResourceLoader INSTANCE = new ResourceLoader();
+   }
+
    public static ResourceLoader getInstance() {
-      return ResourceLoader.instance;
+      return Holder.INSTANCE;
    }
 
    private ResourceLoader() {

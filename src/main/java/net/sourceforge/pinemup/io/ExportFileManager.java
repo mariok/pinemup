@@ -19,14 +19,16 @@ public class ExportFileManager {
    private static final String NOTE_SEPARATOR = "---------------------";
    private static final String CATEGORY_SEPARATOR = "################################################################";
 
-   private static ExportFileManager instance = new ExportFileManager();
-
-   private ExportFileManager() {
-
+   private static class Holder {
+      private static final ExportFileManager INSTANCE = new ExportFileManager();
    }
 
    public static ExportFileManager getInstance() {
-      return ExportFileManager.instance;
+      return Holder.INSTANCE;
+   }
+
+   private ExportFileManager() {
+
    }
 
    public void exportCategoriesToTextFile(List<Category> l) {

@@ -27,14 +27,11 @@ import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.UserPasswordRetriever;
 
 public final class UserSettings {
-   private Preferences prefs;
-   private static UserSettings instance = new UserSettings(); // Singleton
-
    private static final String PREFIX = "peu_dev_";
-
    private static final int MIN_NOTEWINDOW_WIDTH = 30;
    private static final int MIN_NOTEWINDOW_HEIGHT = 30;
 
+   private Preferences prefs;
    private UserPasswordRetriever userPasswordRetriever;
 
    private short defaultWindowWidth;
@@ -57,6 +54,14 @@ public final class UserSettings {
    private ConnectionType serverType;
    private String locale;
    private boolean confirmUpDownload;
+
+   private static class Holder {
+      private static final UserSettings INSTANCE = new UserSettings();
+   }
+
+   public static UserSettings getInstance() {
+      return Holder.INSTANCE;
+   }
 
    public boolean getConfirmUpDownload() {
       return confirmUpDownload;
@@ -290,10 +295,6 @@ public final class UserSettings {
       serverType = ConnectionType.getConnectionTypeByCode(Short.parseShort(prefs.get(PREFIX + "serverType", "0")));
       locale = prefs.get(PREFIX + "locale", "en_US");
       confirmUpDownload = prefs.getBoolean(PREFIX + "confirmUpDownload", true);
-   }
-
-   public static UserSettings getInstance() {
-      return UserSettings.instance;
    }
 
    public void setUserPasswordRetriever(UserPasswordRetriever userPasswordRetriever) {

@@ -49,10 +49,8 @@ public class ServerThread extends Thread {
          List<Category> newCats = NotesFileManager.getInstance().readCategoriesFromFile();
          // if downloaded successfully, replace:
 
-         NotesFileSaveTrigger.getInstance().setDisabled(true);
          CategoryManager.getInstance().replaceWithNewCategories(newCats);
          NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
-         NotesFileSaveTrigger.getInstance().setDisabled(false);
       }
    }
 

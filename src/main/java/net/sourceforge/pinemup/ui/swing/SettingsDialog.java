@@ -58,7 +58,6 @@ import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
 import net.sourceforge.pinemup.io.ResourceLoader;
 import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
@@ -989,12 +988,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
          // load new notes from file
          List<Category> cl = NotesFileManager.getInstance().readCategoriesFromFile();
-         NotesFileSaveTrigger.getInstance().setDisabled(true);
          // if file has not been valid and new one has been selected:
          notesFileField.setText(UserSettings.getInstance().getNotesFile());
 
          CategoryManager.getInstance().replaceWithNewCategories(cl);
-         NotesFileSaveTrigger.getInstance().setDisabled(false);
 
          PinEmUpUI.getUI().refreshI18NStrings();
          PinEmUpUI.getUI().refreshCategories();

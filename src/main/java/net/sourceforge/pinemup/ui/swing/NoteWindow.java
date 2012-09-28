@@ -249,7 +249,10 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    @Override
    public void windowClosed(WindowEvent arg0) {
-      NoteWindowManager.getInstance().hideAndRemoveNoteWindow(this);
+      parentNote.deleteObserver(this);
+      parentNote.addObserver(NoteWindowManager.getInstance());
+      NoteWindowManager.getInstance().removeNoteWindow(this);
+      getOwner().setVisible(false);
    }
 
    @Override
@@ -445,7 +448,8 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    private void updateVisibility() {
       setAlwaysOnTop(parentNote.isAlwaysOnTop());
       if (parentNote.isHidden()) {
-         NoteWindowManager.getInstance().hideAndRemoveNoteWindow(this);
+         setVisible(false);
+         dispose();
       }
    }
 

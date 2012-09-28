@@ -22,33 +22,25 @@
 package net.sourceforge.pinemup.ui.swing;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
-import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
 
-public class NoteWindowManager {
-   private static NoteWindowManager instance = new NoteWindowManager();
-
+public class NoteWindowManager implements Observer {
    private Map<Note, NoteWindow> noteWindows;
 
-   private NoteWindowManager() {
-      noteWindows = new HashMap<Note, NoteWindow>();
+   private static class Holder {
+      private static final NoteWindowManager INSTANCE = new NoteWindowManager();
    }
 
    public static NoteWindowManager getInstance() {
-      return NoteWindowManager.instance;
+      return Holder.INSTANCE;
    }
 
-   public void createNoteWindowsForAllVisibleNotes() {
-      List<Note> visibleNotes = CategoryManager.getInstance().getAllVisibleNotes();
-      for (Note note : visibleNotes) {
-         if (noteWindows.get(note) == null) {
-            NoteWindow window = createNoteWindowForNote(note);
-            window.toBack();
-         }
-      }
+   private NoteWindowManager() {
+      noteWindows = new HashMap<Note, NoteWindow>();
    }
 
    public NoteWindow createNoteWindowForNote(Note note) {
@@ -57,26 +49,26 @@ public class NoteWindowManager {
       return window;
    }
 
-   public void hideAndRemoveNoteWindow(NoteWindow window) {
+   public void removeNoteWindow(NoteWindow window) {
       if (window != null) {
-         window.getParentNote().deleteObserver(window);
-         window.setVisible(false);
-         window.dispose();
          noteWindows.remove(window.getParentNote());
       }
-   }
-
-   public void hideAndRemoveAllNoteWindows() {
-      for (NoteWindow window : noteWindows.values()) {
-         window.getParentNote().deleteObserver(window);
-         window.setVisible(false);
-      }
-      noteWindows.clear();
    }
 
    public void bringAllWindowsToFront() {
       for (NoteWindow window : noteWindows.values()) {
          window.toFront();
+      }
+   }
+
+   @Override
+   public void update(Observable o, Object arg) {
+      if (o instanceof Note) {
+         Note n = (Note)o;
+         if (!n.isHidden()) {
+            n.deleteObserver(this);
+            createNoteWindowForNote(n);
+         }
       }
    }
 }

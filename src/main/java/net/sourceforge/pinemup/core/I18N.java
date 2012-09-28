@@ -30,8 +30,15 @@ public final class I18N {
    public static final String[] LOCALES = {"cs_CZ", "de_DE", "en_US"};
    public static final String[] LOCALE_NAMES = {"Česky", "Deutsch", "English"};
 
-   private static I18N instance = new I18N();
    private ResourceBundle res;
+
+   private static class Holder {
+      private static final I18N INSTANCE = new I18N();
+   }
+
+   public static I18N getInstance() {
+      return Holder.INSTANCE;
+   }
 
    public void setLocale(String locale) {
       String language = locale.substring(0, locale.indexOf("_"));
@@ -39,10 +46,6 @@ public final class I18N {
       Locale myLocale = new Locale(language, country);
       res = ResourceBundle.getBundle("i18n.messages", myLocale);
       Locale.setDefault(myLocale);
-   }
-
-   public static I18N getInstance() {
-      return I18N.instance;
    }
 
    private I18N() {

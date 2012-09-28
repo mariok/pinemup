@@ -22,7 +22,6 @@
 package net.sourceforge.pinemup.core;
 
 import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
 
@@ -43,8 +42,7 @@ public final class PinEmUp {
    }
 
    public static void main(String[] args) {
-      // wait for a moment for SystemTray to be initialized
-      // (to prevent problems with autostart on some systems)
+      // wait for a moment for SystemTray to be initialized (to prevent problems with autostart on some systems)
       try {
          Thread.sleep(STARTUP_SLEEP_TIME);
       } catch (InterruptedException e) {
@@ -59,9 +57,7 @@ public final class PinEmUp {
       PinEmUpUI.getUI().initialize();
 
       // load notes from file
-      NotesFileSaveTrigger.getInstance().setDisabled(true);
       CategoryManager.getInstance().replaceWithNewCategories(NotesFileManager.getInstance().readCategoriesFromFile());
-      NotesFileSaveTrigger.getInstance().setDisabled(false);
 
       // update check
       if (UserSettings.getInstance().isUpdateCheckEnabled()) {

@@ -8,17 +8,19 @@ import net.sourceforge.pinemup.core.CategoryManager;
 public class NotesFileSaveTrigger implements Observer {
    private static final int SAVE_DELAY_MILLIS = 5000;
 
-   private static NotesFileSaveTrigger instance = new NotesFileSaveTrigger();
-
    private FileSaveThread fileSaveThread;
    private boolean disabled;
 
-   private NotesFileSaveTrigger() {
-
+   private static class Holder {
+      private static final NotesFileSaveTrigger INSTANCE = new NotesFileSaveTrigger();
    }
 
    public static NotesFileSaveTrigger getInstance() {
-      return instance;
+      return Holder.INSTANCE;
+   }
+
+   private NotesFileSaveTrigger() {
+
    }
 
    @Override

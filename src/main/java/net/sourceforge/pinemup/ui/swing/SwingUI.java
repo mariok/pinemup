@@ -35,16 +35,6 @@ public class SwingUI extends PinEmUpUI {
    }
 
    @Override
-   public void hideNotes() {
-      NoteWindowManager.getInstance().hideAndRemoveAllNoteWindows();
-   }
-
-   @Override
-   public void showNotes() {
-      NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
-   }
-
-   @Override
    public void refreshCategories() {
       trayMenu.createCategoriesMenu();
    }

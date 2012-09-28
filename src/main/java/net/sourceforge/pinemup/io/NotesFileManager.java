@@ -58,14 +58,16 @@ import org.xml.sax.SAXException;
 public class NotesFileManager {
    private static final String LATEST_NOTESFILE_VERSION = "0.2";
 
-   private static NotesFileManager instance = new NotesFileManager();
-
-   private NotesFileManager() {
-
+   private static class Holder {
+      private static final NotesFileManager INSTANCE = new NotesFileManager();
    }
 
    public static NotesFileManager getInstance() {
-      return NotesFileManager.instance;
+      return Holder.INSTANCE;
+   }
+
+   private NotesFileManager() {
+
    }
 
    public void writeCategoriesToFile(List<Category> l) {

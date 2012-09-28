@@ -39,5 +39,6 @@ class DummyFrame extends JFrame {
       if (osName == null || !(osName.toLowerCase().indexOf("win") >= 0)) {
          this.setVisible(true);
       }
+      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
    }
 }

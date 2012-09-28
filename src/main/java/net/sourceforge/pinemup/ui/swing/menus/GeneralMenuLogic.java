@@ -42,7 +42,6 @@ class GeneralMenuLogic implements ActionListener {
          window.jumpIntoTextArea();
       } else if (ACTION_SHOW_ALL_NOTES.equals(action)) {
          CategoryManager.getInstance().unhideAllNotes();
-         NoteWindowManager.getInstance().createNoteWindowsForAllVisibleNotes();
       } else if (ACTION_HIDE_ALL_NOTES.equals(action)) {
          CategoryManager.getInstance().hideAllNotes();
       } else if (ACTION_SHOW_ABOUT_DIALOG.equals(action)) {

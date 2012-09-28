@@ -53,7 +53,6 @@ public class Note extends Observable {
    public void setFontSize(short fontSize) {
       if (fontSize != this.fontSize && fontSize >= MIN_FONT_SIZE && fontSize <= MAX_FONT_SIZE) {
          this.fontSize = fontSize;
-         setChanged();
          notifyObservers();
       }
    }
@@ -157,5 +156,9 @@ public class Note extends Observable {
    public void refreshCategoryInfo() {
       setChanged();
       notifyObservers();
+   }
+
+   public void markForObservers() {
+      setChanged();
    }
 }

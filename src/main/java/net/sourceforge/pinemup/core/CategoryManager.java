@@ -27,18 +27,22 @@ import java.util.Observable;
 
 import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
+import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
 
 public final class CategoryManager extends Observable {
    private List<Category> categories;
-   private static CategoryManager instance = new CategoryManager();
+
+   private static class Holder {
+      private static final CategoryManager INSTANCE = new CategoryManager();
+   }
+
+   public static CategoryManager getInstance() {
+      return Holder.INSTANCE;
+   }
 
    private CategoryManager() {
       categories = new LinkedList<Category>();
       addObserver(NotesFileSaveTrigger.getInstance());
-   }
-
-   public static CategoryManager getInstance() {
-      return CategoryManager.instance;
    }
 
    public void addCategory(Category c) {
@@ -155,16 +159,38 @@ public final class CategoryManager extends Observable {
    }
 
    public void replaceWithNewCategories(List<Category> newCategories) {
-      PinEmUpUI.getUI().hideNotes();
+      NotesFileSaveTrigger.getInstance().setDisabled(true);
+
+      // hide all old notes
+      hideAllNotes();
 
       // link and save new notes
       categories.clear();
       categories.addAll(newCategories);
 
+      addNoteWindowManagerForAllNotes();
+      notifyAllNotes();
+
       PinEmUpUI.getUI().refreshCategories();
 
-      // show all notes which are not hidden
-      PinEmUpUI.getUI().showNotes();
+      NotesFileSaveTrigger.getInstance().setDisabled(false);
+   }
+
+   private void addNoteWindowManagerForAllNotes() {
+      for (Category cat : categories) {
+         for (Note n : cat.getNotes()) {
+            n.addObserver(NoteWindowManager.getInstance());
+         }
+      }
+   }
+
+   private void notifyAllNotes() {
+      for (Category cat : categories) {
+         for (Note n : cat.getNotes()) {
+            n.markForObservers();
+            n.notifyObservers();
+         }
+      }
    }
 
    public void moveNoteToCategory(Note note, int catNumber) {
