@@ -27,8 +27,52 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public final class I18N {
-   public static final String[] LOCALES = {"cs_CZ", "de_DE", "en_US"};
-   public static final String[] LOCALE_NAMES = {"Česky", "Deutsch", "English"};
+   public enum SupportedLocale {
+      de_DE("de", "DE"),
+      cs_CZ("cs", "CZ"),
+      en_US("en", "US"),
+      ru("ru"),
+      uk_UA("uk", "UA");
+
+      private Locale locale;
+
+      private SupportedLocale(String language) {
+         locale = new Locale(language);
+      }
+
+      private SupportedLocale(String language, String country) {
+         locale = new Locale(language, country);
+      }
+
+      public Locale getLocale() {
+         return locale;
+      }
+
+      @Override
+      public String toString() {
+         return locale.getDisplayName();
+      }
+
+      public static SupportedLocale fromLocaleString(String localeString) {
+         String[] localeParts = localeString.split("_");
+         String language = localeParts[0];
+         String country = "";
+         if (localeParts.length > 1) {
+            country = localeParts[1];
+         }
+
+         SupportedLocale locale = FALLBACK_LOCALE;
+         for (SupportedLocale l : SupportedLocale.values()) {
+            if (language.equals(l.getLocale().getLanguage()) && country.equals(l.getLocale().getCountry())) {
+               locale = l;
+               break;
+            }
+         }
+         return locale;
+      }
+   }
+
+   private static final SupportedLocale FALLBACK_LOCALE = SupportedLocale.en_US;
 
    private ResourceBundle res;
 
@@ -40,16 +84,13 @@ public final class I18N {
       return Holder.INSTANCE;
    }
 
-   public void setLocale(String locale) {
-      String language = locale.substring(0, locale.indexOf("_"));
-      String country = locale.substring(locale.indexOf("_") + 1);
-      Locale myLocale = new Locale(language, country);
-      res = ResourceBundle.getBundle("i18n.messages", myLocale);
-      Locale.setDefault(myLocale);
+   public void setLocale(Locale locale) {
+      res = ResourceBundle.getBundle("i18n.messages", locale);
+      Locale.setDefault(locale);
    }
 
    private I18N() {
-      res = ResourceBundle.getBundle("i18n.messages", new Locale("en", "US"));
+      res = ResourceBundle.getBundle("i18n.messages", FALLBACK_LOCALE.getLocale());
    }
 
    public String getString(String key) {

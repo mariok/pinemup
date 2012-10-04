@@ -72,6 +72,7 @@ public class AboutDialog extends JFrame implements ActionListener {
       msg += "<p>&nbsp;</p>";
       msg += "<h1>Translators:</h1>";
       msg += "<p>Petr Mašek (Czech)</p>";
+      msg += "<p>Vladimir Solomko (Russian and Ukrainian)</p>";
       msg += "</html>";
       JEditorPane p = new JEditorPane("text/html", msg);
       p.addHyperlinkListener(hyperlinkListener);

@@ -21,8 +21,10 @@
 
 package net.sourceforge.pinemup.core;
 
+import java.util.Locale;
 import java.util.prefs.Preferences;
 
+import net.sourceforge.pinemup.core.I18N.SupportedLocale;
 import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.UserPasswordRetriever;
 
@@ -52,7 +54,7 @@ public final class UserSettings {
    private boolean storeServerPass;
    private boolean updateCheckEnabled;
    private ConnectionType serverType;
-   private String locale;
+   private Locale locale;
    private boolean confirmUpDownload;
 
    private static class Holder {
@@ -233,11 +235,11 @@ public final class UserSettings {
       return storeServerPass;
    }
 
-   public String getLocale() {
+   public Locale getLocale() {
       return locale;
    }
 
-   public void setLocale(String l) {
+   public void setLocale(Locale l) {
       locale = l;
    }
 
@@ -264,7 +266,7 @@ public final class UserSettings {
       prefs.putBoolean(PREFIX + "storeServerPass", storeServerPass);
       prefs.putBoolean(PREFIX + "updateCheckEnabled", updateCheckEnabled);
       prefs.putInt(PREFIX + "serverType", serverType.getCode());
-      prefs.put(PREFIX + "locale", locale);
+      prefs.put(PREFIX + "locale", locale.toString());
       prefs.putBoolean(PREFIX + "confirmUpDownload", confirmUpDownload);
    }
 
@@ -293,7 +295,8 @@ public final class UserSettings {
       storeServerPass = prefs.getBoolean(PREFIX + "storeServerPass", false);
       updateCheckEnabled = prefs.getBoolean(PREFIX + "updateCheckEnabled", true);
       serverType = ConnectionType.getConnectionTypeByCode(Short.parseShort(prefs.get(PREFIX + "serverType", "0")));
-      locale = prefs.get(PREFIX + "locale", "en_US");
+      String localeString = prefs.get(PREFIX + "locale", "en_US");
+      locale = SupportedLocale.fromLocaleString(localeString).getLocale();
       confirmUpDownload = prefs.getBoolean(PREFIX + "confirmUpDownload", true);
    }
 

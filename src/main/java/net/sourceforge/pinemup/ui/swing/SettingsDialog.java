@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -55,6 +56,7 @@ import javax.swing.event.DocumentListener;
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
+import net.sourceforge.pinemup.core.I18N.SupportedLocale;
 import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
@@ -83,7 +85,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private JRadioButton closeIcon1Button, closeIcon2Button;
    private ButtonGroup closeIconGroup;
    private JButton updateCheckButton;
-   private JComboBox serverTypeBox, languageBox;
+   private JComboBox<SupportedLocale> languageBox;
+   private JComboBox serverTypeBox;
    private TitledBorder updateCheckBorder, languageBorder, titleBarBorder, behaviorBorder, sizeBorder, fontBorder, visibilityBorder,
          notesFileBorder, serverBorder;
    private JLabel updateCheckLabel, languageLabel, closeIconLabel, showCatLabel, confirmDeleteLabel, defaultWidthLabel, defaultHeightLabel,
@@ -380,7 +383,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       languagePanel.add(emptyLabel, gbc);
 
       // Create fields
-      languageBox = new JComboBox(I18N.LOCALE_NAMES);
+      languageBox = new JComboBox<SupportedLocale>(SupportedLocale.values());
       languageBox.addActionListener(this);
 
       // Set settings for all fields
@@ -884,21 +887,10 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       }
    }
 
-   private int getIndexForLocale(String locale) {
-      int index = 0;
-      for (int i = 0; i < I18N.LOCALES.length; i++) {
-         if (I18N.LOCALES[i].equals(locale)) {
-            index = i;
-            break;
-         }
-      }
-      return index;
-   }
-
    private void loadSettings() {
       // write settings from object into fields
       updateCheckBox.setSelected(UserSettings.getInstance().isUpdateCheckEnabled());
-      languageBox.setSelectedIndex(getIndexForLocale(UserSettings.getInstance().getLocale()));
+      languageBox.setSelectedItem(SupportedLocale.fromLocaleString(UserSettings.getInstance().getLocale().toString()));
 
       defaultWidthField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowWidth()));
       defaultHeightField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowHeight()));
@@ -934,7 +926,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
          // load settings from fields
          boolean updateCheckEnabled = updateCheckBox.isSelected();
-         String locale = I18N.LOCALES[languageBox.getSelectedIndex()];
+         Locale selectedLocale = languageBox.getItemAt(languageBox.getSelectedIndex()).getLocale();
          short defaultWidth = Short.parseShort(defaultWidthField.getText());
          short defaultHeight = Short.parseShort(defaultHeightField.getText());
          short defaultXPosition = Short.parseShort(defaultXPositionField.getText());
@@ -960,7 +952,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
 
          // write settings into object
          UserSettings.getInstance().setUpdateCheckEnabled(updateCheckEnabled);
-         UserSettings.getInstance().setLocale(locale);
+         UserSettings.getInstance().setLocale(selectedLocale);
          UserSettings.getInstance().setDefaultWindowHeight(defaultHeight);
          UserSettings.getInstance().setDefaultWindowWidth(defaultWidth);
          UserSettings.getInstance().setDefaultWindowXPosition(defaultXPosition);
