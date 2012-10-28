@@ -29,6 +29,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import net.sourceforge.pinemup.core.PinEmUp;
 
 public final class ResourceLoader {
    private static final String IMG_DIR = "img/";
@@ -129,14 +135,30 @@ public final class ResourceLoader {
    }
 
    public String getLicense() {
+      return getFileAsString("COPYING", null);
+   }
+
+   public String getAboutPage() {
+      Map<String, String> parameters = new HashMap<String, String>();
+      parameters.put("VERSION", PinEmUp.VERSION);
+      parameters.put("CURRENTYEAR", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+      return getFileAsString("about.html", parameters);
+   }
+
+   public String getAuthorsPage() {
+      return getFileAsString("authors.html", null);
+   }
+
+   private String getFileAsString(String filename, Map<String, String> parameters) {
       StringBuilder s = new StringBuilder();
+
       try {
-         String filename = "COPYING";
          InputStream is = getResourceStream(filename);
          BufferedReader br = new BufferedReader(new InputStreamReader(is));
          String nextLine = br.readLine();
 
          while (nextLine != null) {
+            nextLine = replacePlaceholdersWithParameters(nextLine, parameters);
             s.append(nextLine);
             s.append("\r\n");
             nextLine = br.readLine();
@@ -147,6 +169,18 @@ public final class ResourceLoader {
       }
 
       return s.toString();
+   }
+
+   private String replacePlaceholdersWithParameters(String text, Map<String, String> parameters) {
+      String newText = text;
+
+      if (parameters != null) {
+         for (Entry<String, String> param : parameters.entrySet()) {
+            newText = newText.replaceAll("\\$\\{" + param.getKey() + "\\}", param.getValue());
+         }
+      }
+
+      return newText;
    }
 
    public URL getSchemaFile(String version) {

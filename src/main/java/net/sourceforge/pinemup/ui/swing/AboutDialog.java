@@ -37,7 +37,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkListener;
 
 import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.PinEmUp;
 import net.sourceforge.pinemup.io.ResourceLoader;
 
 public class AboutDialog extends JFrame implements ActionListener {
@@ -47,65 +46,20 @@ public class AboutDialog extends JFrame implements ActionListener {
    private static final int DIALOG_HEIGHT = 350;
 
    private JButton okButton;
-
-   private JEditorPane makeAboutTab(HyperlinkListener hyperlinkListener) {
-      String msg = "";
-      msg += "<html>";
-      msg += "<p>pin 'em up</p>";
-      msg += "<p>version " + PinEmUp.VERSION + "</p>";
-      msg += "<p>(C) 2007 - " + Calendar.getInstance().get(Calendar.YEAR) + " Mario Ködding</p>";
-      msg += "<p><a href=\"http://pinemup.sourceforge.net\" target=\"blank\">http://pinemup.sourceforge.net</a></p>";
-      msg += "</html>";
-      JEditorPane p = new JEditorPane("text/html", msg);
-      p.addHyperlinkListener(hyperlinkListener);
-      p.setEditable(false);
-      return p;
-   }
-
-   private JScrollPane makeAuthorsTab(HyperlinkListener hyperlinkListener) {
-      String msg = "";
-      msg += "<html>";
-      msg += "<h1>Developers</h1>";
-      msg += "<p>Mario Ködding<br />";
-      msg += "<a href=\"mailto:mario.koedding@web.de\">mario.koedding@web.de</a><br />";
-      msg += "developer &amp; founder of the project</p>";
-      msg += "<p>&nbsp;</p>";
-      msg += "<h1>Translators:</h1>";
-      msg += "<p>Petr Mašek (Czech)</p>";
-      msg += "<p>Vladimir Solomko (Russian and Ukrainian)</p>";
-      msg += "</html>";
-      JEditorPane p = new JEditorPane("text/html", msg);
-      p.addHyperlinkListener(hyperlinkListener);
-      p.setEditable(false);
-      JScrollPane myScrollPane = new JScrollPane(p);
-      p.setCaretPosition(0); // scroll back to the top
-      return myScrollPane;
-   }
-
-   private JScrollPane makeLicenseTab() {
-      String msg = "";
-      msg += "(C) 2007 - " + Calendar.getInstance().get(Calendar.YEAR) + " Mario Ködding\r\n\r\n";
-      msg += "This program is licensed under the terms of the GNU GPL V3 or any later version.\r\n\r\n\r\n";
-      msg += ResourceLoader.getInstance().getLicense();
-      JEditorPane p = new JEditorPane("text/plain", msg);
-      p.setEditable(false);
-      JScrollPane myScrollPane = new JScrollPane(p);
-      p.setCaretPosition(0); // scroll back to the top
-      return myScrollPane;
-   }
+   private HyperlinkListener hyperlinkListener;
 
    public AboutDialog() {
       super(I18N.getInstance().getString("aboutdialog.title"));
       setSize(new Dimension(DIALOG_WIDTH, DIALOG_HEIGHT));
 
       JPanel mainPanel = new JPanel(new BorderLayout());
+      hyperlinkListener = new DefaultHyperLinkListener();
 
-      HyperlinkListener hyperlinkListener = new DefaultHyperLinkListener();
       JTabbedPane tpane = new JTabbedPane();
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(hyperlinkListener), I18N.getInstance()
-            .getString("aboutdialog.abouttab"));
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(hyperlinkListener), I18N.getInstance()
-            .getString("aboutdialog.authorstab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(),
+            I18N.getInstance().getString("aboutdialog.abouttab"));
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(),
+            I18N.getInstance().getString("aboutdialog.authorstab"));
       tpane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(),
             I18N.getInstance().getString("aboutdialog.licensetab"));
       mainPanel.add(tpane, BorderLayout.CENTER);
@@ -124,6 +78,32 @@ public class AboutDialog extends JFrame implements ActionListener {
       SwingUtils.centerWindowOnScreen(this);
 
       setVisible(true);
+   }
+
+   private JScrollPane makeAboutTab() {
+      String msg = ResourceLoader.getInstance().getAboutPage();
+      return makeTextPanel(msg, "text/html");
+   }
+
+   private JScrollPane makeAuthorsTab() {
+      String msg = ResourceLoader.getInstance().getAuthorsPage();
+      return makeTextPanel(msg, "text/html");
+   }
+
+   private JScrollPane makeLicenseTab() {
+      String msg = "(C) 2007 - " + Calendar.getInstance().get(Calendar.YEAR) + " Mario Ködding\r\n\r\n";
+      msg += "This program is licensed under the terms of the GNU GPL V3 or any later version.\r\n\r\n\r\n";
+      msg += ResourceLoader.getInstance().getLicense();
+      return makeTextPanel(msg, "text/plain");
+   }
+
+   private JScrollPane makeTextPanel(String text, String contentType) {
+      JEditorPane p = new JEditorPane(contentType, text);
+      p.addHyperlinkListener(hyperlinkListener);
+      p.setEditable(false);
+      JScrollPane myScrollPane = new JScrollPane(p);
+      p.setCaretPosition(0); // scroll back to the top
+      return myScrollPane;
    }
 
    @Override

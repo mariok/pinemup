@@ -48,8 +48,10 @@ Contents
     - added possibility to change font size via keyboard shortcuts (ctrl++ and ctrl+-) or mousewheel (ctrl+mousewheel up/down)
     - added single-click action to tray icon: bring notes to front
     - added czech translation (thanks to Petr Masek)
+    - added russian and ukrainian translations (thanks to Vladimir Solomko)
     - Settings are only being saved if something has been changed
     - removed numbers from category items in menus
+    - improved look and feel of menus
     - export function does not export empty notes anymore
     - improved export file style (better category markers and windows-style line breaks)
     - BUGFIX: dialog for managing categories is now sized correctly (no controls out of sight)
