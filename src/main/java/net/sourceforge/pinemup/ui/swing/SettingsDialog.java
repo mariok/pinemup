@@ -86,7 +86,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private ButtonGroup closeIconGroup;
    private JButton updateCheckButton;
    private JComboBox<SupportedLocale> languageBox;
-   private JComboBox serverTypeBox;
+   private JComboBox<ConnectionType> serverTypeBox;
    private TitledBorder updateCheckBorder, languageBorder, titleBarBorder, behaviorBorder, sizeBorder, fontBorder, visibilityBorder,
          notesFileBorder, serverBorder;
    private JLabel updateCheckLabel, languageLabel, closeIconLabel, showCatLabel, confirmDeleteLabel, defaultWidthLabel, defaultHeightLabel,
@@ -756,7 +756,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverPanel.add(serverDirLabel, gbc);
 
       // Create fields
-      serverTypeBox = new JComboBox(ConnectionType.getConnectionTypeNames());
+      serverTypeBox = new JComboBox<ConnectionType>(ConnectionType.values());
       serverTypeBox.addActionListener(this);
       serverAddressField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverAddressField.getDocument().addDocumentListener(this);
@@ -907,7 +907,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       confirmDeleteBox.setSelected(UserSettings.getInstance().getConfirmDeletion());
 
       notesFileField.setText(UserSettings.getInstance().getNotesFile());
-      serverTypeBox.setSelectedIndex(UserSettings.getInstance().getServerType().getCode());
+      serverTypeBox.setSelectedItem(UserSettings.getInstance().getServerType());
       serverAddressField.setText(UserSettings.getInstance().getServerAddress());
       serverUserField.setText(UserSettings.getInstance().getServerUser());
       storeServerPassBox.setSelected(UserSettings.getInstance().getStoreServerPass());
@@ -942,7 +942,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
             ci = 2;
          }
          String notesFile = notesFileField.getText();
-         short serverTypeCode = (short)serverTypeBox.getSelectedIndex();
+         ConnectionType serverType = serverTypeBox.getItemAt(serverTypeBox.getSelectedIndex());
          String serverAddress = serverAddressField.getText();
          String serverUser = serverUserField.getText();
          char[] serverPasswd = serverPasswdField.getPassword();
@@ -963,7 +963,7 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          UserSettings.getInstance().setShowCategory(showCat);
          UserSettings.getInstance().setConfirmDeletion(confirmDel);
          UserSettings.getInstance().setNotesFile(notesFile);
-         UserSettings.getInstance().setServerType(ConnectionType.getConnectionTypeByCode(serverTypeCode));
+         UserSettings.getInstance().setServerType(serverType);
          UserSettings.getInstance().setServerAddress(serverAddress);
          UserSettings.getInstance().setServerUser(serverUser);
          UserSettings.getInstance().setStoreServerPass(storeServerPass);

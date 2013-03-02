@@ -256,7 +256,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          private static final long serialVersionUID = 1L;
 
          @Override
-         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
+         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean hasFocus) {
             Component c = super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
             if (index >= 0) {
                c.setBackground(NoteColor.values()[index].getColor1());

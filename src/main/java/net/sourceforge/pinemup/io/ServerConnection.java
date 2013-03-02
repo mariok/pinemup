@@ -25,8 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.sourceforge.pinemup.core.UserSettings;
 
@@ -56,12 +54,9 @@ public abstract class ServerConnection {
          return ConnectionType.values()[code];
       }
 
-      public static String[] getConnectionTypeNames() {
-         List<String> names = new ArrayList<String>(ConnectionType.values().length);
-         for (ConnectionType ct : ConnectionType.values()) {
-            names.add(ct.getName());
-         }
-         return names.toArray(new String[ConnectionType.values().length]);
+      @Override
+      public String toString() {
+         return name;
       }
    }
 
