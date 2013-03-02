@@ -67,7 +67,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
    private DefaultTableModel catTableModel;
    private JTextField catNameField;
    private JCheckBox defaultBox;
-   private JComboBox colorBox;
+   private JComboBox<NoteColor> colorBox;
 
    private int noOfCategories;
    private int defCat;
@@ -264,7 +264,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
             return c;
          }
       };
-      colorBox = new JComboBox(NoteColor.getLocalizedColorNames());
+      colorBox = new JComboBox<NoteColor>(NoteColor.values());
       colorBox.setRenderer(cr);
       colorBox.addActionListener(this);
       colorBox.setEnabled(false);
@@ -410,9 +410,9 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
 
    private void updateCatColor() {
       if (trackChanges) {
-         byte colorCode = (byte)colorBox.getSelectedIndex();
+         NoteColor catColor = colorBox.getItemAt(colorBox.getSelectedIndex());
+         int colorCode = colorBox.getSelectedIndex();
          catTable.getModel().setValueAt(String.valueOf(colorCode), selectedRow, 2);
-         NoteColor catColor = NoteColor.getNoteColorByCode(colorCode);
          selectedCat.setDefaultNoteColor(catColor);
          colorBox.setBackground(catColor.getColor1());
       }
@@ -461,7 +461,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          } else {
             defaultBox.setEnabled(true);
          }
-         colorBox.setSelectedIndex(selectedCat.getDefaultNoteColor().getCode());
+         colorBox.setSelectedItem(selectedCat.getDefaultNoteColor());
          colorBox.setBackground(selectedCat.getDefaultNoteColor().getColor1());
          trackChanges = true;
       }

@@ -5,9 +5,8 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: My Checks
-    Description: 
-Checkstyle configuration that checks the sun coding conventions.
+    Checkstyle-Configuration: pinemup checkstyle rules
+    Description: none
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
