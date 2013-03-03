@@ -24,6 +24,7 @@ package net.sourceforge.pinemup.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Authenticator;
@@ -38,18 +39,21 @@ import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
 
 class WebdavConnection extends ServerConnection {
+   private static final String PROTOCOL_HTTP = "http";
+   private static final String PROTOCOL_HTTPS = "https";
+
    private String protocol;
 
    public WebdavConnection(boolean sslEnabled) {
       if (sslEnabled) {
-         protocol = "https";
+         protocol = PROTOCOL_HTTPS;
       } else {
-         protocol = "http";
+         protocol = PROTOCOL_HTTP;
       }
    }
 
-   public WebdavConnection() { // default without ssl
-      protocol = "http";
+   public WebdavConnection() {
+      protocol = PROTOCOL_HTTP;
    }
 
    private void setDefaultAuthenticator() {
@@ -63,22 +67,24 @@ class WebdavConnection extends ServerConnection {
 
    public void importNotesFromServer() {
       boolean downloaded = true;
+
+      FileOutputStream fos = null;
+      InputStream is = null;
       try {
          makeBackupFile();
          File f = new File(UserSettings.getInstance().getNotesFile());
-         FileOutputStream fos = new FileOutputStream(f);
+         fos = new FileOutputStream(f);
          String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir()
                + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
          HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
-         InputStream is = urlc.getInputStream();
+         is = urlc.getInputStream();
          int nextByte = is.read();
          while (nextByte != -1) {
             fos.write(nextByte);
             nextByte = is.read();
          }
-         fos.close();
          if (urlc.getResponseCode() != HttpURLConnection.HTTP_OK) {
             downloaded = false;
          }
@@ -88,6 +94,21 @@ class WebdavConnection extends ServerConnection {
          downloaded = false;
       } catch (Exception e) {
          downloaded = false;
+      } finally {
+         if (is != null) {
+            try {
+               is.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+         if (fos != null) {
+            try {
+               fos.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
       }
       if (downloaded) {
          deleteBackupFile();
@@ -102,9 +123,12 @@ class WebdavConnection extends ServerConnection {
 
    public void exportNotesToServer() {
       boolean uploaded = true;
+
+      FileInputStream fis = null;
+      OutputStream os = null;
       try {
          File f = new File(UserSettings.getInstance().getNotesFile());
-         FileInputStream fis = new FileInputStream(f);
+         fis = new FileInputStream(f);
          String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir()
                + f.getName();
          setDefaultAuthenticator();
@@ -112,14 +136,12 @@ class WebdavConnection extends ServerConnection {
          HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
          urlc.setDoOutput(true);
          urlc.setRequestMethod("PUT");
-         OutputStream os = urlc.getOutputStream();
+         os = urlc.getOutputStream();
          int nextByte = fis.read();
          while (nextByte != -1) {
             os.write(nextByte);
             nextByte = fis.read();
          }
-         fis.close();
-         os.close();
          if (urlc.getResponseCode() != HttpURLConnection.HTTP_CREATED && urlc.getResponseCode() != HttpURLConnection.HTTP_NO_CONTENT) {
             uploaded = false;
          }
@@ -129,6 +151,21 @@ class WebdavConnection extends ServerConnection {
          uploaded = false;
       } catch (Exception e) {
          uploaded = false;
+      } finally {
+         if (os != null) {
+            try {
+               os.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+         if (fis != null) {
+            try {
+               fis.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
       }
       if (uploaded) {
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"),

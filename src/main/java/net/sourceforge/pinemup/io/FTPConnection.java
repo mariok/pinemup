@@ -40,25 +40,42 @@ class FTPConnection extends ServerConnection {
    @Override
    public void importNotesFromServer() {
       boolean downloaded = true;
+
+      FileOutputStream fos = null;
+      InputStream is = null;
       try {
          makeBackupFile();
          File f = new File(UserSettings.getInstance().getNotesFile());
-         FileOutputStream fos = new FileOutputStream(f);
+         fos = new FileOutputStream(f);
          String filename = f.getName();
          String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":"
                + UserSettings.getInstance().getServerPasswdString() + "@" + UserSettings.getInstance().getServerAddress()
                + UserSettings.getInstance().getServerDir() + filename + ";type=i";
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
-         InputStream is = urlc.getInputStream();
+         is = urlc.getInputStream();
          int nextByte = is.read();
          while (nextByte != -1) {
             fos.write(nextByte);
             nextByte = is.read();
          }
-         fos.close();
       } catch (IOException e) {
          downloaded = false;
+      } finally {
+         try {
+            if (fos != null) {
+               fos.close();
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         try {
+            if (is != null) {
+               is.close();
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
       }
       if (downloaded) {
          deleteBackupFile();
@@ -79,24 +96,40 @@ class FTPConnection extends ServerConnection {
       String filename = f.getName();
       String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswdString()
             + "@" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + filename + ";type=i";
-      FileInputStream fis;
+
+      FileInputStream fis = null;
+      OutputStream os = null;
       try {
          fis = new FileInputStream(f);
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
-         OutputStream os = urlc.getOutputStream();
+         os = urlc.getOutputStream();
 
          int nextByte = fis.read();
          while (nextByte != -1) {
             os.write(nextByte);
             nextByte = fis.read();
          }
-         fis.close();
-         os.close();
+
       } catch (IOException e) {
          uploaded = false;
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"),
                I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+      } finally {
+         try {
+            if (fis != null) {
+               fis.close();
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         try {
+            if (os != null) {
+               os.close();
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
       }
       if (uploaded) {
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"),

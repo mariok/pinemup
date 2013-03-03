@@ -72,10 +72,12 @@ public class NotesFileManager {
 
    public void writeCategoriesToFile(List<Category> l) {
       System.out.println(new Date() + " writing notes to file...");
+      FileOutputStream f = null;
+      XMLStreamWriter writer = null;
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
-         FileOutputStream f = new FileOutputStream(UserSettings.getInstance().getNotesFile());
-         XMLStreamWriter writer = myFactory.createXMLStreamWriter(f, "UTF-8");
+         f = new FileOutputStream(UserSettings.getInstance().getNotesFile());
+         writer = myFactory.createXMLStreamWriter(f, "UTF-8");
 
          writer.writeStartDocument("UTF-8", "1.0");
          writer.writeStartElement("notesfile");
@@ -118,16 +120,27 @@ public class NotesFileManager {
          }
          writer.writeEndElement();
          writer.writeEndDocument();
-         writer.close();
-         f.close();
       } catch (XMLStreamException e) {
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"),
                I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
       } catch (FileNotFoundException e) {
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"),
                I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
-      } catch (IOException e) {
-         e.printStackTrace();
+      } finally {
+         if (writer != null) {
+            try {
+               writer.close();
+            } catch (XMLStreamException e) {
+               e.printStackTrace();
+            }
+         }
+         if (f != null) {
+            try {
+               f.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
       }
    }
 
@@ -154,24 +167,17 @@ public class NotesFileManager {
       }
       UserSettings.getInstance().saveSettings();
 
+      InputStream in = null;
+      XMLStreamReader parser = null;
       try {
-         InputStream in = new FileInputStream(UserSettings.getInstance().getNotesFile());
+         in = new FileInputStream(UserSettings.getInstance().getNotesFile());
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         XMLStreamReader parser = myFactory.createXMLStreamReader(in, "UTF-8");
+         parser = myFactory.createXMLStreamReader(in, "UTF-8");
 
          int event;
          while (parser.hasNext()) {
             event = parser.next();
             switch (event) {
-            case XMLStreamConstants.START_DOCUMENT:
-               // do nothing
-               break;
-            case XMLStreamConstants.END_DOCUMENT:
-               parser.close();
-               break;
-            case XMLStreamConstants.NAMESPACE:
-               // do nothing
-               break;
             case XMLStreamConstants.START_ELEMENT:
                String ename = parser.getLocalName();
                if (ename.equals("category")) {
@@ -240,23 +246,32 @@ public class NotesFileManager {
                   }
                }
                break;
-            case XMLStreamConstants.END_ELEMENT:
-               // do nothing
-               break;
             default:
+               // do nothing for all other events
                break;
             }
          }
-         parser.close();
-         in.close();
       } catch (FileNotFoundException e) {
          // create default categories
          categories.add(new Category("Home", true, NoteColor.YELLOW));
          categories.add(new Category("Office", false, NoteColor.GREEN));
       } catch (XMLStreamException e) {
          e.printStackTrace();
-      } catch (IOException e) {
-         e.printStackTrace();
+      } finally {
+         if (parser != null) {
+            try {
+               parser.close();
+            } catch (XMLStreamException e) {
+               e.printStackTrace();
+            }
+         }
+         if (in != null) {
+            try {
+               in.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
       }
       observeAllNotesAndCategories(categories);
       return categories;
@@ -273,13 +288,8 @@ public class NotesFileManager {
 
    private boolean fileIsValid(String filename) {
       try {
-         // 1. Lookup a factory for the W3C XML Schema language
          SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 
-         // 2. Compile the schema.
-         // Here the schema is loaded from a java.io.File, but you could use
-         // a java.net.URL or a javax.xml.transform.Source instead.
-         // File schemaLocation = ResourceLoader.getSchemaFile();
          String version = getNotesFileVersion(filename);
          if (version == null) {
             return false;
@@ -288,32 +298,29 @@ public class NotesFileManager {
          Schema schema;
          schema = factory.newSchema(schemaLocation);
 
-         // 3. Get a validator from the schema.
          Validator validator = schema.newValidator();
 
-         // 4. Parse the document you want to check.
          Source source = new StreamSource(new FileInputStream(filename));
 
-         // 5. Check the document
          validator.validate(source);
 
          return true;
       } catch (IOException e) {
-         // e.printStackTrace();
          return false;
       } catch (SAXException e) {
-         // System.out.println(filename + " is not valid!");
-         // System.out.println(e.getMessage());
          return false;
       }
    }
 
    private String getNotesFileVersion(String filename) {
       String version = null;
+
+      InputStream in = null;
+      XMLStreamReader parser = null;
       try {
-         InputStream in = new FileInputStream(filename);
+         in = new FileInputStream(filename);
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         XMLStreamReader parser = myFactory.createXMLStreamReader(in, "UTF-8");
+         parser = myFactory.createXMLStreamReader(in, "UTF-8");
 
          int event;
          while (parser.hasNext()) {
@@ -334,14 +341,25 @@ public class NotesFileManager {
                break;
             }
          }
-         parser.close();
-         in.close();
       } catch (FileNotFoundException e) {
          e.printStackTrace();
       } catch (XMLStreamException e) {
          e.printStackTrace();
-      } catch (IOException e) {
-         e.printStackTrace();
+      } finally {
+         if (parser != null) {
+            try {
+               parser.close();
+            } catch (XMLStreamException e) {
+               e.printStackTrace();
+            }
+         }
+         if (in != null) {
+            try {
+               in.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
       }
       return version;
    }
