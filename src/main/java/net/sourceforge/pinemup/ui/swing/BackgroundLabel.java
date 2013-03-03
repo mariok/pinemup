@@ -30,39 +30,41 @@ import javax.swing.JLabel;
 import net.sourceforge.pinemup.core.NoteColor;
 
 class BackgroundLabel extends JLabel {
-   private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = -8780099589968016013L;
 
-   private NoteWindow parentWindow;
    private NoteColor myColor;
 
    @Override
    public void paintComponent(Graphics g) {
-      setBounds(0, 0, parentWindow.getWidth(), parentWindow.getHeight());
-      int h = getHeight();
-      int w = getWidth();
+      int width = getWidth();
+      int height = getHeight();
+
       Graphics2D g2 = (Graphics2D)g;
 
-      for (int i = 1; i <= w; i++) {
+      for (int i = 1; i <= width; i++) {
          int startX = i;
          int startY = 0;
          int endX = startX + 1;
-         int endY = startY + h;
+         int endY = startY + height;
          GradientPaint gradient = new GradientPaint(startX, startY, myColor.getColor1(), endX, endY, myColor.getColor2());
          g2.setPaint(gradient);
       }
-      g2.fillRect(0, 0, w, h);
+      g2.fillRect(0, 0, width, height);
    }
 
-   public BackgroundLabel(NoteWindow w, NoteColor color) {
+   public BackgroundLabel(NoteColor color, int width, int height) {
       super();
-      parentWindow = w;
       myColor = color;
-      setBounds(0, 0, parentWindow.getWidth(), parentWindow.getHeight());
+      updateSize(width, height);
       setFocusable(false);
       setOpaque(false);
    }
 
    public void setMyColor(NoteColor color) {
       myColor = color;
+   }
+
+   public void updateSize(int width, int height) {
+      setBounds(0, 0, width, height);
    }
 }

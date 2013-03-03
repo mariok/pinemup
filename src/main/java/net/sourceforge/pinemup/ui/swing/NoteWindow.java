@@ -70,7 +70,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    private static final int RESIZE_AREA_SIZE = 10;
 
-   private static final int OFFSET = 35;
+   private static final int OFFSET_Y_FOR_AUTOSIZING = 35;
 
    private static final Dimension SCROLLBUTTON_SIZE = new Dimension(10, 5);
    private static final Color COLOR_TRANSPARENT = new Color(255, 255, 255, 0);
@@ -88,13 +88,16 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    private JButton closeButton, catButton, scrollButton;
 
-   private int dx, dy;
+   private int draggingOffsetX, draggingOffsetY;
 
-   private boolean dragging; // required to make the window movable
+   /** required to make window movable. */
+   private boolean dragging;
 
-   private boolean resizeCursor, resizing; // required to make window resizable
+   /** required to make window resizable. */
+   private boolean resizeCursor, resizing;
 
-   private boolean controlPressed; // required for font size change via mousewheel
+   /** required for font size change via mousewheel. */
+   private boolean controlPressed;
 
    private BackgroundLabel bgLabel;
 
@@ -186,8 +189,13 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       closeButton.setMargin(new Insets(3, 0, 0, 3));
       topPanel.add(closeButton, BorderLayout.EAST);
 
+      int width = parentNote.getXSize();
+      int height = parentNote.getYSize();
+      bgLabel = new BackgroundLabel(parentNote.getColor(), width, height);
+      getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
+
+      setSize(width, height);
       setLocation(parentNote.getXPos(), parentNote.getYPos());
-      setSize(parentNote.getXSize(), parentNote.getYSize());
 
       // menu and doubleclick
       topPanel.addMouseListener(this);
@@ -208,10 +216,6 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       addWindowListener(this);
       textArea.setFocusable(false);
 
-      bgLabel = new BackgroundLabel(this, parentNote.getColor());
-
-      getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
-
       textPanel.getVerticalScrollBar().setOpaque(false);
 
       // add keylisteners (for keyboard shortcuts)
@@ -221,6 +225,12 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       updateCategory();
       setVisible(true);
       showScrollButtonIfNeeded();
+   }
+
+   @Override
+   public void setSize(int width, int height) {
+      super.setSize(width, height);
+      bgLabel.updateSize(width, height);
    }
 
    @Override
@@ -234,7 +244,8 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    public void focusLost(FocusEvent e) {
       if (e.getSource() == textArea) {
          if (!resizing) {
-            // resizing would call showScrollBarIfNeeded() and thus revert the effect
+            // resizing would call showScrollBarIfNeeded() and thus revert the
+            // effect
             showScrollButtonIfNeeded();
          }
          parentNote.setText(textArea.getText());
@@ -291,7 +302,8 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    @Override
    public void mouseClicked(MouseEvent e) {
       if (e.getSource() == topPanel || e.getSource() == catButton) {
-         if (e.getClickCount() == 2) { // doubleclick on topPanel
+         if (e.getClickCount() == 2) {
+            // doubleclick on topPanel
             autoSizeY();
          } else {
             textArea.setFocusable(false);
@@ -303,21 +315,17 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    }
 
    private void autoSizeY() {
-      int sizeX = getWidth();
-      int sizeY = OFFSET;
-
-      // get number of lines (incl. wrapped lines)
-      int lineHeight = textArea.getFontMetrics(textArea.getFont()).getHeight();
       View view = textArea.getUI().getRootView(textArea).getView(0);
       int prefHeight = (int)view.getPreferredSpan(View.Y_AXIS);
-      int lines = prefHeight / lineHeight;
 
-      // calculate new height
-      sizeY += lineHeight * lines;
+      int currentWidth = getWidth();
+      int autoHeight = prefHeight + OFFSET_Y_FOR_AUTOSIZING;
 
       // apply new size
-      setSize(sizeX, sizeY);
-      parentNote.setSize((short)sizeX, (short)sizeY);
+      setSize(currentWidth, autoHeight);
+      parentNote.setSize((short)currentWidth, (short)autoHeight);
+
+      // hide scroll button, as all content is visible now
       scrollButton.setVisible(false);
    }
 
@@ -339,14 +347,14 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
          textArea.setFocusable(false);
          if (e.getButton() == MouseEvent.BUTTON1) {
             // determine position on panel
-            dx = e.getXOnScreen() - getX();
-            dy = e.getYOnScreen() - getY();
+            draggingOffsetX = e.getXOnScreen() - getX();
+            draggingOffsetY = e.getYOnScreen() - getY();
             dragging = true;
          }
       } else if (src == textArea) {
          if (e.getButton() == MouseEvent.BUTTON1 && resizeCursor) {
-            dx = getX() + getWidth() - e.getXOnScreen();
-            dy = getY() + getHeight() - e.getYOnScreen();
+            draggingOffsetX = getX() + getWidth() - e.getXOnScreen();
+            draggingOffsetY = getY() + getHeight() - e.getYOnScreen();
             resizing = true;
             textArea.setFocusable(false);
             showScrollBarIfNeeded();
@@ -395,10 +403,10 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    @Override
    public void mouseDragged(MouseEvent e) {
       if (dragging) {
-         setLocation(e.getXOnScreen() - dx, e.getYOnScreen() - dy);
+         setLocation(e.getXOnScreen() - draggingOffsetX, e.getYOnScreen() - draggingOffsetY);
       } else if (resizing) {
-         int sx = e.getXOnScreen() - getX() + dx;
-         int sy = e.getYOnScreen() - getY() + dy;
+         int sx = e.getXOnScreen() - getX() + draggingOffsetX;
+         int sy = e.getYOnScreen() - getY() + draggingOffsetY;
          if (sx < MIN_WINDOW_WIDTH) {
             sx = MIN_WINDOW_WIDTH;
          }
