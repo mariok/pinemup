@@ -60,7 +60,7 @@ class WebdavConnection extends ServerConnection {
       Authenticator.setDefault(new Authenticator() {
          protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), UserSettings.getInstance()
-                  .getServerPasswdString().toCharArray());
+                  .getServerPasswd().toCharArray());
          }
       });
    }

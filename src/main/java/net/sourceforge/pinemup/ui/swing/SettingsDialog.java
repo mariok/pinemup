@@ -911,8 +911,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       serverAddressField.setText(UserSettings.getInstance().getServerAddress());
       serverUserField.setText(UserSettings.getInstance().getServerUser());
       storeServerPassBox.setSelected(UserSettings.getInstance().getStoreServerPass());
-      if (UserSettings.getInstance().getStoreServerPass() && UserSettings.getInstance().getServerPasswd() != null) {
-         serverPasswdField.setText(String.copyValueOf(UserSettings.getInstance().getServerPasswd()));
+      if (UserSettings.getInstance().getStoreServerPass()) {
+         serverPasswdField.setText(UserSettings.getInstance().getServerPasswd());
       }
       serverPasswdField.setEnabled(UserSettings.getInstance().getStoreServerPass());
       serverDirField.setText(UserSettings.getInstance().getServerDir());
@@ -968,9 +968,9 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          UserSettings.getInstance().setServerUser(serverUser);
          UserSettings.getInstance().setStoreServerPass(storeServerPass);
          if (storeServerPass) {
-            UserSettings.getInstance().setServerPasswd(serverPasswd);
+            UserSettings.getInstance().setServerPasswdFromCharArray(serverPasswd);
          } else {
-            UserSettings.getInstance().setServerPasswd(null);
+            UserSettings.getInstance().setServerPasswdFromCharArray(null);
          }
          UserSettings.getInstance().setServerDir(serverDir);
          UserSettings.getInstance().setConfirmUpDownload(confirmUpDownload);

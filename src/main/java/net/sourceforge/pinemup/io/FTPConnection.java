@@ -49,7 +49,7 @@ class FTPConnection extends ServerConnection {
          fos = new FileOutputStream(f);
          String filename = f.getName();
          String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":"
-               + UserSettings.getInstance().getServerPasswdString() + "@" + UserSettings.getInstance().getServerAddress()
+               + UserSettings.getInstance().getServerPasswd() + "@" + UserSettings.getInstance().getServerAddress()
                + UserSettings.getInstance().getServerDir() + filename + ";type=i";
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
@@ -94,7 +94,7 @@ class FTPConnection extends ServerConnection {
       String completeFilename = UserSettings.getInstance().getNotesFile();
       File f = new File(completeFilename);
       String filename = f.getName();
-      String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswdString()
+      String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswd()
             + "@" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + filename + ";type=i";
 
       FileInputStream fis = null;

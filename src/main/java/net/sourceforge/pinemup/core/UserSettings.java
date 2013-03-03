@@ -44,7 +44,7 @@ public final class UserSettings {
    private String notesFile;
    private String serverAddress;
    private String serverUser;
-   private char[] serverPasswd;
+   private String serverPasswd;
    private String serverDir;
    private boolean defaultAlwaysOnTop;
    private byte tempDef = 0;
@@ -199,14 +199,10 @@ public final class UserSettings {
       serverUser = u;
    }
 
-   public char[] getServerPasswd() {
-      return serverPasswd;
-   }
-
-   public String getServerPasswdString() {
+   public String getServerPasswd() {
       String tempString = "";
       if (storeServerPass) {
-         tempString = String.valueOf(serverPasswd);
+         tempString = serverPasswd;
       } else {
          if (userPasswordRetriever != null) {
             tempString = userPasswordRetriever.retrievePasswordFromUser();
@@ -215,8 +211,12 @@ public final class UserSettings {
       return tempString;
    }
 
-   public void setServerPasswd(char[] p) {
-      serverPasswd = p;
+   public void setServerPasswdFromCharArray(char[] passwdCharArray) {
+      if (passwdCharArray != null) {
+         serverPasswd = String.valueOf(passwdCharArray);
+      } else {
+         serverPasswd = "";
+      }
    }
 
    public String getServerDir() {
@@ -255,7 +255,7 @@ public final class UserSettings {
       prefs.put(PREFIX + "serverAddress", serverAddress);
       prefs.put(PREFIX + "serverUser", serverUser);
       if (storeServerPass) {
-         prefs.put(PREFIX + "serverPasswd", getServerPasswdString());
+         prefs.put(PREFIX + "serverPasswd", getServerPasswd());
       } else {
          prefs.put(PREFIX + "serverPasswd", "");
       }
@@ -287,7 +287,7 @@ public final class UserSettings {
       notesFile = prefs.get(PREFIX + "notesFile", homeDir + "pinemup.xml");
       serverAddress = prefs.get(PREFIX + "serverAddress", "ftp.example.com");
       serverUser = prefs.get(PREFIX + "serverUser", "anonymous");
-      serverPasswd = prefs.get(PREFIX + "serverPasswd", "").toCharArray();
+      serverPasswd = prefs.get(PREFIX + "serverPasswd", "");
       serverDir = prefs.get(PREFIX + "serverDir", "/");
       closeicon = Byte.parseByte(prefs.get(PREFIX + "closeicon", "1"));
       showCategory = prefs.getBoolean(PREFIX + "showCategory", false);
