@@ -34,7 +34,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.event.HyperlinkListener;
 
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.io.ResourceLoader;
@@ -46,14 +45,12 @@ public class AboutDialog extends JFrame implements ActionListener {
    private static final int DIALOG_HEIGHT = 350;
 
    private JButton okButton;
-   private HyperlinkListener hyperlinkListener;
 
    public AboutDialog() {
       super(I18N.getInstance().getString("aboutdialog.title"));
       setSize(new Dimension(DIALOG_WIDTH, DIALOG_HEIGHT));
 
       JPanel mainPanel = new JPanel(new BorderLayout());
-      hyperlinkListener = new DefaultHyperLinkListener();
 
       JTabbedPane tpane = new JTabbedPane();
       tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(),
@@ -99,10 +96,13 @@ public class AboutDialog extends JFrame implements ActionListener {
 
    private JScrollPane makeTextPanel(String text, String contentType) {
       JEditorPane p = new JEditorPane(contentType, text);
-      p.addHyperlinkListener(hyperlinkListener);
+      p.addHyperlinkListener(new DefaultHyperLinkListener());
       p.setEditable(false);
       JScrollPane myScrollPane = new JScrollPane(p);
-      p.setCaretPosition(0); // scroll back to the top
+
+      // scroll back to the top
+      p.setCaretPosition(0);
+
       return myScrollPane;
    }
 
