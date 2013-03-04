@@ -1,10 +1,11 @@
 package net.sourceforge.pinemup.io;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -15,6 +16,7 @@ import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
 
 public class ExportFileManager {
+   private static final String EXPORT_FILE_ENCODING = "UTF-8";
    private static final String FILE_EXTENSION = ".txt";
    private static final String NOTE_SEPARATOR = "---------------------";
    private static final String CATEGORY_SEPARATOR = "################################################################";
@@ -40,7 +42,8 @@ public class ExportFileManager {
       }
       if (f != null) {
          try {
-            PrintWriter ostream = new PrintWriter(new BufferedWriter(new FileWriter(f)));
+            PrintWriter ostream = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), Charset.forName(EXPORT_FILE_ENCODING)
+                  .newEncoder()));
 
             for (Category cat : l) {
                ostream.println(CATEGORY_SEPARATOR);

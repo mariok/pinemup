@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,8 @@ public final class ResourceLoader {
    private static final int TRAYICON_SIZE_STEP = 8;
    private static final int TRAYICON_MIN_SIZE = 16;
    private static final int TRAYICON_MAX_SIZE = 48;
+
+   private static final String TEXT_RESOURCES_ENCODING = "UTF-8";
 
    private Image closeIcon1;
    private Image closeIcon2;
@@ -83,12 +86,12 @@ public final class ResourceLoader {
 
    private InputStream getResourceStream(String filename, String dirname) {
       String name = "/" + dirname + filename;
-      InputStream is = getClass().getResourceAsStream(name);
-      return is;
+      return getClass().getResourceAsStream(name);
    }
 
    private Image loadImage(String filename) {
       Image img = null;
+
       try {
          InputStream is = getResourceStream(filename, IMG_DIR);
 
@@ -154,7 +157,7 @@ public final class ResourceLoader {
 
       try {
          InputStream is = getResourceStream(filename);
-         BufferedReader br = new BufferedReader(new InputStreamReader(is));
+         BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName(TEXT_RESOURCES_ENCODING).newDecoder()));
          String nextLine = br.readLine();
 
          while (nextLine != null) {
@@ -185,7 +188,6 @@ public final class ResourceLoader {
 
    public URL getSchemaFile(String version) {
       String filename = "notesfile-" + version + ".xsd";
-      URL u = getClass().getResource("/" + SCHEMA_DIR + filename);
-      return u;
+      return getClass().getResource("/" + SCHEMA_DIR + filename);
    }
 }

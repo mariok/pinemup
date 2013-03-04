@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 
 import javax.swing.JOptionPane;
 
@@ -33,6 +34,8 @@ import net.sourceforge.pinemup.ui.swing.UpdateDialog;
 
 public class UpdateCheckThread extends Thread {
    private static final String UPDATE_URL = "http://pinemup.sourceforge.net/version.php?version=" + PinEmUp.VERSION;
+   private static final String UPDATE_DOCUMENT_ENCODING = "UTF-8";
+
    private boolean showUpToDateMessage;
 
    public UpdateCheckThread(boolean showUpToDateMessage) {
@@ -45,7 +48,8 @@ public class UpdateCheckThread extends Thread {
       try {
          URL url = new URL(UPDATE_URL);
          URLConnection urlc = url.openConnection();
-         BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+         BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream(), Charset.forName(UPDATE_DOCUMENT_ENCODING)
+               .newDecoder()));
 
          String versionString = br.readLine();
          if (versionString != null && !versionString.equals(PinEmUp.VERSION)) {
