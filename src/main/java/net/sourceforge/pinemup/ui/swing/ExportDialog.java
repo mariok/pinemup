@@ -32,6 +32,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -116,7 +117,10 @@ public class ExportDialog extends JDialog implements ActionListener {
             }
          }
 
-         ExportFileManager.getInstance().exportCategoriesToTextFile(catsToExport);
+         if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            String fileName = FileDialogCreator.getExportFileDialogInstance().getSelectedFile().getAbsolutePath();
+            ExportFileManager.getInstance().exportCategoriesToTextFile(catsToExport, fileName);
+         }
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {

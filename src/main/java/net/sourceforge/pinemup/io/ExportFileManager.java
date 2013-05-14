@@ -8,12 +8,9 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
 
 public class ExportFileManager {
    private static final String EXPORT_FILE_ENCODING = "UTF-8";
@@ -33,13 +30,9 @@ public class ExportFileManager {
 
    }
 
-   public void exportCategoriesToTextFile(List<Category> l) {
-      File f = null;
-      if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-         String name = NotesFileManager.checkAndAddExtension(FileDialogCreator.getExportFileDialogInstance().getSelectedFile()
-               .getAbsolutePath(), FILE_EXTENSION);
-         f = new File(name);
-      }
+   public void exportCategoriesToTextFile(List<Category> l, String fileName) {
+      String checkedFileName = NotesFileManager.checkAndAddExtension(fileName, FILE_EXTENSION);
+      File f = new File(checkedFileName);
       if (f != null) {
          try {
             PrintWriter ostream = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), Charset.forName(EXPORT_FILE_ENCODING)
