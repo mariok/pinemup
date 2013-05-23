@@ -26,7 +26,7 @@ import java.util.prefs.Preferences;
 
 import net.sourceforge.pinemup.core.I18N.SupportedLocale;
 import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
-import net.sourceforge.pinemup.ui.UserPasswordRetriever;
+import net.sourceforge.pinemup.ui.UserInputRetriever;
 
 public final class UserSettings {
    private static final String PREFIX = "peu_dev_";
@@ -34,7 +34,7 @@ public final class UserSettings {
    private static final int MIN_NOTEWINDOW_HEIGHT = 30;
 
    private Preferences prefs;
-   private UserPasswordRetriever userPasswordRetriever;
+   private UserInputRetriever userInputRetriever;
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;
@@ -204,8 +204,8 @@ public final class UserSettings {
       if (storeServerPass) {
          tempString = serverPasswd;
       } else {
-         if (userPasswordRetriever != null) {
-            tempString = userPasswordRetriever.retrievePasswordFromUser();
+         if (userInputRetriever != null) {
+            tempString = userInputRetriever.retrievePasswordFromUser();
          }
       }
       return tempString;
@@ -300,7 +300,11 @@ public final class UserSettings {
       confirmUpDownload = prefs.getBoolean(PREFIX + "confirmUpDownload", true);
    }
 
-   public void setUserPasswordRetriever(UserPasswordRetriever userPasswordRetriever) {
-      this.userPasswordRetriever = userPasswordRetriever;
+   public void setUserInputRetriever(UserInputRetriever userInputRetriever) {
+      this.userInputRetriever = userInputRetriever;
+   }
+
+   public UserInputRetriever getUserInputRetriever() {
+      return userInputRetriever;
    }
 }

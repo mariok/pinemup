@@ -25,8 +25,9 @@ public class SwingUI extends PinEmUpUI {
             e.printStackTrace();
          }
 
-         // define user interface for retrieving the server password
-         UserSettings.getInstance().setUserPasswordRetriever(new PasswordDialog());
+         // define user interface for retrieving user input, such as passwords
+         // or filenames
+         UserSettings.getInstance().setUserInputRetriever(new SwingUserInputRetreiver());
       } else { // tray icon not supported
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.trayiconnotsupported"),
                I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
