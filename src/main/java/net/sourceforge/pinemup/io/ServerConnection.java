@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2012 by Mario Ködding
+ * Copyright (C) 2007-2013 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,9 +62,9 @@ public abstract class ServerConnection {
 
    public static ServerConnection createServerConnection(ConnectionType serverType) {
       if (serverType == ConnectionType.WEBDAV) {
-         return new WebdavConnection(false);
+         return new WebdavConnection();
       } else if (serverType == ConnectionType.WEBDAVS) {
-         return new WebdavConnection(true);
+         return new WebdavSSLConnection();
       } else {
          return new FTPConnection();
       }

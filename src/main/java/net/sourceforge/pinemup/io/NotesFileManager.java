@@ -213,7 +213,7 @@ public class NotesFileManager {
    }
 
    public List<Category> readCategoriesFromFile(String filePath) {
-      List<Category> categories = null;
+      List<Category> categories = new LinkedList<>();
 
       if (new File(filePath).exists()) {
          try (InputStream in = new FileInputStream(filePath)) {
@@ -223,7 +223,6 @@ public class NotesFileManager {
          }
       } else {
          // create default categories
-         categories = new LinkedList<>();
          categories.add(new Category("Home", true, NoteColor.YELLOW));
          categories.add(new Category("Office", false, NoteColor.GREEN));
       }

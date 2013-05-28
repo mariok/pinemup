@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2012 by Mario Ködding
+ * Copyright (C) 2007-2013 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,20 +39,9 @@ import net.sourceforge.pinemup.core.UserSettings;
 
 class WebdavConnection extends ServerConnection {
    private static final String PROTOCOL_HTTP = "http";
-   private static final String PROTOCOL_HTTPS = "https";
 
-   private String protocol;
-
-   public WebdavConnection(boolean sslEnabled) {
-      if (sslEnabled) {
-         protocol = PROTOCOL_HTTPS;
-      } else {
-         protocol = PROTOCOL_HTTP;
-      }
-   }
-
-   public WebdavConnection() {
-      protocol = PROTOCOL_HTTP;
+   protected String getProtocol() {
+      return PROTOCOL_HTTP;
    }
 
    private void setDefaultAuthenticator() {
@@ -73,8 +62,8 @@ class WebdavConnection extends ServerConnection {
          makeBackupFile();
          File f = new File(UserSettings.getInstance().getNotesFile());
          fos = new FileOutputStream(f);
-         String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir()
-               + f.getName();
+         String urlString = getProtocol() + "://" + UserSettings.getInstance().getServerAddress()
+               + UserSettings.getInstance().getServerDir() + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
          HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
@@ -134,8 +123,8 @@ class WebdavConnection extends ServerConnection {
       try {
          File f = new File(UserSettings.getInstance().getNotesFile());
          fis = new FileInputStream(f);
-         String urlString = protocol + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir()
-               + f.getName();
+         String urlString = getProtocol() + "://" + UserSettings.getInstance().getServerAddress()
+               + UserSettings.getInstance().getServerDir() + f.getName();
          setDefaultAuthenticator();
          URL url = new URL(urlString);
          HttpURLConnection urlc = (HttpURLConnection)url.openConnection();
