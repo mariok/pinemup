@@ -25,6 +25,7 @@ import java.util.List;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
 
@@ -42,18 +43,41 @@ public class ServerThread extends Thread {
 
    public void run() {
       if (upload == ServerThread.UPLOAD) {
-         ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).exportNotesToServer();
+         boolean uploadSuccessful = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType())
+               .exportNotesToServer(CategoryManager.getInstance().getCategories());
+
+         if (uploadSuccessful) {
+            UserSettings
+                  .getInstance()
+                  .getUserInputRetriever()
+                  .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfileuploaded"));
+         } else {
+            UserSettings
+                  .getInstance()
+                  .getUserInputRetriever()
+                  .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                        I18N.getInstance().getString("error.notesfilenotuploaded"));
+         }
       } else {
-         // download Notes
-         ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).importNotesFromServer();
+         List<Category> categoriesFromServer = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType())
+               .importCategoriesFromServer();
 
-         // load new file
-         UserSettings.getInstance().makeSureNotesFileIsValid();
-         List<Category> newCats = NotesFileManager.getInstance().readCategoriesFromFile(UserSettings.getInstance().getNotesFile());
-
-         // if downloaded successfully, replace
-         CategoryManager.getInstance().replaceWithNewCategories(newCats);
-         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+         if (categoriesFromServer != null) {
+            CategoryManager.getInstance().replaceWithNewCategories(categoriesFromServer);
+            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+                  UserSettings.getInstance().getNotesFile());
+            UserSettings
+                  .getInstance()
+                  .getUserInputRetriever()
+                  .showInfoMessageToUser(I18N.getInstance().getString("info.title"),
+                        I18N.getInstance().getString("info.notesfiledownloaded"));
+         } else {
+            UserSettings
+                  .getInstance()
+                  .getUserInputRetriever()
+                  .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                        I18N.getInstance().getString("error.notesfilenotdownloaded"));
+         }
       }
    }
 

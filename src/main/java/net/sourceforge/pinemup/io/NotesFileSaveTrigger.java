@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.UserSettings;
 
 public class NotesFileSaveTrigger implements Observer {
    private static final int SAVE_DELAY_MILLIS = 5000;
@@ -51,7 +52,8 @@ public class NotesFileSaveTrigger implements Observer {
       public void run() {
          try {
             Thread.sleep(SAVE_DELAY_MILLIS);
-            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+                  UserSettings.getInstance().getNotesFile());
          } catch (InterruptedException e) {
             e.printStackTrace();
          }

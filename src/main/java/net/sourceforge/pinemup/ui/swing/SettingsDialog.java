@@ -922,7 +922,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
    private void saveSettings() {
       if (settingsChanged) {
          // save old notesfile
-         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+               UserSettings.getInstance().getNotesFile());
 
          // load settings from fields
          boolean updateCheckEnabled = updateCheckBox.isSelected();

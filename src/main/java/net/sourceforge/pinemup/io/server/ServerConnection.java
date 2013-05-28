@@ -22,8 +22,6 @@
 package net.sourceforge.pinemup.io.server;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,11 +29,14 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import javax.net.ssl.SSLHandshakeException;
 
+import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
+import net.sourceforge.pinemup.io.NotesFileManager;
 
 public abstract class ServerConnection {
    public enum ConnectionType {
@@ -79,70 +80,29 @@ public abstract class ServerConnection {
       }
    }
 
-   protected void makeBackupFile() {
-      File f = new File(UserSettings.getInstance().getNotesFile());
-      File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
+   public List<Category> importCategoriesFromServer() {
+      List<Category> categoriesFromServer = null;
 
-      try {
-         FileInputStream fis = new FileInputStream(f);
-         FileOutputStream fos = new FileOutputStream(bf);
-         int nextByte;
-         while ((nextByte = fis.read()) != -1) {
-            fos.write(nextByte);
-         }
-         fis.close();
-         fos.close();
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-   }
-
-   protected void deleteBackupFile() {
-      File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
-      if (bf.exists()) {
-         bf.delete();
-      }
-   }
-
-   protected void restoreFileFromBackup() {
-      File f = new File(UserSettings.getInstance().getNotesFile());
-      File bf = new File(UserSettings.getInstance().getNotesFile() + ".bak");
-      if (f.exists()) {
-         f.delete();
-      }
-      bf.renameTo(f);
-   }
-
-   public void importNotesFromServer() {
-      boolean downloaded = true;
-
-      FileOutputStream fos = null;
       InputStream is = null;
       try {
-         makeBackupFile();
          File f = new File(UserSettings.getInstance().getNotesFile());
-         fos = new FileOutputStream(f);
          setDefaultAuthenticator();
          URL url = new URL(getUrlString(f.getName()));
          URLConnection urlc = url.openConnection();
          is = urlc.getInputStream();
-         int nextByte = is.read();
-         while (nextByte != -1) {
-            fos.write(nextByte);
-            nextByte = is.read();
-         }
+         categoriesFromServer = NotesFileManager.getInstance().readCategoriesFromInputStream(is);
          if (!isConnectionStateOkAfterDownload(urlc)) {
-            downloaded = false;
+            categoriesFromServer = null;
          }
-      } catch (SSLHandshakeException e) { // Certificate error (self-signed?)
+      } catch (SSLHandshakeException e) {
+         // certificate error (self-signed?)
          UserSettings
                .getInstance()
                .getUserInputRetriever()
                .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
                      I18N.getInstance().getString("error.sslcertificateerror"));
-         downloaded = false;
       } catch (Exception e) {
-         downloaded = false;
+         categoriesFromServer = null;
       } finally {
          if (is != null) {
             try {
@@ -151,48 +111,26 @@ public abstract class ServerConnection {
                e.printStackTrace();
             }
          }
-         if (fos != null) {
-            try {
-               fos.close();
-            } catch (IOException e) {
-               e.printStackTrace();
-            }
-         }
       }
-      if (downloaded) {
-         deleteBackupFile();
-         UserSettings.getInstance().getUserInputRetriever()
-               .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfiledownloaded"));
-      } else {
-         restoreFileFromBackup();
-         UserSettings
-               .getInstance()
-               .getUserInputRetriever()
-               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                     I18N.getInstance().getString("error.notesfilenotdownloaded"));
-      }
+
+      return categoriesFromServer;
    }
 
-   public void exportNotesToServer() {
+   public boolean exportNotesToServer(List<Category> categories) {
       boolean uploaded = true;
 
-      FileInputStream fis = null;
       OutputStream os = null;
       try {
          File f = new File(UserSettings.getInstance().getNotesFile());
-         fis = new FileInputStream(f);
 
          setDefaultAuthenticator();
          URL url = new URL(getUrlString(f.getName()));
          URLConnection urlc = openURLConnection(url);
          urlc.setDoOutput(true);
          os = urlc.getOutputStream();
-         int nextByte = fis.read();
-         while (nextByte != -1) {
-            os.write(nextByte);
-            nextByte = fis.read();
-         }
-         if (!isConnectionStateOkAfterUpload(urlc)) {
+         boolean writtenSuccessfully = NotesFileManager.getInstance().writeCategoriesToOutputStream(categories, os);
+
+         if (!isConnectionStateOkAfterUpload(urlc) || !writtenSuccessfully) {
             uploaded = false;
          }
       } catch (SSLHandshakeException e) {
@@ -213,24 +151,9 @@ public abstract class ServerConnection {
                e.printStackTrace();
             }
          }
-         if (fis != null) {
-            try {
-               fis.close();
-            } catch (IOException e) {
-               e.printStackTrace();
-            }
-         }
       }
-      if (uploaded) {
-         UserSettings.getInstance().getUserInputRetriever()
-               .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfileuploaded"));
-      } else {
-         UserSettings
-               .getInstance()
-               .getUserInputRetriever()
-               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                     I18N.getInstance().getString("error.notesfilenotuploaded"));
-      }
+
+      return uploaded;
    }
 
    private void setDefaultAuthenticator() {

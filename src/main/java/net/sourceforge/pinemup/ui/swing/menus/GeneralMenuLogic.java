@@ -50,14 +50,16 @@ class GeneralMenuLogic implements ActionListener {
          SettingsDialog.showInstance();
       } else if (ACTION_EXIT_APPLICATION.equals(action)) {
          // save notes to file and exit
-         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+               UserSettings.getInstance().getNotesFile());
          System.exit(0);
       } else if (ACTION_UPLOAD_TO_SERVER.equals(action)) {
          if (!UserSettings.getInstance().getConfirmUpDownload()
                || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance()
                      .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             // save notes to file
-            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
+            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+                  UserSettings.getInstance().getNotesFile());
             // copy file to server
             new ServerThread(ServerThread.UPLOAD);
          }

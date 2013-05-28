@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.LinkedList;
@@ -67,20 +68,19 @@ public class NotesFileManager {
 
    }
 
-   public void writeCategoriesToFile(List<Category> l) {
-      System.out.println(new Date() + " writing notes to file...");
-      FileOutputStream f = null;
+   public boolean writeCategoriesToOutputStream(List<Category> categories, OutputStream out) {
+      boolean writtenSuccessfully = true;
+
       XMLStreamWriter writer = null;
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
-         f = new FileOutputStream(UserSettings.getInstance().getNotesFile());
-         writer = myFactory.createXMLStreamWriter(f, "UTF-8");
+         writer = myFactory.createXMLStreamWriter(out, "UTF-8");
 
          writer.writeStartDocument("UTF-8", "1.0");
          writer.writeStartElement("notesfile");
          writer.writeAttribute("version", LATEST_NOTESFILE_VERSION);
 
-         for (Category cat : l) {
+         for (Category cat : categories) {
             writer.writeStartElement("category");
             writer.writeAttribute("name", cat.getName());
             writer.writeAttribute("default", String.valueOf(cat.isDefaultCategory()));
@@ -117,7 +117,8 @@ public class NotesFileManager {
          }
          writer.writeEndElement();
          writer.writeEndDocument();
-      } catch (XMLStreamException | FileNotFoundException e) {
+      } catch (XMLStreamException e) {
+         writtenSuccessfully = false;
          UserSettings
                .getInstance()
                .getUserInputRetriever()
@@ -130,17 +131,32 @@ public class NotesFileManager {
                e.printStackTrace();
             }
          }
-         if (f != null) {
-            try {
-               f.close();
-            } catch (IOException e) {
-               e.printStackTrace();
-            }
-         }
       }
+
+      return writtenSuccessfully;
    }
 
-   private List<Category> readCategoriesFromInputStream(InputStream inputStream) {
+   public boolean writeCategoriesToFile(List<Category> categories, String filePath) {
+      boolean writtenSuccessfully = true;
+
+      System.out.println(new Date() + " writing notes to file...");
+
+      try (FileOutputStream f = new FileOutputStream(filePath);) {
+         writtenSuccessfully = writeCategoriesToOutputStream(categories, f);
+      } catch (FileNotFoundException e) {
+         writtenSuccessfully = false;
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"), I18N.getInstance().getString("error.notesfilenotsaved"));
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+
+      return writtenSuccessfully;
+   }
+
+   public List<Category> readCategoriesFromInputStream(InputStream inputStream) {
       List<Category> categories = new LinkedList<>();
 
       XMLStreamReader parser = null;
