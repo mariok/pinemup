@@ -30,8 +30,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.swing.JOptionPane;
-
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
 
@@ -48,9 +46,8 @@ class FTPConnection extends ServerConnection {
          File f = new File(UserSettings.getInstance().getNotesFile());
          fos = new FileOutputStream(f);
          String filename = f.getName();
-         String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":"
-               + UserSettings.getInstance().getServerPasswd() + "@" + UserSettings.getInstance().getServerAddress()
-               + UserSettings.getInstance().getServerDir() + filename + ";type=i";
+         String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswd()
+               + "@" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + filename + ";type=i";
          URL url = new URL(ftpString);
          URLConnection urlc = url.openConnection();
          is = urlc.getInputStream();
@@ -79,12 +76,15 @@ class FTPConnection extends ServerConnection {
       }
       if (downloaded) {
          deleteBackupFile();
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfiledownloaded"),
-               I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+         UserSettings.getInstance().getUserInputRetriever()
+               .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfiledownloaded"));
       } else {
          restoreFileFromBackup();
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotdownloaded"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showInfoMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.notesfilenotdownloaded"));
       }
    }
 
@@ -94,8 +94,8 @@ class FTPConnection extends ServerConnection {
       String completeFilename = UserSettings.getInstance().getNotesFile();
       File f = new File(completeFilename);
       String filename = f.getName();
-      String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswd()
-            + "@" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + filename + ";type=i";
+      String ftpString = "ftp://" + UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswd() + "@"
+            + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + filename + ";type=i";
 
       FileInputStream fis = null;
       OutputStream os = null;
@@ -113,8 +113,11 @@ class FTPConnection extends ServerConnection {
 
       } catch (IOException e) {
          uploaded = false;
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.notesfilenotuploaded"));
       } finally {
          try {
             if (fis != null) {
@@ -132,8 +135,8 @@ class FTPConnection extends ServerConnection {
          }
       }
       if (uploaded) {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"),
-               I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+         UserSettings.getInstance().getUserInputRetriever()
+               .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfileuploaded"));
       }
    }
 }

@@ -43,4 +43,9 @@ class SwingUserInputRetreiver implements UserInputRetriever {
    public void showErrorMessageToUser(String title, String message) {
       JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
    }
+
+   @Override
+   public void showInfoMessageToUser(String title, String message) {
+      JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+   }
 }

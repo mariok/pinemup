@@ -33,7 +33,6 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import javax.net.ssl.SSLHandshakeException;
-import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
@@ -59,8 +58,8 @@ class WebdavConnection extends ServerConnection {
    private void setDefaultAuthenticator() {
       Authenticator.setDefault(new Authenticator() {
          protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), UserSettings.getInstance()
-                  .getServerPasswd().toCharArray());
+            return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), UserSettings.getInstance().getServerPasswd()
+                  .toCharArray());
          }
       });
    }
@@ -89,8 +88,11 @@ class WebdavConnection extends ServerConnection {
             downloaded = false;
          }
       } catch (SSLHandshakeException e) { // Certificate error (self-signed?)
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.sslcertificateerror"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.sslcertificateerror"));
          downloaded = false;
       } catch (Exception e) {
          downloaded = false;
@@ -112,12 +114,15 @@ class WebdavConnection extends ServerConnection {
       }
       if (downloaded) {
          deleteBackupFile();
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfiledownloaded"),
-               I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+         UserSettings.getInstance().getUserInputRetriever()
+               .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfiledownloaded"));
       } else {
          restoreFileFromBackup();
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotdownloaded"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.notesfilenotdownloaded"));
       }
    }
 
@@ -146,8 +151,11 @@ class WebdavConnection extends ServerConnection {
             uploaded = false;
          }
       } catch (SSLHandshakeException e) { // Certificate error (self-signed?)
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.sslcertificateerror"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.sslcertificateerror"));
          uploaded = false;
       } catch (Exception e) {
          uploaded = false;
@@ -168,11 +176,14 @@ class WebdavConnection extends ServerConnection {
          }
       }
       if (uploaded) {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.notesfileuploaded"),
-               I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+         UserSettings.getInstance().getUserInputRetriever()
+               .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfileuploaded"));
       } else {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotuploaded"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.notesfilenotuploaded"));
       }
    }
 }

@@ -12,4 +12,6 @@ public interface UserInputRetriever {
    boolean retrieveUserConfirmation(String title, String message);
 
    void showErrorMessageToUser(String title, String message);
+
+   void showInfoMessageToUser(String title, String message);
 }

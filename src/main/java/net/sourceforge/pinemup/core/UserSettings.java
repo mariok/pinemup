@@ -25,14 +25,10 @@ import java.io.File;
 import java.util.Locale;
 import java.util.prefs.Preferences;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 import net.sourceforge.pinemup.core.I18N.SupportedLocale;
 import net.sourceforge.pinemup.io.NotesFileManager;
 import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.UserInputRetriever;
-import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
 
 public final class UserSettings {
    private static final String PREFIX = "peu_dev_";
@@ -310,15 +306,12 @@ public final class UserSettings {
       String validFilePath = notesFile;
       File nfile = new File(validFilePath);
       while (nfile.exists() && !NotesFileManager.getInstance().fileIsValid(validFilePath)) {
-         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("error.notesfilenotvalid"),
-               I18N.getInstance().getString("error.title"), JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+         if (!userInputRetriever.retrieveUserConfirmation(I18N.getInstance().getString("error.title"),
+               I18N.getInstance().getString("error.notesfilenotvalid"))) {
             System.exit(0);
          }
 
-         File selectedFile = null;
-         if (FileDialogCreator.getFileDialogInstance().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            selectedFile = FileDialogCreator.getFileDialogInstance().getSelectedFile();
-         }
+         File selectedFile = userInputRetriever.retieveFileChoiceFromUser();
          if (selectedFile != null) {
             validFilePath = NotesFileManager.checkAndAddExtension(selectedFile.getAbsolutePath(), ".xml");
             nfile = new File(validFilePath);

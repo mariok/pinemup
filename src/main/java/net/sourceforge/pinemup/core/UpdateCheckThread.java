@@ -28,8 +28,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
-import javax.swing.JOptionPane;
-
 import net.sourceforge.pinemup.ui.swing.UpdateDialog;
 
 public class UpdateCheckThread extends Thread {
@@ -86,8 +84,8 @@ public class UpdateCheckThread extends Thread {
 
             new UpdateDialog(changelogString.toString());
          } else if (showUpToDateMessage) {
-            JOptionPane.showMessageDialog(null, I18N.getInstance().getString("info.versionuptodate"),
-                  I18N.getInstance().getString("info.title"), JOptionPane.INFORMATION_MESSAGE);
+            UserSettings.getInstance().getUserInputRetriever()
+                  .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.versionuptodate"));
          }
          br.close();
       } catch (IOException e) {
