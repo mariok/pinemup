@@ -32,8 +32,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -51,7 +49,6 @@ import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.ui.swing.FileDialogCreator;
 
 import org.xml.sax.SAXException;
 
@@ -120,12 +117,11 @@ public class NotesFileManager {
          }
          writer.writeEndElement();
          writer.writeEndDocument();
-      } catch (XMLStreamException e) {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
-      } catch (FileNotFoundException e) {
-         JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.notesfilenotsaved"),
-               I18N.getInstance().getString("error.title"), JOptionPane.ERROR_MESSAGE);
+      } catch (XMLStreamException | FileNotFoundException e) {
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"), I18N.getInstance().getString("error.notesfilenotsaved"));
       } finally {
          if (writer != null) {
             try {
@@ -144,97 +140,47 @@ public class NotesFileManager {
       }
    }
 
-   public List<Category> readCategoriesFromFile() {
-      List<Category> categories = new LinkedList<Category>();
-      Category currentCategory = null;
-      Note currentNote = null;
-      boolean defaultNotAdded = true;
-      File nfile = new File(UserSettings.getInstance().getNotesFile());
-      while (nfile.exists() && !fileIsValid(UserSettings.getInstance().getNotesFile())) {
-         if (JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("error.notesfilenotvalid"),
-               I18N.getInstance().getString("error.title"), JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
-            System.exit(0);
-         }
+   private List<Category> readCategoriesFromInputStream(InputStream inputStream) {
+      List<Category> categories = new LinkedList<>();
 
-         File f = null;
-         if (FileDialogCreator.getFileDialogInstance().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            f = FileDialogCreator.getFileDialogInstance().getSelectedFile();
-         }
-         if (f != null) {
-            UserSettings.getInstance().setNotesFile((NotesFileManager.checkAndAddExtension(f.getAbsolutePath(), ".xml")));
-         }
-         nfile = new File(UserSettings.getInstance().getNotesFile());
-      }
-      UserSettings.getInstance().saveSettings();
-
-      InputStream in = null;
       XMLStreamReader parser = null;
       try {
-         in = new FileInputStream(UserSettings.getInstance().getNotesFile());
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         parser = myFactory.createXMLStreamReader(in, "UTF-8");
+         parser = myFactory.createXMLStreamReader(inputStream, "UTF-8");
 
-         int event;
+         Category currentCategory = null;
+         Note currentNote = null;
+         boolean defaultCategoryAdded = false;
+
          while (parser.hasNext()) {
-            event = parser.next();
+            int event = parser.next();
             switch (event) {
             case XMLStreamConstants.START_ELEMENT:
-               String ename = parser.getLocalName();
-               if (ename.equals("category")) {
-                  String name = "";
-                  boolean def = false;
-                  NoteColor defNoteColor = NoteColor.DEFAULT_COLOR;
-                  for (int i = 0; i < parser.getAttributeCount(); i++) {
-                     if (parser.getAttributeLocalName(i).equals("name")) {
-                        name = parser.getAttributeValue(i);
-                     } else if (parser.getAttributeLocalName(i).equals("default")) {
-                        def = (parser.getAttributeValue(i).equals("true")) && defaultNotAdded;
-                        if (def) {
-                           defaultNotAdded = false;
-                        }
-                     } else if (parser.getAttributeLocalName(i).equals("defaultnotecolor")) {
-                        defNoteColor = NoteColor.getNoteColorByCode(Byte.parseByte(parser.getAttributeValue(i)));
+               String elementName = parser.getLocalName();
+               if (elementName.equals("category")) {
+                  currentCategory = handleCategory(parser);
+                  if (currentCategory.isDefaultCategory()) {
+                     if (defaultCategoryAdded) {
+                        // there must be only one default category
+                        currentCategory.setDefault(false);
+                     } else {
+                        defaultCategoryAdded = true;
                      }
                   }
-                  currentCategory = new Category(name, def, defNoteColor);
                   categories.add(currentCategory);
-               } else if (ename.equals("note")) {
-                  currentNote = new Note();
-                  for (int i = 0; i < parser.getAttributeCount(); i++) {
-                     if (parser.getAttributeLocalName(i).equals("hidden")) {
-                        boolean h = parser.getAttributeValue(i).equals("true");
-                        currentNote.setHidden(h);
-                     } else if (parser.getAttributeLocalName(i).equals("xposition")) {
-                        short x = Short.parseShort(parser.getAttributeValue(i));
-                        currentNote.setPosition(x, currentNote.getYPos());
-                     } else if (parser.getAttributeLocalName(i).equals("yposition")) {
-                        short y = Short.parseShort(parser.getAttributeValue(i));
-                        currentNote.setPosition(currentNote.getXPos(), y);
-                     } else if (parser.getAttributeLocalName(i).equals("width")) {
-                        short w = Short.parseShort(parser.getAttributeValue(i));
-                        currentNote.setSize(w, currentNote.getYSize());
-                     } else if (parser.getAttributeLocalName(i).equals("height")) {
-                        short h = Short.parseShort(parser.getAttributeValue(i));
-                        currentNote.setSize(currentNote.getXSize(), h);
-                     } else if (parser.getAttributeLocalName(i).equals("alwaysontop")) {
-                        boolean a = parser.getAttributeValue(i).equals("true");
-                        currentNote.setAlwaysOnTop(a);
-                     } else if (parser.getAttributeLocalName(i).equals("color")) {
-                        NoteColor color = NoteColor.getNoteColorByCode(Byte.parseByte(parser.getAttributeValue(i)));
-                        currentNote.setColor(color);
-                     }
-                  }
+               } else if (elementName.equals("note")) {
+                  currentNote = handleNote(parser);
                   if (currentCategory != null) {
                      currentCategory.addNote(currentNote);
                   }
-               } else if (ename.equals("text")) {
+               } else if (elementName.equals("text")) {
                   for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("size")) {
                         short fontSize = Short.parseShort(parser.getAttributeValue(i));
                         currentNote.setFontSize(fontSize);
                      }
                   }
-               } else if (ename.equals("newline")) {
+               } else if (elementName.equals("newline")) {
                   currentNote.setText(currentNote.getText() + "\n");
                }
                break;
@@ -251,12 +197,8 @@ public class NotesFileManager {
                break;
             }
          }
-      } catch (FileNotFoundException e) {
-         // create default categories
-         categories.add(new Category("Home", true, NoteColor.YELLOW));
-         categories.add(new Category("Office", false, NoteColor.GREEN));
       } catch (XMLStreamException e) {
-         e.printStackTrace();
+         categories = null;
       } finally {
          if (parser != null) {
             try {
@@ -265,16 +207,77 @@ public class NotesFileManager {
                e.printStackTrace();
             }
          }
-         if (in != null) {
-            try {
-               in.close();
-            } catch (IOException e) {
-               e.printStackTrace();
-            }
+      }
+
+      return categories;
+   }
+
+   public List<Category> readCategoriesFromFile(String filePath) {
+      List<Category> categories = null;
+
+      if (new File(filePath).exists()) {
+         try (InputStream in = new FileInputStream(filePath)) {
+            categories = readCategoriesFromInputStream(in);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      } else {
+         // create default categories
+         categories = new LinkedList<>();
+         categories.add(new Category("Home", true, NoteColor.YELLOW));
+         categories.add(new Category("Office", false, NoteColor.GREEN));
+      }
+
+      observeAllNotesAndCategories(categories);
+
+      return categories;
+   }
+
+   private Category handleCategory(XMLStreamReader parser) {
+      String name = "";
+      boolean isDefaultCategory = false;
+      NoteColor defNoteColor = NoteColor.DEFAULT_COLOR;
+      for (int i = 0; i < parser.getAttributeCount(); i++) {
+         if (parser.getAttributeLocalName(i).equals("name")) {
+            name = parser.getAttributeValue(i);
+         } else if (parser.getAttributeLocalName(i).equals("default")) {
+            isDefaultCategory = (parser.getAttributeValue(i).equals("true"));
+         } else if (parser.getAttributeLocalName(i).equals("defaultnotecolor")) {
+            defNoteColor = NoteColor.getNoteColorByCode(Byte.parseByte(parser.getAttributeValue(i)));
          }
       }
-      observeAllNotesAndCategories(categories);
-      return categories;
+      return new Category(name, isDefaultCategory, defNoteColor);
+   }
+
+   private Note handleNote(XMLStreamReader parser) {
+      Note currentNote = new Note();
+
+      for (int i = 0; i < parser.getAttributeCount(); i++) {
+         if (parser.getAttributeLocalName(i).equals("hidden")) {
+            boolean h = parser.getAttributeValue(i).equals("true");
+            currentNote.setHidden(h);
+         } else if (parser.getAttributeLocalName(i).equals("xposition")) {
+            short x = Short.parseShort(parser.getAttributeValue(i));
+            currentNote.setPosition(x, currentNote.getYPos());
+         } else if (parser.getAttributeLocalName(i).equals("yposition")) {
+            short y = Short.parseShort(parser.getAttributeValue(i));
+            currentNote.setPosition(currentNote.getXPos(), y);
+         } else if (parser.getAttributeLocalName(i).equals("width")) {
+            short w = Short.parseShort(parser.getAttributeValue(i));
+            currentNote.setSize(w, currentNote.getYSize());
+         } else if (parser.getAttributeLocalName(i).equals("height")) {
+            short h = Short.parseShort(parser.getAttributeValue(i));
+            currentNote.setSize(currentNote.getXSize(), h);
+         } else if (parser.getAttributeLocalName(i).equals("alwaysontop")) {
+            boolean a = parser.getAttributeValue(i).equals("true");
+            currentNote.setAlwaysOnTop(a);
+         } else if (parser.getAttributeLocalName(i).equals("color")) {
+            NoteColor color = NoteColor.getNoteColorByCode(Byte.parseByte(parser.getAttributeValue(i)));
+            currentNote.setColor(color);
+         }
+      }
+
+      return currentNote;
    }
 
    public static String checkAndAddExtension(String s, String xt) {
@@ -286,7 +289,7 @@ public class NotesFileManager {
       return s;
    }
 
-   private boolean fileIsValid(String filename) {
+   public boolean fileIsValid(String filename) {
       try {
          SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 

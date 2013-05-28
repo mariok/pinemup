@@ -978,10 +978,14 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
          // set new locale
          I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
-         // load new notes from file
-         List<Category> cl = NotesFileManager.getInstance().readCategoriesFromFile();
-         // if file has not been valid and new one has been selected:
+         // make sure the selected notesfile is not invalid
+         UserSettings.getInstance().makeSureNotesFileIsValid();
+         // in case the notesfile has not been valid and new one has been
+         // selected, update the UI field
          notesFileField.setText(UserSettings.getInstance().getNotesFile());
+
+         // load new notes from file
+         List<Category> cl = NotesFileManager.getInstance().readCategoriesFromFile(UserSettings.getInstance().getNotesFile());
 
          CategoryManager.getInstance().replaceWithNewCategories(cl);
 

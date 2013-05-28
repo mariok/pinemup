@@ -42,7 +42,8 @@ public final class PinEmUp {
    }
 
    public static void main(String[] args) {
-      // wait for a moment for SystemTray to be initialized (to prevent problems with autostart on some systems)
+      // wait for a moment for SystemTray to be initialized (to prevent problems
+      // with autostart on some systems)
       try {
          Thread.sleep(STARTUP_SLEEP_TIME);
       } catch (InterruptedException e) {
@@ -56,8 +57,12 @@ public final class PinEmUp {
       PinEmUpUI.setUI(new SwingUI());
       PinEmUpUI.getUI().initialize();
 
+      // make sure the currently saved notesfile is not invalid
+      UserSettings.getInstance().makeSureNotesFileIsValid();
+
       // load notes from file
-      CategoryManager.getInstance().replaceWithNewCategories(NotesFileManager.getInstance().readCategoriesFromFile());
+      CategoryManager.getInstance().replaceWithNewCategories(
+            NotesFileManager.getInstance().readCategoriesFromFile(UserSettings.getInstance().getNotesFile()));
 
       // update check
       if (UserSettings.getInstance().isUpdateCheckEnabled()) {

@@ -40,15 +40,17 @@ public class ServerThread extends Thread {
    }
 
    public void run() {
-      if (upload == ServerThread.UPLOAD) { // upload notes
+      if (upload == ServerThread.UPLOAD) {
          ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).exportNotesToServer();
-      } else { // download notes
+      } else {
          // download Notes
          ServerConnection.createServerConnection(UserSettings.getInstance().getServerType()).importNotesFromServer();
-         // load new file
-         List<Category> newCats = NotesFileManager.getInstance().readCategoriesFromFile();
-         // if downloaded successfully, replace:
 
+         // load new file
+         UserSettings.getInstance().makeSureNotesFileIsValid();
+         List<Category> newCats = NotesFileManager.getInstance().readCategoriesFromFile(UserSettings.getInstance().getNotesFile());
+
+         // if downloaded successfully, replace
          CategoryManager.getInstance().replaceWithNewCategories(newCats);
          NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories());
       }
