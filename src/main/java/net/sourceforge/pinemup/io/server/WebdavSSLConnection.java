@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.io;
+package net.sourceforge.pinemup.io.server;
 
 class WebdavSSLConnection extends WebdavConnection {
    private static final String PROTOCOL_HTTPS = "https";

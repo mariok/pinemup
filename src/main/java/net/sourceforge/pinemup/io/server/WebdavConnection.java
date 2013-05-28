@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.io;
+package net.sourceforge.pinemup.io.server;
 
 import java.io.File;
 import java.io.FileInputStream;

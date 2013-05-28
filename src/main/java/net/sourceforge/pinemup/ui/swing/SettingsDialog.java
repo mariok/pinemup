@@ -61,7 +61,7 @@ import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
 import net.sourceforge.pinemup.io.ResourceLoader;
-import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
+import net.sourceforge.pinemup.io.server.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
 
 public class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {

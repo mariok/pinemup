@@ -11,7 +11,7 @@ import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.io.ServerThread;
+import net.sourceforge.pinemup.io.server.ServerThread;
 import net.sourceforge.pinemup.ui.swing.AboutDialog;
 import net.sourceforge.pinemup.ui.swing.CategoryDialog;
 import net.sourceforge.pinemup.ui.swing.ExportDialog;

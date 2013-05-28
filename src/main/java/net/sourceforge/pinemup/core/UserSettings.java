@@ -27,7 +27,7 @@ import java.util.prefs.Preferences;
 
 import net.sourceforge.pinemup.core.I18N.SupportedLocale;
 import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.io.ServerConnection.ConnectionType;
+import net.sourceforge.pinemup.io.server.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.UserInputRetriever;
 
 public final class UserSettings {
