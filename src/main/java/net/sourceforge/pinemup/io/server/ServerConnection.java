@@ -25,7 +25,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.URL;
+import java.net.URLConnection;
 
+import javax.net.ssl.SSLHandshakeException;
+
+import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
 
 public abstract class ServerConnection {
@@ -104,7 +113,144 @@ public abstract class ServerConnection {
       bf.renameTo(f);
    }
 
-   public abstract void exportNotesToServer();
+   public void importNotesFromServer() {
+      boolean downloaded = true;
 
-   public abstract void importNotesFromServer();
+      FileOutputStream fos = null;
+      InputStream is = null;
+      try {
+         makeBackupFile();
+         File f = new File(UserSettings.getInstance().getNotesFile());
+         fos = new FileOutputStream(f);
+         setDefaultAuthenticator();
+         URL url = new URL(getUrlString(f.getName()));
+         URLConnection urlc = url.openConnection();
+         is = urlc.getInputStream();
+         int nextByte = is.read();
+         while (nextByte != -1) {
+            fos.write(nextByte);
+            nextByte = is.read();
+         }
+         if (!isConnectionStateOkAfterDownload(urlc)) {
+            downloaded = false;
+         }
+      } catch (SSLHandshakeException e) { // Certificate error (self-signed?)
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.sslcertificateerror"));
+         downloaded = false;
+      } catch (Exception e) {
+         downloaded = false;
+      } finally {
+         if (is != null) {
+            try {
+               is.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+         if (fos != null) {
+            try {
+               fos.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+      }
+      if (downloaded) {
+         deleteBackupFile();
+         UserSettings.getInstance().getUserInputRetriever()
+               .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfiledownloaded"));
+      } else {
+         restoreFileFromBackup();
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.notesfilenotdownloaded"));
+      }
+   }
+
+   public void exportNotesToServer() {
+      boolean uploaded = true;
+
+      FileInputStream fis = null;
+      OutputStream os = null;
+      try {
+         File f = new File(UserSettings.getInstance().getNotesFile());
+         fis = new FileInputStream(f);
+
+         setDefaultAuthenticator();
+         URL url = new URL(getUrlString(f.getName()));
+         URLConnection urlc = openURLConnection(url);
+         urlc.setDoOutput(true);
+         os = urlc.getOutputStream();
+         int nextByte = fis.read();
+         while (nextByte != -1) {
+            os.write(nextByte);
+            nextByte = fis.read();
+         }
+         if (!isConnectionStateOkAfterUpload(urlc)) {
+            uploaded = false;
+         }
+      } catch (SSLHandshakeException e) {
+         // certificate error (self-signed?)
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.sslcertificateerror"));
+         uploaded = false;
+      } catch (Exception e) {
+         uploaded = false;
+      } finally {
+         if (os != null) {
+            try {
+               os.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+         if (fis != null) {
+            try {
+               fis.close();
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+      }
+      if (uploaded) {
+         UserSettings.getInstance().getUserInputRetriever()
+               .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfileuploaded"));
+      } else {
+         UserSettings
+               .getInstance()
+               .getUserInputRetriever()
+               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.notesfilenotuploaded"));
+      }
+   }
+
+   private void setDefaultAuthenticator() {
+      Authenticator.setDefault(new Authenticator() {
+         protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), UserSettings.getInstance().getServerPasswd()
+                  .toCharArray());
+         }
+      });
+   }
+
+   protected boolean isConnectionStateOkAfterDownload(URLConnection urlConnection) throws IOException {
+      return true;
+   }
+
+   protected boolean isConnectionStateOkAfterUpload(URLConnection urlConnection) throws IOException {
+      return true;
+   }
+
+   protected abstract String getUrlString(String fileName);
+
+   protected abstract URLConnection openURLConnection(URL url) throws IOException;
 }
