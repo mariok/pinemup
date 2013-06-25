@@ -486,7 +486,6 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    @Override
    public void mouseWheelMoved(MouseWheelEvent e) {
-      System.out.println("mwheel");
       if (controlPressed) {
          int diff = -1 * e.getWheelRotation();
          parentNote.setFontSize((short)(parentNote.getFontSize() + diff));

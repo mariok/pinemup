@@ -26,6 +26,9 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class I18N {
    public enum SupportedLocale {
       de_DE("de", "DE"),
@@ -74,6 +77,8 @@ public final class I18N {
 
    private static final SupportedLocale FALLBACK_LOCALE = SupportedLocale.en_US;
 
+   private static final Logger LOG = LoggerFactory.getLogger(I18N.class);
+
    private ResourceBundle res;
 
    private static class Holder {
@@ -99,7 +104,7 @@ public final class I18N {
          s = res.getString(key);
       } catch (MissingResourceException e) {
          s = key;
-         e.printStackTrace();
+         LOG.error("The resource with the key '" + key + "' could not be found.", e);
       }
       return s;
    }

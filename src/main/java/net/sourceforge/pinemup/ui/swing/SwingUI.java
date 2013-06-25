@@ -10,7 +10,12 @@ import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
 import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SwingUI extends PinEmUpUI {
+   private static final Logger LOG = LoggerFactory.getLogger(SwingUI.class);
+
    private TrayMenu trayMenu;
 
    @Override
@@ -22,7 +27,7 @@ public class SwingUI extends PinEmUpUI {
             trayMenu = new TrayMenu();
             tray.add(new PinEmUpTrayIcon(trayMenu));
          } catch (AWTException e) {
-            e.printStackTrace();
+            LOG.error("Error during initialization of tray icon.", e);
          }
 
          // define user interface for retrieving user input, such as passwords

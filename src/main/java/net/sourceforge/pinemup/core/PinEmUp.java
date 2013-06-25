@@ -25,9 +25,14 @@ import net.sourceforge.pinemup.io.NotesFileManager;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class PinEmUp {
    public static final String VERSION;
    private static final int STARTUP_SLEEP_TIME = 1000;
+
+   private static final Logger LOG = LoggerFactory.getLogger(PinEmUp.class);
 
    static {
       if (PinEmUp.class.getPackage().getImplementationVersion() != null) {
@@ -45,9 +50,10 @@ public final class PinEmUp {
       // wait for a moment for SystemTray to be initialized (to prevent problems
       // with autostart on some systems)
       try {
+         LOG.info("pin 'em up is starting up. Waiting a few seconds before initializing the tray icon...");
          Thread.sleep(STARTUP_SLEEP_TIME);
       } catch (InterruptedException e) {
-         e.printStackTrace();
+         LOG.error("Startup sleep time has been interrupted.", e);
       }
 
       // set locale

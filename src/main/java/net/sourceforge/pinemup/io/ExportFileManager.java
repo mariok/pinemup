@@ -12,11 +12,16 @@ import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ExportFileManager {
    private static final String EXPORT_FILE_ENCODING = "UTF-8";
    private static final String FILE_EXTENSION = ".txt";
    private static final String NOTE_SEPARATOR = "---------------------";
    private static final String CATEGORY_SEPARATOR = "################################################################";
+
+   private static final Logger LOG = LoggerFactory.getLogger(ExportFileManager.class);
 
    private static class Holder {
       private static final ExportFileManager INSTANCE = new ExportFileManager();
@@ -61,7 +66,7 @@ public class ExportFileManager {
             ostream.flush();
             ostream.close();
          } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error during attempt to export notes.", e);
          }
       }
    }

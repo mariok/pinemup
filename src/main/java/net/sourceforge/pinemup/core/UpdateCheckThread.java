@@ -30,9 +30,14 @@ import java.nio.charset.Charset;
 
 import net.sourceforge.pinemup.ui.swing.UpdateDialog;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class UpdateCheckThread extends Thread {
    private static final String UPDATE_URL = "http://pinemup.sourceforge.net/version.php?version=" + PinEmUp.VERSION;
    private static final String UPDATE_DOCUMENT_ENCODING = "UTF-8";
+
+   private static final Logger LOG = LoggerFactory.getLogger(UpdateCheckThread.class);
 
    private boolean showUpToDateMessage;
 
@@ -89,7 +94,7 @@ public class UpdateCheckThread extends Thread {
          }
          br.close();
       } catch (IOException e) {
-         System.err.println("Error while trying to check for updates.");
+         LOG.error("Error while trying to check for updates.", e);
       }
 
    }

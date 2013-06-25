@@ -1,7 +1,7 @@
 /*
  * pin 'em up
  *
- * Copyright (C) 2007-2012 by Mario Ködding
+ * Copyright (C) 2007-2013 by Mario Ködding
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,10 +50,14 @@ import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-public class NotesFileManager {
+public final class NotesFileManager {
    private static final String LATEST_NOTESFILE_VERSION = "0.2";
+
+   private static final Logger LOG = LoggerFactory.getLogger(NotesFileManager.class);
 
    private static class Holder {
       private static final NotesFileManager INSTANCE = new NotesFileManager();
@@ -65,7 +68,6 @@ public class NotesFileManager {
    }
 
    private NotesFileManager() {
-
    }
 
    public boolean writeCategoriesToOutputStream(List<Category> categories, OutputStream out) {
@@ -118,6 +120,8 @@ public class NotesFileManager {
          writer.writeEndElement();
          writer.writeEndDocument();
       } catch (XMLStreamException e) {
+         LOG.error("XMLStreamException occured during attempt to write notesfile to disk.", e);
+
          writtenSuccessfully = false;
          UserSettings
                .getInstance()
@@ -128,7 +132,7 @@ public class NotesFileManager {
             try {
                writer.close();
             } catch (XMLStreamException e) {
-               e.printStackTrace();
+               LOG.error("Error during attempt to close stream.", e);
             }
          }
       }
@@ -139,7 +143,7 @@ public class NotesFileManager {
    public boolean writeCategoriesToFile(List<Category> categories, String filePath) {
       boolean writtenSuccessfully = true;
 
-      System.out.println(new Date() + " writing notes to file...");
+      LOG.info("writing notes to file...");
 
       try (FileOutputStream f = new FileOutputStream(filePath);) {
          writtenSuccessfully = writeCategoriesToOutputStream(categories, f);
@@ -150,7 +154,7 @@ public class NotesFileManager {
                .getUserInputRetriever()
                .showErrorMessageToUser(I18N.getInstance().getString("error.title"), I18N.getInstance().getString("error.notesfilenotsaved"));
       } catch (IOException e) {
-         e.printStackTrace();
+         LOG.error("Error during attempt to write notes to stream.", e);
       }
 
       return writtenSuccessfully;
@@ -220,7 +224,7 @@ public class NotesFileManager {
             try {
                parser.close();
             } catch (XMLStreamException e) {
-               e.printStackTrace();
+               LOG.error("Error during attempt to close stream.", e);
             }
          }
       }
@@ -235,7 +239,7 @@ public class NotesFileManager {
          try (InputStream in = new FileInputStream(filePath)) {
             categories = readCategoriesFromInputStream(in);
          } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error during attempt to read notes from file.", e);
          }
       } else {
          // create default categories
@@ -360,22 +364,22 @@ public class NotesFileManager {
             }
          }
       } catch (FileNotFoundException e) {
-         e.printStackTrace();
+         LOG.error("The file " + filename + " could not be found!", e);
       } catch (XMLStreamException e) {
-         e.printStackTrace();
+         LOG.error("Error during attempt to retrieve notesfile version.", e);
       } finally {
          if (parser != null) {
             try {
                parser.close();
             } catch (XMLStreamException e) {
-               e.printStackTrace();
+               LOG.error("Error during attempt to close stream.", e);
             }
          }
          if (in != null) {
             try {
                in.close();
             } catch (IOException e) {
-               e.printStackTrace();
+               LOG.error("Error during attempt to close stream.", e);
             }
          }
       }

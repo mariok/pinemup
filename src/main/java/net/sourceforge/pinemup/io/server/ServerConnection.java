@@ -38,6 +38,9 @@ import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class ServerConnection {
    public enum ConnectionType {
       FTP((short)0, "FTP"),
@@ -69,6 +72,8 @@ public abstract class ServerConnection {
          return name;
       }
    }
+
+   private static final Logger LOG = LoggerFactory.getLogger(ServerConnection.class);
 
    public static ServerConnection createServerConnection(ConnectionType serverType) {
       if (serverType == ConnectionType.WEBDAV) {
@@ -108,7 +113,7 @@ public abstract class ServerConnection {
             try {
                is.close();
             } catch (IOException e) {
-               e.printStackTrace();
+               LOG.error("Error during attempt to close stream.", e);
             }
          }
       }
@@ -134,7 +139,8 @@ public abstract class ServerConnection {
             uploaded = false;
          }
       } catch (SSLHandshakeException e) {
-         // certificate error (self-signed?)
+         LOG.error("SSL exception occured. Probably a self-signed certificate?", e);
+
          UserSettings
                .getInstance()
                .getUserInputRetriever()
@@ -148,7 +154,7 @@ public abstract class ServerConnection {
             try {
                os.close();
             } catch (IOException e) {
-               e.printStackTrace();
+               LOG.error("Error during attempt to close stream.", e);
             }
          }
       }

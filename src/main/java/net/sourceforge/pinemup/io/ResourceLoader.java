@@ -37,6 +37,9 @@ import java.util.Map.Entry;
 
 import net.sourceforge.pinemup.core.PinEmUp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class ResourceLoader {
    private static final String IMG_DIR = "img/";
    private static final String SCHEMA_DIR = "xsd/";
@@ -47,6 +50,8 @@ public final class ResourceLoader {
    private static final int TRAYICON_MAX_SIZE = 48;
 
    private static final String TEXT_RESOURCES_ENCODING = "UTF-8";
+
+   private static final Logger LOG = LoggerFactory.getLogger(ResourceLoader.class);
 
    private Image closeIcon1;
    private Image closeIcon2;
@@ -112,7 +117,7 @@ public final class ResourceLoader {
             is.close();
          }
       } catch (IOException e) {
-         e.printStackTrace();
+         LOG.error("Error while loading image " + filename + ".", e);
       }
 
       return img;
@@ -168,7 +173,7 @@ public final class ResourceLoader {
          }
          br.close();
       } catch (IOException e) {
-         e.printStackTrace();
+         LOG.error("Error while loading file " + filename + ".", e);
       }
 
       return s.toString();

@@ -6,8 +6,13 @@ import java.util.Observer;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.UserSettings;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NotesFileSaveTrigger implements Observer {
    private static final int SAVE_DELAY_MILLIS = 5000;
+
+   private static final Logger LOG = LoggerFactory.getLogger(NotesFileSaveTrigger.class);
 
    private FileSaveThread fileSaveThread;
    private boolean disabled;
@@ -41,7 +46,7 @@ public class NotesFileSaveTrigger implements Observer {
          try {
             fileSaveThread.join();
          } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("Error while waiting for notesfile save thread.", e);
          }
       }
       this.disabled = disabled;
@@ -55,7 +60,7 @@ public class NotesFileSaveTrigger implements Observer {
             NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
                   UserSettings.getInstance().getNotesFile());
          } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("Error while waiting for notesfile save thread.", e);
          }
       }
    }

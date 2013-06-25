@@ -5,6 +5,12 @@
   <version>0.6-SNAPSHOT</version>
   <name>pin 'em up</name>
   <url>http://pinemup.sourceforge.net/</url>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <version.slf4j>1.7.5</version.slf4j>
+    <version.logback>1.0.13</version.logback>
+  </properties>
 
   <build>
     <plugins>
@@ -37,6 +43,26 @@
       
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>1.5</version>
+        <configuration>
+          <transformers>
+            <transformer
+              implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+          </transformers>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.6</version>
         <configuration>
@@ -44,7 +70,7 @@
         </configuration>
       </plugin>
     </plugins>
-    
+
     <resources>
         <resource>
             <directory>src/main/resources</directory>
@@ -55,4 +81,17 @@
         </resource>
     </resources>
   </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${version.slf4j}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${version.logback}</version>
+    </dependency>
+  </dependencies>
 </project>
