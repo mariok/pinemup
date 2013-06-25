@@ -9,7 +9,7 @@ import net.sourceforge.pinemup.core.UserSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NotesFileSaveTrigger implements Observer {
+public final class NotesFileSaveTrigger implements Observer {
    private static final int SAVE_DELAY_MILLIS = 5000;
 
    private static final Logger LOG = LoggerFactory.getLogger(NotesFileSaveTrigger.class);
@@ -52,7 +52,7 @@ public class NotesFileSaveTrigger implements Observer {
       this.disabled = disabled;
    }
 
-   class FileSaveThread extends Thread {
+   private static class FileSaveThread extends Thread {
       @Override
       public void run() {
          try {

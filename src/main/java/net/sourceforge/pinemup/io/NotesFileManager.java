@@ -299,13 +299,17 @@ public final class NotesFileManager {
       return currentNote;
    }
 
-   public static String checkAndAddExtension(String s, String xt) {
-      int len = s.length();
-      String ext = s.substring(len - 4, len);
-      if (!ext.toLowerCase().equals(xt.toLowerCase())) {
-         s = s + xt.toLowerCase();
+   public static String checkAndAddExtension(String fileName, String requiredExtension) {
+      String checkedFileName = fileName;
+
+      int len = fileName.length();
+      String actualExtension = fileName.substring(len - 4, len);
+
+      if (!actualExtension.equalsIgnoreCase(requiredExtension)) {
+         checkedFileName = fileName + requiredExtension.toLowerCase();
       }
-      return s;
+
+      return checkedFileName;
    }
 
    public boolean fileIsValid(String filename) {

@@ -64,7 +64,7 @@ import net.sourceforge.pinemup.io.ResourceLoader;
 import net.sourceforge.pinemup.io.server.ServerConnection.ConnectionType;
 import net.sourceforge.pinemup.ui.PinEmUpUI;
 
-public class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
+public final class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
    private static final long serialVersionUID = 1L;
 
    private static final int DIALOG_WIDTH = 640;
@@ -354,7 +354,8 @@ public class SettingsDialog extends JFrame implements ActionListener, DocumentLi
       return updateCheckPanel;
    }
 
-   private JPanel makeLanguagePanel() { // panel for language selection
+   private JPanel makeLanguagePanel() {
+      // panel for language selection
       GridBagLayout gbl = new GridBagLayout();
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.insets = new Insets(1, 1, 1, 1);

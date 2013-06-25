@@ -192,7 +192,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       int width = parentNote.getXSize();
       int height = parentNote.getYSize();
       bgLabel = new BackgroundLabel(parentNote.getColor(), width, height);
-      getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
+      getLayeredPane().add(bgLabel, Integer.MIN_VALUE);
 
       setSize(width, height);
       setLocation(parentNote.getXPos(), parentNote.getYPos());

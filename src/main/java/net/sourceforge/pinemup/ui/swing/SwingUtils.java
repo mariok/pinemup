@@ -2,7 +2,7 @@ package net.sourceforge.pinemup.ui.swing;
 
 import java.awt.Window;
 
-class SwingUtils {
+final class SwingUtils {
    private SwingUtils() {
    }
 

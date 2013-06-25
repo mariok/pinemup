@@ -35,27 +35,23 @@ import net.sourceforge.pinemup.core.I18N;
 
 class MenuCreator {
    private String[] getBasicItemTexts() {
-      String[] s = {I18N.getInstance().getString("menu.addnoteitem"), I18N.getInstance().getString("menu.showallnotesitem"),
+      return new String[] {I18N.getInstance().getString("menu.addnoteitem"), I18N.getInstance().getString("menu.showallnotesitem"),
             I18N.getInstance().getString("menu.hideallnotesitem")};
-      return s;
    }
 
    private String[] getBasicActionCommands() {
-      String[] s = {GeneralMenuLogic.ACTION_ADD_NOTE, GeneralMenuLogic.ACTION_SHOW_ALL_NOTES, GeneralMenuLogic.ACTION_HIDE_ALL_NOTES};
-      return s;
+      return new String[] {GeneralMenuLogic.ACTION_ADD_NOTE, GeneralMenuLogic.ACTION_SHOW_ALL_NOTES, GeneralMenuLogic.ACTION_HIDE_ALL_NOTES};
    }
 
    private String[] getCategoryItemTexts() {
-      String[] s = {I18N.getInstance().getString("menu.categorymenu.hidenotes"),
+      return new String[] {I18N.getInstance().getString("menu.categorymenu.hidenotes"),
             I18N.getInstance().getString("menu.categorymenu.shownotes"), I18N.getInstance().getString("menu.categorymenu.showonlynotes"),
             I18N.getInstance().getString("menu.categorymenu.setasdefault")};
-      return s;
    }
 
    private String[] getCategoryActionCommands() {
-      String[] s = {CategoryMenuLogic.ACTION_HIDE_ALL_NOTES, CategoryMenuLogic.ACTION_SHOW_ALL_NOTES,
+      return new String[] {CategoryMenuLogic.ACTION_HIDE_ALL_NOTES, CategoryMenuLogic.ACTION_SHOW_ALL_NOTES,
             CategoryMenuLogic.ACTION_SHOW_ONLY_NOTES_OF_CATEGORY, CategoryMenuLogic.ACTION_SET_AS_DEFAULT_CATEGORY};
-      return s;
    }
 
    public List<JMenuItem> getBasicJMenuItems() {

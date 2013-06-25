@@ -28,7 +28,7 @@ import java.util.Observer;
 
 import net.sourceforge.pinemup.core.Note;
 
-public class NoteWindowManager implements Observer {
+public final class NoteWindowManager implements Observer {
    private Map<Note, NoteWindow> noteWindows;
 
    private static class Holder {

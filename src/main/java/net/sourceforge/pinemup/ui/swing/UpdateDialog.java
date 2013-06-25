@@ -53,7 +53,8 @@ public class UpdateDialog extends JFrame implements ActionListener {
       p.setEditable(false);
       p.addHyperlinkListener(new DefaultHyperLinkListener());
       JScrollPane myScrollPane = new JScrollPane(p);
-      p.setCaretPosition(0); // scroll back to the top
+      // scroll back to the top
+      p.setCaretPosition(0);
 
       mainPanel.add(myScrollPane, BorderLayout.CENTER);
 

@@ -15,7 +15,7 @@ import net.sourceforge.pinemup.core.Note;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExportFileManager {
+public final class ExportFileManager {
    private static final String EXPORT_FILE_ENCODING = "UTF-8";
    private static final String FILE_EXTENSION = ".txt";
    private static final String NOTE_SEPARATOR = "---------------------";
