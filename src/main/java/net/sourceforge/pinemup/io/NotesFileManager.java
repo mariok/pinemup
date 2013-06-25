@@ -57,6 +57,8 @@ import org.xml.sax.SAXException;
 public final class NotesFileManager {
    private static final String LATEST_NOTESFILE_VERSION = "0.2";
 
+   private static final String NOTESFILE_ENCODING = "UTF-8";
+
    private static final Logger LOG = LoggerFactory.getLogger(NotesFileManager.class);
 
    private static class Holder {
@@ -76,9 +78,9 @@ public final class NotesFileManager {
       XMLStreamWriter writer = null;
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
-         writer = myFactory.createXMLStreamWriter(out, "UTF-8");
+         writer = myFactory.createXMLStreamWriter(out, NOTESFILE_ENCODING);
 
-         writer.writeStartDocument("UTF-8", "1.0");
+         writer.writeStartDocument(NOTESFILE_ENCODING, "1.0");
          writer.writeStartElement("notesfile");
          writer.writeAttribute("version", LATEST_NOTESFILE_VERSION);
 
@@ -166,7 +168,7 @@ public final class NotesFileManager {
       XMLStreamReader parser = null;
       try {
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         parser = myFactory.createXMLStreamReader(inputStream, "UTF-8");
+         parser = myFactory.createXMLStreamReader(inputStream, NOTESFILE_ENCODING);
 
          Category currentCategory = null;
          Note currentNote = null;
@@ -302,9 +304,7 @@ public final class NotesFileManager {
    public static String checkAndAddExtension(String fileName, String requiredExtension) {
       String checkedFileName = fileName;
 
-      int len = fileName.length();
-      String actualExtension = fileName.substring(len - 4, len);
-
+      String actualExtension = fileName.substring(fileName.length() - requiredExtension.length());
       if (!actualExtension.equalsIgnoreCase(requiredExtension)) {
          checkedFileName = fileName + requiredExtension.toLowerCase();
       }
@@ -346,7 +346,7 @@ public final class NotesFileManager {
       try {
          in = new FileInputStream(filename);
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         parser = myFactory.createXMLStreamReader(in, "UTF-8");
+         parser = myFactory.createXMLStreamReader(in, NOTESFILE_ENCODING);
 
          int event;
          while (parser.hasNext()) {
