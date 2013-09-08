@@ -19,31 +19,28 @@
  *
  */
 
-package net.sourceforge.pinemup.core;
+package net.sourceforge.pinemup;
 
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.I18N;
+import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.ui.PinEmUpUI;
+import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
+import net.sourceforge.pinemup.io.UpdateCheckThread;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
+import net.sourceforge.pinemup.ui.swing.SwingUpdateCheckResultHandler;
+import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class PinEmUp {
-   public static final String VERSION;
    private static final int STARTUP_SLEEP_TIME = 1000;
 
    private static final Logger LOG = LoggerFactory.getLogger(PinEmUp.class);
 
-   static {
-      if (PinEmUp.class.getPackage().getImplementationVersion() != null) {
-         VERSION = PinEmUp.class.getPackage().getImplementationVersion();
-      } else {
-         VERSION = "dev-SNAPSHOT";
-      }
-   }
-
    private PinEmUp() {
-
+      super();
    }
 
    public static void main(String[] args) {
@@ -59,12 +56,20 @@ public final class PinEmUp {
       // set locale
       I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
-      // create Swing UI
-      PinEmUpUI.setUI(new SwingUI());
-      PinEmUpUI.getUI().initialize();
+      // initialize UI
+      SwingUI.initialize();
+      NotesFileSaveTrigger.getInstance().setUserInputRetriever(SwingUI.getUserInputRetriever());
 
-      // make sure the currently saved notesfile is not invalid
-      UserSettings.getInstance().makeSureNotesFileIsValid();
+      // make sure the currently saved notesfile is valid
+      UserSettings.getInstance().setNotesFile(
+            NotesFileManager.getInstance().makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(),
+                  SwingUI.getUserInputRetriever()));
+
+      // add NotesFileSaveTrigger as observer for notes and categories
+      CategoryManager.getInstance().addCategoriesObserver(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().addDefaultNoteObserver(NotesFileSaveTrigger.getInstance());
+
+      CategoryManager.getInstance().addDefaultNoteObserver(NoteWindowManager.getInstance());
 
       // load notes from file
       CategoryManager.getInstance().replaceWithNewCategories(
@@ -72,7 +77,7 @@ public final class PinEmUp {
 
       // update check
       if (UserSettings.getInstance().isUpdateCheckEnabled()) {
-         new UpdateCheckThread(false);
+         new UpdateCheckThread(new SwingUpdateCheckResultHandler(false));
       }
    }
 }

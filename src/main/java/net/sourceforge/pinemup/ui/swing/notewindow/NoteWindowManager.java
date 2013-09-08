@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.notewindow;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +67,8 @@ public final class NoteWindowManager implements Observer {
          Note n = (Note)o;
          if (!n.isHidden()) {
             n.deleteObserver(this);
-            createNoteWindowForNote(n);
+            NoteWindow noteWindow = createNoteWindowForNote(n);
+            noteWindow.jumpIntoTextArea();
          }
       }
    }

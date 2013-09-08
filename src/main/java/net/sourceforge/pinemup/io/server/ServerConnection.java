@@ -31,10 +31,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
-import javax.net.ssl.SSLHandshakeException;
+import javax.xml.stream.XMLStreamException;
 
 import net.sourceforge.pinemup.core.Category;
-import net.sourceforge.pinemup.core.I18N;
+import net.sourceforge.pinemup.core.ConnectionType;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
 
@@ -42,50 +42,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class ServerConnection {
-   public enum ConnectionType {
-      FTP((short)0, "FTP"),
-      WEBDAV((short)1, "WebDAV"),
-      WEBDAVS((short)2, "WebDAVs");
-
-      private short code;
-      private String name;
-
-      private ConnectionType(short code, String name) {
-         this.code = code;
-         this.name = name;
-      }
-
-      public short getCode() {
-         return code;
-      }
-
-      public String getName() {
-         return name;
-      }
-
-      public static ConnectionType getConnectionTypeByCode(short code) {
-         return ConnectionType.values()[code];
-      }
-
-      @Override
-      public String toString() {
-         return name;
-      }
-   }
-
    private static final Logger LOG = LoggerFactory.getLogger(ServerConnection.class);
 
-   public static ServerConnection createServerConnection(ConnectionType serverType) {
+   protected String serverPassword;
+
+   public static ServerConnection createServerConnection(ConnectionType serverType, String password) {
       if (serverType == ConnectionType.WEBDAV) {
-         return new WebdavConnection();
+         return new WebdavConnection(password);
       } else if (serverType == ConnectionType.WEBDAVS) {
-         return new WebdavSSLConnection();
+         return new WebdavSSLConnection(password);
       } else {
-         return new FTPConnection();
+         return new FTPConnection(password);
       }
    }
 
-   public List<Category> importCategoriesFromServer() {
+   protected ServerConnection(String serverPassword) {
+      super();
+      this.serverPassword = serverPassword;
+   }
+
+   public List<Category> importCategoriesFromServer() throws IOException {
       List<Category> categoriesFromServer = null;
 
       InputStream is = null;
@@ -99,15 +75,6 @@ public abstract class ServerConnection {
          if (!isConnectionStateOkAfterDownload(urlc)) {
             categoriesFromServer = null;
          }
-      } catch (SSLHandshakeException e) {
-         // certificate error (self-signed?)
-         UserSettings
-               .getInstance()
-               .getUserInputRetriever()
-               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                     I18N.getInstance().getString("error.sslcertificateerror"));
-      } catch (Exception e) {
-         categoriesFromServer = null;
       } finally {
          if (is != null) {
             try {
@@ -121,7 +88,7 @@ public abstract class ServerConnection {
       return categoriesFromServer;
    }
 
-   public boolean exportNotesToServer(List<Category> categories) {
+   public boolean exportNotesToServer(List<Category> categories) throws IOException, XMLStreamException {
       boolean uploaded = true;
 
       OutputStream os = null;
@@ -138,17 +105,6 @@ public abstract class ServerConnection {
          if (!isConnectionStateOkAfterUpload(urlc) || !writtenSuccessfully) {
             uploaded = false;
          }
-      } catch (SSLHandshakeException e) {
-         LOG.error("SSL exception occured. Probably a self-signed certificate?", e);
-
-         UserSettings
-               .getInstance()
-               .getUserInputRetriever()
-               .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                     I18N.getInstance().getString("error.sslcertificateerror"));
-         uploaded = false;
-      } catch (Exception e) {
-         uploaded = false;
       } finally {
          if (os != null) {
             try {
@@ -165,8 +121,7 @@ public abstract class ServerConnection {
    private void setDefaultAuthenticator() {
       Authenticator.setDefault(new Authenticator() {
          protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), UserSettings.getInstance().getServerPasswd()
-                  .toCharArray());
+            return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), serverPassword.toCharArray());
          }
       });
    }

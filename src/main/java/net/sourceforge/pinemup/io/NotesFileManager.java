@@ -48,7 +48,7 @@ import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
-import net.sourceforge.pinemup.core.UserSettings;
+import net.sourceforge.pinemup.ui.UserInputRetriever;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,9 +70,10 @@ public final class NotesFileManager {
    }
 
    private NotesFileManager() {
+      super();
    }
 
-   public boolean writeCategoriesToOutputStream(List<Category> categories, OutputStream out) {
+   public boolean writeCategoriesToOutputStream(List<Category> categories, OutputStream out) throws XMLStreamException {
       boolean writtenSuccessfully = true;
 
       XMLStreamWriter writer = null;
@@ -121,14 +122,6 @@ public final class NotesFileManager {
          }
          writer.writeEndElement();
          writer.writeEndDocument();
-      } catch (XMLStreamException e) {
-         LOG.error("XMLStreamException occured during attempt to write notesfile to disk.", e);
-
-         writtenSuccessfully = false;
-         UserSettings
-               .getInstance()
-               .getUserInputRetriever()
-               .showErrorMessageToUser(I18N.getInstance().getString("error.title"), I18N.getInstance().getString("error.notesfilenotsaved"));
       } finally {
          if (writer != null) {
             try {
@@ -142,21 +135,13 @@ public final class NotesFileManager {
       return writtenSuccessfully;
    }
 
-   public boolean writeCategoriesToFile(List<Category> categories, String filePath) {
+   public boolean writeCategoriesToFile(List<Category> categories, String filePath) throws IOException, XMLStreamException {
       boolean writtenSuccessfully = true;
 
       LOG.info("writing notes to file...");
 
       try (FileOutputStream f = new FileOutputStream(filePath);) {
          writtenSuccessfully = writeCategoriesToOutputStream(categories, f);
-      } catch (FileNotFoundException e) {
-         writtenSuccessfully = false;
-         UserSettings
-               .getInstance()
-               .getUserInputRetriever()
-               .showErrorMessageToUser(I18N.getInstance().getString("error.title"), I18N.getInstance().getString("error.notesfilenotsaved"));
-      } catch (IOException e) {
-         LOG.error("Error during attempt to write notes to stream.", e);
       }
 
       return writtenSuccessfully;
@@ -397,5 +382,23 @@ public final class NotesFileManager {
             note.addObserver(NotesFileSaveTrigger.getInstance());
          }
       }
+   }
+
+   public String makeSureNotesFileIsValid(String notesFilePath, UserInputRetriever userInputRetriever) {
+      String validFilePath = notesFilePath;
+      File nfile = new File(validFilePath);
+      while (nfile.exists() && !NotesFileManager.getInstance().fileIsValid(validFilePath)) {
+         if (!userInputRetriever.retrieveUserConfirmation(I18N.getInstance().getString("error.title"),
+               I18N.getInstance().getString("error.notesfilenotvalid"))) {
+            System.exit(0);
+         }
+
+         File selectedFile = userInputRetriever.retieveFileChoiceFromUser();
+         if (selectedFile != null) {
+            validFilePath = NotesFileManager.checkAndAddExtension(selectedFile.getAbsolutePath(), ".xml");
+            nfile = new File(validFilePath);
+         }
+      }
+      return validFilePath;
    }
 }

@@ -28,9 +28,13 @@ import java.net.URLConnection;
 import net.sourceforge.pinemup.core.UserSettings;
 
 class FTPConnection extends ServerConnection {
+   protected FTPConnection(String serverPassword) {
+      super(serverPassword);
+   }
+
    @Override
    protected String getUrlString(String fileName) {
-      return "ftp://" + UserSettings.getInstance().getServerUser() + ":" + UserSettings.getInstance().getServerPasswd() + "@"
+      return "ftp://" + UserSettings.getInstance().getServerUser() + ":" + serverPassword + "@"
             + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + fileName + ";type=i";
    }
 

@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import net.sourceforge.pinemup.core.I18N;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public class UpdateDialog extends JFrame implements ActionListener {
    private static final long serialVersionUID = 1L;

@@ -21,14 +21,10 @@
 
 package net.sourceforge.pinemup.core;
 
-import java.io.File;
 import java.util.Locale;
 import java.util.prefs.Preferences;
 
 import net.sourceforge.pinemup.core.I18N.SupportedLocale;
-import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.io.server.ServerConnection.ConnectionType;
-import net.sourceforge.pinemup.ui.UserInputRetriever;
 
 public final class UserSettings {
    private static final String PREFIX = "peu_dev_";
@@ -36,7 +32,6 @@ public final class UserSettings {
    private static final int MIN_NOTEWINDOW_HEIGHT = 30;
 
    private Preferences prefs;
-   private UserInputRetriever userInputRetriever;
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;
@@ -202,15 +197,7 @@ public final class UserSettings {
    }
 
    public String getServerPasswd() {
-      String tempString = "";
-      if (storeServerPass) {
-         tempString = serverPasswd;
-      } else {
-         if (userInputRetriever != null) {
-            tempString = userInputRetriever.retrievePasswordFromUser();
-         }
-      }
-      return tempString;
+      return serverPasswd;
    }
 
    public void setServerPasswdFromCharArray(char[] passwdCharArray) {
@@ -273,7 +260,7 @@ public final class UserSettings {
    }
 
    private UserSettings() {
-      prefs = Preferences.userNodeForPackage(PinEmUp.class);
+      prefs = Preferences.userNodeForPackage(UserSettings.class);
 
       String homeDir = System.getProperty("user.home");
       if (homeDir.charAt(homeDir.length() - 1) != '\\' && homeDir.charAt(homeDir.length() - 1) != '/') {
@@ -300,31 +287,5 @@ public final class UserSettings {
       String localeString = prefs.get(PREFIX + "locale", "en_US");
       locale = SupportedLocale.fromLocaleString(localeString).getLocale();
       confirmUpDownload = prefs.getBoolean(PREFIX + "confirmUpDownload", true);
-   }
-
-   public void makeSureNotesFileIsValid() {
-      String validFilePath = notesFile;
-      File nfile = new File(validFilePath);
-      while (nfile.exists() && !NotesFileManager.getInstance().fileIsValid(validFilePath)) {
-         if (!userInputRetriever.retrieveUserConfirmation(I18N.getInstance().getString("error.title"),
-               I18N.getInstance().getString("error.notesfilenotvalid"))) {
-            System.exit(0);
-         }
-
-         File selectedFile = userInputRetriever.retieveFileChoiceFromUser();
-         if (selectedFile != null) {
-            validFilePath = NotesFileManager.checkAndAddExtension(selectedFile.getAbsolutePath(), ".xml");
-            nfile = new File(validFilePath);
-         }
-      }
-      notesFile = validFilePath;
-   }
-
-   public void setUserInputRetriever(UserInputRetriever userInputRetriever) {
-      this.userInputRetriever = userInputRetriever;
-   }
-
-   public UserInputRetriever getUserInputRetriever() {
-      return userInputRetriever;
    }
 }

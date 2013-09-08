@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.dialogs;
 
 import java.awt.Color;
 import java.awt.Component;

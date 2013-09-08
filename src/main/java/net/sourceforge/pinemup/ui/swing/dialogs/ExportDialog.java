@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -41,6 +41,8 @@ import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.io.ExportFileManager;
+import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public class ExportDialog extends JDialog implements ActionListener {
    private static final long serialVersionUID = 1L;

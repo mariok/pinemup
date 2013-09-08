@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -28,6 +28,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,17 +53,22 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.xml.stream.XMLStreamException;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.ConnectionType;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.I18N.SupportedLocale;
-import net.sourceforge.pinemup.core.UpdateCheckThread;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
+import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
 import net.sourceforge.pinemup.io.ResourceLoader;
-import net.sourceforge.pinemup.io.server.ServerConnection.ConnectionType;
-import net.sourceforge.pinemup.ui.PinEmUpUI;
+import net.sourceforge.pinemup.io.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.io.UpdateCheckThread;
+import net.sourceforge.pinemup.ui.UserInputRetriever;
+import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public final class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
    private static final long serialVersionUID = 1L;
@@ -71,8 +77,6 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
    private static final int DIALOG_HEIGHT = 480;
 
    private static final int DEFAULT_TEXTFIELD_SIZE = 20;
-
-   private static SettingsDialog instance;
 
    private boolean settingsChanged;
 
@@ -94,10 +98,64 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
          serverUserLabel, serverPasswdLabel, serverDirLabel;
    private JTabbedPane tpane;
 
-   public static void showInstance() {
-      if (SettingsDialog.instance == null || !SettingsDialog.instance.isVisible()) {
-         instance = new SettingsDialog();
-      }
+   private UserInputRetriever userInputRetriever;
+   private UpdateCheckResultHandler updateCheckResultHandler;
+
+   public SettingsDialog(UserInputRetriever userInputRetriever, UpdateCheckResultHandler updateCheckResultHandler) {
+      super();
+      this.userInputRetriever = userInputRetriever;
+      this.updateCheckResultHandler = updateCheckResultHandler;
+
+      setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
+
+      // PREPARE ALL PANELS
+      // ---------------------
+      JPanel mainPanel = new JPanel(new BorderLayout());
+
+      // tabbed pane and tabs
+      tpane = new JTabbedPane();
+      JPanel generalTab = makeGeneralTab();
+      JPanel lookAndFeelTab = makeLookAndFeelTab();
+      JPanel defaultsTab = makeDefaultsTab();
+      JPanel loadSaveTab = makeLoadSaveTab();
+      tpane.addTab("", null, generalTab, "");
+      tpane.addTab("", null, lookAndFeelTab, "");
+      tpane.addTab("", null, defaultsTab, "");
+      tpane.addTab("", null, loadSaveTab, "");
+      mainPanel.add(tpane, BorderLayout.CENTER);
+
+      // PANEL WITH BUTTONS
+      okButton = new JButton();
+      okButton.addActionListener(this);
+      cancelButton = new JButton();
+      cancelButton.addActionListener(this);
+      applyButton = new JButton();
+      applyButton.addActionListener(this);
+      okButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+      cancelButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+      applyButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+      okButton.setEnabled(true);
+      cancelButton.setEnabled(true);
+      JPanel buttonPanel = new JPanel();
+      buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+      buttonPanel.add(okButton);
+      buttonPanel.add(cancelButton);
+      buttonPanel.add(applyButton);
+      mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+      // Load language-specific labels
+      loadLocaleTexts();
+
+      // Load Settings Into Fields
+      loadSettings();
+      markSettingsChanged(false);
+
+      setContentPane(mainPanel);
+      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+      SwingUtils.centerWindowOnScreen(this);
+
+      setVisible(true);
    }
 
    private JPanel makeGeneralTab() {
@@ -800,60 +858,6 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       return serverPanel;
    }
 
-   private SettingsDialog() {
-      super();
-      setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
-
-      // PREPARE ALL PANELS
-      // ---------------------
-      JPanel mainPanel = new JPanel(new BorderLayout());
-
-      // tabbed pane and tabs
-      tpane = new JTabbedPane();
-      JPanel generalTab = makeGeneralTab();
-      JPanel lookAndFeelTab = makeLookAndFeelTab();
-      JPanel defaultsTab = makeDefaultsTab();
-      JPanel loadSaveTab = makeLoadSaveTab();
-      tpane.addTab("", null, generalTab, "");
-      tpane.addTab("", null, lookAndFeelTab, "");
-      tpane.addTab("", null, defaultsTab, "");
-      tpane.addTab("", null, loadSaveTab, "");
-      mainPanel.add(tpane, BorderLayout.CENTER);
-
-      // PANEL WITH BUTTONS
-      okButton = new JButton();
-      okButton.addActionListener(this);
-      cancelButton = new JButton();
-      cancelButton.addActionListener(this);
-      applyButton = new JButton();
-      applyButton.addActionListener(this);
-      okButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-      cancelButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-      applyButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-      okButton.setEnabled(true);
-      cancelButton.setEnabled(true);
-      JPanel buttonPanel = new JPanel();
-      buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-      buttonPanel.add(okButton);
-      buttonPanel.add(cancelButton);
-      buttonPanel.add(applyButton);
-      mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-      // Load language-specific labels
-      loadLocaleTexts();
-
-      // Load Settings Into Fields
-      loadSettings();
-      markSettingsChanged(false);
-
-      setContentPane(mainPanel);
-      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-      SwingUtils.centerWindowOnScreen(this);
-
-      setVisible(true);
-   }
-
    @Override
    public void actionPerformed(ActionEvent e) {
       Object src = e.getSource();
@@ -878,7 +882,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
             notesFileField.setText(NotesFileManager.checkAndAddExtension(f.getAbsolutePath(), ".xml"));
          }
       } else if (src == updateCheckButton) {
-         new UpdateCheckThread(true);
+         new UpdateCheckThread(updateCheckResultHandler);
       } else if (src == updateCheckBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox
             || src == confirmDeleteBox || src == serverTypeBox || src == languageBox) {
          markSettingsChanged(true);
@@ -923,8 +927,13 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
    private void saveSettings() {
       if (settingsChanged) {
          // save old notesfile
-         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
-               UserSettings.getInstance().getNotesFile());
+         try {
+            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+                  UserSettings.getInstance().getNotesFile());
+         } catch (IOException | XMLStreamException e) {
+            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                  I18N.getInstance().getString("error.notesfilenotsaved"));
+         }
 
          // load settings from fields
          boolean updateCheckEnabled = updateCheckBox.isSelected();
@@ -980,8 +989,10 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
          // set new locale
          I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
-         // make sure the selected notesfile is not invalid
-         UserSettings.getInstance().makeSureNotesFileIsValid();
+         // make sure the selected notesfile is valid
+         UserSettings.getInstance().setNotesFile(
+               NotesFileManager.getInstance().makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(), userInputRetriever));
+
          // in case the notesfile has not been valid and new one has been
          // selected, update the UI field
          notesFileField.setText(UserSettings.getInstance().getNotesFile());
@@ -989,10 +1000,9 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
          // load new notes from file
          List<Category> cl = NotesFileManager.getInstance().readCategoriesFromFile(UserSettings.getInstance().getNotesFile());
 
+         NotesFileSaveTrigger.getInstance().setDisabled(true);
          CategoryManager.getInstance().replaceWithNewCategories(cl);
-
-         PinEmUpUI.getUI().refreshI18NStrings();
-         PinEmUpUI.getUI().refreshCategories();
+         NotesFileSaveTrigger.getInstance().setDisabled(false);
 
          // save settings permanentely
          UserSettings.getInstance().saveSettings();

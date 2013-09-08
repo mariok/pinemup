@@ -6,33 +6,35 @@ import java.awt.SystemTray;
 import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.ui.PinEmUpUI;
-import net.sourceforge.pinemup.ui.swing.menus.TrayMenu;
+import net.sourceforge.pinemup.io.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.ui.UserInputRetriever;
+import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
+import net.sourceforge.pinemup.ui.swing.tray.PinEmUpTrayIcon;
+import net.sourceforge.pinemup.ui.swing.tray.TrayMenu;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SwingUI extends PinEmUpUI {
+public class SwingUI {
    private static final Logger LOG = LoggerFactory.getLogger(SwingUI.class);
 
-   private TrayMenu trayMenu;
+   private SwingUI() {
+      super();
+   }
 
-   @Override
-   public void initialize() {
+   public static void initialize() {
       if (SystemTray.isSupported()) {
          // add trayicon
          SystemTray tray = SystemTray.getSystemTray();
          try {
-            trayMenu = new TrayMenu();
-            tray.add(new PinEmUpTrayIcon(trayMenu));
+            UpdateCheckResultHandler updateCheckResultHandler = new SwingUpdateCheckResultHandler(true);
+            UserInputRetriever userInputRetriever = new SwingUserInputRetreiver();
+            DialogFactory dialogFactory = new DialogFactory();
+
+            tray.add(new PinEmUpTrayIcon(new TrayMenu(dialogFactory, userInputRetriever, updateCheckResultHandler)));
          } catch (AWTException e) {
             LOG.error("Error during initialization of tray icon.", e);
          }
-
-         // define user interface for retrieving user input, such as passwords
-         // or filenames
-         UserSettings.getInstance().setUserInputRetriever(new SwingUserInputRetreiver());
       } else {
          // tray icon not supported
          JOptionPane.showMessageDialog(null, I18N.getInstance().getString("error.trayiconnotsupported"),
@@ -41,13 +43,7 @@ public class SwingUI extends PinEmUpUI {
       }
    }
 
-   @Override
-   public void refreshCategories() {
-      trayMenu.createCategoriesMenu();
-   }
-
-   @Override
-   public void refreshI18NStrings() {
-      trayMenu.init();
+   public static UserInputRetriever getUserInputRetriever() {
+      return new SwingUserInputRetreiver();
    }
 }

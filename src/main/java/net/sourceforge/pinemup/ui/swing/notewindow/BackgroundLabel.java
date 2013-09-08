@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.notewindow;
 
 import java.awt.GradientPaint;
 import java.awt.Graphics;

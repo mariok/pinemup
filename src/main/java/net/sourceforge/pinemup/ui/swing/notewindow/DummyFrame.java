@@ -19,17 +19,26 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.notewindow;
 
-import java.awt.PopupMenu;
-import java.awt.TrayIcon;
+import javax.swing.JFrame;
 
-import net.sourceforge.pinemup.io.ResourceLoader;
+class DummyFrame extends JFrame {
+   private static final long serialVersionUID = -5528849950380262389L;
 
-final class PinEmUpTrayIcon extends TrayIcon {
-   public PinEmUpTrayIcon(PopupMenu popupMenu) {
-      super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", popupMenu);
-      setImageAutoSize(false);
-      addMouseListener(new IconClickLogic());
+   @Override
+   public boolean isShowing() {
+      return true;
+   }
+
+   public DummyFrame() {
+      super("pin 'em up");
+      this.setUndecorated(true);
+      this.setBounds(-1, -1, 1, 1);
+      String osName = System.getProperty("os.name");
+      if (osName == null || !(osName.toLowerCase().indexOf("win") >= 0)) {
+         this.setVisible(true);
+      }
+      setDefaultCloseOperation(DISPOSE_ON_CLOSE);
    }
 }

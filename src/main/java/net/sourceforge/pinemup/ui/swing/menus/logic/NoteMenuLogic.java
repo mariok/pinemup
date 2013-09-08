@@ -1,4 +1,4 @@
-package net.sourceforge.pinemup.ui.swing.menus;
+package net.sourceforge.pinemup.ui.swing.menus.logic;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +12,7 @@ import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 
-class NoteMenuLogic implements ActionListener {
+public class NoteMenuLogic implements ActionListener {
    public static final String ACTION_DELETE_NOTE = "DELETE_NOTE";
    public static final String ACTION_TOGGLE_ALWAYS_ON_TOP = "TOGGLE_ALWAYS_ON_TOP";
    public static final String ACTION_MOVE_NOTE_TO_CATEGORY = "MOVE_NOTE_TO_CATEGORY";
@@ -21,7 +21,7 @@ class NoteMenuLogic implements ActionListener {
 
    private Note note;
 
-   NoteMenuLogic(Note note) {
+   public NoteMenuLogic(Note note) {
       this.note = note;
    }
 

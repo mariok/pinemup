@@ -1,8 +1,8 @@
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.utils;
 
 import java.awt.Window;
 
-final class SwingUtils {
+public final class SwingUtils {
    private SwingUtils() {
    }
 

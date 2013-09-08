@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.core;
+package net.sourceforge.pinemup.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,22 +28,24 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
-import net.sourceforge.pinemup.ui.swing.UpdateDialog;
+import net.sourceforge.pinemup.core.CommonConfiguration;
+import net.sourceforge.pinemup.core.I18N;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UpdateCheckThread extends Thread {
-   private static final String UPDATE_URL = "http://pinemup.sourceforge.net/version.php?version=" + PinEmUp.VERSION;
+   private static final String UPDATE_URL = "http://pinemup.sourceforge.net/version.php?version="
+         + CommonConfiguration.getApplicationVersion();
    private static final String UPDATE_DOCUMENT_ENCODING = "UTF-8";
 
    private static final Logger LOG = LoggerFactory.getLogger(UpdateCheckThread.class);
 
-   private boolean showUpToDateMessage;
+   private UpdateCheckResultHandler updateCheckResultHandler;
 
-   public UpdateCheckThread(boolean showUpToDateMessage) {
+   public UpdateCheckThread(UpdateCheckResultHandler updateCheckResultHandler) {
       super("Update-Check Thread");
-      this.showUpToDateMessage = showUpToDateMessage;
+      this.updateCheckResultHandler = updateCheckResultHandler;
       this.start();
    }
 
@@ -55,11 +57,12 @@ public class UpdateCheckThread extends Thread {
                .newDecoder()));
 
          String versionString = br.readLine();
-         if (versionString != null && !versionString.equals(PinEmUp.VERSION)) {
+         if (versionString != null && !versionString.equals(CommonConfiguration.getApplicationVersion())) {
             StringBuilder changelogString = new StringBuilder();
             changelogString.append("<html>");
             changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part1") + "</p>");
-            changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part2", PinEmUp.VERSION) + "<br />");
+            changelogString.append("<p>"
+                  + I18N.getInstance().getString("info.updateavailable.part2", CommonConfiguration.getApplicationVersion()) + "<br />");
             changelogString.append(I18N.getInstance().getString("info.updateavailable.part3", versionString) + "</p>");
             changelogString.append("<p>"
                   + I18N.getInstance().getString("info.updateavailable.part4",
@@ -87,10 +90,9 @@ public class UpdateCheckThread extends Thread {
             } while (nextLine != null);
             changelogString.append("</p></html>");
 
-            new UpdateDialog(changelogString.toString());
-         } else if (showUpToDateMessage) {
-            UserSettings.getInstance().getUserInputRetriever()
-                  .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.versionuptodate"));
+            updateCheckResultHandler.handleUpdateFound(changelogString.toString());
+         } else {
+            updateCheckResultHandler.handleNoUpdateFound();
          }
          br.close();
       } catch (IOException e) {

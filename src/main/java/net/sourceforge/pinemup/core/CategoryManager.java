@@ -24,13 +24,12 @@ package net.sourceforge.pinemup.core;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-
-import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
-import net.sourceforge.pinemup.ui.PinEmUpUI;
-import net.sourceforge.pinemup.ui.swing.NoteWindowManager;
+import java.util.Observer;
 
 public final class CategoryManager extends Observable {
    private List<Category> categories;
+
+   private List<Observer> defaultNoteObservers;
 
    private static class Holder {
       private static final CategoryManager INSTANCE = new CategoryManager();
@@ -41,8 +40,8 @@ public final class CategoryManager extends Observable {
    }
 
    private CategoryManager() {
-      categories = new LinkedList<Category>();
-      addObserver(NotesFileSaveTrigger.getInstance());
+      categories = new LinkedList<>();
+      defaultNoteObservers = new LinkedList<>();
    }
 
    public void addCategory(Category c) {
@@ -159,32 +158,26 @@ public final class CategoryManager extends Observable {
    }
 
    public void replaceWithNewCategories(List<Category> newCategories) {
-      NotesFileSaveTrigger.getInstance().setDisabled(true);
-
-      // hide all old notes
       hideAllNotes();
 
-      // link and save new notes
       categories.clear();
       categories.addAll(newCategories);
 
-      addNoteWindowManagerForAllNotes();
-      notifyAllNotes();
+      registerDefaultNoteObserversForAllNotes();
 
-      PinEmUpUI.getUI().refreshCategories();
-
-      NotesFileSaveTrigger.getInstance().setDisabled(false);
+      notifyObservers();
+      notifyObserversForAllNotes();
    }
 
-   private void addNoteWindowManagerForAllNotes() {
+   private void registerDefaultNoteObserversForAllNotes() {
       for (Category cat : categories) {
          for (Note n : cat.getNotes()) {
-            n.addObserver(NoteWindowManager.getInstance());
+            registerDefaultNoteObservers(n);
          }
       }
    }
 
-   private void notifyAllNotes() {
+   private void notifyObserversForAllNotes() {
       for (Category cat : categories) {
          for (Note n : cat.getNotes()) {
             n.markForObservers();
@@ -212,7 +205,21 @@ public final class CategoryManager extends Observable {
       Note newNote = new Note();
       defCat.addNote(newNote);
       newNote.setColor(defCat.getDefaultNoteColor());
-      newNote.addObserver(NotesFileSaveTrigger.getInstance());
+      registerDefaultNoteObservers(newNote);
       return newNote;
+   }
+
+   private void registerDefaultNoteObservers(Note note) {
+      for (Observer noteObserver : defaultNoteObservers) {
+         note.addObserver(noteObserver);
+      }
+   }
+
+   public void addCategoriesObserver(Observer categoriesObserver) {
+      addObserver(categoriesObserver);
+   }
+
+   public void addDefaultNoteObserver(Observer noteObserver) {
+      defaultNoteObservers.add(noteObserver);
    }
 }

@@ -19,7 +19,10 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing.menus;
+package net.sourceforge.pinemup.ui.swing.notewindow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -32,6 +35,11 @@ import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
+import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic;
+import net.sourceforge.pinemup.ui.swing.menus.logic.NoteMenuLogic;
+import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic.CategoryAction;
+import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic;
+import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic.GeneralAction;
 
 public class RightClickMenu extends JPopupMenu {
    private static final long serialVersionUID = -3437718385990990890L;
@@ -39,12 +47,10 @@ public class RightClickMenu extends JPopupMenu {
    public RightClickMenu(Note parentNote) {
       super();
 
-      MenuCreator myMenuCreator = new MenuCreator();
-
       NoteMenuLogic noteMenuLogic = new NoteMenuLogic(parentNote);
 
       // add basic items
-      for (JMenuItem item : myMenuCreator.getBasicJMenuItems()) {
+      for (JMenuItem item : getBasicMenuItems()) {
          add(item);
       }
       addSeparator();
@@ -101,6 +107,35 @@ public class RightClickMenu extends JPopupMenu {
 
       // category menu
       Category currentCat = parentNote.getCategory();
-      add(myMenuCreator.getCategoryActionsJMenu(I18N.getInstance().getString("category") + " '" + currentCat.getName() + "'", currentCat));
+      add(getCategoryActionsMenu(I18N.getInstance().getString("category") + " '" + currentCat.getName() + "'", currentCat));
+   }
+
+   private JMenu getCategoryActionsMenu(String title, Category c) {
+      JMenu menu = new JMenu(title);
+      CategoryMenuLogic catMenuLogic = new CategoryMenuLogic(c);
+      int i = 0;
+      for (CategoryAction action : CategoryMenuLogic.CategoryAction.values()) {
+         JMenuItem menuItem = new JMenuItem(I18N.getInstance().getString(action.getI18nKey()));
+         menuItem.setActionCommand(action.toString());
+         menuItem.addActionListener(catMenuLogic);
+         menu.add(menuItem);
+         if (i == 2) {
+            menu.addSeparator();
+         }
+         i++;
+      }
+      return menu;
+   }
+
+   private List<JMenuItem> getBasicMenuItems() {
+      GeneralMenuLogic basicMenuLogic = new GeneralMenuLogic();
+      List<JMenuItem> menuItems = new ArrayList<>();
+      for (GeneralAction action : GeneralAction.values()) {
+         JMenuItem menuItem = new JMenuItem(I18N.getInstance().getString(action.getI18nKey()));
+         menuItem.setActionCommand(action.toString());
+         menuItem.addActionListener(basicMenuLogic);
+         menuItems.add(menuItem);
+      }
+      return menuItems;
    }
 }

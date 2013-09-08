@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.notewindow;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -59,7 +59,6 @@ import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.ResourceLoader;
-import net.sourceforge.pinemup.ui.swing.menus.RightClickMenu;
 
 public class NoteWindow extends JWindow implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
       MouseWheelListener, KeyListener, Observer {

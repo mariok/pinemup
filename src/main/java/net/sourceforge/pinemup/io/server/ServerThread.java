@@ -21,64 +21,108 @@
 
 package net.sourceforge.pinemup.io.server;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.net.ssl.SSLHandshakeException;
+import javax.xml.stream.XMLStreamException;
 
 import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.NotesFileManager;
+import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
+import net.sourceforge.pinemup.ui.UserInputRetriever;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServerThread extends Thread {
+   private static final Logger LOG = LoggerFactory.getLogger(ServerThread.class);
+
    public static final boolean UPLOAD = true;
    public static final boolean DOWNLOAD = false;
 
    private boolean upload;
+   private UserInputRetriever userInputRetriever;
 
-   public ServerThread(boolean upload) {
+   public ServerThread(boolean upload, UserInputRetriever userInputRetriever) {
       super("Server Up-/Download Thread");
       this.upload = upload;
+      this.userInputRetriever = userInputRetriever;
       this.start();
    }
 
    public void run() {
       if (upload == ServerThread.UPLOAD) {
-         boolean uploadSuccessful = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType())
-               .exportNotesToServer(CategoryManager.getInstance().getCategories());
+
+         boolean uploadSuccessful;
+         try {
+            uploadSuccessful = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType(), getServerPassword())
+                  .exportNotesToServer(CategoryManager.getInstance().getCategories());
+         } catch (SSLHandshakeException e) {
+            LOG.error("SSL exception occured. Probably a self-signed certificate?", e);
+
+            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                  I18N.getInstance().getString("error.sslcertificateerror"));
+            uploadSuccessful = false;
+         } catch (IOException | XMLStreamException e) {
+            uploadSuccessful = false;
+         }
 
          if (uploadSuccessful) {
-            UserSettings
-                  .getInstance()
-                  .getUserInputRetriever()
-                  .showInfoMessageToUser(I18N.getInstance().getString("info.title"), I18N.getInstance().getString("info.notesfileuploaded"));
+            userInputRetriever.showInfoMessageToUser(I18N.getInstance().getString("info.title"),
+                  I18N.getInstance().getString("info.notesfileuploaded"));
          } else {
-            UserSettings
-                  .getInstance()
-                  .getUserInputRetriever()
-                  .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                        I18N.getInstance().getString("error.notesfilenotuploaded"));
+            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                  I18N.getInstance().getString("error.notesfilenotuploaded"));
          }
       } else {
-         List<Category> categoriesFromServer = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType())
-               .importCategoriesFromServer();
+         List<Category> categoriesFromServer;
+
+         try {
+            categoriesFromServer = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType(), getServerPassword())
+                  .importCategoriesFromServer();
+         } catch (SSLHandshakeException e) {
+            // certificate error (self-signed?)
+            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                  I18N.getInstance().getString("error.sslcertificateerror"));
+            categoriesFromServer = null;
+         } catch (IOException e) {
+            categoriesFromServer = null;
+         }
 
          if (categoriesFromServer != null) {
+            NotesFileSaveTrigger.getInstance().setDisabled(true);
             CategoryManager.getInstance().replaceWithNewCategories(categoriesFromServer);
-            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
-                  UserSettings.getInstance().getNotesFile());
-            UserSettings
-                  .getInstance()
-                  .getUserInputRetriever()
-                  .showInfoMessageToUser(I18N.getInstance().getString("info.title"),
-                        I18N.getInstance().getString("info.notesfiledownloaded"));
+            NotesFileSaveTrigger.getInstance().setDisabled(false);
+            try {
+               NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+                     UserSettings.getInstance().getNotesFile());
+            } catch (IOException | XMLStreamException e) {
+               userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.notesfilenotsaved"));
+            }
+            userInputRetriever.showInfoMessageToUser(I18N.getInstance().getString("info.title"),
+                  I18N.getInstance().getString("info.notesfiledownloaded"));
          } else {
-            UserSettings
-                  .getInstance()
-                  .getUserInputRetriever()
-                  .showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                        I18N.getInstance().getString("error.notesfilenotdownloaded"));
+            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
+                  I18N.getInstance().getString("error.notesfilenotdownloaded"));
          }
       }
+   }
+
+   private String getServerPassword() {
+      String password = "";
+      if (UserSettings.getInstance().getStoreServerPass()) {
+         password = UserSettings.getInstance().getServerPasswd();
+      } else {
+         if (userInputRetriever != null) {
+            password = userInputRetriever.retrievePasswordFromUser();
+         }
+      }
+      return password;
    }
 
 }

@@ -1,4 +1,4 @@
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.dialogs;
 
 import java.awt.Desktop;
 import java.io.IOException;

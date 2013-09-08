@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -54,7 +54,7 @@ import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
-import net.sourceforge.pinemup.ui.PinEmUpUI;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public final class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {
    private static final long serialVersionUID = 1L;
@@ -318,7 +318,6 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
             catTableModel.setValueAt("!", 0, 0);
             defCat = 0;
          }
-         PinEmUpUI.getUI().refreshCategories();
          noOfCategories--;
          selectedCat = null;
 
@@ -352,7 +351,6 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          catTableModel.moveRow(selectedRow, selectedRow, selectedRow + 1);
          catTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
       }
-      PinEmUpUI.getUI().refreshCategories();
    }
 
    private void makeSelectedCategoryDefault() {
@@ -373,7 +371,6 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       Category newCat = new Category(catName, false, NoteColor.DEFAULT_COLOR);
       CategoryManager.getInstance().addCategory(newCat);
       newCat.addObserver(NotesFileSaveTrigger.getInstance());
-      PinEmUpUI.getUI().refreshCategories();
       Object[] rowData = {"", catName, "0"};
       catTableModel.addRow(rowData);
       noOfCategories++;
@@ -404,7 +401,6 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
          String name = catNameField.getText();
          catTable.getModel().setValueAt(name, selectedRow, 1);
          selectedCat.setName(name);
-         PinEmUpUI.getUI().refreshCategories();
       }
    }
 

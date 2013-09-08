@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.tray;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -31,6 +31,8 @@ import javax.swing.Timer;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
+import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindow;
+import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 
 class IconClickLogic extends MouseAdapter implements ActionListener {
    private Timer timer;

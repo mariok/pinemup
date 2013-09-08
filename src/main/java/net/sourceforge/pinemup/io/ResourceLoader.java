@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.sourceforge.pinemup.core.PinEmUp;
+import net.sourceforge.pinemup.core.CommonConfiguration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +148,7 @@ public final class ResourceLoader {
 
    public String getAboutPage() {
       Map<String, String> parameters = new HashMap<String, String>();
-      parameters.put("VERSION", PinEmUp.VERSION);
+      parameters.put("VERSION", CommonConfiguration.getApplicationVersion());
       parameters.put("CURRENTYEAR", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
       return getFileAsString("about.html", parameters);
    }

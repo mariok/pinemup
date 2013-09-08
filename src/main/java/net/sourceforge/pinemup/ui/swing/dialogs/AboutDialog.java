@@ -19,7 +19,7 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing;
+package net.sourceforge.pinemup.ui.swing.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -37,6 +37,7 @@ import javax.swing.JTabbedPane;
 
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.io.ResourceLoader;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public class AboutDialog extends JFrame implements ActionListener {
    private static final long serialVersionUID = -6786897911342420374L;

@@ -31,6 +31,10 @@ import net.sourceforge.pinemup.core.UserSettings;
 class WebdavConnection extends ServerConnection {
    private static final String PROTOCOL_HTTP = "http";
 
+   protected WebdavConnection(String serverPassword) {
+      super(serverPassword);
+   }
+
    @Override
    protected String getUrlString(String fileName) {
       return getProtocol() + "://" + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + fileName;
