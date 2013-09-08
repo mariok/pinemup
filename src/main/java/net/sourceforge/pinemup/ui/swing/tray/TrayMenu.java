@@ -125,13 +125,12 @@ public class TrayMenu extends PopupMenu {
    private List<Menu> getCategoryMenus() {
       List<Menu> categoryMenus = new ArrayList<Menu>();
       for (Category cat : CategoryManager.getInstance().getCategories()) {
-         Menu catMenu = getCategoryActionsMenu(cat.getName(), cat);
-         categoryMenus.add(catMenu);
+         categoryMenus.add(createCategoryActionsMenu(cat.getName(), cat));
       }
       return categoryMenus;
    }
 
-   private Menu getCategoryActionsMenu(String title, Category c) {
+   private Menu createCategoryActionsMenu(String title, Category c) {
       Menu menu = new Menu(title);
       CategoryMenuLogic catMenuLogic = new CategoryMenuLogic(c);
       int i = 0;
@@ -152,7 +151,7 @@ public class TrayMenu extends PopupMenu {
       GeneralMenuLogic basicMenuLogic = new GeneralMenuLogic();
       List<MenuItem> menuItems = new ArrayList<>();
       for (GeneralAction action : GeneralAction.values()) {
-         MenuItem menuItem = new MenuItem(action.getI18nKey());
+         MenuItem menuItem = new MenuItem(I18N.getInstance().getString(action.getI18nKey()));
          menuItem.setActionCommand(action.toString());
          menuItem.addActionListener(basicMenuLogic);
          menuItems.add(menuItem);

@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public abstract class ServerConnection {
    private static final Logger LOG = LoggerFactory.getLogger(ServerConnection.class);
 
-   protected String serverPassword;
+   private String serverPassword;
 
    public static ServerConnection createServerConnection(ConnectionType serverType, String password) {
       if (serverType == ConnectionType.WEBDAV) {
@@ -124,6 +124,10 @@ public abstract class ServerConnection {
             return new PasswordAuthentication(UserSettings.getInstance().getServerUser(), serverPassword.toCharArray());
          }
       });
+   }
+
+   protected String getServerPassword() {
+      return serverPassword;
    }
 
    protected boolean isConnectionStateOkAfterDownload(URLConnection urlConnection) throws IOException {

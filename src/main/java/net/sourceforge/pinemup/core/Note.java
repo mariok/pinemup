@@ -154,11 +154,6 @@ public class Note extends Observable {
       return color;
    }
 
-   public void refreshCategoryInfo() {
-      setChanged();
-      notifyObservers();
-   }
-
    public void markForObservers() {
       setChanged();
    }

@@ -45,7 +45,8 @@ public class Category extends Observable {
    public void setName(String name) {
       if (!name.equals(this.name)) {
          this.name = name;
-         notifyNotes();
+         setChanged();
+         notifyObservers();
       }
    }
 
@@ -114,12 +115,6 @@ public class Category extends Observable {
    public void unhideAllNotes() {
       for (Note note : notes) {
          note.setHidden(false);
-      }
-   }
-
-   private void notifyNotes() {
-      for (Note note : notes) {
-         note.refreshCategoryInfo();
       }
    }
 }

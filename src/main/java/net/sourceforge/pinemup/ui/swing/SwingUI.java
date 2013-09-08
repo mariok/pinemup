@@ -5,12 +5,14 @@ import java.awt.SystemTray;
 
 import javax.swing.JOptionPane;
 
+import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.io.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.ui.UserInputRetriever;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
 import net.sourceforge.pinemup.ui.swing.tray.PinEmUpTrayIcon;
 import net.sourceforge.pinemup.ui.swing.tray.TrayMenu;
+import net.sourceforge.pinemup.ui.swing.tray.TrayMenuUpdater;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,10 @@ public class SwingUI {
             UserInputRetriever userInputRetriever = new SwingUserInputRetreiver();
             DialogFactory dialogFactory = new DialogFactory();
 
-            tray.add(new PinEmUpTrayIcon(new TrayMenu(dialogFactory, userInputRetriever, updateCheckResultHandler)));
+            TrayMenu trayMenu = new TrayMenu(dialogFactory, userInputRetriever, updateCheckResultHandler);
+            tray.add(new PinEmUpTrayIcon(trayMenu));
+
+            CategoryManager.getInstance().registerDefaultCategoryObserver(new TrayMenuUpdater(trayMenu));
          } catch (AWTException e) {
             LOG.error("Error during initialization of tray icon.", e);
          }

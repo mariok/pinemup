@@ -138,7 +138,7 @@ public final class NotesFileManager {
    public boolean writeCategoriesToFile(List<Category> categories, String filePath) throws IOException, XMLStreamException {
       boolean writtenSuccessfully = true;
 
-      LOG.info("writing notes to file...");
+      LOG.debug("writing notes to file...");
 
       try (FileOutputStream f = new FileOutputStream(filePath);) {
          writtenSuccessfully = writeCategoriesToOutputStream(categories, f);

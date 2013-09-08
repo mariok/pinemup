@@ -136,6 +136,8 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
             catButton.addMouseListener(this);
             catButton.addMouseMotionListener(this);
             topPanel.add(catPanel, BorderLayout.CENTER);
+
+            cat.addObserver(this);
          }
       }
 
@@ -260,6 +262,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    public void windowClosed(WindowEvent arg0) {
       parentNote.deleteObserver(this);
       parentNote.addObserver(NoteWindowManager.getInstance());
+      parentNote.getCategory().deleteObserver(this);
       NoteWindowManager.getInstance().removeNoteWindow(this);
       getOwner().setVisible(false);
    }

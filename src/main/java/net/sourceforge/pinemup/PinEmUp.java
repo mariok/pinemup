@@ -66,10 +66,10 @@ public final class PinEmUp {
                   SwingUI.getUserInputRetriever()));
 
       // add NotesFileSaveTrigger as observer for notes and categories
-      CategoryManager.getInstance().addCategoriesObserver(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().addDefaultNoteObserver(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().registerDefaultCategoryObserver(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().registerDefaultNoteObserver(NotesFileSaveTrigger.getInstance());
 
-      CategoryManager.getInstance().addDefaultNoteObserver(NoteWindowManager.getInstance());
+      CategoryManager.getInstance().registerDefaultNoteObserver(NoteWindowManager.getInstance());
 
       // load notes from file
       CategoryManager.getInstance().replaceWithNewCategories(

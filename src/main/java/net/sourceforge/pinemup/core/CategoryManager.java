@@ -30,6 +30,7 @@ public final class CategoryManager extends Observable {
    private List<Category> categories;
 
    private List<Observer> defaultNoteObservers;
+   private List<Observer> defaultCategoryObservers;
 
    private static class Holder {
       private static final CategoryManager INSTANCE = new CategoryManager();
@@ -42,6 +43,7 @@ public final class CategoryManager extends Observable {
    private CategoryManager() {
       categories = new LinkedList<>();
       defaultNoteObservers = new LinkedList<>();
+      defaultCategoryObservers = new LinkedList<>();
    }
 
    public void addCategory(Category c) {
@@ -163,16 +165,24 @@ public final class CategoryManager extends Observable {
       categories.clear();
       categories.addAll(newCategories);
 
-      registerDefaultNoteObserversForAllNotes();
+      addDefaultCategoryObserversForAllCategories();
+      addDefaultNoteObserversForAllNotes();
 
+      setChanged();
       notifyObservers();
       notifyObserversForAllNotes();
    }
 
-   private void registerDefaultNoteObserversForAllNotes() {
+   private void addDefaultCategoryObserversForAllCategories() {
+      for (Category category : categories) {
+         addDefaultCategoryObservers(category);
+      }
+   }
+
+   private void addDefaultNoteObserversForAllNotes() {
       for (Category cat : categories) {
          for (Note n : cat.getNotes()) {
-            registerDefaultNoteObservers(n);
+            addDefaultNoteObservers(n);
          }
       }
    }
@@ -205,21 +215,32 @@ public final class CategoryManager extends Observable {
       Note newNote = new Note();
       defCat.addNote(newNote);
       newNote.setColor(defCat.getDefaultNoteColor());
-      registerDefaultNoteObservers(newNote);
+      addDefaultNoteObservers(newNote);
       return newNote;
    }
 
-   private void registerDefaultNoteObservers(Note note) {
+   private void addDefaultNoteObservers(Note note) {
       for (Observer noteObserver : defaultNoteObservers) {
          note.addObserver(noteObserver);
       }
    }
 
-   public void addCategoriesObserver(Observer categoriesObserver) {
-      addObserver(categoriesObserver);
+   private void addDefaultCategoryObservers(Category category) {
+      for (Observer categoryObserver : defaultCategoryObservers) {
+         category.addObserver(categoryObserver);
+      }
    }
 
-   public void addDefaultNoteObserver(Observer noteObserver) {
+   public void registerDefaultCategoryObserver(Observer categoriesObserver) {
+      defaultCategoryObservers.add(categoriesObserver);
+
+      addObserver(categoriesObserver);
+      for (Category category : categories) {
+         category.addObserver(categoriesObserver);
+      }
+   }
+
+   public void registerDefaultNoteObserver(Observer noteObserver) {
       defaultNoteObservers.add(noteObserver);
    }
 }

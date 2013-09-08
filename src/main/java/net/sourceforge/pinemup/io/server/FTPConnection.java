@@ -34,7 +34,7 @@ class FTPConnection extends ServerConnection {
 
    @Override
    protected String getUrlString(String fileName) {
-      return "ftp://" + UserSettings.getInstance().getServerUser() + ":" + serverPassword + "@"
+      return "ftp://" + UserSettings.getInstance().getServerUser() + ":" + getServerPassword() + "@"
             + UserSettings.getInstance().getServerAddress() + UserSettings.getInstance().getServerDir() + fileName + ";type=i";
    }
 
