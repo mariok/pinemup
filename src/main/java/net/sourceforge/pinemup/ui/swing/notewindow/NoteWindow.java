@@ -192,7 +192,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       int width = parentNote.getXSize();
       int height = parentNote.getYSize();
       bgLabel = new BackgroundLabel(parentNote.getColor(), width, height);
-      getLayeredPane().add(bgLabel, Integer.MIN_VALUE);
+      getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
 
       setSize(width, height);
       setLocation(parentNote.getXPos(), parentNote.getYPos());
@@ -543,13 +543,13 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    @Override
    public void update(Observable o, Object arg) {
-      LOG.debug("Received update event from {}.", o);
-      if (o instanceof Note) {
-         setBGColor(parentNote.getColor());
-         updateFontSize();
-         updateVisibility();
-      } else if (o instanceof Category) {
-         updateCategory();
-      }
+      // LOG.debug("Received update event from {}.", o);
+      // if (o instanceof Note) {
+      // setBGColor(parentNote.getColor());
+      // updateFontSize();
+      // updateVisibility();
+      // } else if (o instanceof Category) {
+      // updateCategory();
+      // }
    }
 }
