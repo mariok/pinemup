@@ -33,7 +33,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>net.sourceforge.pinemup.core.PinEmUp</mainClass>
+							<mainClass>net.sourceforge.pinemup.PinEmUp</mainClass>
 							<addDefaultImplementationEntries>
 								true
 							</addDefaultImplementationEntries>
