@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
@@ -34,10 +33,9 @@ public class NoteMenuLogic implements ActionListener {
             confirmed = JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.deletenote"), I18N.getInstance()
                   .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
-         Category currentCat = note.getCategory();
-         if (confirmed && currentCat != null) {
+         if (confirmed) {
             note.setHidden(true);
-            currentCat.removeNote(note);
+            CategoryManager.getInstance().removeNote(note);
          }
       } else if (ACTION_TOGGLE_ALWAYS_ON_TOP.equals(action)) {
          note.setAlwaysOnTop(!note.isAlwaysOnTop());

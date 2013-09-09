@@ -36,8 +36,6 @@ public class Note extends Observable {
 
    private NoteColor color;
 
-   private Category category;
-
    public void setAlwaysOnTop(boolean alwaysOnTop) {
       if (alwaysOnTop != this.alwaysOnTop) {
          this.alwaysOnTop = alwaysOnTop;
@@ -130,18 +128,6 @@ public class Note extends Observable {
 
    public short getYSize() {
       return ysize;
-   }
-
-   public Category getCategory() {
-      return category;
-   }
-
-   public void setCategory(Category category) {
-      if (category != this.category) {
-         this.category = category;
-         setChanged();
-         notifyObservers();
-      }
    }
 
    public void setColor(NoteColor color) {

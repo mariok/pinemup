@@ -58,6 +58,10 @@ public final class CategoryManager extends Observable {
       notifyObservers();
    }
 
+   public void removeNote(Note note) {
+      findCategoryForNote(note).removeNote(note);
+   }
+
    public void hideAllNotes() {
       for (Category cat : categories) {
          cat.hideAllNotes();
@@ -200,14 +204,26 @@ public final class CategoryManager extends Observable {
       Category newCat = getCategoryByNumber(catNumber);
       if (newCat != null) {
          // remove from old category
-         if (note.getCategory() != null) {
-            note.getCategory().removeNote(note);
+         Category oldCat = findCategoryForNote(note);
+         if (oldCat != null) {
+            oldCat.removeNote(note);
          }
          // add to new category
          newCat.addNote(note);
          // set note color to default color of the new category
          note.setColor(newCat.getDefaultNoteColor());
       }
+   }
+
+   public Category findCategoryForNote(Note note) {
+      Category categoryForNote = null;
+      for (Category category : categories) {
+         if (category.containsNote(note)) {
+            categoryForNote = category;
+            break;
+         }
+      }
+      return categoryForNote;
    }
 
    public Note createNoteAndAddToDefaultCategory() {

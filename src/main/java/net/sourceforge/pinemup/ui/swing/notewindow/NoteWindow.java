@@ -120,7 +120,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
       // create category-label, if option is enabled
       if (UserSettings.getInstance().getShowCategory()) {
-         Category cat = parentNote.getCategory();
+         Category cat = CategoryManager.getInstance().findCategoryForNote(parentNote);
          if (cat != null) {
             catButton = new JButton(cat.getName());
             catButton.setRolloverEnabled(false);
@@ -262,7 +262,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    public void windowClosed(WindowEvent arg0) {
       parentNote.deleteObserver(this);
       parentNote.addObserver(NoteWindowManager.getInstance());
-      parentNote.getCategory().deleteObserver(this);
+      CategoryManager.getInstance().findCategoryForNote(parentNote).deleteObserver(this);
       NoteWindowManager.getInstance().removeNoteWindow(this);
       getOwner().setVisible(false);
    }
@@ -440,7 +440,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    }
 
    private void updateCategory() {
-      Category cat = parentNote.getCategory();
+      Category cat = CategoryManager.getInstance().findCategoryForNote(parentNote);
       if (cat != null) {
          topPanel.setToolTipText(I18N.getInstance().getString("category") + ": " + cat.getName());
          if (catButton != null) {

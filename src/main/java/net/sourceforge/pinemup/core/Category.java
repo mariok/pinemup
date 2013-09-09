@@ -99,14 +99,12 @@ public class Category extends Observable {
    }
 
    public void addNote(Note n) {
-      n.setCategory(this);
       notes.add(n);
       setChanged();
       notifyObservers();
    }
 
    public void removeNote(Note n) {
-      n.setCategory(null);
       notes.remove(n);
       setChanged();
       notifyObservers();
@@ -116,5 +114,9 @@ public class Category extends Observable {
       for (Note note : notes) {
          note.setHidden(false);
       }
+   }
+
+   public boolean containsNote(Note note) {
+      return notes.contains(note);
    }
 }

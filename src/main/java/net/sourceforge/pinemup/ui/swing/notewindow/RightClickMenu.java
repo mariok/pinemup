@@ -36,10 +36,10 @@ import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic;
-import net.sourceforge.pinemup.ui.swing.menus.logic.NoteMenuLogic;
 import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic.CategoryAction;
 import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic;
 import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic.GeneralAction;
+import net.sourceforge.pinemup.ui.swing.menus.logic.NoteMenuLogic;
 
 public class RightClickMenu extends JPopupMenu {
    private static final long serialVersionUID = -3437718385990990890L;
@@ -87,10 +87,12 @@ public class RightClickMenu extends JPopupMenu {
          colorMenu.add(colorItem);
       }
 
+      Category categoryOfParentNote = CategoryManager.getInstance().findCategoryForNote(parentNote);
+
       JMenu categoryMenu = new JMenu(I18N.getInstance().getString("category"));
       int i = 0;
       for (Category cat : CategoryManager.getInstance().getCategories()) {
-         boolean isActiveCategory = cat == parentNote.getCategory();
+         boolean isActiveCategory = cat == categoryOfParentNote;
          JRadioButtonMenuItem categoryItem = new JRadioButtonMenuItem(cat.getName(), isActiveCategory);
          categoryItem.setActionCommand(NoteMenuLogic.ACTION_MOVE_NOTE_TO_CATEGORY + "_" + i);
          categoryItem.addActionListener(noteMenuLogic);
@@ -106,8 +108,8 @@ public class RightClickMenu extends JPopupMenu {
       settingsMenu.add(alwaysOnTopItem);
 
       // category menu
-      Category currentCat = parentNote.getCategory();
-      add(getCategoryActionsMenu(I18N.getInstance().getString("category") + " '" + currentCat.getName() + "'", currentCat));
+      add(getCategoryActionsMenu(I18N.getInstance().getString("category") + " '" + categoryOfParentNote.getName() + "'",
+            categoryOfParentNote));
    }
 
    private JMenu getCategoryActionsMenu(String title, Category c) {
