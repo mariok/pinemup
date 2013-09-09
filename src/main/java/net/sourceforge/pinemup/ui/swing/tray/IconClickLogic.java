@@ -30,8 +30,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.Timer;
 
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindow;
 import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 
 class IconClickLogic extends MouseAdapter implements ActionListener {
@@ -65,8 +63,6 @@ class IconClickLogic extends MouseAdapter implements ActionListener {
    }
 
    private void doubleClick() {
-      Note newNote = CategoryManager.getInstance().createNoteAndAddToDefaultCategory();
-      NoteWindow window = NoteWindowManager.getInstance().createNoteWindowForNote(newNote);
-      window.jumpIntoTextArea();
+      CategoryManager.getInstance().createNoteAndAddToDefaultCategory();
    }
 }

@@ -21,10 +21,12 @@
 
 package net.sourceforge.pinemup.core;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 public final class CategoryManager extends Observable {
    private List<Category> categories;
@@ -41,6 +43,7 @@ public final class CategoryManager extends Observable {
    }
 
    private CategoryManager() {
+      super();
       categories = new LinkedList<>();
       defaultNoteObservers = new LinkedList<>();
       defaultCategoryObservers = new LinkedList<>();
@@ -147,16 +150,16 @@ public final class CategoryManager extends Observable {
       return categories;
    }
 
-   public List<Note> getAllNotes() {
-      List<Note> notes = new LinkedList<Note>();
+   public Set<Note> getAllNotes() {
+      Set<Note> notes = new HashSet<>();
       for (Category cat : categories) {
          notes.addAll(cat.getNotes());
       }
       return notes;
    }
 
-   public List<Note> getAllVisibleNotes() {
-      List<Note> visibleNotes = new LinkedList<Note>();
+   public Set<Note> getAllVisibleNotes() {
+      Set<Note> visibleNotes = new HashSet<>();
       for (Category cat : categories) {
          visibleNotes.addAll(cat.getVisibleNotes());
       }
@@ -232,6 +235,8 @@ public final class CategoryManager extends Observable {
       defCat.addNote(newNote);
       newNote.setColor(defCat.getDefaultNoteColor());
       addDefaultNoteObservers(newNote);
+      newNote.markForObservers();
+      newNote.notifyObservers();
       return newNote;
    }
 

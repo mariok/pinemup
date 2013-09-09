@@ -26,9 +26,16 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class NoteWindowManager implements Observer {
+   private static final Logger LOG = LoggerFactory.getLogger(NoteWindowManager.class);
+
    private Map<Note, NoteWindow> noteWindows;
 
    private static class Holder {
@@ -46,6 +53,9 @@ public final class NoteWindowManager implements Observer {
    public NoteWindow createNoteWindowForNote(Note note) {
       NoteWindow window = new NoteWindow(note);
       noteWindows.put(note, window);
+      Category categoryOfParentNote = CategoryManager.getInstance().findCategoryForNote(note);
+      note.addObserver(window);
+      categoryOfParentNote.addObserver(window);
       return window;
    }
 
@@ -63,6 +73,7 @@ public final class NoteWindowManager implements Observer {
 
    @Override
    public void update(Observable o, Object arg) {
+      LOG.debug("Received update event from {}.", o);
       if (o instanceof Note) {
          Note n = (Note)o;
          if (!n.isHidden()) {

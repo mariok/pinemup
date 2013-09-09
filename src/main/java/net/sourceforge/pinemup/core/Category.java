@@ -21,13 +21,13 @@
 
 package net.sourceforge.pinemup.core;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Observable;
+import java.util.Set;
 
 public class Category extends Observable {
    private String name;
-   private List<Note> notes;
+   private Set<Note> notes;
    private boolean defaultCategory;
    private NoteColor defaultNoteColor;
 
@@ -35,7 +35,7 @@ public class Category extends Observable {
       this.name = name;
       this.defaultCategory = def;
       this.defaultNoteColor = defNoteColor;
-      notes = new LinkedList<Note>();
+      notes = new HashSet<>();
    }
 
    public String getName() {
@@ -84,12 +84,12 @@ public class Category extends Observable {
       }
    }
 
-   public List<Note> getNotes() {
+   public Set<Note> getNotes() {
       return notes;
    }
 
-   public List<Note> getVisibleNotes() {
-      List<Note> visibleNotes = new LinkedList<Note>();
+   public Set<Note> getVisibleNotes() {
+      Set<Note> visibleNotes = new HashSet<>();
       for (Note note : notes) {
          if (!note.isHidden()) {
             visibleNotes.add(note);

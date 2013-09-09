@@ -60,8 +60,13 @@ import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.ResourceLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NoteWindow extends JWindow implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
       MouseWheelListener, KeyListener, Observer {
+   private static final Logger LOG = LoggerFactory.getLogger(NoteWindow.class);
+
    private static final long serialVersionUID = -5228524832353948701L;
 
    private static final int MIN_WINDOW_HEIGHT = 40;
@@ -103,7 +108,6 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    NoteWindow(Note pn) {
       super(new DummyFrame());
       parentNote = pn;
-      parentNote.addObserver(this);
       textPanel = new JScrollPane();
       textPanel.setBorder(null);
       textPanel.setOpaque(false);
@@ -120,25 +124,20 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
       // create category-label, if option is enabled
       if (UserSettings.getInstance().getShowCategory()) {
-         Category cat = CategoryManager.getInstance().findCategoryForNote(parentNote);
-         if (cat != null) {
-            catButton = new JButton(cat.getName());
-            catButton.setRolloverEnabled(false);
-            catButton.setEnabled(false);
-            catButton.setFocusable(false);
-            catButton.setPreferredSize(CATBUTTON_SIZE);
-            catButton.setMargin(new Insets(0, 0, 0, 0));
-            catButton.setBackground(COLOR_TRANSPARENT);
+         catButton = new JButton();
+         catButton.setRolloverEnabled(false);
+         catButton.setEnabled(false);
+         catButton.setFocusable(false);
+         catButton.setPreferredSize(CATBUTTON_SIZE);
+         catButton.setMargin(new Insets(0, 0, 0, 0));
+         catButton.setBackground(COLOR_TRANSPARENT);
 
-            catPanel = new JPanel(new FlowLayout());
-            catPanel.add(catButton);
-            catPanel.setOpaque(false);
-            catButton.addMouseListener(this);
-            catButton.addMouseMotionListener(this);
-            topPanel.add(catPanel, BorderLayout.CENTER);
-
-            cat.addObserver(this);
-         }
+         catPanel = new JPanel(new FlowLayout());
+         catPanel.add(catButton);
+         catPanel.setOpaque(false);
+         catButton.addMouseListener(this);
+         catButton.addMouseMotionListener(this);
+         topPanel.add(catPanel, BorderLayout.CENTER);
       }
 
       // create and adjust TextArea
@@ -544,9 +543,13 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    @Override
    public void update(Observable o, Object arg) {
-      setBGColor(parentNote.getColor());
-      updateCategory();
-      updateFontSize();
-      updateVisibility();
+      LOG.debug("Received update event from {}.", o);
+      if (o instanceof Note) {
+         setBGColor(parentNote.getColor());
+         updateFontSize();
+         updateVisibility();
+      } else if (o instanceof Category) {
+         updateCategory();
+      }
    }
 }

@@ -15,9 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class NotesFileSaveTrigger implements Observer {
-   private static final int SAVE_DELAY_MILLIS = 5000;
-
    private static final Logger LOG = LoggerFactory.getLogger(NotesFileSaveTrigger.class);
+
+   private static final int SAVE_DELAY_MILLIS = 5000;
 
    private FileSaveThread fileSaveThread;
    private boolean disabled;
@@ -37,6 +37,7 @@ public final class NotesFileSaveTrigger implements Observer {
 
    @Override
    public synchronized void update(Observable o, Object arg) {
+      LOG.debug("Received update event.");
       if (!disabled && (fileSaveThread == null || !fileSaveThread.isAlive())) {
          fileSaveThread = new FileSaveThread(userInputRetriever);
          fileSaveThread.start();
