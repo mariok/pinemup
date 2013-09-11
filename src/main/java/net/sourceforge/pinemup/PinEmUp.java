@@ -65,11 +65,19 @@ public final class PinEmUp {
             NotesFileManager.getInstance().makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(),
                   SwingUI.getUserInputRetriever()));
 
-      // add NotesFileSaveTrigger as observer for notes and categories
-      CategoryManager.getInstance().registerDefaultCategoryObserver(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().registerDefaultNoteObserver(NotesFileSaveTrigger.getInstance());
+      // add NotesFileSaveTrigger and NoteWindowManager as default listeners for
+      // notes / categories
+      CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().registerCategoryAddedEventListener(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().registerCategoryRemovedEventListener(NotesFileSaveTrigger.getInstance());
 
-      CategoryManager.getInstance().registerDefaultNoteObserver(NoteWindowManager.getInstance());
+      CategoryManager.getInstance().registerDefaultNoteChangedEventListener(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().registerDefaultNoteAddedEventListener(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(NotesFileSaveTrigger.getInstance());
+
+      CategoryManager.getInstance().registerDefaultNoteChangedEventListener(NoteWindowManager.getInstance());
+      CategoryManager.getInstance().registerDefaultNoteAddedEventListener(NoteWindowManager.getInstance());
+      CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(NoteWindowManager.getInstance());
 
       // load notes from file
       CategoryManager.getInstance().replaceWithNewCategories(

@@ -21,18 +21,23 @@
 
 package net.sourceforge.pinemup.core;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
 
-public final class CategoryManager extends Observable {
+public final class CategoryManager {
    private List<Category> categories;
 
-   private List<Observer> defaultNoteObservers;
-   private List<Observer> defaultCategoryObservers;
+   /* Listeners, which will be added per default to new notes. */
+   private List<NoteChangedEventListener> defaultNoteChangedEventListeners;
+
+   /* Listeners, which will be added per default to new categories. */
+   private List<CategoryChangedEventListener> defaultCategoryChangedEventlisteners;
+   private List<NoteAddedEventListener> defaultNoteAddedEventListeners;
+   private List<NoteRemovedEventListener> defaultNoteRemovedEventListeners;
+
+   private List<CategoryAddedEventListener> categoryAddedEventListeners;
+
+   private List<CategoryRemovedEventListener> categoryRemovedEventListeners;
 
    private static class Holder {
       private static final CategoryManager INSTANCE = new CategoryManager();
@@ -45,20 +50,23 @@ public final class CategoryManager extends Observable {
    private CategoryManager() {
       super();
       categories = new LinkedList<>();
-      defaultNoteObservers = new LinkedList<>();
-      defaultCategoryObservers = new LinkedList<>();
+      defaultNoteChangedEventListeners = new LinkedList<>();
+      defaultCategoryChangedEventlisteners = new LinkedList<>();
+      defaultNoteAddedEventListeners = new LinkedList<>();
+      defaultNoteRemovedEventListeners = new LinkedList<>();
+      categoryAddedEventListeners = new LinkedList<>();
+      categoryRemovedEventListeners = new LinkedList<>();
    }
 
    public void addCategory(Category c) {
       categories.add(c);
-      setChanged();
-      notifyObservers();
+      addDefaultCategoryEventListeners(c);
+      fireCategoryAddedEvent(c);
    }
 
    public void removeCategory(Category c) {
       categories.remove(c);
-      setChanged();
-      notifyObservers();
+      fireCategoryRemovedEvent(c);
    }
 
    public void removeNote(Note note) {
@@ -124,8 +132,8 @@ public final class CategoryManager extends Observable {
       if (index > 0) {
          categories.set(index, categories.get(index - 1));
          categories.set(index - 1, c);
-         setChanged();
-         notifyObservers();
+         fireCategoryRemovedEvent(c);
+         fireCategoryAddedEvent(c);
       }
    }
 
@@ -134,8 +142,8 @@ public final class CategoryManager extends Observable {
       if (index < categories.size() - 1) {
          categories.set(index, categories.get(index + 1));
          categories.set(index + 1, c);
-         setChanged();
-         notifyObservers();
+         fireCategoryRemovedEvent(c);
+         fireCategoryAddedEvent(c);
       }
    }
 
@@ -150,55 +158,16 @@ public final class CategoryManager extends Observable {
       return categories;
    }
 
-   public Set<Note> getAllNotes() {
-      Set<Note> notes = new HashSet<>();
-      for (Category cat : categories) {
-         notes.addAll(cat.getNotes());
-      }
-      return notes;
-   }
-
-   public Set<Note> getAllVisibleNotes() {
-      Set<Note> visibleNotes = new HashSet<>();
-      for (Category cat : categories) {
-         visibleNotes.addAll(cat.getVisibleNotes());
-      }
-      return visibleNotes;
-   }
-
    public void replaceWithNewCategories(List<Category> newCategories) {
       hideAllNotes();
-
       categories.clear();
-      categories.addAll(newCategories);
 
-      addDefaultCategoryObserversForAllCategories();
-      addDefaultNoteObserversForAllNotes();
+      for (Category category : newCategories) {
+         addCategory(category);
 
-      setChanged();
-      notifyObservers();
-      notifyObserversForAllNotes();
-   }
-
-   private void addDefaultCategoryObserversForAllCategories() {
-      for (Category category : categories) {
-         addDefaultCategoryObservers(category);
-      }
-   }
-
-   private void addDefaultNoteObserversForAllNotes() {
-      for (Category cat : categories) {
-         for (Note n : cat.getNotes()) {
-            addDefaultNoteObservers(n);
-         }
-      }
-   }
-
-   private void notifyObserversForAllNotes() {
-      for (Category cat : categories) {
-         for (Note n : cat.getNotes()) {
-            n.markForObservers();
-            n.notifyObservers();
+         for (Note note : category.getNotes()) {
+            addDefaultNoteEventListeners(note);
+            note.fireNoteChangedEvent();
          }
       }
    }
@@ -234,34 +203,63 @@ public final class CategoryManager extends Observable {
       Note newNote = new Note();
       defCat.addNote(newNote);
       newNote.setColor(defCat.getDefaultNoteColor());
-      addDefaultNoteObservers(newNote);
-      newNote.markForObservers();
-      newNote.notifyObservers();
+      addDefaultNoteEventListeners(newNote);
+      newNote.setHidden(false);
+
       return newNote;
    }
 
-   private void addDefaultNoteObservers(Note note) {
-      for (Observer noteObserver : defaultNoteObservers) {
-         note.addObserver(noteObserver);
+   private void addDefaultNoteEventListeners(Note note) {
+      for (NoteChangedEventListener listener : defaultNoteChangedEventListeners) {
+         note.addNoteChangedEventListener(listener);
       }
    }
 
-   private void addDefaultCategoryObservers(Category category) {
-      for (Observer categoryObserver : defaultCategoryObservers) {
-         category.addObserver(categoryObserver);
+   private void addDefaultCategoryEventListeners(Category category) {
+      for (CategoryChangedEventListener listener : defaultCategoryChangedEventlisteners) {
+         category.addCategoryChangedEventListener(listener);
+      }
+      for (NoteAddedEventListener listener : defaultNoteAddedEventListeners) {
+         category.addNoteAddedEventListener(listener);
+      }
+      for (NoteRemovedEventListener listener : defaultNoteRemovedEventListeners) {
+         category.addNoteRemovedEventListener(listener);
       }
    }
 
-   public void registerDefaultCategoryObserver(Observer categoriesObserver) {
-      defaultCategoryObservers.add(categoriesObserver);
+   public void registerDefaultNoteChangedEventListener(NoteChangedEventListener listener) {
+      defaultNoteChangedEventListeners.add(listener);
+   }
 
-      addObserver(categoriesObserver);
-      for (Category category : categories) {
-         category.addObserver(categoriesObserver);
+   public void registerDefaultCategoryChangedEventListener(CategoryChangedEventListener listener) {
+      defaultCategoryChangedEventlisteners.add(listener);
+   }
+
+   public void registerDefaultNoteAddedEventListener(NoteAddedEventListener listener) {
+      defaultNoteAddedEventListeners.add(listener);
+   }
+
+   public void registerDefaultNoteRemovedEventListener(NoteRemovedEventListener listener) {
+      defaultNoteRemovedEventListeners.add(listener);
+   }
+
+   public void registerCategoryAddedEventListener(CategoryAddedEventListener listener) {
+      categoryAddedEventListeners.add(listener);
+   }
+
+   public void registerCategoryRemovedEventListener(CategoryRemovedEventListener listener) {
+      categoryRemovedEventListeners.add(listener);
+   }
+
+   private void fireCategoryAddedEvent(Category category) {
+      for (CategoryAddedEventListener listener : categoryAddedEventListeners) {
+         listener.categoryAdded(new CategoryAddedEvent(this, category));
       }
    }
 
-   public void registerDefaultNoteObserver(Observer noteObserver) {
-      defaultNoteObservers.add(noteObserver);
+   private void fireCategoryRemovedEvent(Category category) {
+      for (CategoryRemovedEventListener listener : categoryRemovedEventListeners) {
+         listener.categoryRemoved(new CategoryRemovedEvent(this, category));
+      }
    }
 }

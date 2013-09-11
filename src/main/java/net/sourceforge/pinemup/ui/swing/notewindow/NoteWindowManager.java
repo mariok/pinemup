@@ -23,17 +23,19 @@ package net.sourceforge.pinemup.ui.swing.notewindow;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 
-import net.sourceforge.pinemup.core.Category;
-import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
+import net.sourceforge.pinemup.core.NoteAddedEvent;
+import net.sourceforge.pinemup.core.NoteAddedEventListener;
+import net.sourceforge.pinemup.core.NoteChangedEvent;
+import net.sourceforge.pinemup.core.NoteChangedEventListener;
+import net.sourceforge.pinemup.core.NoteRemovedEvent;
+import net.sourceforge.pinemup.core.NoteRemovedEventListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class NoteWindowManager implements Observer {
+public final class NoteWindowManager implements NoteChangedEventListener, NoteAddedEventListener, NoteRemovedEventListener {
    private static final Logger LOG = LoggerFactory.getLogger(NoteWindowManager.class);
 
    private Map<Note, NoteWindow> noteWindows;
@@ -53,16 +55,8 @@ public final class NoteWindowManager implements Observer {
    public NoteWindow createNoteWindowForNote(Note note) {
       NoteWindow window = new NoteWindow(note);
       noteWindows.put(note, window);
-      Category categoryOfParentNote = CategoryManager.getInstance().findCategoryForNote(note);
-      note.addObserver(window);
-      categoryOfParentNote.addObserver(window);
+      note.addNoteChangedEventListener(window);
       return window;
-   }
-
-   public void removeNoteWindow(NoteWindow window) {
-      if (window != null) {
-         noteWindows.remove(window.getParentNote());
-      }
    }
 
    public void bringAllWindowsToFront() {
@@ -72,15 +66,41 @@ public final class NoteWindowManager implements Observer {
    }
 
    @Override
-   public void update(Observable o, Object arg) {
-      LOG.debug("Received update event from {}.", o);
-      if (o instanceof Note) {
-         Note n = (Note)o;
-         if (!n.isHidden()) {
-            n.deleteObserver(this);
-            NoteWindow noteWindow = createNoteWindowForNote(n);
-            noteWindow.jumpIntoTextArea();
-         }
+   public void noteChanged(NoteChangedEvent event) {
+      LOG.debug("Received NoteChangedEvent.");
+      Note n = event.getSource();
+      if (n.isHidden()) {
+         closeAndRemoveNoteWindow(n);
+      } else {
+         NoteWindow noteWindow = createNoteWindowForNote(n);
+         noteWindow.jumpIntoTextArea();
+      }
+   }
+
+   @Override
+   public void noteRemoved(NoteRemovedEvent event) {
+      LOG.debug("Received NoteRemovedEvent.");
+      Note n = event.getRemovedNote();
+      closeAndRemoveNoteWindow(n);
+   }
+
+   @Override
+   public void noteAdded(NoteAddedEvent event) {
+      LOG.debug("Received NoteAddedEvent.");
+      Note n = event.getAddedNote();
+      if (!n.isHidden()) {
+         NoteWindow noteWindow = createNoteWindowForNote(n);
+         noteWindow.jumpIntoTextArea();
+      }
+   }
+
+   private void closeAndRemoveNoteWindow(Note n) {
+      NoteWindow window = noteWindows.get(n);
+      if (window != null) {
+         noteWindows.remove(window);
+         n.removeNoteChangedEventListener(window);
+         window.setVisible(false);
+         window.dispose();
       }
    }
 }

@@ -21,9 +21,10 @@
 
 package net.sourceforge.pinemup.core;
 
-import java.util.Observable;
+import java.util.LinkedList;
+import java.util.List;
 
-public class Note extends Observable {
+public class Note {
    public static final short MIN_FONT_SIZE = 5;
    public static final short MAX_FONT_SIZE = 30;
 
@@ -36,11 +37,20 @@ public class Note extends Observable {
 
    private NoteColor color;
 
+   private List<NoteChangedEventListener> noteChangedEventListeners = new LinkedList<>();
+
+   public void addNoteChangedEventListener(NoteChangedEventListener listener) {
+      noteChangedEventListeners.add(listener);
+   }
+
+   public void removeNoteChangedEventListener(NoteChangedEventListener listener) {
+      noteChangedEventListeners.remove(listener);
+   }
+
    public void setAlwaysOnTop(boolean alwaysOnTop) {
       if (alwaysOnTop != this.alwaysOnTop) {
          this.alwaysOnTop = alwaysOnTop;
-         setChanged();
-         notifyObservers();
+         fireNoteChangedEvent();
       }
    }
 
@@ -51,8 +61,7 @@ public class Note extends Observable {
    public void setFontSize(short fontSize) {
       if (fontSize != this.fontSize && fontSize >= MIN_FONT_SIZE && fontSize <= MAX_FONT_SIZE) {
          this.fontSize = fontSize;
-         setChanged();
-         notifyObservers();
+         fireNoteChangedEvent();
       }
    }
 
@@ -63,8 +72,7 @@ public class Note extends Observable {
    public void setHidden(boolean hidden) {
       if (hidden != this.hidden) {
          this.hidden = hidden;
-         setChanged();
-         notifyObservers();
+         fireNoteChangedEvent();
       }
    }
 
@@ -74,7 +82,7 @@ public class Note extends Observable {
 
    public Note() {
       text = "";
-      hidden = false;
+      hidden = true;
       xpos = UserSettings.getInstance().getDefaultWindowXPostition();
       ypos = UserSettings.getInstance().getDefaultWindowYPostition();
       xsize = UserSettings.getInstance().getDefaultWindowWidth();
@@ -87,8 +95,7 @@ public class Note extends Observable {
    public void setText(String text) {
       if (!text.equals(this.text)) {
          this.text = text;
-         setChanged();
-         notifyObservers();
+         fireNoteChangedEvent();
       }
    }
 
@@ -100,8 +107,7 @@ public class Note extends Observable {
       if (x != xpos || y != ypos) {
          xpos = x;
          ypos = y;
-         setChanged();
-         notifyObservers();
+         fireNoteChangedEvent();
       }
    }
 
@@ -117,8 +123,7 @@ public class Note extends Observable {
       if (x != xsize || y != ysize) {
          xsize = x;
          ysize = y;
-         setChanged();
-         notifyObservers();
+         fireNoteChangedEvent();
       }
    }
 
@@ -132,15 +137,16 @@ public class Note extends Observable {
 
    public void setColor(NoteColor color) {
       this.color = color;
-      setChanged();
-      notifyObservers();
+      fireNoteChangedEvent();
    }
 
    public NoteColor getColor() {
       return color;
    }
 
-   public void markForObservers() {
-      setChanged();
+   public void fireNoteChangedEvent() {
+      for (NoteChangedEventListener listener : noteChangedEventListeners) {
+         listener.noteChanged(new NoteChangedEvent(this));
+      }
    }
 }

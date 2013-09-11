@@ -22,14 +22,43 @@
 package net.sourceforge.pinemup.core;
 
 import java.util.HashSet;
-import java.util.Observable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
-public class Category extends Observable {
+public class Category {
    private String name;
    private Set<Note> notes;
    private boolean defaultCategory;
    private NoteColor defaultNoteColor;
+
+   private List<CategoryChangedEventListener> categoryChangedEventListeners = new LinkedList<>();
+   private List<NoteAddedEventListener> noteAddedEventListeners = new LinkedList<>();
+   private List<NoteRemovedEventListener> noteRemovedEventListeners = new LinkedList<>();
+
+   public void addCategoryChangedEventListener(CategoryChangedEventListener listener) {
+      categoryChangedEventListeners.add(listener);
+   }
+
+   public void removeCategoryChangedEventListener(CategoryChangedEventListener listener) {
+      categoryChangedEventListeners.remove(listener);
+   }
+
+   public void addNoteAddedEventListener(NoteAddedEventListener listener) {
+      noteAddedEventListeners.add(listener);
+   }
+
+   public void removeNoteAddedEventListener(NoteAddedEventListener listener) {
+      noteAddedEventListeners.remove(listener);
+   }
+
+   public void addNoteRemovedEventListener(NoteRemovedEventListener listener) {
+      noteRemovedEventListeners.add(listener);
+   }
+
+   public void removeNoteRemovedEventListener(NoteRemovedEventListener listener) {
+      noteRemovedEventListeners.remove(listener);
+   }
 
    public Category(String name, boolean def, NoteColor defNoteColor) {
       this.name = name;
@@ -45,8 +74,7 @@ public class Category extends Observable {
    public void setName(String name) {
       if (!name.equals(this.name)) {
          this.name = name;
-         setChanged();
-         notifyObservers();
+         fireCategoryChangedEvent();
       }
    }
 
@@ -57,16 +85,14 @@ public class Category extends Observable {
    public void setDefault(boolean b) {
       if (b != defaultCategory) {
          defaultCategory = b;
-         setChanged();
-         notifyObservers();
+         fireCategoryChangedEvent();
       }
    }
 
    public void setDefaultNoteColor(NoteColor c) {
       if (!c.equals(defaultNoteColor)) {
          defaultNoteColor = c;
-         setChanged();
-         notifyObservers();
+         fireCategoryChangedEvent();
       }
    }
 
@@ -88,26 +114,14 @@ public class Category extends Observable {
       return notes;
    }
 
-   public Set<Note> getVisibleNotes() {
-      Set<Note> visibleNotes = new HashSet<>();
-      for (Note note : notes) {
-         if (!note.isHidden()) {
-            visibleNotes.add(note);
-         }
-      }
-      return visibleNotes;
-   }
-
    public void addNote(Note n) {
       notes.add(n);
-      setChanged();
-      notifyObservers();
+      fireNoteAddedEvent(n);
    }
 
    public void removeNote(Note n) {
       notes.remove(n);
-      setChanged();
-      notifyObservers();
+      fireNoteRemovedEvent(n);
    }
 
    public void unhideAllNotes() {
@@ -118,5 +132,23 @@ public class Category extends Observable {
 
    public boolean containsNote(Note note) {
       return notes.contains(note);
+   }
+
+   public void fireCategoryChangedEvent() {
+      for (CategoryChangedEventListener listener : categoryChangedEventListeners) {
+         listener.categoryChanged(new CategoryChangedEvent(this));
+      }
+   }
+
+   public void fireNoteAddedEvent(Note note) {
+      for (NoteAddedEventListener listener : noteAddedEventListeners) {
+         listener.noteAdded(new NoteAddedEvent(this, note));
+      }
+   }
+
+   public void fireNoteRemovedEvent(Note note) {
+      for (NoteRemovedEventListener listener : noteRemovedEventListeners) {
+         listener.noteRemoved(new NoteRemovedEvent(this, note));
+      }
    }
 }

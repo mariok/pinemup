@@ -36,7 +36,7 @@ public class SwingUI {
             TrayMenu trayMenu = new TrayMenu(dialogFactory, userInputRetriever, updateCheckResultHandler);
             tray.add(new PinEmUpTrayIcon(trayMenu));
 
-            CategoryManager.getInstance().registerDefaultCategoryObserver(new TrayMenuUpdater(trayMenu));
+            CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(new TrayMenuUpdater(trayMenu));
          } catch (AWTException e) {
             LOG.error("Error during initialization of tray icon.", e);
          }

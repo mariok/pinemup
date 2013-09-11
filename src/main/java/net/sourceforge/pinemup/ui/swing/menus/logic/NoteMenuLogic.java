@@ -34,7 +34,6 @@ public class NoteMenuLogic implements ActionListener {
                   .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
          }
          if (confirmed) {
-            note.setHidden(true);
             CategoryManager.getInstance().removeNote(note);
          }
       } else if (ACTION_TOGGLE_ALWAYS_ON_TOP.equals(action)) {

@@ -40,8 +40,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -56,6 +54,8 @@ import net.sourceforge.pinemup.core.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
+import net.sourceforge.pinemup.core.NoteChangedEvent;
+import net.sourceforge.pinemup.core.NoteChangedEventListener;
 import net.sourceforge.pinemup.core.NoteColor;
 import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.ResourceLoader;
@@ -64,7 +64,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NoteWindow extends JWindow implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
-      MouseWheelListener, KeyListener, Observer {
+      MouseWheelListener, KeyListener, NoteChangedEventListener {
    private static final Logger LOG = LoggerFactory.getLogger(NoteWindow.class);
 
    private static final long serialVersionUID = -5228524832353948701L;
@@ -259,10 +259,6 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    @Override
    public void windowClosed(WindowEvent arg0) {
-      parentNote.deleteObserver(this);
-      parentNote.addObserver(NoteWindowManager.getInstance());
-      CategoryManager.getInstance().findCategoryForNote(parentNote).deleteObserver(this);
-      NoteWindowManager.getInstance().removeNoteWindow(this);
       getOwner().setVisible(false);
    }
 
@@ -296,7 +292,6 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       if (e.getSource() == closeButton) {
          parentNote.setHidden(true);
       }
-
    }
 
    @Override
@@ -453,12 +448,8 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       textArea.setFont(new java.awt.Font("SANSSERIF", 1, parentNote.getFontSize()));
    }
 
-   private void updateVisibility() {
+   private void updateAlwaysOnTopState() {
       setAlwaysOnTop(parentNote.isAlwaysOnTop());
-      if (parentNote.isHidden()) {
-         setVisible(false);
-         dispose();
-      }
    }
 
    public void jumpIntoTextArea() {
@@ -542,14 +533,10 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    }
 
    @Override
-   public void update(Observable o, Object arg) {
-      // LOG.debug("Received update event from {}.", o);
-      // if (o instanceof Note) {
-      // setBGColor(parentNote.getColor());
-      // updateFontSize();
-      // updateVisibility();
-      // } else if (o instanceof Category) {
-      // updateCategory();
-      // }
+   public void noteChanged(NoteChangedEvent event) {
+      LOG.debug("Received NoteChangedEvent.");
+      setBGColor(parentNote.getColor());
+      updateFontSize();
+      updateAlwaysOnTopState();
    }
 }

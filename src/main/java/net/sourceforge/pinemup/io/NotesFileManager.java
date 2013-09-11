@@ -234,8 +234,6 @@ public final class NotesFileManager {
          categories.add(new Category("Office", false, NoteColor.GREEN));
       }
 
-      observeAllNotesAndCategories(categories);
-
       return categories;
    }
 
@@ -373,15 +371,6 @@ public final class NotesFileManager {
          }
       }
       return version;
-   }
-
-   private void observeAllNotesAndCategories(List<Category> categories) {
-      for (Category cat : categories) {
-         cat.addObserver(NotesFileSaveTrigger.getInstance());
-         for (Note note : cat.getNotes()) {
-            note.addObserver(NotesFileSaveTrigger.getInstance());
-         }
-      }
    }
 
    public String makeSureNotesFileIsValid(String notesFilePath, UserInputRetriever userInputRetriever) {
