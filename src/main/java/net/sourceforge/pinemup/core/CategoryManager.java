@@ -155,12 +155,21 @@ public final class CategoryManager {
    public void replaceWithNewCategories(List<Category> newCategories) {
       hideAllNotes();
       categories.clear();
+      categories.addAll(newCategories);
 
       for (Category category : newCategories) {
-         addCategory(category);
+         addDefaultCategoryEventListeners(category);
 
          for (Note note : category.getNotes()) {
             addDefaultNoteEventListeners(note);
+         }
+      }
+
+      for (Category category : newCategories) {
+         fireCategoryAddedEvent(category);
+
+         for (Note note : category.getNotes()) {
+            category.fireNoteAddedEvent(note);
          }
       }
    }
@@ -197,7 +206,6 @@ public final class CategoryManager {
       defCat.addNote(newNote);
       newNote.setColor(defCat.getDefaultNoteColor());
       addDefaultNoteEventListeners(newNote);
-      newNote.fireNoteChangedEvent();
 
       return newNote;
    }

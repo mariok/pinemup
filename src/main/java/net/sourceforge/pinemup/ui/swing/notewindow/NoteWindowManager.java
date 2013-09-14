@@ -85,7 +85,7 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
    private void closeAndRemoveNoteWindow(Note n) {
       NoteWindow window = noteWindows.get(n);
       if (window != null) {
-         noteWindows.remove(window);
+         noteWindows.remove(n);
          n.removeNoteChangedEventListener(window);
          window.setVisible(false);
          window.dispose();
