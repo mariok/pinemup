@@ -21,8 +21,8 @@
 
 package net.sourceforge.pinemup.core;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Note {
    public static final short MIN_FONT_SIZE = 5;
@@ -37,7 +37,7 @@ public class Note {
 
    private NoteColor color;
 
-   private List<NoteChangedEventListener> noteChangedEventListeners = new LinkedList<>();
+   private Collection<NoteChangedEventListener> noteChangedEventListeners = new ConcurrentLinkedDeque<>();
 
    public void addNoteChangedEventListener(NoteChangedEventListener listener) {
       noteChangedEventListeners.add(listener);
@@ -82,7 +82,6 @@ public class Note {
 
    public Note() {
       text = "";
-      hidden = true;
       xpos = UserSettings.getInstance().getDefaultWindowXPostition();
       ypos = UserSettings.getInstance().getDefaultWindowYPostition();
       xsize = UserSettings.getInstance().getDefaultWindowWidth();

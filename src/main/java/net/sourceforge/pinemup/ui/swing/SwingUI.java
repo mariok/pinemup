@@ -10,6 +10,7 @@ import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.io.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.ui.UserInputRetriever;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
+import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 import net.sourceforge.pinemup.ui.swing.tray.PinEmUpTrayIcon;
 import net.sourceforge.pinemup.ui.swing.tray.TrayMenu;
 import net.sourceforge.pinemup.ui.swing.tray.TrayMenuUpdater;
@@ -33,10 +34,16 @@ public class SwingUI {
             UserInputRetriever userInputRetriever = new SwingUserInputRetreiver();
             DialogFactory dialogFactory = new DialogFactory();
 
+            NoteWindowManager noteWindowManager = new NoteWindowManager();
+
             TrayMenu trayMenu = new TrayMenu(dialogFactory, userInputRetriever, updateCheckResultHandler);
-            tray.add(new PinEmUpTrayIcon(trayMenu));
+            tray.add(new PinEmUpTrayIcon(trayMenu, noteWindowManager));
 
             CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(new TrayMenuUpdater(trayMenu));
+
+            CategoryManager.getInstance().registerDefaultNoteChangedEventListener(noteWindowManager);
+            CategoryManager.getInstance().registerDefaultNoteAddedEventListener(noteWindowManager);
+            CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(noteWindowManager);
          } catch (AWTException e) {
             LOG.error("Error during initialization of tray icon.", e);
          }

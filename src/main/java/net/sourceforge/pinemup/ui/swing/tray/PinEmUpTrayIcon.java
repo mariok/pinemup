@@ -25,11 +25,12 @@ import java.awt.PopupMenu;
 import java.awt.TrayIcon;
 
 import net.sourceforge.pinemup.io.ResourceLoader;
+import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 
 public final class PinEmUpTrayIcon extends TrayIcon {
-   public PinEmUpTrayIcon(PopupMenu popupMenu) {
+   public PinEmUpTrayIcon(PopupMenu popupMenu, NoteWindowManager noteWindowManager) {
       super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", popupMenu);
       setImageAutoSize(false);
-      addMouseListener(new IconClickLogic());
+      addMouseListener(new IconClickLogic(noteWindowManager));
    }
 }

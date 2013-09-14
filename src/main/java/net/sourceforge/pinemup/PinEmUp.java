@@ -29,7 +29,6 @@ import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
 import net.sourceforge.pinemup.io.UpdateCheckThread;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
 import net.sourceforge.pinemup.ui.swing.SwingUpdateCheckResultHandler;
-import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +64,7 @@ public final class PinEmUp {
             NotesFileManager.getInstance().makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(),
                   SwingUI.getUserInputRetriever()));
 
-      // add NotesFileSaveTrigger and NoteWindowManager as default listeners for
-      // notes / categories
+      // add NotesFileSaveTrigger as default listeners for notes / categories
       CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(NotesFileSaveTrigger.getInstance());
       CategoryManager.getInstance().registerCategoryAddedEventListener(NotesFileSaveTrigger.getInstance());
       CategoryManager.getInstance().registerCategoryRemovedEventListener(NotesFileSaveTrigger.getInstance());
@@ -74,10 +72,6 @@ public final class PinEmUp {
       CategoryManager.getInstance().registerDefaultNoteChangedEventListener(NotesFileSaveTrigger.getInstance());
       CategoryManager.getInstance().registerDefaultNoteAddedEventListener(NotesFileSaveTrigger.getInstance());
       CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(NotesFileSaveTrigger.getInstance());
-
-      CategoryManager.getInstance().registerDefaultNoteChangedEventListener(NoteWindowManager.getInstance());
-      CategoryManager.getInstance().registerDefaultNoteAddedEventListener(NoteWindowManager.getInstance());
-      CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(NoteWindowManager.getInstance());
 
       // load notes from file
       CategoryManager.getInstance().replaceWithNewCategories(

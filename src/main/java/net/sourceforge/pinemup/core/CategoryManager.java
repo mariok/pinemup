@@ -21,23 +21,24 @@
 
 package net.sourceforge.pinemup.core;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 public final class CategoryManager {
-   private List<Category> categories;
+   private List<Category> categories = new LinkedList<>();
 
    /* Listeners, which will be added per default to new notes. */
-   private List<NoteChangedEventListener> defaultNoteChangedEventListeners;
+   private Collection<NoteChangedEventListener> defaultNoteChangedEventListeners = new LinkedList<>();
 
    /* Listeners, which will be added per default to new categories. */
-   private List<CategoryChangedEventListener> defaultCategoryChangedEventlisteners;
-   private List<NoteAddedEventListener> defaultNoteAddedEventListeners;
-   private List<NoteRemovedEventListener> defaultNoteRemovedEventListeners;
+   private Collection<CategoryChangedEventListener> defaultCategoryChangedEventlisteners = new LinkedList<>();
+   private Collection<NoteAddedEventListener> defaultNoteAddedEventListeners = new LinkedList<>();
+   private Collection<NoteRemovedEventListener> defaultNoteRemovedEventListeners = new LinkedList<>();
 
-   private List<CategoryAddedEventListener> categoryAddedEventListeners;
+   private Collection<CategoryAddedEventListener> categoryAddedEventListeners = new LinkedList<>();
 
-   private List<CategoryRemovedEventListener> categoryRemovedEventListeners;
+   private Collection<CategoryRemovedEventListener> categoryRemovedEventListeners = new LinkedList<>();
 
    private static class Holder {
       private static final CategoryManager INSTANCE = new CategoryManager();
@@ -49,13 +50,6 @@ public final class CategoryManager {
 
    private CategoryManager() {
       super();
-      categories = new LinkedList<>();
-      defaultNoteChangedEventListeners = new LinkedList<>();
-      defaultCategoryChangedEventlisteners = new LinkedList<>();
-      defaultNoteAddedEventListeners = new LinkedList<>();
-      defaultNoteRemovedEventListeners = new LinkedList<>();
-      categoryAddedEventListeners = new LinkedList<>();
-      categoryRemovedEventListeners = new LinkedList<>();
    }
 
    public void addCategory(Category c) {
@@ -167,7 +161,6 @@ public final class CategoryManager {
 
          for (Note note : category.getNotes()) {
             addDefaultNoteEventListeners(note);
-            note.fireNoteChangedEvent();
          }
       }
    }
@@ -204,7 +197,7 @@ public final class CategoryManager {
       defCat.addNote(newNote);
       newNote.setColor(defCat.getDefaultNoteColor());
       addDefaultNoteEventListeners(newNote);
-      newNote.setHidden(false);
+      newNote.fireNoteChangedEvent();
 
       return newNote;
    }

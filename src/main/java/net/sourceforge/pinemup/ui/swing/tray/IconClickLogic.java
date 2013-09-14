@@ -33,9 +33,16 @@ import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 
 class IconClickLogic extends MouseAdapter implements ActionListener {
+   private static final int CLICK_INTERVAL = (Integer)Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
+
    private Timer timer;
 
-   private static final int CLICK_INTERVAL = (Integer)Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
+   private NoteWindowManager noteWindowManager;
+
+   public IconClickLogic(NoteWindowManager noteWindowManager) {
+      super();
+      this.noteWindowManager = noteWindowManager;
+   }
 
    @Override
    public void actionPerformed(ActionEvent arg0) {
@@ -59,7 +66,7 @@ class IconClickLogic extends MouseAdapter implements ActionListener {
    }
 
    private void singleClick() {
-      NoteWindowManager.getInstance().bringAllWindowsToFront();
+      noteWindowManager.bringAllWindowsToFront();
    }
 
    private void doubleClick() {

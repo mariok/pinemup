@@ -40,23 +40,8 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
 
    private Map<Note, NoteWindow> noteWindows;
 
-   private static class Holder {
-      private static final NoteWindowManager INSTANCE = new NoteWindowManager();
-   }
-
-   public static NoteWindowManager getInstance() {
-      return Holder.INSTANCE;
-   }
-
-   private NoteWindowManager() {
+   public NoteWindowManager() {
       noteWindows = new HashMap<Note, NoteWindow>();
-   }
-
-   public NoteWindow createNoteWindowForNote(Note note) {
-      NoteWindow window = new NoteWindow(note);
-      noteWindows.put(note, window);
-      note.addNoteChangedEventListener(window);
-      return window;
    }
 
    public void bringAllWindowsToFront() {
@@ -72,8 +57,11 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
       if (n.isHidden()) {
          closeAndRemoveNoteWindow(n);
       } else {
-         NoteWindow noteWindow = createNoteWindowForNote(n);
-         noteWindow.jumpIntoTextArea();
+         NoteWindow window = noteWindows.get(n);
+         if (window == null) {
+            NoteWindow noteWindow = createNoteWindowForNote(n);
+            noteWindow.jumpIntoTextArea();
+         }
       }
    }
 
@@ -102,5 +90,12 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
          window.setVisible(false);
          window.dispose();
       }
+   }
+
+   private NoteWindow createNoteWindowForNote(Note note) {
+      NoteWindow window = new NoteWindow(note);
+      noteWindows.put(note, window);
+      note.addNoteChangedEventListener(window);
+      return window;
    }
 }

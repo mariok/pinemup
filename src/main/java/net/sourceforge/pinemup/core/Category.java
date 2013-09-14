@@ -21,9 +21,9 @@
 
 package net.sourceforge.pinemup.core;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 public class Category {
@@ -32,9 +32,9 @@ public class Category {
    private boolean defaultCategory;
    private NoteColor defaultNoteColor;
 
-   private List<CategoryChangedEventListener> categoryChangedEventListeners = new LinkedList<>();
-   private List<NoteAddedEventListener> noteAddedEventListeners = new LinkedList<>();
-   private List<NoteRemovedEventListener> noteRemovedEventListeners = new LinkedList<>();
+   private Collection<CategoryChangedEventListener> categoryChangedEventListeners = new LinkedList<>();
+   private Collection<NoteAddedEventListener> noteAddedEventListeners = new LinkedList<>();
+   private Collection<NoteRemovedEventListener> noteRemovedEventListeners = new LinkedList<>();
 
    public void addCategoryChangedEventListener(CategoryChangedEventListener listener) {
       categoryChangedEventListeners.add(listener);
