@@ -21,12 +21,16 @@
 
 package net.sourceforge.pinemup.core;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.prefs.Preferences;
 
 import net.sourceforge.pinemup.core.I18N.SupportedLocale;
 
 public final class UserSettings {
+   private Collection<UserSettingsChangedEventListener> userSettingsChangedEventListeners = new LinkedList<>();
+
    private static final String PREFIX = "peu_dev_";
    private static final int MIN_NOTEWINDOW_WIDTH = 30;
    private static final int MIN_NOTEWINDOW_HEIGHT = 30;
@@ -60,6 +64,14 @@ public final class UserSettings {
 
    public static UserSettings getInstance() {
       return Holder.INSTANCE;
+   }
+
+   public void addUserSettingsChangedEventListener(UserSettingsChangedEventListener listener) {
+      userSettingsChangedEventListeners.add(listener);
+   }
+
+   public void removeUserSettingsChangedEventListener(UserSettingsChangedEventListener listener) {
+      userSettingsChangedEventListeners.remove(listener);
    }
 
    public boolean getConfirmUpDownload() {
@@ -287,5 +299,11 @@ public final class UserSettings {
       String localeString = prefs.get(PREFIX + "locale", "en_US");
       locale = SupportedLocale.fromLocaleString(localeString).getLocale();
       confirmUpDownload = prefs.getBoolean(PREFIX + "confirmUpDownload", true);
+   }
+
+   public void fireUserSettingsChangedEvent() {
+      for (UserSettingsChangedEventListener listener : userSettingsChangedEventListeners) {
+         listener.settingsChanged(new UserSettingsChangedEvent(this));
+      }
    }
 }

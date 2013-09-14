@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
+import net.sourceforge.pinemup.core.UserSettings;
 import net.sourceforge.pinemup.io.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.ui.UserInputRetriever;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
@@ -39,7 +40,9 @@ public class SwingUI {
             TrayMenu trayMenu = new TrayMenu(dialogFactory, userInputRetriever, updateCheckResultHandler);
             tray.add(new PinEmUpTrayIcon(trayMenu, noteWindowManager));
 
+            TrayMenuUpdater trayMenuUpdater = new TrayMenuUpdater(trayMenu);
             CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(new TrayMenuUpdater(trayMenu));
+            UserSettings.getInstance().addUserSettingsChangedEventListener(trayMenuUpdater);
 
             CategoryManager.getInstance().registerDefaultNoteChangedEventListener(noteWindowManager);
             CategoryManager.getInstance().registerDefaultNoteAddedEventListener(noteWindowManager);

@@ -1006,6 +1006,8 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
          // save settings permanentely
          UserSettings.getInstance().saveSettings();
+
+         UserSettings.getInstance().fireUserSettingsChangedEvent();
       }
    }
 

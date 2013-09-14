@@ -43,13 +43,16 @@ public class TrayMenu extends PopupMenu {
 
    private Menu categoriesMenu;
    private MenuItem manageCategoriesItem;
+   private TrayMenuLogic trayMenuLogic;
 
    public TrayMenu(DialogFactory dialogFactory, UserInputRetriever userInputRetriever, UpdateCheckResultHandler updateCheckResultHandler) {
       super("pin 'em up");
+      trayMenuLogic = new TrayMenuLogic(dialogFactory, userInputRetriever, updateCheckResultHandler);
+      initWithNewLanguage();
+   }
 
+   public void initWithNewLanguage() {
       removeAll();
-
-      TrayMenuLogic trayMenuLogic = new TrayMenuLogic(dialogFactory, userInputRetriever, updateCheckResultHandler);
 
       // add basic items
       for (MenuItem item : getBasicMenuItems()) {
