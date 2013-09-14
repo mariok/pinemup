@@ -35,15 +35,15 @@ Contents
 
 2. System requirements
 ------------------------
-  pin 'em up only runs with Java 6 (JRE) or higher
+  pin 'em up only runs with Java 7 (JRE) or higher
   
-  (get the latest version at http://java.sun.com)
+  (get the latest version at http://java.oracle.com)
 
 
 
 3. Changelog
 ------------------------
-  0.6:
+  1.0:
     - added keyboard shortcuts for changing a note's category (first 10 categories: ctrl+0 - ctrl+9)
     - added possibility to change font size via keyboard shortcuts (ctrl++ and ctrl+-) or mousewheel (ctrl+mousewheel up/down)
     - added single-click action to tray icon: bring notes to front
