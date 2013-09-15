@@ -41,7 +41,9 @@ public class SwingUI {
             tray.add(new PinEmUpTrayIcon(trayMenu, noteWindowManager));
 
             TrayMenuUpdater trayMenuUpdater = new TrayMenuUpdater(trayMenu);
-            CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(new TrayMenuUpdater(trayMenu));
+            CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(trayMenuUpdater);
+            CategoryManager.getInstance().registerCategoryAddedEventListener(trayMenuUpdater);
+            CategoryManager.getInstance().registerCategoryRemovedEventListener(trayMenuUpdater);
             UserSettings.getInstance().addUserSettingsChangedEventListener(trayMenuUpdater);
 
             CategoryManager.getInstance().registerDefaultNoteChangedEventListener(noteWindowManager);
