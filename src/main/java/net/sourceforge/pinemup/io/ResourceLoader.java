@@ -147,7 +147,7 @@ public final class ResourceLoader {
    }
 
    public String getAboutPage() {
-      Map<String, String> parameters = new HashMap<String, String>();
+      Map<String, String> parameters = new HashMap<>();
       parameters.put("VERSION", CommonConfiguration.getApplicationVersion());
       parameters.put("CURRENTYEAR", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
       return getFileAsString("about.html", parameters);

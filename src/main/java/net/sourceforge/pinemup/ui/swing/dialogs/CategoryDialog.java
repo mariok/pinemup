@@ -263,7 +263,7 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
             return c;
          }
       };
-      colorBox = new JComboBox<NoteColor>(NoteColor.values());
+      colorBox = new JComboBox<>(NoteColor.values());
       colorBox.setRenderer(cr);
       colorBox.addActionListener(this);
       colorBox.setEnabled(false);

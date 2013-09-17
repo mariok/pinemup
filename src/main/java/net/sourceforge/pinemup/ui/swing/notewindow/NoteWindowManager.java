@@ -43,7 +43,7 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
    private Map<Note, NoteWindow> noteWindows;
 
    public NoteWindowManager() {
-      noteWindows = new HashMap<Note, NoteWindow>();
+      noteWindows = new HashMap<>();
    }
 
    public void bringAllWindowsToFront() {

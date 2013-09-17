@@ -112,7 +112,7 @@ public class ExportDialog extends JDialog implements ActionListener {
          setVisible(false);
          dispose();
       } else if (src == okButton) {
-         List<Category> catsToExport = new LinkedList<Category>();
+         List<Category> catsToExport = new LinkedList<>();
          for (int i = 0; i < catBox.length; i++) {
             if (catBox[i].isSelected()) {
                catsToExport.add(CategoryManager.getInstance().getCategoryByNumber(i));

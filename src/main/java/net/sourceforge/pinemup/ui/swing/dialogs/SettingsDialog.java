@@ -442,7 +442,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       languagePanel.add(emptyLabel, gbc);
 
       // Create fields
-      languageBox = new JComboBox<SupportedLocale>(SupportedLocale.values());
+      languageBox = new JComboBox<>(SupportedLocale.values());
       languageBox.addActionListener(this);
 
       // Set settings for all fields
@@ -815,7 +815,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       serverPanel.add(serverDirLabel, gbc);
 
       // Create fields
-      serverTypeBox = new JComboBox<ConnectionType>(ConnectionType.values());
+      serverTypeBox = new JComboBox<>(ConnectionType.values());
       serverTypeBox.addActionListener(this);
       serverAddressField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverAddressField.getDocument().addDocumentListener(this);

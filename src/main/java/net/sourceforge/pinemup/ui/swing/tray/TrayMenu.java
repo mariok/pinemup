@@ -126,7 +126,7 @@ public class TrayMenu extends PopupMenu {
    }
 
    private List<Menu> getCategoryMenus() {
-      List<Menu> categoryMenus = new ArrayList<Menu>();
+      List<Menu> categoryMenus = new ArrayList<>();
       for (Category cat : CategoryManager.getInstance().getCategories()) {
          categoryMenus.add(createCategoryActionsMenu(cat.getName(), cat));
       }
