@@ -24,6 +24,8 @@ package net.sourceforge.pinemup.ui.swing.notewindow;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.Note;
 import net.sourceforge.pinemup.core.NoteAddedEvent;
 import net.sourceforge.pinemup.core.NoteAddedEventListener;
@@ -69,6 +71,8 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
    public void noteRemoved(NoteRemovedEvent event) {
       LOG.debug("Received NoteRemovedEvent.");
       Note n = event.getRemovedNote();
+      Category category = event.getSource();
+      category.removeCategoryChangedEventListener(noteWindows.get(n));
       closeAndRemoveNoteWindow(n);
    }
 
@@ -96,6 +100,8 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
       NoteWindow window = new NoteWindow(note);
       noteWindows.put(note, window);
       note.addNoteChangedEventListener(window);
+      Category category = CategoryManager.getInstance().findCategoryForNote(note);
+      category.addCategoryChangedEventListener(window);
       return window;
    }
 }

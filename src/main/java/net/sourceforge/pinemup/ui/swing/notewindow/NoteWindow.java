@@ -51,6 +51,8 @@ import javax.swing.SwingConstants;
 import javax.swing.text.View;
 
 import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.CategoryChangedEvent;
+import net.sourceforge.pinemup.core.CategoryChangedEventListener;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.I18N;
 import net.sourceforge.pinemup.core.Note;
@@ -64,7 +66,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NoteWindow extends JWindow implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
-      MouseWheelListener, KeyListener, NoteChangedEventListener {
+      MouseWheelListener, KeyListener, NoteChangedEventListener, CategoryChangedEventListener {
    private static final Logger LOG = LoggerFactory.getLogger(NoteWindow.class);
 
    private static final long serialVersionUID = -5228524832353948701L;
@@ -221,7 +223,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       topPanel.addKeyListener(this);
       textArea.addKeyListener(this);
 
-      updateCategory();
+      loadCategoryNameFromParentNote();
       setVisible(true);
       showScrollButtonIfNeeded();
    }
@@ -433,14 +435,18 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       }
    }
 
-   private void updateCategory() {
+   private void loadCategoryNameFromParentNote() {
       Category cat = CategoryManager.getInstance().findCategoryForNote(parentNote);
       if (cat != null) {
-         topPanel.setToolTipText(I18N.getInstance().getString("category") + ": " + cat.getName());
-         if (catButton != null) {
-            catButton.setText(cat.getName());
-            repaint();
-         }
+         refreshCategoryName(cat);
+      }
+   }
+
+   private void refreshCategoryName(Category category) {
+      topPanel.setToolTipText(I18N.getInstance().getString("category") + ": " + category.getName());
+      if (catButton != null) {
+         catButton.setText(category.getName());
+         repaint();
       }
    }
 
@@ -538,5 +544,12 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       setBGColor(parentNote.getColor());
       updateFontSize();
       updateAlwaysOnTopState();
+   }
+
+   @Override
+   public void categoryChanged(CategoryChangedEvent event) {
+      LOG.debug("Received CategoryChangedEvent.");
+      Category category = event.getSource();
+      refreshCategoryName(category);
    }
 }
