@@ -32,7 +32,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import net.sourceforge.pinemup.core.I18N;
+import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public class UpdateDialog extends JFrame implements ActionListener {

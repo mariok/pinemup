@@ -3,7 +3,7 @@ package net.sourceforge.pinemup.ui.swing.menus.logic;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 
 public class CategoryMenuLogic implements ActionListener {

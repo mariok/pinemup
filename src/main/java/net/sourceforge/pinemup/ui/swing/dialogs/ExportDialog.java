@@ -37,10 +37,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.io.ExportFileManager;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.ExportFileManager;
 import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
 import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 

@@ -1,7 +1,7 @@
 package net.sourceforge.pinemup.ui.swing.dialogs;
 
-import net.sourceforge.pinemup.io.UpdateCheckResultHandler;
-import net.sourceforge.pinemup.ui.UserInputRetriever;
+import net.sourceforge.pinemup.core.io.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.core.UserInputRetriever;
 
 public class DialogFactory {
    private UserInputRetriever userInputRetriever;

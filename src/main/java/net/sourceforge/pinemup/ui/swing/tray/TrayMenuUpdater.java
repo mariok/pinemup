@@ -1,13 +1,13 @@
 package net.sourceforge.pinemup.ui.swing.tray;
 
-import net.sourceforge.pinemup.core.CategoryAddedEvent;
-import net.sourceforge.pinemup.core.CategoryAddedEventListener;
-import net.sourceforge.pinemup.core.CategoryChangedEvent;
-import net.sourceforge.pinemup.core.CategoryChangedEventListener;
-import net.sourceforge.pinemup.core.CategoryRemovedEvent;
-import net.sourceforge.pinemup.core.CategoryRemovedEventListener;
-import net.sourceforge.pinemup.core.UserSettingsChangedEvent;
-import net.sourceforge.pinemup.core.UserSettingsChangedEventListener;
+import net.sourceforge.pinemup.core.model.CategoryAddedEvent;
+import net.sourceforge.pinemup.core.model.CategoryAddedEventListener;
+import net.sourceforge.pinemup.core.model.CategoryChangedEvent;
+import net.sourceforge.pinemup.core.model.CategoryChangedEventListener;
+import net.sourceforge.pinemup.core.model.CategoryRemovedEvent;
+import net.sourceforge.pinemup.core.model.CategoryRemovedEventListener;
+import net.sourceforge.pinemup.core.settings.UserSettingsChangedEvent;
+import net.sourceforge.pinemup.core.settings.UserSettingsChangedEventListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -27,7 +27,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JLabel;
 
-import net.sourceforge.pinemup.core.NoteColor;
+import net.sourceforge.pinemup.core.model.NoteColor;
 
 class BackgroundLabel extends JLabel {
    private static final long serialVersionUID = -8780099589968016013L;

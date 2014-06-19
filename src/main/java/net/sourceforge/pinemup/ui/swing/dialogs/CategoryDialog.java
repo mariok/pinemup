@@ -49,10 +49,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.NoteColor;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.model.NoteColor;
 import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public final class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {

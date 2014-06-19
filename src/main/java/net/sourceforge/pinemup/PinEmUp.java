@@ -22,11 +22,11 @@
 package net.sourceforge.pinemup;
 
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.io.NotesFileManager;
-import net.sourceforge.pinemup.io.NotesFileSaveTrigger;
-import net.sourceforge.pinemup.io.UpdateCheckThread;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.settings.UserSettings;
+import net.sourceforge.pinemup.core.io.NotesFileManager;
+import net.sourceforge.pinemup.core.io.NotesFileSaveTrigger;
+import net.sourceforge.pinemup.core.io.UpdateCheckThread;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
 import net.sourceforge.pinemup.ui.swing.SwingUpdateCheckResultHandler;
 
@@ -66,9 +66,8 @@ public final class PinEmUp {
 
       // add NotesFileSaveTrigger as default listeners for notes / categories
       CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().registerCategoryAddedEventListener(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().registerCategoryRemovedEventListener(NotesFileSaveTrigger.getInstance());
-
+      CategoryManager.getInstance().registerDefaultCategoryAddedEventListener(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().registerDefaultCategoryRemovedEventListener(NotesFileSaveTrigger.getInstance());
       CategoryManager.getInstance().registerDefaultNoteChangedEventListener(NotesFileSaveTrigger.getInstance());
       CategoryManager.getInstance().registerDefaultNoteAddedEventListener(NotesFileSaveTrigger.getInstance());
       CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(NotesFileSaveTrigger.getInstance());

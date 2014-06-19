@@ -23,7 +23,7 @@ package net.sourceforge.pinemup.ui.swing.dialogs.file;
 
 import javax.swing.JFileChooser;
 
-import net.sourceforge.pinemup.core.I18N;
+import net.sourceforge.pinemup.core.i18n.I18N;
 
 public final class FileDialogCreator {
    private static JFileChooser fileDialog;

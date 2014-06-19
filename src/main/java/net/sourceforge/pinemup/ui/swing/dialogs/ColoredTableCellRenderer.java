@@ -30,7 +30,7 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-import net.sourceforge.pinemup.core.NoteColor;
+import net.sourceforge.pinemup.core.model.NoteColor;
 
 class ColoredTableCellRenderer implements TableCellRenderer {
    private static final Color SELECTION_COLOR = new Color(160, 160, 255);

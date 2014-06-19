@@ -19,18 +19,17 @@
  *
  */
 
-package net.sourceforge.pinemup.ui.swing.tray;
+package net.sourceforge.pinemup.core.io.server;
 
-import java.awt.PopupMenu;
-import java.awt.TrayIcon;
+class WebdavSSLConnection extends WebdavConnection {
+   private static final String PROTOCOL_HTTPS = "https";
 
-import net.sourceforge.pinemup.core.io.ResourceLoader;
-import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
+   protected WebdavSSLConnection(String serverPassword) {
+      super(serverPassword);
+   }
 
-public final class PinEmUpTrayIcon extends TrayIcon {
-   public PinEmUpTrayIcon(PopupMenu popupMenu, NoteWindowManager noteWindowManager) {
-      super(ResourceLoader.getInstance().getTrayIcon(), "pin 'em up", popupMenu);
-      setImageAutoSize(false);
-      addMouseListener(new IconClickLogic(noteWindowManager));
+   @Override
+   protected String getProtocol() {
+      return PROTOCOL_HTTPS;
    }
 }

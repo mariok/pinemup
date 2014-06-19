@@ -30,11 +30,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
-import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.core.NoteColor;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.model.Note;
+import net.sourceforge.pinemup.core.model.NoteColor;
 import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic;
 import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic.CategoryAction;
 import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic;

@@ -6,10 +6,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.core.NoteColor;
-import net.sourceforge.pinemup.core.UserSettings;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.model.Note;
+import net.sourceforge.pinemup.core.model.NoteColor;
+import net.sourceforge.pinemup.core.settings.UserSettings;
 
 public class NoteMenuLogic implements ActionListener {
    public static final String ACTION_DELETE_NOTE = "DELETE_NOTE";

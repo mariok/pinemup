@@ -24,15 +24,15 @@ package net.sourceforge.pinemup.ui.swing.notewindow;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.pinemup.core.Category;
+import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.core.NoteAddedEvent;
-import net.sourceforge.pinemup.core.NoteAddedEventListener;
-import net.sourceforge.pinemup.core.NoteChangedEvent;
-import net.sourceforge.pinemup.core.NoteChangedEventListener;
-import net.sourceforge.pinemup.core.NoteRemovedEvent;
-import net.sourceforge.pinemup.core.NoteRemovedEventListener;
+import net.sourceforge.pinemup.core.model.Note;
+import net.sourceforge.pinemup.core.model.NoteAddedEvent;
+import net.sourceforge.pinemup.core.model.NoteAddedEventListener;
+import net.sourceforge.pinemup.core.model.NoteChangedEvent;
+import net.sourceforge.pinemup.core.model.NoteChangedEventListener;
+import net.sourceforge.pinemup.core.model.NoteRemovedEvent;
+import net.sourceforge.pinemup.core.model.NoteRemovedEventListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

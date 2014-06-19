@@ -50,17 +50,17 @@ import javax.swing.JWindow;
 import javax.swing.SwingConstants;
 import javax.swing.text.View;
 
-import net.sourceforge.pinemup.core.Category;
-import net.sourceforge.pinemup.core.CategoryChangedEvent;
-import net.sourceforge.pinemup.core.CategoryChangedEventListener;
+import net.sourceforge.pinemup.core.model.Category;
+import net.sourceforge.pinemup.core.model.CategoryChangedEvent;
+import net.sourceforge.pinemup.core.model.CategoryChangedEventListener;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.Note;
-import net.sourceforge.pinemup.core.NoteChangedEvent;
-import net.sourceforge.pinemup.core.NoteChangedEventListener;
-import net.sourceforge.pinemup.core.NoteColor;
-import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.io.ResourceLoader;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.model.Note;
+import net.sourceforge.pinemup.core.model.NoteChangedEvent;
+import net.sourceforge.pinemup.core.model.NoteChangedEventListener;
+import net.sourceforge.pinemup.core.model.NoteColor;
+import net.sourceforge.pinemup.core.settings.UserSettings;
+import net.sourceforge.pinemup.core.io.ResourceLoader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

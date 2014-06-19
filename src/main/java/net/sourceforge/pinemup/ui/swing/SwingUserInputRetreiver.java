@@ -6,8 +6,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
-import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.ui.UserInputRetriever;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.UserInputRetriever;
 import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
 
 public class SwingUserInputRetreiver implements UserInputRetriever {

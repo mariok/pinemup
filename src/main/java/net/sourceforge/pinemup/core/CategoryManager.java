@@ -21,24 +21,28 @@
 
 package net.sourceforge.pinemup.core;
 
+import net.sourceforge.pinemup.core.model.*;
+import net.sourceforge.pinemup.core.settings.UserSettings;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 public final class CategoryManager {
-   private List<Category> categories = new LinkedList<>();
+   /** The pinboard, which contains all notes. **/
+   private PinBoard pinBoard = new PinBoard();
 
-   /* Listeners, which will be added per default to new notes. */
+   /** Listeners, which will be added per default to new notes. **/
    private Collection<NoteChangedEventListener> defaultNoteChangedEventListeners = new LinkedList<>();
 
-   /* Listeners, which will be added per default to new categories. */
+   /** Listeners, which will be added per default to new categories. **/
    private Collection<CategoryChangedEventListener> defaultCategoryChangedEventlisteners = new LinkedList<>();
    private Collection<NoteAddedEventListener> defaultNoteAddedEventListeners = new LinkedList<>();
    private Collection<NoteRemovedEventListener> defaultNoteRemovedEventListeners = new LinkedList<>();
 
-   private Collection<CategoryAddedEventListener> categoryAddedEventListeners = new LinkedList<>();
-
-   private Collection<CategoryRemovedEventListener> categoryRemovedEventListeners = new LinkedList<>();
+   /** Listeners, which will be added per default to new pinboards. **/
+   private Collection<CategoryAddedEventListener> defaultCategoryAddedEventListeners = new LinkedList<>();
+   private Collection<CategoryRemovedEventListener> defaultCategoryRemovedEventListeners = new LinkedList<>();
 
    private static class Holder {
       private static final CategoryManager INSTANCE = new CategoryManager();
@@ -53,14 +57,12 @@ public final class CategoryManager {
    }
 
    public void addCategory(Category c) {
-      categories.add(c);
       addDefaultCategoryEventListeners(c);
-      fireCategoryAddedEvent(c);
+      pinBoard.addCategory(c);
    }
 
    public void removeCategory(Category c) {
-      categories.remove(c);
-      fireCategoryRemovedEvent(c);
+      pinBoard.removeCategory(c);
    }
 
    public void removeNote(Note note) {
@@ -68,13 +70,13 @@ public final class CategoryManager {
    }
 
    public void hideAllNotes() {
-      for (Category cat : categories) {
+      for (Category cat : pinBoard.getCategories()) {
          cat.hideAllNotes();
       }
    }
 
    public void unhideAllNotes() {
-      for (Category cat : categories) {
+      for (Category cat : pinBoard.getCategories()) {
          cat.unhideAllNotes();
       }
    }
@@ -83,7 +85,7 @@ public final class CategoryManager {
       int n = getNumberOfCategories();
       String[] s = new String[n];
       int ni = 0;
-      for (Category cat : categories) {
+      for (Category cat : pinBoard.getCategories()) {
          s[ni] = cat.getName();
          ni++;
       }
@@ -91,11 +93,11 @@ public final class CategoryManager {
    }
 
    public int getNumberOfCategories() {
-      return categories.size();
+      return pinBoard.getCategories().size();
    }
 
    public Category getDefaultCategory() {
-      for (Category cat : categories) {
+      for (Category cat : pinBoard.getCategories()) {
          if (cat.isDefaultCategory()) {
             return cat;
          }
@@ -105,7 +107,7 @@ public final class CategoryManager {
 
    public void setDefaultCategory(Category c) {
       c.setDefault(true);
-      for (Category cat : categories) {
+      for (Category cat : pinBoard.getCategories()) {
          if (cat != c) {
             cat.setDefault(false);
          }
@@ -114,7 +116,7 @@ public final class CategoryManager {
 
    public void showOnlyNotesOfCategory(Category c) {
       c.unhideAllNotes();
-      for (Category cat : categories) {
+      for (Category cat : pinBoard.getCategories()) {
          if (cat != c) {
             cat.hideAllNotes();
          }
@@ -122,40 +124,23 @@ public final class CategoryManager {
    }
 
    public void moveCategoryUp(Category c) {
-      int index = categories.indexOf(c);
-      if (index > 0) {
-         categories.set(index, categories.get(index - 1));
-         categories.set(index - 1, c);
-         fireCategoryRemovedEvent(c);
-         fireCategoryAddedEvent(c);
-      }
+      pinBoard.moveCategoryUp(c);
    }
 
    public void moveCategoryDown(Category c) {
-      int index = categories.indexOf(c);
-      if (index < categories.size() - 1) {
-         categories.set(index, categories.get(index + 1));
-         categories.set(index + 1, c);
-         fireCategoryRemovedEvent(c);
-         fireCategoryAddedEvent(c);
-      }
+      pinBoard.moveCategoryDown(c);
    }
 
    public Category getCategoryByNumber(int n) {
-      if (n < 0 || n >= categories.size()) {
-         return null;
-      }
-      return categories.get(n);
+      return pinBoard.getCategoryByNumber(n);
    }
 
    public List<Category> getCategories() {
-      return categories;
+      return pinBoard.getCategories();
    }
 
    public void replaceWithNewCategories(List<Category> newCategories) {
       hideAllNotes();
-      categories.clear();
-      categories.addAll(newCategories);
 
       for (Category category : newCategories) {
          addDefaultCategoryEventListeners(category);
@@ -165,12 +150,11 @@ public final class CategoryManager {
          }
       }
 
-      for (Category category : newCategories) {
-         fireCategoryAddedEvent(category);
+      pinBoard = new PinBoard();
+      addDefaultPinBoardEventListeners(pinBoard);
 
-         for (Note note : category.getNotes()) {
-            category.fireNoteAddedEvent(note);
-         }
+      for(Category category : newCategories) {
+         pinBoard.addCategory(category);
       }
    }
 
@@ -191,7 +175,7 @@ public final class CategoryManager {
 
    public Category findCategoryForNote(Note note) {
       Category categoryForNote = null;
-      for (Category category : categories) {
+      for (Category category : pinBoard.getCategories()) {
          if (category.containsNote(note)) {
             categoryForNote = category;
             break;
@@ -202,11 +186,21 @@ public final class CategoryManager {
 
    public Note createNoteAndAddToDefaultCategory() {
       Category defCat = getDefaultCategory();
-      Note newNote = new Note();
+      Note newNote = createNoteWithDefaultUserSettings();
       defCat.addNote(newNote);
       newNote.setColor(defCat.getDefaultNoteColor());
       addDefaultNoteEventListeners(newNote);
 
+      return newNote;
+   }
+
+   private Note createNoteWithDefaultUserSettings() {
+      UserSettings userSettings = UserSettings.getInstance();
+      Note newNote = new Note();
+      newNote.setSize(userSettings.getDefaultWindowWidth(), userSettings.getDefaultWindowHeight());
+      newNote.setPosition(userSettings.getDefaultWindowXPostition(), userSettings.getDefaultWindowYPostition());
+      newNote.setFontSize(userSettings.getDefaultFontSize());
+      newNote.setAlwaysOnTop(userSettings.getDefaultAlwaysOnTop());
       return newNote;
    }
 
@@ -228,12 +222,17 @@ public final class CategoryManager {
       }
    }
 
-   public void registerDefaultNoteChangedEventListener(NoteChangedEventListener listener) {
-      defaultNoteChangedEventListeners.add(listener);
+   private void addDefaultPinBoardEventListeners(PinBoard pinBoard) {
+      for (CategoryAddedEventListener listener : defaultCategoryAddedEventListeners) {
+         pinBoard.addCategoryAddedEventListener(listener);
+      }
+      for (CategoryRemovedEventListener listener : defaultCategoryRemovedEventListeners) {
+         pinBoard.addCategoryRemovedEventListener(listener);
+      }
    }
 
-   public void registerDefaultCategoryChangedEventListener(CategoryChangedEventListener listener) {
-      defaultCategoryChangedEventlisteners.add(listener);
+   public void registerDefaultNoteChangedEventListener(NoteChangedEventListener listener) {
+      defaultNoteChangedEventListeners.add(listener);
    }
 
    public void registerDefaultNoteAddedEventListener(NoteAddedEventListener listener) {
@@ -244,23 +243,15 @@ public final class CategoryManager {
       defaultNoteRemovedEventListeners.add(listener);
    }
 
-   public void registerCategoryAddedEventListener(CategoryAddedEventListener listener) {
-      categoryAddedEventListeners.add(listener);
+   public void registerDefaultCategoryChangedEventListener(CategoryChangedEventListener listener) {
+      defaultCategoryChangedEventlisteners.add(listener);
    }
 
-   public void registerCategoryRemovedEventListener(CategoryRemovedEventListener listener) {
-      categoryRemovedEventListeners.add(listener);
+   public void registerDefaultCategoryAddedEventListener(CategoryAddedEventListener listener) {
+      defaultCategoryAddedEventListeners.add(listener);
    }
 
-   private void fireCategoryAddedEvent(Category category) {
-      for (CategoryAddedEventListener listener : categoryAddedEventListeners) {
-         listener.categoryAdded(new CategoryAddedEvent(this, category));
-      }
-   }
-
-   private void fireCategoryRemovedEvent(Category category) {
-      for (CategoryRemovedEventListener listener : categoryRemovedEventListeners) {
-         listener.categoryRemoved(new CategoryRemovedEvent(this, category));
-      }
+   public void registerDefaultCategoryRemovedEventListener(CategoryRemovedEventListener listener) {
+      defaultCategoryRemovedEventListeners.add(listener);
    }
 }

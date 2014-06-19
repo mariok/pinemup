@@ -6,10 +6,10 @@ import java.awt.SystemTray;
 import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.I18N;
-import net.sourceforge.pinemup.core.UserSettings;
-import net.sourceforge.pinemup.io.UpdateCheckResultHandler;
-import net.sourceforge.pinemup.ui.UserInputRetriever;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.settings.UserSettings;
+import net.sourceforge.pinemup.core.io.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.core.UserInputRetriever;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
 import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 import net.sourceforge.pinemup.ui.swing.tray.PinEmUpTrayIcon;
@@ -42,8 +42,8 @@ public class SwingUI {
 
             TrayMenuUpdater trayMenuUpdater = new TrayMenuUpdater(trayMenu);
             CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(trayMenuUpdater);
-            CategoryManager.getInstance().registerCategoryAddedEventListener(trayMenuUpdater);
-            CategoryManager.getInstance().registerCategoryRemovedEventListener(trayMenuUpdater);
+            CategoryManager.getInstance().registerDefaultCategoryAddedEventListener(trayMenuUpdater);
+            CategoryManager.getInstance().registerDefaultCategoryRemovedEventListener(trayMenuUpdater);
             UserSettings.getInstance().addUserSettingsChangedEventListener(trayMenuUpdater);
 
             CategoryManager.getInstance().registerDefaultNoteChangedEventListener(noteWindowManager);
