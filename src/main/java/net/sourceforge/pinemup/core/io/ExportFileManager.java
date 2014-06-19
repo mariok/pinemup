@@ -38,36 +38,34 @@ public final class ExportFileManager {
    public void exportCategoriesToTextFile(List<Category> l, String fileName) {
       String checkedFileName = NotesFileManager.checkAndAddExtension(fileName, FILE_EXTENSION);
       File f = new File(checkedFileName);
-      if (f != null) {
-         try {
-            PrintWriter ostream = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), Charset.forName(EXPORT_FILE_ENCODING)
-                  .newEncoder()));
+      try {
+         PrintWriter ostream = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), Charset.forName(EXPORT_FILE_ENCODING)
+               .newEncoder()));
 
-            for (Category cat : l) {
-               ostream.println(CATEGORY_SEPARATOR);
-               ostream.println(I18N.getInstance().getString("category") + ": " + cat.getName());
-               ostream.println(CATEGORY_SEPARATOR);
-               ostream.println();
+         for (Category cat : l) {
+            ostream.println(CATEGORY_SEPARATOR);
+            ostream.println(I18N.getInstance().getString("category") + ": " + cat.getName());
+            ostream.println(CATEGORY_SEPARATOR);
+            ostream.println();
 
-               boolean firstNote = true;
-               for (Note n : cat.getNotes()) {
-                  if (n.getText() != null && !n.getText().trim().equals("")) {
-                     if (!firstNote) {
-                        ostream.println();
-                        ostream.println(NOTE_SEPARATOR);
-                     } else {
-                        firstNote = false;
-                     }
-                     ostream.println(n.getText().replaceAll("\n", "\r\n"));
+            boolean firstNote = true;
+            for (Note n : cat.getNotes()) {
+               if (n.getText() != null && !n.getText().trim().equals("")) {
+                  if (!firstNote) {
                      ostream.println();
+                     ostream.println(NOTE_SEPARATOR);
+                  } else {
+                     firstNote = false;
                   }
+                  ostream.println(n.getText().replaceAll("\n", "\r\n"));
+                  ostream.println();
                }
             }
-            ostream.flush();
-            ostream.close();
-         } catch (IOException e) {
-            LOG.error("Error during attempt to export notes.", e);
          }
+         ostream.flush();
+         ostream.close();
+      } catch (IOException e) {
+         LOG.error("Error during attempt to export notes.", e);
       }
    }
 }

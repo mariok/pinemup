@@ -60,13 +60,18 @@ public class UpdateCheckThread extends Thread {
          if (versionString != null && !versionString.equals(CommonConfiguration.getApplicationVersion())) {
             StringBuilder changelogString = new StringBuilder();
             changelogString.append("<html>");
-            changelogString.append("<p>" + I18N.getInstance().getString("info.updateavailable.part1") + "</p>");
-            changelogString.append("<p>"
-                  + I18N.getInstance().getString("info.updateavailable.part2", CommonConfiguration.getApplicationVersion()) + "<br />");
-            changelogString.append(I18N.getInstance().getString("info.updateavailable.part3", versionString) + "</p>");
-            changelogString.append("<p>"
-                  + I18N.getInstance().getString("info.updateavailable.part4",
-                        "<a href=\"http://pinemup.sourceforge.net\">http://pinemup.sourceforge.net</a>") + "</p>");
+            changelogString.append("<p>");
+            changelogString.append(I18N.getInstance().getString("info.updateavailable.part1"));
+            changelogString.append("</p>");
+            changelogString.append("<p>");
+            changelogString.append(I18N.getInstance().getString("info.updateavailable.part2", CommonConfiguration.getApplicationVersion()));
+            changelogString.append("<br />");
+            changelogString.append(I18N.getInstance().getString("info.updateavailable.part3", versionString));
+            changelogString.append("</p>");
+            changelogString.append("<p>");
+            changelogString.append(I18N.getInstance().getString("info.updateavailable.part4",
+                        "<a href=\"http://pinemup.sourceforge.net\">http://pinemup.sourceforge.net</a>"));
+            changelogString.append("</p>");
             changelogString.append("<p>&nbsp;</p>");
             changelogString.append("<p>Changelog:<br />");
             changelogString.append("--------------------------------</p><p>");
@@ -76,14 +81,17 @@ public class UpdateCheckThread extends Thread {
                nextLine = br.readLine();
                if (nextLine != null) {
                   if (nextLine.startsWith("-")) {
-                     changelogString.append("<li>" + nextLine.substring(2) + "</li>");
+                     changelogString.append("<li>");
+                     changelogString.append(nextLine.substring(2));
+                     changelogString.append("</li>");
                   } else {
                      if (!firstList) {
                         changelogString.append("</ul>");
                      } else {
                         firstList = false;
                      }
-                     changelogString.append(nextLine + "<ul>");
+                     changelogString.append(nextLine);
+                     changelogString.append("<ul>");
                   }
 
                }

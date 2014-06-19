@@ -22,7 +22,7 @@ public class CategoryMenuLogic implements ActionListener {
       public String getI18nKey() {
          return i18nKey;
       }
-   };
+   }
 
    private Category category;
 

@@ -87,7 +87,6 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
    private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeServerPassBox, updateCheckBox, confirmUpDownloadBox;
    private JSpinner defaultFontSizeSpinner;
    private JRadioButton closeIcon1Button, closeIcon2Button;
-   private ButtonGroup closeIconGroup;
    private JButton updateCheckButton;
    private JComboBox<SupportedLocale> languageBox;
    private JComboBox<ConnectionType> serverTypeBox;
@@ -500,7 +499,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       titleBarPanel.add(showCatLabel, gbc);
 
       // Add fields
-      closeIconGroup = new ButtonGroup();
+      ButtonGroup closeIconGroup = new ButtonGroup();
       ImageIcon closeIcon1 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(1));
       ImageIcon closeIcon2 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(2));
       closeIcon1Button = new JRadioButton();
@@ -901,7 +900,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       defaultHeightField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowHeight()));
       defaultXPositionField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowXPostition()));
       defaultYPositionField.setText(String.valueOf(UserSettings.getInstance().getDefaultWindowYPostition()));
-      defaultFontSizeSpinner.getModel().setValue(Integer.valueOf(UserSettings.getInstance().getDefaultFontSize()));
+      defaultFontSizeSpinner.getModel().setValue((int)UserSettings.getInstance().getDefaultFontSize());
       if (UserSettings.getInstance().getCloseIcon() == 1) {
          closeIcon1Button.setSelected(true);
       } else if (UserSettings.getInstance().getCloseIcon() == 2) {
@@ -942,7 +941,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
          short defaultHeight = Short.parseShort(defaultHeightField.getText());
          short defaultXPosition = Short.parseShort(defaultXPositionField.getText());
          short defaultYPosition = Short.parseShort(defaultYPositionField.getText());
-         short defaultFontSize = ((Integer)((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber()).shortValue();
+         short defaultFontSize = ((SpinnerNumberModel)defaultFontSizeSpinner.getModel()).getNumber().shortValue();
          boolean defaultAlwaysOnTop = alwaysOnTopBox.isSelected();
          boolean showCat = showCatBox.isSelected();
          boolean confirmDel = confirmDeleteBox.isSelected();

@@ -136,11 +136,11 @@ public final class NotesFileManager {
    }
 
    public boolean writeCategoriesToFile(List<Category> categories, String filePath) throws IOException, XMLStreamException {
-      boolean writtenSuccessfully = true;
+      boolean writtenSuccessfully;
 
       LOG.debug("writing notes to file...");
 
-      try (FileOutputStream f = new FileOutputStream(filePath);) {
+      try (FileOutputStream f = new FileOutputStream(filePath)) {
          writtenSuccessfully = writeCategoriesToOutputStream(categories, f);
       }
 
@@ -163,8 +163,8 @@ public final class NotesFileManager {
             int event = parser.next();
             switch (event) {
             case XMLStreamConstants.START_ELEMENT:
-               String elementName = parser.getLocalName();
-               if (elementName.equals("category")) {
+               switch (parser.getLocalName()) {
+               case "category":
                   currentCategory = handleCategory(parser);
                   if (currentCategory.isDefaultCategory()) {
                      if (defaultCategoryAdded) {
@@ -175,20 +175,27 @@ public final class NotesFileManager {
                      }
                   }
                   categories.add(currentCategory);
-               } else if (elementName.equals("note")) {
+                  break;
+               case "note":
                   currentNote = handleNote(parser);
                   if (currentCategory != null) {
                      currentCategory.addNote(currentNote);
                   }
-               } else if (elementName.equals("text")) {
+                  break;
+               case "text":
                   for (int i = 0; i < parser.getAttributeCount(); i++) {
                      if (parser.getAttributeLocalName(i).equals("size")) {
                         short fontSize = Short.parseShort(parser.getAttributeValue(i));
                         currentNote.setFontSize(fontSize);
                      }
                   }
-               } else if (elementName.equals("newline")) {
+                  break;
+               case "newline":
                   currentNote.setText(currentNote.getText() + "\n");
+                  break;
+               default:
+                  // unkown element name, do nothing
+                  break;
                }
                break;
             case XMLStreamConstants.CHARACTERS:

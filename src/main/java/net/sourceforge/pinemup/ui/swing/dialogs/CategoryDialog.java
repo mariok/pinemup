@@ -207,8 +207,8 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
             I18N.getInstance().getString("categorydialog.namecolumn"), I18N.getInstance().getString("categorydialog.colorcolumn")};
       catTableModel.setColumnIdentifiers(columnNames);
       Object[][] rowData = makeDataArray();
-      for (int i = 0; i < rowData.length; i++) {
-         catTableModel.addRow(rowData[i]);
+      for (Object[] row : rowData) {
+         catTableModel.addRow(row);
       }
 
       JTable jt = new JTable(catTableModel);

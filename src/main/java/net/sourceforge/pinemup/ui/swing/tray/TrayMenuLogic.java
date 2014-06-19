@@ -44,36 +44,46 @@ public class TrayMenuLogic implements ActionListener {
 
    @Override
    public void actionPerformed(ActionEvent e) {
-      String action = e.getActionCommand();
-      if (ACTION_SHOW_ABOUT_DIALOG.equals(action)) {
+      switch (e.getActionCommand()) {
+      case ACTION_SHOW_ABOUT_DIALOG:
          new AboutDialog();
-      } else if (ACTION_SHOW_SETTINGS_DIALOG.equals(action)) {
+         break;
+      case ACTION_SHOW_SETTINGS_DIALOG:
          dialogFactory.showSettingsDialog();
-      } else if (ACTION_EXIT_APPLICATION.equals(action)) {
+         break;
+      case ACTION_EXIT_APPLICATION:
          // save notes to file and exit
          writeCategoriesToFile();
          System.exit(0);
-      } else if (ACTION_UPLOAD_TO_SERVER.equals(action)) {
+      case ACTION_UPLOAD_TO_SERVER:
          if (!UserSettings.getInstance().getConfirmUpDownload()
                || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance()
-                     .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+               .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             // save notes to file
             writeCategoriesToFile();
             // copy file to server
-            new ServerThread(ServerThread.UPLOAD, userInputRetriever);
+            new ServerThread(ServerThread.Direction.UPLOAD, userInputRetriever);
          }
-      } else if (ACTION_DOWNLOAD_FROM_SERVER.equals(action)) {
+         break;
+      case ACTION_DOWNLOAD_FROM_SERVER:
          if (!UserSettings.getInstance().getConfirmUpDownload()
                || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacelocalfile"), I18N.getInstance()
-                     .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            new ServerThread(ServerThread.DOWNLOAD, userInputRetriever);
+               .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            new ServerThread(ServerThread.Direction.DOWNLOAD, userInputRetriever);
          }
-      } else if (ACTION_EXPORT.equals(action)) {
+         break;
+      case ACTION_EXPORT:
          new ExportDialog();
-      } else if (ACTION_MANAGE_CATEGORIES.equals(action)) {
+         break;
+      case ACTION_MANAGE_CATEGORIES:
          CategoryDialog.showInstance();
-      } else if (ACTION_CHECK_FOR_UPDATES.equals(action)) {
+         break;
+      case ACTION_CHECK_FOR_UPDATES:
          new UpdateCheckThread(updateCheckResultHandler);
+         break;
+      default:
+         // unknown action, do nothing
+         break;
       }
    }
 

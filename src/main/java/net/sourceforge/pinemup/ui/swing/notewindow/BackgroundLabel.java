@@ -41,8 +41,7 @@ class BackgroundLabel extends JLabel {
 
       Graphics2D g2 = (Graphics2D)g;
 
-      for (int i = 1; i <= width; i++) {
-         int startX = i;
+      for (int startX = 1; startX <= width; startX++) {
          int startY = 0;
          int endX = startX + 1;
          int endY = startY + height;

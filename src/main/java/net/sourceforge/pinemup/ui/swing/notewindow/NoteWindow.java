@@ -21,49 +21,18 @@
 
 package net.sourceforge.pinemup.ui.swing.notewindow;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JWindow;
-import javax.swing.SwingConstants;
-import javax.swing.text.View;
-
-import net.sourceforge.pinemup.core.model.Category;
-import net.sourceforge.pinemup.core.model.CategoryChangedEvent;
-import net.sourceforge.pinemup.core.model.CategoryChangedEventListener;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.model.Note;
-import net.sourceforge.pinemup.core.model.NoteChangedEvent;
-import net.sourceforge.pinemup.core.model.NoteChangedEventListener;
-import net.sourceforge.pinemup.core.model.NoteColor;
-import net.sourceforge.pinemup.core.settings.UserSettings;
 import net.sourceforge.pinemup.core.io.ResourceLoader;
-
+import net.sourceforge.pinemup.core.model.*;
+import net.sourceforge.pinemup.core.settings.UserSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.text.View;
+import java.awt.*;
+import java.awt.event.*;
 
 public class NoteWindow extends JWindow implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
       MouseWheelListener, KeyListener, NoteChangedEventListener, CategoryChangedEventListener {
@@ -86,7 +55,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    private JScrollPane textPanel;
 
-   private JPanel topPanel, catPanel, mainPanel;
+   private JPanel topPanel;
 
    private JTextArea textArea;
 
@@ -113,7 +82,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       textPanel = new JScrollPane();
       textPanel.setBorder(null);
       textPanel.setOpaque(false);
-      mainPanel = new JPanel(new BorderLayout());
+      JPanel mainPanel = new JPanel(new BorderLayout());
       mainPanel.setOpaque(false);
       topPanel = new JPanel(new BorderLayout());
       topPanel.setPreferredSize(new Dimension(UserSettings.getInstance().getDefaultWindowWidth(), TOPPANEL_HEIGHT));
@@ -134,7 +103,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
          catButton.setMargin(new Insets(0, 0, 0, 0));
          catButton.setBackground(COLOR_TRANSPARENT);
 
-         catPanel = new JPanel(new FlowLayout());
+         JPanel catPanel = new JPanel(new FlowLayout());
          catPanel.add(catButton);
          catPanel.setOpaque(false);
          catButton.addMouseListener(this);
@@ -451,7 +420,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    }
 
    private void updateFontSize() {
-      textArea.setFont(new java.awt.Font("SANSSERIF", 1, parentNote.getFontSize()));
+      textArea.setFont(new java.awt.Font("SANSSERIF", Font.BOLD, parentNote.getFontSize()));
    }
 
    private void updateAlwaysOnTopState() {

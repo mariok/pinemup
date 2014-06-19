@@ -36,7 +36,7 @@ class DummyFrame extends JFrame {
       this.setUndecorated(true);
       this.setBounds(-1, -1, 1, 1);
       String osName = System.getProperty("os.name");
-      if (osName == null || !(osName.toLowerCase().indexOf("win") >= 0)) {
+      if (osName == null || !(osName.toLowerCase().contains("win"))) {
          this.setVisible(true);
       }
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);

@@ -153,7 +153,7 @@ public final class CategoryManager {
       pinBoard = new PinBoard();
       addDefaultPinBoardEventListeners(pinBoard);
 
-      for(Category category : newCategories) {
+      for (Category category : newCategories) {
          pinBoard.addCategory(category);
       }
    }

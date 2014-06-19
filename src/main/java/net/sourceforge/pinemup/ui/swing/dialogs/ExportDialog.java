@@ -51,7 +51,7 @@ public class ExportDialog extends JDialog implements ActionListener {
    private static final int DIALOG_HEIGHT = 300;
 
    private JButton okButton, cancelButton;
-   private JCheckBox[] catBox;
+   private JCheckBox[] catBoxes;
    private JCheckBox allCatsBox;
 
    public ExportDialog() {
@@ -71,7 +71,7 @@ public class ExportDialog extends JDialog implements ActionListener {
       JPanel checkBoxPanel = new JPanel(new GridLayout(rows + 2, 1));
       String[] cats = CategoryManager.getInstance().getCategoryNames();
       JPanel[] catPanel = new JPanel[rows];
-      catBox = new JCheckBox[rows];
+      catBoxes = new JCheckBox[rows];
       JPanel allCatsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       allCatsBox = new JCheckBox("(" + I18N.getInstance().getString("exportdialog.allcategoriescheckbox") + ")");
       allCatsBox.setSelected(true);
@@ -80,10 +80,10 @@ public class ExportDialog extends JDialog implements ActionListener {
       checkBoxPanel.add(allCatsPanel);
       for (int i = 0; i < rows; i++) {
          catPanel[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
-         catBox[i] = new JCheckBox((i + 1) + ": " + cats[i]);
-         catBox[i].setSelected(true);
-         catBox[i].addActionListener(this);
-         catPanel[i].add(catBox[i]);
+         catBoxes[i] = new JCheckBox((i + 1) + ": " + cats[i]);
+         catBoxes[i].setSelected(true);
+         catBoxes[i].addActionListener(this);
+         catPanel[i].add(catBoxes[i]);
          checkBoxPanel.add(catPanel[i]);
       }
       sp.setViewportView(checkBoxPanel);
@@ -113,8 +113,8 @@ public class ExportDialog extends JDialog implements ActionListener {
          dispose();
       } else if (src == okButton) {
          List<Category> catsToExport = new LinkedList<>();
-         for (int i = 0; i < catBox.length; i++) {
-            if (catBox[i].isSelected()) {
+         for (int i = 0; i < catBoxes.length; i++) {
+            if (catBoxes[i].isSelected()) {
                catsToExport.add(CategoryManager.getInstance().getCategoryByNumber(i));
             }
          }
@@ -126,16 +126,15 @@ public class ExportDialog extends JDialog implements ActionListener {
          setVisible(false);
          dispose();
       } else if (src == allCatsBox) {
-         for (int i = 0; i < catBox.length; i++) {
-            catBox[i].setSelected(allCatsBox.isSelected());
+         for (JCheckBox catBox : catBoxes) {
+            catBox.setSelected(allCatsBox.isSelected());
          }
       } else {
-         for (int i = 0; i < catBox.length; i++) {
-            if (src == catBox[i] && allCatsBox.isSelected() && !catBox[i].isSelected()) {
+         for (JCheckBox catBox : catBoxes) {
+            if (src == catBox && allCatsBox.isSelected() && !catBox.isSelected()) {
                allCatsBox.setSelected(false);
             }
          }
       }
    }
-
 }

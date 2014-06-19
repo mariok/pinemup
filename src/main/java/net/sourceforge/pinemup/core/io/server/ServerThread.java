@@ -39,24 +39,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ServerThread extends Thread {
+   public enum Direction {
+      UPLOAD,
+      DOWNLOAD
+   }
+
    private static final Logger LOG = LoggerFactory.getLogger(ServerThread.class);
 
-   public static final boolean UPLOAD = true;
-   public static final boolean DOWNLOAD = false;
-
-   private boolean upload;
+   private Direction direction;
    private UserInputRetriever userInputRetriever;
 
-   public ServerThread(boolean upload, UserInputRetriever userInputRetriever) {
+   public ServerThread(Direction direction, UserInputRetriever userInputRetriever) {
       super("Server Up-/Download Thread");
-      this.upload = upload;
+      this.direction = direction;
       this.userInputRetriever = userInputRetriever;
       this.start();
    }
 
    public void run() {
-      if (upload == ServerThread.UPLOAD) {
-
+      if (direction == Direction.UPLOAD) {
          boolean uploadSuccessful;
          try {
             uploadSuccessful = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType(), getServerPassword())
