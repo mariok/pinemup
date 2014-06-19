@@ -42,7 +42,7 @@ public class Note {
 
    private NoteColor color;
 
-   private Collection<NoteChangedEventListener> noteChangedEventListeners = new ConcurrentLinkedDeque<>();
+   private final Collection<NoteChangedEventListener> noteChangedEventListeners = new ConcurrentLinkedDeque<>();
 
    public void addNoteChangedEventListener(NoteChangedEventListener listener) {
       noteChangedEventListeners.add(listener);

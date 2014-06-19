@@ -16,7 +16,7 @@ public class TrayMenuUpdater implements CategoryChangedEventListener, UserSettin
       CategoryRemovedEventListener {
    private static final Logger LOG = LoggerFactory.getLogger(TrayMenuUpdater.class);
 
-   private TrayMenu trayMenu;
+   private final TrayMenu trayMenu;
 
    public TrayMenuUpdater(TrayMenu trayMenu) {
       this.trayMenu = trayMenu;

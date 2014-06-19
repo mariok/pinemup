@@ -80,7 +80,10 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
    private boolean settingsChanged;
 
-   private JButton okButton, cancelButton, applyButton, browseButton;
+   private final JButton okButton;
+   private final JButton cancelButton;
+   private final JButton applyButton;
+   private JButton browseButton;
    private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, serverAddressField,
          serverUserField, serverDirField, notesFileField;
    private JPasswordField serverPasswdField;
@@ -95,10 +98,10 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
    private JLabel updateCheckLabel, languageLabel, closeIconLabel, showCatLabel, confirmDeleteLabel, defaultWidthLabel, defaultHeightLabel,
          defaultXPositionLabel, defaultYPositionLabel, defaultFontSizeLabel, alwaysOnTopLabel, serverTypeLabel, serverAddressLabel,
          serverUserLabel, serverPasswdLabel, serverDirLabel;
-   private JTabbedPane tpane;
+   private final JTabbedPane tpane;
 
-   private UserInputRetriever userInputRetriever;
-   private UpdateCheckResultHandler updateCheckResultHandler;
+   private final UserInputRetriever userInputRetriever;
+   private final UpdateCheckResultHandler updateCheckResultHandler;
 
    public SettingsDialog(UserInputRetriever userInputRetriever, UpdateCheckResultHandler updateCheckResultHandler) {
       super();

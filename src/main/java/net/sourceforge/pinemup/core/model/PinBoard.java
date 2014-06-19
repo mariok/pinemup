@@ -8,11 +8,11 @@ import java.util.List;
  * Contains a number of notes of different categories.
  */
 public class PinBoard {
-   private List<Category> categories = new LinkedList<>();
+   private final List<Category> categories = new LinkedList<>();
 
-   private Collection<CategoryAddedEventListener> categoryAddedEventListeners = new LinkedList<>();
+   private final Collection<CategoryAddedEventListener> categoryAddedEventListeners = new LinkedList<>();
 
-   private Collection<CategoryRemovedEventListener> categoryRemovedEventListeners = new LinkedList<>();
+   private final Collection<CategoryRemovedEventListener> categoryRemovedEventListeners = new LinkedList<>();
 
    public void addCategory(Category c) {
       categories.add(c);

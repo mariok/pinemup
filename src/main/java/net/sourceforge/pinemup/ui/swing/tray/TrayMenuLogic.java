@@ -30,9 +30,9 @@ public class TrayMenuLogic implements ActionListener {
    public static final String ACTION_MANAGE_CATEGORIES = "MANAGE_CATEGORIES";
    public static final String ACTION_CHECK_FOR_UPDATES = "CHECK_FOR_UPDATES";
 
-   private DialogFactory dialogFactory;
-   private UserInputRetriever userInputRetriever;
-   private UpdateCheckResultHandler updateCheckResultHandler;
+   private final DialogFactory dialogFactory;
+   private final UserInputRetriever userInputRetriever;
+   private final UpdateCheckResultHandler updateCheckResultHandler;
 
    public TrayMenuLogic(DialogFactory dialogFactory, UserInputRetriever userInputRetriever,
          UpdateCheckResultHandler updateCheckResultHandler) {

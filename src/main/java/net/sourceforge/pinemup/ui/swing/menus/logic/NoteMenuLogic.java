@@ -18,7 +18,7 @@ public class NoteMenuLogic implements ActionListener {
    public static final String ACTION_SET_NOTE_COLOR = "SET_NOTE_COLOR";
    public static final String ACTION_SET_NOTE_FONT_SIZE = "SET_NOTE_FONT_SIZE";
 
-   private Note note;
+   private final Note note;
 
    public NoteMenuLogic(Note note) {
       this.note = note;

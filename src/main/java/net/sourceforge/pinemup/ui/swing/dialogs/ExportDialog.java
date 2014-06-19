@@ -50,9 +50,10 @@ public class ExportDialog extends JDialog implements ActionListener {
    private static final int DIALOG_WIDTH = 250;
    private static final int DIALOG_HEIGHT = 300;
 
-   private JButton okButton, cancelButton;
-   private JCheckBox[] catBoxes;
-   private JCheckBox allCatsBox;
+   private final JButton okButton;
+   private final JButton cancelButton;
+   private final JCheckBox[] catBoxes;
+   private final JCheckBox allCatsBox;
 
    public ExportDialog() {
       super();

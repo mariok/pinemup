@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public abstract class ServerConnection {
    private static final Logger LOG = LoggerFactory.getLogger(ServerConnection.class);
 
-   private String serverPassword;
+   private final String serverPassword;
 
    public static ServerConnection createServerConnection(ConnectionType serverType, String password) {
       if (serverType == ConnectionType.WEBDAV) {

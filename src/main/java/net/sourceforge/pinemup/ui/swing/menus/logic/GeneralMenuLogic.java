@@ -11,7 +11,7 @@ public class GeneralMenuLogic implements ActionListener {
       SHOW_ALL_NOTES("menu.showallnotesitem"),
       HIDE_ALL_NOTES("menu.hideallnotesitem");
 
-      private String i18nKey;
+      private final String i18nKey;
 
       private GeneralAction(String i18nKey) {
          this.i18nKey = i18nKey;

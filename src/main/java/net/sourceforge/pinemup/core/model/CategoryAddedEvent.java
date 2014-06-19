@@ -5,7 +5,7 @@ import java.util.EventObject;
 public class CategoryAddedEvent extends EventObject {
    private static final long serialVersionUID = 3366814253028410097L;
 
-   private Category addedCategory;
+   private final Category addedCategory;
 
    public CategoryAddedEvent(PinBoard source, Category addedCategory) {
       super(source);

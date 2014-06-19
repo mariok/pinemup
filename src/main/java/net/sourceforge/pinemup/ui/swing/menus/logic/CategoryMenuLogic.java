@@ -13,7 +13,7 @@ public class CategoryMenuLogic implements ActionListener {
       SHOW_ONLY_NOTES_OF_CATEGORY("menu.categorymenu.showonlynotes"),
       SET_AS_DEFAULT_CATEGORY("menu.categorymenu.setasdefault");
 
-      private String i18nKey;
+      private final String i18nKey;
 
       private CategoryAction(String i18nKey) {
          this.i18nKey = i18nKey;
@@ -24,7 +24,7 @@ public class CategoryMenuLogic implements ActionListener {
       }
    }
 
-   private Category category;
+   private final Category category;
 
    public CategoryMenuLogic(Category category) {
       this.category = category;

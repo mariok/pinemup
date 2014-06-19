@@ -37,7 +37,7 @@ class IconClickLogic extends MouseAdapter implements ActionListener {
 
    private Timer timer;
 
-   private NoteWindowManager noteWindowManager;
+   private final NoteWindowManager noteWindowManager;
 
    public IconClickLogic(NoteWindowManager noteWindowManager) {
       super();

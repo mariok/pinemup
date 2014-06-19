@@ -109,7 +109,7 @@ public final class NotesFileSaveTrigger implements CategoryChangedEventListener,
    }
 
    private static class FileSaveThread extends Thread {
-      private UserInputRetriever userInputRetriever;
+      private final UserInputRetriever userInputRetriever;
 
       public FileSaveThread(UserInputRetriever userInputRetriever) {
          this.userInputRetriever = userInputRetriever;

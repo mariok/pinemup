@@ -53,10 +53,10 @@ public final class ResourceLoader {
 
    private static final Logger LOG = LoggerFactory.getLogger(ResourceLoader.class);
 
-   private Image closeIcon1;
-   private Image closeIcon2;
-   private Image trayIcon;
-   private Image scrollImage;
+   private final Image closeIcon1;
+   private final Image closeIcon2;
+   private final Image trayIcon;
+   private final Image scrollImage;
 
    private static class Holder {
       private static final ResourceLoader INSTANCE = new ResourceLoader();

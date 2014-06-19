@@ -28,13 +28,13 @@ import java.util.Set;
 
 public class Category {
    private String name;
-   private Set<Note> notes;
+   private final Set<Note> notes;
    private boolean defaultCategory;
    private NoteColor defaultNoteColor;
 
-   private Collection<CategoryChangedEventListener> categoryChangedEventListeners = new LinkedList<>();
-   private Collection<NoteAddedEventListener> noteAddedEventListeners = new LinkedList<>();
-   private Collection<NoteRemovedEventListener> noteRemovedEventListeners = new LinkedList<>();
+   private final Collection<CategoryChangedEventListener> categoryChangedEventListeners = new LinkedList<>();
+   private final Collection<NoteAddedEventListener> noteAddedEventListeners = new LinkedList<>();
+   private final Collection<NoteRemovedEventListener> noteRemovedEventListeners = new LinkedList<>();
 
    public void addCategoryChangedEventListener(CategoryChangedEventListener listener) {
       categoryChangedEventListeners.add(listener);

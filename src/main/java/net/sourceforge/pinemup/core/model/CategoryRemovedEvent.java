@@ -5,7 +5,7 @@ import java.util.EventObject;
 public class CategoryRemovedEvent extends EventObject {
    private static final long serialVersionUID = 5340998352321719112L;
 
-   private Category removedCategory;
+   private final Category removedCategory;
 
    public CategoryRemovedEvent(PinBoard source, Category removedCategory) {
       super(source);

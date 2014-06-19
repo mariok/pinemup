@@ -37,7 +37,7 @@ public final class I18N {
       ru("ru"),
       uk_UA("uk", "UA");
 
-      private Locale locale;
+      private final Locale locale;
 
       private SupportedLocale(String language) {
          locale = new Locale(language);

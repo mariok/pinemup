@@ -5,7 +5,7 @@ import net.sourceforge.pinemup.core.io.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.ui.swing.dialogs.UpdateDialog;
 
 public class SwingUpdateCheckResultHandler implements UpdateCheckResultHandler {
-   private boolean showUpToDateMessage;
+   private final boolean showUpToDateMessage;
 
    public SwingUpdateCheckResultHandler(boolean showUpToDateMessage) {
       super();

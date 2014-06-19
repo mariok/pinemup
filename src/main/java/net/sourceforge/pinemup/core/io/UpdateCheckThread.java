@@ -41,7 +41,7 @@ public class UpdateCheckThread extends Thread {
 
    private static final Logger LOG = LoggerFactory.getLogger(UpdateCheckThread.class);
 
-   private UpdateCheckResultHandler updateCheckResultHandler;
+   private final UpdateCheckResultHandler updateCheckResultHandler;
 
    public UpdateCheckThread(UpdateCheckResultHandler updateCheckResultHandler) {
       super("Update-Check Thread");

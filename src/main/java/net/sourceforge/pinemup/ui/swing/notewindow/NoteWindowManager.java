@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public final class NoteWindowManager implements NoteChangedEventListener, NoteAddedEventListener, NoteRemovedEventListener {
    private static final Logger LOG = LoggerFactory.getLogger(NoteWindowManager.class);
 
-   private Map<Note, NoteWindow> noteWindows;
+   private final Map<Note, NoteWindow> noteWindows;
 
    public NoteWindowManager() {
       noteWindows = new HashMap<>();

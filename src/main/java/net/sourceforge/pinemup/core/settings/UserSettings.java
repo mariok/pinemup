@@ -29,13 +29,13 @@ import java.util.prefs.Preferences;
 import net.sourceforge.pinemup.core.i18n.I18N.SupportedLocale;
 
 public final class UserSettings {
-   private Collection<UserSettingsChangedEventListener> userSettingsChangedEventListeners = new LinkedList<>();
+   private final Collection<UserSettingsChangedEventListener> userSettingsChangedEventListeners = new LinkedList<>();
 
    private static final String PREFIX = "peu_dev_";
    private static final int MIN_NOTEWINDOW_WIDTH = 30;
    private static final int MIN_NOTEWINDOW_HEIGHT = 30;
 
-   private Preferences prefs;
+   private final Preferences prefs;
 
    private short defaultWindowWidth;
    private short defaultWindowHeight;

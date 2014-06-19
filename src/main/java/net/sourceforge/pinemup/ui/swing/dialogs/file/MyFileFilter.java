@@ -26,7 +26,7 @@ import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 class MyFileFilter extends FileFilter {
-   private String ending;
+   private final String ending;
 
    public boolean accept(File f) {
       return f.getName().toUpperCase().endsWith("." + ending) || f.isDirectory();

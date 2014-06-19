@@ -33,16 +33,16 @@ public final class CategoryManager {
    private PinBoard pinBoard = new PinBoard();
 
    /** Listeners, which will be added per default to new notes. **/
-   private Collection<NoteChangedEventListener> defaultNoteChangedEventListeners = new LinkedList<>();
+   private final Collection<NoteChangedEventListener> defaultNoteChangedEventListeners = new LinkedList<>();
 
    /** Listeners, which will be added per default to new categories. **/
-   private Collection<CategoryChangedEventListener> defaultCategoryChangedEventlisteners = new LinkedList<>();
-   private Collection<NoteAddedEventListener> defaultNoteAddedEventListeners = new LinkedList<>();
-   private Collection<NoteRemovedEventListener> defaultNoteRemovedEventListeners = new LinkedList<>();
+   private final Collection<CategoryChangedEventListener> defaultCategoryChangedEventlisteners = new LinkedList<>();
+   private final Collection<NoteAddedEventListener> defaultNoteAddedEventListeners = new LinkedList<>();
+   private final Collection<NoteRemovedEventListener> defaultNoteRemovedEventListeners = new LinkedList<>();
 
    /** Listeners, which will be added per default to new pinboards. **/
-   private Collection<CategoryAddedEventListener> defaultCategoryAddedEventListeners = new LinkedList<>();
-   private Collection<CategoryRemovedEventListener> defaultCategoryRemovedEventListeners = new LinkedList<>();
+   private final Collection<CategoryAddedEventListener> defaultCategoryAddedEventListeners = new LinkedList<>();
+   private final Collection<CategoryRemovedEventListener> defaultCategoryRemovedEventListeners = new LinkedList<>();
 
    private static class Holder {
       private static final CategoryManager INSTANCE = new CategoryManager();

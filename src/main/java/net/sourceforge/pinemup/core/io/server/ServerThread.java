@@ -46,8 +46,8 @@ public class ServerThread extends Thread {
 
    private static final Logger LOG = LoggerFactory.getLogger(ServerThread.class);
 
-   private Direction direction;
-   private UserInputRetriever userInputRetriever;
+   private final Direction direction;
+   private final UserInputRetriever userInputRetriever;
 
    public ServerThread(Direction direction, UserInputRetriever userInputRetriever) {
       super("Server Up-/Download Thread");

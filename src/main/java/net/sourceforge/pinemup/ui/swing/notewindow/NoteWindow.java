@@ -53,15 +53,17 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    private static final Dimension CATBUTTON_SIZE = new Dimension(100, 15);
    private static final int TOPPANEL_HEIGHT = 26;
 
-   private JScrollPane textPanel;
+   private final JScrollPane textPanel;
 
-   private JPanel topPanel;
+   private final JPanel topPanel;
 
-   private JTextArea textArea;
+   private final JTextArea textArea;
 
-   private Note parentNote;
+   private final Note parentNote;
 
-   private JButton closeButton, catButton, scrollButton;
+   private final JButton closeButton;
+   private JButton catButton;
+   private final JButton scrollButton;
 
    private int draggingOffsetX, draggingOffsetY;
 
@@ -74,7 +76,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    /** required for font size change via mousewheel. */
    private boolean controlPressed;
 
-   private BackgroundLabel bgLabel;
+   private final BackgroundLabel bgLabel;
 
    NoteWindow(Note pn) {
       super(new DummyFrame());

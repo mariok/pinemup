@@ -18,10 +18,10 @@ public enum NoteColor {
    public static final NoteColor DEFAULT_COLOR = NoteColor.YELLOW;
    private static final String I18N_PREFIX = "color.";
 
-   private byte code;
-   private String name;
-   private Color color1;
-   private Color color2;
+   private final byte code;
+   private final String name;
+   private final Color color1;
+   private final Color color2;
 
    private NoteColor(byte code, String name, Color color1, Color color2) {
       this.code = code;

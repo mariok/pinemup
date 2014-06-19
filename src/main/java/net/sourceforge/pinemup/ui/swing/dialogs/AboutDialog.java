@@ -45,7 +45,7 @@ public class AboutDialog extends JFrame implements ActionListener {
    private static final int DIALOG_WIDTH = 600;
    private static final int DIALOG_HEIGHT = 350;
 
-   private JButton okButton;
+   private final JButton okButton;
 
    public AboutDialog() {
       super(I18N.getInstance().getString("aboutdialog.title"));

@@ -5,8 +5,8 @@ public enum ConnectionType {
    WEBDAV((short)1, "WebDAV"),
    WEBDAVS((short)2, "WebDAVs");
 
-   private short code;
-   private String name;
+   private final short code;
+   private final String name;
 
    private ConnectionType(short code, String name) {
       this.code = code;

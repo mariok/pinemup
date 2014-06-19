@@ -43,7 +43,7 @@ public class TrayMenu extends PopupMenu {
 
    private Menu categoriesMenu;
    private MenuItem manageCategoriesItem;
-   private TrayMenuLogic trayMenuLogic;
+   private final TrayMenuLogic trayMenuLogic;
 
    public TrayMenu(DialogFactory dialogFactory, UserInputRetriever userInputRetriever, UpdateCheckResultHandler updateCheckResultHandler) {
       super("pin 'em up");

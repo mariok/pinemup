@@ -60,9 +60,13 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
 
    private static CategoryDialog instance;
 
-   private JButton closeButton, moveUpButton, moveDownButton, deleteButton, addButton;
+   private final JButton closeButton;
+   private final JButton moveUpButton;
+   private final JButton moveDownButton;
+   private final JButton deleteButton;
+   private final JButton addButton;
 
-   private JTable catTable;
+   private final JTable catTable;
    private DefaultTableModel catTableModel;
    private JTextField catNameField;
    private JCheckBox defaultBox;

@@ -5,7 +5,7 @@ import java.util.EventObject;
 public class NoteRemovedEvent extends EventObject {
    private static final long serialVersionUID = 4092939602152086749L;
 
-   private Note removedNote;
+   private final Note removedNote;
 
    public NoteRemovedEvent(Category source, Note removedNote) {
       super(source);

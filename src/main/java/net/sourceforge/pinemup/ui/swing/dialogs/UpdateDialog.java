@@ -41,7 +41,7 @@ public class UpdateDialog extends JFrame implements ActionListener {
    private static final int DIALOG_WIDTH = 400;
    private static final int DIALOG_HEIGHT = 350;
 
-   private JButton closeButton;
+   private final JButton closeButton;
 
    public UpdateDialog(String updateText) {
       super(I18N.getInstance().getString("updatedialog.title"));
