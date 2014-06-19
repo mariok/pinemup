@@ -104,7 +104,7 @@ public final class NotesFileSaveTrigger implements CategoryChangedEventListener,
       this.disabled = disabled;
    }
 
-   public void setUserInputRetriever(UserInputRetriever userInputRetriever) {
+   public synchronized void setUserInputRetriever(UserInputRetriever userInputRetriever) {
       this.userInputRetriever = userInputRetriever;
    }
 

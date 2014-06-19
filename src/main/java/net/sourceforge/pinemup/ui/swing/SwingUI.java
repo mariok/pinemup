@@ -19,7 +19,7 @@ import net.sourceforge.pinemup.ui.swing.tray.TrayMenuUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SwingUI {
+public final class SwingUI {
    private static final Logger LOG = LoggerFactory.getLogger(SwingUI.class);
 
    private SwingUI() {
@@ -33,7 +33,7 @@ public class SwingUI {
          try {
             UpdateCheckResultHandler updateCheckResultHandler = new SwingUpdateCheckResultHandler(true);
             UserInputRetriever userInputRetriever = new SwingUserInputRetreiver();
-            DialogFactory dialogFactory = new DialogFactory();
+            DialogFactory dialogFactory = new DialogFactory(userInputRetriever, updateCheckResultHandler);
 
             NoteWindowManager noteWindowManager = new NoteWindowManager();
 

@@ -4,7 +4,7 @@ package net.sourceforge.pinemup.core.settings;
  * Stores common configuration information, which is cannot be modified by the
  * user.
  */
-public class CommonConfiguration {
+public final class CommonConfiguration {
    private static final String APPLICATION_VERSION;
 
    static {

@@ -9,6 +9,12 @@ public class DialogFactory {
 
    private SettingsDialog settingsDialogInstance;
 
+   public DialogFactory(UserInputRetriever userInputRetriever,
+         UpdateCheckResultHandler updateCheckResultHandler) {
+      this.userInputRetriever = userInputRetriever;
+      this.updateCheckResultHandler = updateCheckResultHandler;
+   }
+
    public void showSettingsDialog() {
       if (settingsDialogInstance == null || !settingsDialogInstance.isVisible()) {
          settingsDialogInstance = new SettingsDialog(userInputRetriever, updateCheckResultHandler);

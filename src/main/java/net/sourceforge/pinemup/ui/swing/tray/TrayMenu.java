@@ -51,7 +51,7 @@ public class TrayMenu extends PopupMenu {
       initWithNewLanguage();
    }
 
-   public void initWithNewLanguage() {
+   public final void initWithNewLanguage() {
       removeAll();
 
       // add basic items
