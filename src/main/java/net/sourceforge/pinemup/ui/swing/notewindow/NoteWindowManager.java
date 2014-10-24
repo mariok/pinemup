@@ -24,6 +24,7 @@ package net.sourceforge.pinemup.ui.swing.notewindow;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.model.Note;
@@ -41,9 +42,11 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
    private static final Logger LOG = LoggerFactory.getLogger(NoteWindowManager.class);
 
    private final Map<Note, NoteWindow> noteWindows;
+   private final ResourceLoader resourceLoader;
 
-   public NoteWindowManager() {
+   public NoteWindowManager(ResourceLoader resourceLoader) {
       noteWindows = new HashMap<>();
+      this.resourceLoader = resourceLoader;
    }
 
    public void bringAllWindowsToFront() {
@@ -97,7 +100,7 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
    }
 
    private NoteWindow createNoteWindowForNote(Note note) {
-      NoteWindow window = new NoteWindow(note);
+      NoteWindow window = new NoteWindow(note, resourceLoader);
       noteWindows.put(note, window);
       note.addNoteChangedEventListener(window);
       Category category = CategoryManager.getInstance().findCategoryForNote(note);

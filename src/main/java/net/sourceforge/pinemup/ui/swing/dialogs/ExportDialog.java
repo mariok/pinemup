@@ -40,7 +40,7 @@ import javax.swing.JScrollPane;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.export.ExportFileManager;
+import net.sourceforge.pinemup.core.io.export.ExportFileWriter;
 import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
 import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
@@ -122,7 +122,7 @@ public class ExportDialog extends JDialog implements ActionListener {
 
          if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             String fileName = FileDialogCreator.getExportFileDialogInstance().getSelectedFile().getAbsolutePath();
-            ExportFileManager.getInstance().exportCategoriesToTextFile(catsToExport, fileName);
+            ExportFileWriter.getInstance().exportCategoriesToTextFile(catsToExport, fileName);
          }
          setVisible(false);
          dispose();

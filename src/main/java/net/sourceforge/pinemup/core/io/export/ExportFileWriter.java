@@ -11,23 +11,23 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 
-public final class ExportFileManager {
+public final class ExportFileWriter {
    private static final String EXPORT_FILE_ENCODING = "UTF-8";
    private static final String FILE_EXTENSION = ".txt";
    private static final String NOTE_SEPARATOR = "---------------------";
    private static final String CATEGORY_SEPARATOR = "################################################################";
 
-   private static final Logger LOG = LoggerFactory.getLogger(ExportFileManager.class);
+   private static final Logger LOG = LoggerFactory.getLogger(ExportFileWriter.class);
 
    private static class Holder {
-      private static final ExportFileManager INSTANCE = new ExportFileManager();
+      private static final ExportFileWriter INSTANCE = new ExportFileWriter();
    }
 
-   public static ExportFileManager getInstance() {
+   public static ExportFileWriter getInstance() {
       return Holder.INSTANCE;
    }
 
-   private ExportFileManager() {
+   private ExportFileWriter() {
 
    }
 

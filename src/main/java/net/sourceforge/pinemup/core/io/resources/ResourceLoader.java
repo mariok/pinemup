@@ -55,34 +55,12 @@ public final class ResourceLoader {
 
    private final Image closeIcon1;
    private final Image closeIcon2;
-   private final Image trayIcon;
    private final Image scrollImage;
 
-   private static class Holder {
-      private static final ResourceLoader INSTANCE = new ResourceLoader();
-   }
-
-   public static ResourceLoader getInstance() {
-      return Holder.INSTANCE;
-   }
-
-   private ResourceLoader() {
+   public ResourceLoader() {
       closeIcon1 = loadImage("closeicon.png");
       closeIcon2 = loadImage("closeicon2.png");
-      trayIcon = loadImage("icon" + getTrayIconSize() + ".png");
       scrollImage = loadImage("scroll.png");
-   }
-
-   private long getTrayIconSize() {
-      long size = Math.round(SystemTray.getSystemTray().getTrayIconSize().getHeight());
-      if ((size < TRAYICON_MIN_SIZE)) {
-         size = TRAYICON_MIN_SIZE;
-      } else if (size > TRAYICON_MAX_SIZE) {
-         size = TRAYICON_MAX_SIZE;
-      } else if (size % TRAYICON_SIZE_STEP != 0) {
-         size = (size / TRAYICON_SIZE_STEP) * TRAYICON_SIZE_STEP;
-      }
-      return size;
    }
 
    private InputStream getResourceStream(String filename) {
@@ -134,8 +112,16 @@ public final class ResourceLoader {
       }
    }
 
-   public Image getTrayIcon() {
-      return trayIcon;
+   public Image getTrayIcon(long size) {
+      long effectiveSize = size;
+      if ((size < TRAYICON_MIN_SIZE)) {
+         effectiveSize = TRAYICON_MIN_SIZE;
+      } else if (size > TRAYICON_MAX_SIZE) {
+         effectiveSize = TRAYICON_MAX_SIZE;
+      } else if (size % TRAYICON_SIZE_STEP != 0) {
+         effectiveSize = (size / TRAYICON_SIZE_STEP) * TRAYICON_SIZE_STEP;
+      }
+      return loadImage("icon" + effectiveSize + ".png");
    }
 
    public Image getScrollImage() {

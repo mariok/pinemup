@@ -6,6 +6,7 @@ import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.core.io.server.ServerThread;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
@@ -37,10 +38,11 @@ public class TrayMenuLogic implements ActionListener {
    private final NotesFileReader notesFileReader;
    private final NotesFileWriter notesFileWriter;
    private final NotesSaveTrigger notesSaveTrigger;
+   private final ResourceLoader resourceLoader;
 
    public TrayMenuLogic(DialogFactory dialogFactory, UserInputRetriever userInputRetriever,
          UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
-         NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
+         NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger, ResourceLoader resourceLoader) {
       super();
       this.dialogFactory = dialogFactory;
       this.userInputRetriever = userInputRetriever;
@@ -48,13 +50,14 @@ public class TrayMenuLogic implements ActionListener {
       this.notesFileReader = notesFileReader;
       this.notesFileWriter = notesFileWriter;
       this.notesSaveTrigger = notesSaveTrigger;
+      this.resourceLoader = resourceLoader;
    }
 
    @Override
    public void actionPerformed(ActionEvent e) {
       switch (e.getActionCommand()) {
       case ACTION_SHOW_ABOUT_DIALOG:
-         new AboutDialog();
+         new AboutDialog(resourceLoader);
          break;
       case ACTION_SHOW_SETTINGS_DIALOG:
          dialogFactory.showSettingsDialog();

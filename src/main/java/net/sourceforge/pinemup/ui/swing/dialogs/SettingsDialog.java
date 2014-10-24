@@ -91,14 +91,18 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
    private final NotesSaveTrigger notesSaveTrigger;
 
+   private final ResourceLoader resourceLoader;
+
    public SettingsDialog(UserInputRetriever userInputRetriever, UpdateCheckResultHandler updateCheckResultHandler,
-         NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
+         NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger,
+         ResourceLoader resourceLoader) {
       super();
       this.userInputRetriever = userInputRetriever;
       this.updateCheckResultHandler = updateCheckResultHandler;
       this.notesFileReader = notesFileReader;
       this.notesFileWriter = notesFileWriter;
       this.notesSaveTrigger = notesSaveTrigger;
+      this.resourceLoader = resourceLoader;
 
       setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 
@@ -495,8 +499,8 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
       // Add fields
       ButtonGroup closeIconGroup = new ButtonGroup();
-      ImageIcon closeIcon1 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(1));
-      ImageIcon closeIcon2 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(2));
+      ImageIcon closeIcon1 = new ImageIcon(resourceLoader.getCloseIcon(1));
+      ImageIcon closeIcon2 = new ImageIcon(resourceLoader.getCloseIcon(2));
       closeIcon1Button = new JRadioButton();
       closeIcon1Button.addActionListener(this);
       closeIcon2Button = new JRadioButton();
