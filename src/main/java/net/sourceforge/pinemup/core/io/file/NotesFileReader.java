@@ -1,151 +1,32 @@
-/*
- * pin 'em up
- *
- * Copyright (C) 2007-2013 by Mario Ködding
- *
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+package net.sourceforge.pinemup.core.io.file;
 
-package net.sourceforge.pinemup.core.io;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
+import net.sourceforge.pinemup.core.UserInputRetriever;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
+import net.sourceforge.pinemup.core.io.utils.FileUtils;
+import net.sourceforge.pinemup.core.model.Category;
+import net.sourceforge.pinemup.core.model.Note;
+import net.sourceforge.pinemup.core.model.NoteColor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import java.io.*;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
-import net.sourceforge.pinemup.core.model.Category;
-import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.model.Note;
-import net.sourceforge.pinemup.core.model.NoteColor;
-import net.sourceforge.pinemup.core.UserInputRetriever;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
-
-public final class NotesFileManager {
-   private static final String LATEST_NOTESFILE_VERSION = "0.2";
-
-   private static final String NOTESFILE_ENCODING = "UTF-8";
-
-   private static final Logger LOG = LoggerFactory.getLogger(NotesFileManager.class);
-
-   private static class Holder {
-      private static final NotesFileManager INSTANCE = new NotesFileManager();
-   }
-
-   public static NotesFileManager getInstance() {
-      return Holder.INSTANCE;
-   }
-
-   private NotesFileManager() {
-      super();
-   }
-
-   public boolean writeCategoriesToOutputStream(List<Category> categories, OutputStream out) throws XMLStreamException {
-      boolean writtenSuccessfully = true;
-
-      XMLStreamWriter writer = null;
-      try {
-         XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
-         writer = myFactory.createXMLStreamWriter(out, NOTESFILE_ENCODING);
-
-         writer.writeStartDocument(NOTESFILE_ENCODING, "1.0");
-         writer.writeStartElement("notesfile");
-         writer.writeAttribute("version", LATEST_NOTESFILE_VERSION);
-
-         for (Category cat : categories) {
-            writer.writeStartElement("category");
-            writer.writeAttribute("name", cat.getName());
-            writer.writeAttribute("default", String.valueOf(cat.isDefaultCategory()));
-            writer.writeAttribute("defaultnotecolor", String.valueOf(cat.getDefaultNoteColor().getCode()));
-
-            for (Note n : cat.getNotes()) {
-               writer.writeStartElement("note");
-               writer.writeAttribute("hidden", String.valueOf(n.isHidden()));
-               writer.writeAttribute("alwaysontop", String.valueOf(n.isAlwaysOnTop()));
-               writer.writeAttribute("xposition", String.valueOf(n.getXPos()));
-               writer.writeAttribute("yposition", String.valueOf(n.getYPos()));
-               writer.writeAttribute("width", String.valueOf(n.getXSize()));
-               writer.writeAttribute("height", String.valueOf(n.getYSize()));
-               writer.writeAttribute("color", String.valueOf(n.getColor().getCode()));
-               writer.writeStartElement("text");
-               writer.writeAttribute("size", String.valueOf(n.getFontSize()));
-               String noteText = n.getText();
-               String[] textParts = noteText.split("\n");
-               for (int i = 0; i < textParts.length; i++) {
-                  writer.writeCharacters(textParts[i]);
-                  if (i < textParts.length - 1) {
-                     writer.writeEmptyElement("newline");
-                  }
-               }
-               // newlines at the end
-               while (noteText.endsWith("\n")) {
-                  writer.writeEmptyElement("newline");
-                  noteText = noteText.substring(0, noteText.length() - 1);
-               }
-               writer.writeEndElement();
-               writer.writeEndElement();
-            }
-            writer.writeEndElement();
-         }
-         writer.writeEndElement();
-         writer.writeEndDocument();
-      } finally {
-         if (writer != null) {
-            try {
-               writer.close();
-            } catch (XMLStreamException e) {
-               LOG.error("Error during attempt to close stream.", e);
-            }
-         }
-      }
-
-      return writtenSuccessfully;
-   }
-
-   public boolean writeCategoriesToFile(List<Category> categories, String filePath) throws IOException, XMLStreamException {
-      boolean writtenSuccessfully;
-
-      LOG.debug("writing notes to file...");
-
-      try (FileOutputStream f = new FileOutputStream(filePath)) {
-         writtenSuccessfully = writeCategoriesToOutputStream(categories, f);
-      }
-
-      return writtenSuccessfully;
-   }
+public class NotesFileReader {
+   private static final Logger LOG = LoggerFactory.getLogger(NotesFileReader.class);
 
    public List<Category> readCategoriesFromInputStream(InputStream inputStream) {
       List<Category> categories = new LinkedList<>();
@@ -153,7 +34,7 @@ public final class NotesFileManager {
       XMLStreamReader parser = null;
       try {
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         parser = myFactory.createXMLStreamReader(inputStream, NOTESFILE_ENCODING);
+         parser = myFactory.createXMLStreamReader(inputStream, NotesFileMetaData.NOTESFILE_ENCODING);
 
          Category currentCategory = null;
          Note currentNote = null;
@@ -291,17 +172,6 @@ public final class NotesFileManager {
       return currentNote;
    }
 
-   public static String checkAndAddExtension(String fileName, String requiredExtension) {
-      String checkedFileName = fileName;
-
-      String actualExtension = fileName.substring(fileName.length() - requiredExtension.length());
-      if (!actualExtension.equalsIgnoreCase(requiredExtension)) {
-         checkedFileName = fileName + requiredExtension.toLowerCase();
-      }
-
-      return checkedFileName;
-   }
-
    public boolean fileIsValid(String filename) {
       try {
          SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
@@ -336,7 +206,7 @@ public final class NotesFileManager {
       try {
          in = new FileInputStream(filename);
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         parser = myFactory.createXMLStreamReader(in, NOTESFILE_ENCODING);
+         parser = myFactory.createXMLStreamReader(in, NotesFileMetaData.NOTESFILE_ENCODING);
 
          int event;
          while (parser.hasNext()) {
@@ -383,7 +253,7 @@ public final class NotesFileManager {
    public String makeSureNotesFileIsValid(String notesFilePath, UserInputRetriever userInputRetriever) {
       String validFilePath = notesFilePath;
       File nfile = new File(validFilePath);
-      while (nfile.exists() && !NotesFileManager.getInstance().fileIsValid(validFilePath)) {
+      while (nfile.exists() && !fileIsValid(validFilePath)) {
          if (!userInputRetriever.retrieveUserConfirmation(I18N.getInstance().getString("error.title"),
                I18N.getInstance().getString("error.notesfilenotvalid"))) {
             System.exit(0);
@@ -391,7 +261,7 @@ public final class NotesFileManager {
 
          File selectedFile = userInputRetriever.retieveFileChoiceFromUser();
          if (selectedFile != null) {
-            validFilePath = NotesFileManager.checkAndAddExtension(selectedFile.getAbsolutePath(), ".xml");
+            validFilePath = FileUtils.checkAndAddExtension(selectedFile.getAbsolutePath(), ".xml");
             nfile = new File(validFilePath);
          }
       }

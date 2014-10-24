@@ -36,7 +36,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.ResourceLoader;
+import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public class AboutDialog extends JFrame implements ActionListener {

@@ -24,7 +24,7 @@ package net.sourceforge.pinemup.ui.swing.tray;
 import java.awt.PopupMenu;
 import java.awt.TrayIcon;
 
-import net.sourceforge.pinemup.core.io.ResourceLoader;
+import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 
 public final class PinEmUpTrayIcon extends TrayIcon {

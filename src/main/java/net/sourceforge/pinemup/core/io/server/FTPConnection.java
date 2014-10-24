@@ -25,11 +25,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 
 class FTPConnection extends ServerConnection {
-   protected FTPConnection(String serverPassword) {
-      super(serverPassword);
+   protected FTPConnection(String serverPassword, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter) {
+      super(serverPassword, notesFileReader, notesFileWriter);
    }
 
    @Override

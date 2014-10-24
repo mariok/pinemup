@@ -1,7 +1,7 @@
 package net.sourceforge.pinemup.ui.swing;
 
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.ui.swing.dialogs.UpdateDialog;
 
 public class SwingUpdateCheckResultHandler implements UpdateCheckResultHandler {

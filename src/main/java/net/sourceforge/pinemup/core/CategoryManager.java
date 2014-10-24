@@ -107,11 +107,9 @@ public final class CategoryManager {
 
    public void setDefaultCategory(Category c) {
       c.setDefault(true);
-      for (Category cat : pinBoard.getCategories()) {
-         if (cat != c) {
-            cat.setDefault(false);
-         }
-      }
+      pinBoard.getCategories().stream().filter(cat -> cat != c).forEach(cat -> {
+         cat.setDefault(false);
+      });
    }
 
    public void showOnlyNotesOfCategory(Category c) {

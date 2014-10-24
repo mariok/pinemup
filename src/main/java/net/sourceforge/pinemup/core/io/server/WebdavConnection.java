@@ -26,13 +26,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 
 class WebdavConnection extends ServerConnection {
    private static final String PROTOCOL_HTTP = "http";
 
-   protected WebdavConnection(String serverPassword) {
-      super(serverPassword);
+   protected WebdavConnection(String serverPassword, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter) {
+      super(serverPassword, notesFileReader, notesFileWriter);
    }
 
    @Override

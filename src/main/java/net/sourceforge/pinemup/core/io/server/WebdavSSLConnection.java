@@ -21,11 +21,14 @@
 
 package net.sourceforge.pinemup.core.io.server;
 
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+
 class WebdavSSLConnection extends WebdavConnection {
    private static final String PROTOCOL_HTTPS = "https";
 
-   protected WebdavSSLConnection(String serverPassword) {
-      super(serverPassword);
+   protected WebdavSSLConnection(String serverPassword, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter) {
+      super(serverPassword, notesFileReader, notesFileWriter);
    }
 
    @Override

@@ -1,49 +1,33 @@
 package net.sourceforge.pinemup.core.io;
 
-import java.io.IOException;
-
-import javax.xml.stream.XMLStreamException;
-
-import net.sourceforge.pinemup.core.model.CategoryAddedEvent;
-import net.sourceforge.pinemup.core.model.CategoryAddedEventListener;
-import net.sourceforge.pinemup.core.model.CategoryChangedEvent;
-import net.sourceforge.pinemup.core.model.CategoryChangedEventListener;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.model.CategoryRemovedEvent;
-import net.sourceforge.pinemup.core.model.CategoryRemovedEventListener;
-import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.model.NoteAddedEvent;
-import net.sourceforge.pinemup.core.model.NoteAddedEventListener;
-import net.sourceforge.pinemup.core.model.NoteChangedEvent;
-import net.sourceforge.pinemup.core.model.NoteChangedEventListener;
-import net.sourceforge.pinemup.core.model.NoteRemovedEvent;
-import net.sourceforge.pinemup.core.model.NoteRemovedEventListener;
-import net.sourceforge.pinemup.core.settings.UserSettings;
 import net.sourceforge.pinemup.core.UserInputRetriever;
-
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.model.*;
+import net.sourceforge.pinemup.core.settings.UserSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class NotesFileSaveTrigger implements CategoryChangedEventListener, NoteChangedEventListener, NoteAddedEventListener,
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+
+public final class NotesSaveTrigger implements CategoryChangedEventListener, NoteChangedEventListener, NoteAddedEventListener,
       NoteRemovedEventListener, CategoryAddedEventListener, CategoryRemovedEventListener {
-   private static final Logger LOG = LoggerFactory.getLogger(NotesFileSaveTrigger.class);
+   private static final Logger LOG = LoggerFactory.getLogger(NotesSaveTrigger.class);
 
    private static final int SAVE_DELAY_MILLIS = 5000;
 
    private FileSaveThread fileSaveThread;
    private boolean disabled;
+
    private UserInputRetriever userInputRetriever;
 
-   private static class Holder {
-      private static final NotesFileSaveTrigger INSTANCE = new NotesFileSaveTrigger();
-   }
+   private final NotesFileWriter notesFileWriter;
 
-   public static NotesFileSaveTrigger getInstance() {
-      return Holder.INSTANCE;
-   }
-
-   private NotesFileSaveTrigger() {
+   public NotesSaveTrigger(NotesFileWriter notesFileWriter) {
       super();
+      this.notesFileWriter = notesFileWriter;
    }
 
    @Override
@@ -84,7 +68,7 @@ public final class NotesFileSaveTrigger implements CategoryChangedEventListener,
 
    private synchronized void triggerSave() {
       if (!disabled && (fileSaveThread == null || !fileSaveThread.isAlive())) {
-         fileSaveThread = new FileSaveThread(userInputRetriever);
+         fileSaveThread = new FileSaveThread(userInputRetriever, notesFileWriter);
          fileSaveThread.start();
       }
    }
@@ -110,16 +94,18 @@ public final class NotesFileSaveTrigger implements CategoryChangedEventListener,
 
    private static class FileSaveThread extends Thread {
       private final UserInputRetriever userInputRetriever;
+      private final NotesFileWriter notesFileWriter;
 
-      public FileSaveThread(UserInputRetriever userInputRetriever) {
+      public FileSaveThread(UserInputRetriever userInputRetriever, NotesFileWriter notesFileWriter) {
          this.userInputRetriever = userInputRetriever;
+         this.notesFileWriter = notesFileWriter;
       }
 
       @Override
       public void run() {
          try {
             Thread.sleep(SAVE_DELAY_MILLIS);
-            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+            notesFileWriter.writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
                   UserSettings.getInstance().getNotesFile());
          } catch (InterruptedException e) {
             LOG.error("Error while waiting for notesfile save thread.", e);

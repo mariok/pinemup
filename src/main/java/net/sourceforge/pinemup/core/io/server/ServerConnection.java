@@ -21,6 +21,14 @@
 
 package net.sourceforge.pinemup.core.io.server;
 
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.model.Category;
+import net.sourceforge.pinemup.core.settings.UserSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,34 +39,19 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
-import javax.xml.stream.XMLStreamException;
-
-import net.sourceforge.pinemup.core.model.Category;
-import net.sourceforge.pinemup.core.settings.ConnectionType;
-import net.sourceforge.pinemup.core.settings.UserSettings;
-import net.sourceforge.pinemup.core.io.NotesFileManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public abstract class ServerConnection {
    private static final Logger LOG = LoggerFactory.getLogger(ServerConnection.class);
 
+   private final NotesFileReader notesFileReader;
+   private final NotesFileWriter notesFileWriter;
+
    private final String serverPassword;
 
-   public static ServerConnection createServerConnection(ConnectionType serverType, String password) {
-      if (serverType == ConnectionType.WEBDAV) {
-         return new WebdavConnection(password);
-      } else if (serverType == ConnectionType.WEBDAVS) {
-         return new WebdavSSLConnection(password);
-      } else {
-         return new FTPConnection(password);
-      }
-   }
-
-   protected ServerConnection(String serverPassword) {
+   protected ServerConnection(String serverPassword, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter) {
       super();
       this.serverPassword = serverPassword;
+      this.notesFileReader = notesFileReader;
+      this.notesFileWriter = notesFileWriter;
    }
 
    public List<Category> importCategoriesFromServer() throws IOException {
@@ -71,7 +64,7 @@ public abstract class ServerConnection {
          URL url = new URL(getUrlString(f.getName()));
          URLConnection urlc = url.openConnection();
          is = urlc.getInputStream();
-         categoriesFromServer = NotesFileManager.getInstance().readCategoriesFromInputStream(is);
+         categoriesFromServer = notesFileReader.readCategoriesFromInputStream(is);
          if (!isConnectionStateOkAfterDownload(urlc)) {
             categoriesFromServer = null;
          }
@@ -100,7 +93,7 @@ public abstract class ServerConnection {
          URLConnection urlc = openURLConnection(url);
          urlc.setDoOutput(true);
          os = urlc.getOutputStream();
-         boolean writtenSuccessfully = NotesFileManager.getInstance().writeCategoriesToOutputStream(categories, os);
+         boolean writtenSuccessfully = notesFileWriter.writeCategoriesToOutputStream(categories, os);
 
          if (!isConnectionStateOkAfterUpload(urlc) || !writtenSuccessfully) {
             uploaded = false;

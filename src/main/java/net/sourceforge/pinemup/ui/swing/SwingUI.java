@@ -7,8 +7,11 @@ import javax.swing.JOptionPane;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.settings.UserSettings;
-import net.sourceforge.pinemup.core.io.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.UserInputRetriever;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
 import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
@@ -26,18 +29,20 @@ public final class SwingUI {
       super();
    }
 
-   public static void initialize() {
+   public static void initialize(NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       if (SystemTray.isSupported()) {
          // add trayicon
          SystemTray tray = SystemTray.getSystemTray();
          try {
             UpdateCheckResultHandler updateCheckResultHandler = new SwingUpdateCheckResultHandler(true);
             UserInputRetriever userInputRetriever = new SwingUserInputRetreiver();
-            DialogFactory dialogFactory = new DialogFactory(userInputRetriever, updateCheckResultHandler);
+            DialogFactory dialogFactory = new DialogFactory(userInputRetriever, updateCheckResultHandler,
+                  notesFileReader, notesFileWriter, notesSaveTrigger);
 
             NoteWindowManager noteWindowManager = new NoteWindowManager();
 
-            TrayMenu trayMenu = new TrayMenu(dialogFactory, userInputRetriever, updateCheckResultHandler);
+            TrayMenu trayMenu = new TrayMenu(dialogFactory, userInputRetriever, updateCheckResultHandler,
+                  notesFileReader, notesFileWriter, notesSaveTrigger);
             tray.add(new PinEmUpTrayIcon(trayMenu, noteWindowManager));
 
             TrayMenuUpdater trayMenuUpdater = new TrayMenuUpdater(trayMenu);

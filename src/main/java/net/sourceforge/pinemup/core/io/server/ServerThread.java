@@ -27,12 +27,13 @@ import java.util.List;
 import javax.net.ssl.SSLHandshakeException;
 import javax.xml.stream.XMLStreamException;
 
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.settings.UserSettings;
-import net.sourceforge.pinemup.core.io.NotesFileManager;
-import net.sourceforge.pinemup.core.io.NotesFileSaveTrigger;
+import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.UserInputRetriever;
 
 import org.slf4j.Logger;
@@ -48,11 +49,18 @@ public class ServerThread extends Thread {
 
    private final Direction direction;
    private final UserInputRetriever userInputRetriever;
+   private final NotesFileReader notesFileReader;
+   private final NotesFileWriter notesFileWriter;
+   private final NotesSaveTrigger notesSaveTrigger;
 
-   public ServerThread(Direction direction, UserInputRetriever userInputRetriever) {
+   public ServerThread(Direction direction, UserInputRetriever userInputRetriever,
+         NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super("Server Up-/Download Thread");
       this.direction = direction;
       this.userInputRetriever = userInputRetriever;
+      this.notesFileReader = notesFileReader;
+      this.notesFileWriter = notesFileWriter;
+      this.notesSaveTrigger = notesSaveTrigger;
       this.start();
    }
 
@@ -60,7 +68,8 @@ public class ServerThread extends Thread {
       if (direction == Direction.UPLOAD) {
          boolean uploadSuccessful;
          try {
-            uploadSuccessful = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType(), getServerPassword())
+            uploadSuccessful = ServerConnectionFactory.createServerConnection(
+                  UserSettings.getInstance().getServerType(), getServerPassword(), notesFileReader, notesFileWriter)
                   .exportNotesToServer(CategoryManager.getInstance().getCategories());
          } catch (SSLHandshakeException e) {
             LOG.error("SSL exception occured. Probably a self-signed certificate?", e);
@@ -83,7 +92,8 @@ public class ServerThread extends Thread {
          List<Category> categoriesFromServer;
 
          try {
-            categoriesFromServer = ServerConnection.createServerConnection(UserSettings.getInstance().getServerType(), getServerPassword())
+            categoriesFromServer = ServerConnectionFactory.createServerConnection(
+                  UserSettings.getInstance().getServerType(), getServerPassword(), notesFileReader, notesFileWriter)
                   .importCategoriesFromServer();
          } catch (SSLHandshakeException e) {
             // certificate error (self-signed?)
@@ -95,11 +105,11 @@ public class ServerThread extends Thread {
          }
 
          if (categoriesFromServer != null) {
-            NotesFileSaveTrigger.getInstance().setDisabled(true);
+            notesSaveTrigger.setDisabled(true);
             CategoryManager.getInstance().replaceWithNewCategories(categoriesFromServer);
-            NotesFileSaveTrigger.getInstance().setDisabled(false);
+            notesSaveTrigger.setDisabled(false);
             try {
-               NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+               notesFileWriter.writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
                      UserSettings.getInstance().getNotesFile());
             } catch (IOException | XMLStreamException e) {
                userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),

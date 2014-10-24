@@ -21,54 +21,37 @@
 
 package net.sourceforge.pinemup.ui.swing.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.UserInputRetriever;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.i18n.I18N.SupportedLocale;
+import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
+import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
+import net.sourceforge.pinemup.core.io.utils.FileUtils;
+import net.sourceforge.pinemup.core.model.Category;
+import net.sourceforge.pinemup.core.settings.ConnectionType;
+import net.sourceforge.pinemup.core.settings.UserSettings;
+import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.xml.stream.XMLStreamException;
-
-import net.sourceforge.pinemup.core.model.Category;
-import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.settings.ConnectionType;
-import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.i18n.I18N.SupportedLocale;
-import net.sourceforge.pinemup.core.settings.UserSettings;
-import net.sourceforge.pinemup.core.io.NotesFileManager;
-import net.sourceforge.pinemup.core.io.NotesFileSaveTrigger;
-import net.sourceforge.pinemup.core.io.ResourceLoader;
-import net.sourceforge.pinemup.core.io.UpdateCheckResultHandler;
-import net.sourceforge.pinemup.core.io.UpdateCheckThread;
-import net.sourceforge.pinemup.core.UserInputRetriever;
-import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
-import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public final class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
    private static final long serialVersionUID = 1L;
@@ -103,10 +86,19 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
    private final UserInputRetriever userInputRetriever;
    private final UpdateCheckResultHandler updateCheckResultHandler;
 
-   public SettingsDialog(UserInputRetriever userInputRetriever, UpdateCheckResultHandler updateCheckResultHandler) {
+   private final NotesFileReader notesFileReader;
+   private final NotesFileWriter notesFileWriter;
+
+   private final NotesSaveTrigger notesSaveTrigger;
+
+   public SettingsDialog(UserInputRetriever userInputRetriever, UpdateCheckResultHandler updateCheckResultHandler,
+         NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super();
       this.userInputRetriever = userInputRetriever;
       this.updateCheckResultHandler = updateCheckResultHandler;
+      this.notesFileReader = notesFileReader;
+      this.notesFileWriter = notesFileWriter;
+      this.notesSaveTrigger = notesSaveTrigger;
 
       setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 
@@ -881,7 +873,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
             f = FileDialogCreator.getFileDialogInstance().getSelectedFile();
          }
          if (f != null) {
-            notesFileField.setText(NotesFileManager.checkAndAddExtension(f.getAbsolutePath(), ".xml"));
+            notesFileField.setText(FileUtils.checkAndAddExtension(f.getAbsolutePath(), ".xml"));
          }
       } else if (src == updateCheckButton) {
          new UpdateCheckThread(updateCheckResultHandler);
@@ -930,7 +922,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       if (settingsChanged) {
          // save old notesfile
          try {
-            NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+            notesFileWriter.writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
                   UserSettings.getInstance().getNotesFile());
          } catch (IOException | XMLStreamException e) {
             userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
@@ -993,18 +985,18 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
          // make sure the selected notesfile is valid
          UserSettings.getInstance().setNotesFile(
-               NotesFileManager.getInstance().makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(), userInputRetriever));
+               notesFileReader.makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(), userInputRetriever));
 
          // in case the notesfile has not been valid and new one has been
          // selected, update the UI field
          notesFileField.setText(UserSettings.getInstance().getNotesFile());
 
          // load new notes from file
-         List<Category> cl = NotesFileManager.getInstance().readCategoriesFromFile(UserSettings.getInstance().getNotesFile());
+         List<Category> cl = notesFileReader.readCategoriesFromFile(UserSettings.getInstance().getNotesFile());
 
-         NotesFileSaveTrigger.getInstance().setDisabled(true);
+         notesSaveTrigger.setDisabled(true);
          CategoryManager.getInstance().replaceWithNewCategories(cl);
-         NotesFileSaveTrigger.getInstance().setDisabled(false);
+         notesSaveTrigger.setDisabled(false);
 
          // save settings permanentely
          UserSettings.getInstance().saveSettings();

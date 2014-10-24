@@ -1,19 +1,15 @@
-package net.sourceforge.pinemup.core.io;
+package net.sourceforge.pinemup.core.io.export;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.util.List;
-
-import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.utils.FileUtils;
+import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.model.Note;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.List;
 
 public final class ExportFileManager {
    private static final String EXPORT_FILE_ENCODING = "UTF-8";
@@ -36,7 +32,7 @@ public final class ExportFileManager {
    }
 
    public void exportCategoriesToTextFile(List<Category> l, String fileName) {
-      String checkedFileName = NotesFileManager.checkAndAddExtension(fileName, FILE_EXTENSION);
+      String checkedFileName = FileUtils.checkAndAddExtension(fileName, FILE_EXTENSION);
       File f = new File(checkedFileName);
       try {
          PrintWriter ostream = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), Charset.forName(EXPORT_FILE_ENCODING)

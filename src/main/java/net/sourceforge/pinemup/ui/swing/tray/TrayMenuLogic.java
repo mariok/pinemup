@@ -1,24 +1,25 @@
 package net.sourceforge.pinemup.ui.swing.tray;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
-import javax.swing.JOptionPane;
-import javax.xml.stream.XMLStreamException;
-
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.settings.UserSettings;
-import net.sourceforge.pinemup.core.io.NotesFileManager;
-import net.sourceforge.pinemup.core.io.UpdateCheckResultHandler;
-import net.sourceforge.pinemup.core.io.UpdateCheckThread;
-import net.sourceforge.pinemup.core.io.server.ServerThread;
 import net.sourceforge.pinemup.core.UserInputRetriever;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.server.ServerThread;
+import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
+import net.sourceforge.pinemup.core.settings.UserSettings;
 import net.sourceforge.pinemup.ui.swing.dialogs.AboutDialog;
 import net.sourceforge.pinemup.ui.swing.dialogs.CategoryDialog;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
 import net.sourceforge.pinemup.ui.swing.dialogs.ExportDialog;
+
+import javax.swing.*;
+import javax.xml.stream.XMLStreamException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class TrayMenuLogic implements ActionListener {
    public static final String ACTION_SHOW_ABOUT_DIALOG = "SHOW_ABOUT_DIALOG";
@@ -33,13 +34,20 @@ public class TrayMenuLogic implements ActionListener {
    private final DialogFactory dialogFactory;
    private final UserInputRetriever userInputRetriever;
    private final UpdateCheckResultHandler updateCheckResultHandler;
+   private final NotesFileReader notesFileReader;
+   private final NotesFileWriter notesFileWriter;
+   private final NotesSaveTrigger notesSaveTrigger;
 
    public TrayMenuLogic(DialogFactory dialogFactory, UserInputRetriever userInputRetriever,
-         UpdateCheckResultHandler updateCheckResultHandler) {
+         UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
+         NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super();
       this.dialogFactory = dialogFactory;
       this.userInputRetriever = userInputRetriever;
       this.updateCheckResultHandler = updateCheckResultHandler;
+      this.notesFileReader = notesFileReader;
+      this.notesFileWriter = notesFileWriter;
+      this.notesSaveTrigger = notesSaveTrigger;
    }
 
    @Override
@@ -62,14 +70,14 @@ public class TrayMenuLogic implements ActionListener {
             // save notes to file
             writeCategoriesToFile();
             // copy file to server
-            new ServerThread(ServerThread.Direction.UPLOAD, userInputRetriever);
+            new ServerThread(ServerThread.Direction.UPLOAD, userInputRetriever, notesFileReader, notesFileWriter, notesSaveTrigger);
          }
          break;
       case ACTION_DOWNLOAD_FROM_SERVER:
          if (!UserSettings.getInstance().getConfirmUpDownload()
                || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacelocalfile"), I18N.getInstance()
                .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            new ServerThread(ServerThread.Direction.DOWNLOAD, userInputRetriever);
+            new ServerThread(ServerThread.Direction.DOWNLOAD, userInputRetriever, notesFileReader, notesFileWriter, notesSaveTrigger);
          }
          break;
       case ACTION_EXPORT:
@@ -89,7 +97,7 @@ public class TrayMenuLogic implements ActionListener {
 
    private void writeCategoriesToFile() {
       try {
-         NotesFileManager.getInstance().writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+         notesFileWriter.writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
                UserSettings.getInstance().getNotesFile());
       } catch (IOException | XMLStreamException e) {
          userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),

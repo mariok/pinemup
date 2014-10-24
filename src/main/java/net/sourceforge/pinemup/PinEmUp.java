@@ -23,13 +23,13 @@ package net.sourceforge.pinemup;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
 import net.sourceforge.pinemup.core.settings.UserSettings;
-import net.sourceforge.pinemup.core.io.NotesFileManager;
-import net.sourceforge.pinemup.core.io.NotesFileSaveTrigger;
-import net.sourceforge.pinemup.core.io.UpdateCheckThread;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
 import net.sourceforge.pinemup.ui.swing.SwingUpdateCheckResultHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,26 +55,33 @@ public final class PinEmUp {
       // set locale
       I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
+      // initialize IO
+      NotesFileReader notesFileReader = new NotesFileReader();
+      NotesFileWriter notesFileWriter = new NotesFileWriter();
+      NotesSaveTrigger notesSaveTrigger = new NotesSaveTrigger(notesFileWriter);
+
       // initialize UI
-      SwingUI.initialize();
-      NotesFileSaveTrigger.getInstance().setUserInputRetriever(SwingUI.getUserInputRetriever());
+      SwingUI.initialize(notesFileReader, notesFileWriter, notesSaveTrigger);
+
+      // TODO: refactor this
+      notesSaveTrigger.setUserInputRetriever(SwingUI.getUserInputRetriever());
 
       // make sure the currently saved notesfile is valid
       UserSettings.getInstance().setNotesFile(
-            NotesFileManager.getInstance().makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(),
+            notesFileReader.makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(),
                   SwingUI.getUserInputRetriever()));
 
       // add NotesFileSaveTrigger as default listeners for notes / categories
-      CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().registerDefaultCategoryAddedEventListener(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().registerDefaultCategoryRemovedEventListener(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().registerDefaultNoteChangedEventListener(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().registerDefaultNoteAddedEventListener(NotesFileSaveTrigger.getInstance());
-      CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(NotesFileSaveTrigger.getInstance());
+      CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(notesSaveTrigger);
+      CategoryManager.getInstance().registerDefaultCategoryAddedEventListener(notesSaveTrigger);
+      CategoryManager.getInstance().registerDefaultCategoryRemovedEventListener(notesSaveTrigger);
+      CategoryManager.getInstance().registerDefaultNoteChangedEventListener(notesSaveTrigger);
+      CategoryManager.getInstance().registerDefaultNoteAddedEventListener(notesSaveTrigger);
+      CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(notesSaveTrigger);
 
       // load notes from file
       CategoryManager.getInstance().replaceWithNewCategories(
-            NotesFileManager.getInstance().readCategoriesFromFile(UserSettings.getInstance().getNotesFile()));
+            notesFileReader.readCategoriesFromFile(UserSettings.getInstance().getNotesFile()));
 
       // update check
       if (UserSettings.getInstance().isUpdateCheckEnabled()) {
