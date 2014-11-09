@@ -21,40 +21,39 @@
 
 package net.sourceforge.pinemup.ui.swing.tray;
 
-import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.UserInputRetriever;
-import net.sourceforge.pinemup.core.i18n.I18N;
+import java.awt.Menu;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
-import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
-import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.model.Category;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
+import net.sourceforge.pinemup.core.UserInputRetriever;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
 import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic;
 import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic.CategoryAction;
 import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic;
 import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic.GeneralAction;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import java.util.ArrayList;
-import java.util.List;
-
-public class TrayMenu extends JPopupMenu {
+public class TrayMenu extends PopupMenu {
    private static final long serialVersionUID = 4859510599893727949L;
 
-   private JMenu categoriesMenu;
-   private JMenuItem manageCategoriesItem;
+   private Menu categoriesMenu;
+   private MenuItem manageCategoriesItem;
    private final TrayMenuLogic trayMenuLogic;
 
    public TrayMenu(DialogFactory dialogFactory, UserInputRetriever userInputRetriever,
          UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
-         NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger, ResourceLoader resourceLoader) {
+         NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super("pin 'em up");
       trayMenuLogic = new TrayMenuLogic(dialogFactory, userInputRetriever, updateCheckResultHandler,
-            notesFileReader, notesFileWriter, notesSaveTrigger, resourceLoader);
+            notesFileReader, notesFileWriter, notesSaveTrigger);
       initWithNewLanguage();
    }
 
@@ -62,34 +61,34 @@ public class TrayMenu extends JPopupMenu {
       removeAll();
 
       // add basic items
-      for (JMenuItem item : getBasicMenuItems()) {
+      for (MenuItem item : getBasicMenuItems()) {
          add(item);
       }
       addSeparator();
 
       // categories menus
-      categoriesMenu = new JMenu(I18N.getInstance().getString("menu.categorymenu"));
+      categoriesMenu = new Menu(I18N.getInstance().getString("menu.categorymenu"));
       add(categoriesMenu);
 
       // category actions
-      manageCategoriesItem = new JMenuItem(I18N.getInstance().getString("menu.categorymenu.managecategoriesitem"));
+      manageCategoriesItem = new MenuItem(I18N.getInstance().getString("menu.categorymenu.managecategoriesitem"));
       manageCategoriesItem.setActionCommand(TrayMenuLogic.ACTION_MANAGE_CATEGORIES);
       manageCategoriesItem.addActionListener(trayMenuLogic);
       createCategoriesMenu();
 
       // im-/export menu
       addSeparator();
-      JMenu imExMenu = new JMenu(I18N.getInstance().getString("menu.notesimexport"));
-      JMenuItem serverUploadItem = new JMenuItem(I18N.getInstance().getString("menu.notesimexport.serveruploaditem"));
+      Menu imExMenu = new Menu(I18N.getInstance().getString("menu.notesimexport"));
+      MenuItem serverUploadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.serveruploaditem"));
       serverUploadItem.setActionCommand(TrayMenuLogic.ACTION_UPLOAD_TO_SERVER);
       serverUploadItem.addActionListener(trayMenuLogic);
       imExMenu.add(serverUploadItem);
-      JMenuItem serverDownloadItem = new JMenuItem(I18N.getInstance().getString("menu.notesimexport.serverdownloaditem"));
+      MenuItem serverDownloadItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.serverdownloaditem"));
       serverDownloadItem.setActionCommand(TrayMenuLogic.ACTION_DOWNLOAD_FROM_SERVER);
       serverDownloadItem.addActionListener(trayMenuLogic);
       imExMenu.add(serverDownloadItem);
       imExMenu.addSeparator();
-      JMenuItem exportItem = new JMenuItem(I18N.getInstance().getString("menu.notesimexport.textexportitem"));
+      MenuItem exportItem = new MenuItem(I18N.getInstance().getString("menu.notesimexport.textexportitem"));
       exportItem.setActionCommand(TrayMenuLogic.ACTION_EXPORT);
       exportItem.addActionListener(trayMenuLogic);
       imExMenu.add(exportItem);
@@ -97,19 +96,19 @@ public class TrayMenu extends JPopupMenu {
 
       // other items
       addSeparator();
-      JMenuItem showSettingsDialogItem = new JMenuItem(I18N.getInstance().getString("menu.settingsitem"));
+      MenuItem showSettingsDialogItem = new MenuItem(I18N.getInstance().getString("menu.settingsitem"));
       showSettingsDialogItem.setActionCommand(TrayMenuLogic.ACTION_SHOW_SETTINGS_DIALOG);
       showSettingsDialogItem.addActionListener(trayMenuLogic);
       add(showSettingsDialogItem);
 
       // help menu
-      JMenu helpMenu = new JMenu(I18N.getInstance().getString("menu.help"));
-      JMenuItem updateItem = new JMenuItem(I18N.getInstance().getString("menu.help.updatecheckitem"));
+      Menu helpMenu = new Menu(I18N.getInstance().getString("menu.help"));
+      MenuItem updateItem = new MenuItem(I18N.getInstance().getString("menu.help.updatecheckitem"));
       updateItem.setActionCommand(TrayMenuLogic.ACTION_CHECK_FOR_UPDATES);
       updateItem.addActionListener(trayMenuLogic);
       helpMenu.add(updateItem);
       helpMenu.addSeparator();
-      JMenuItem aboutItem = new JMenuItem(I18N.getInstance().getString("menu.help.aboutitem"));
+      MenuItem aboutItem = new MenuItem(I18N.getInstance().getString("menu.help.aboutitem"));
       aboutItem.setActionCommand(TrayMenuLogic.ACTION_SHOW_ABOUT_DIALOG);
       aboutItem.addActionListener(trayMenuLogic);
       helpMenu.add(aboutItem);
@@ -117,7 +116,7 @@ public class TrayMenu extends JPopupMenu {
       addSeparator();
 
       // close item
-      JMenuItem closeItem = new JMenuItem(I18N.getInstance().getString("menu.exititem"));
+      MenuItem closeItem = new MenuItem(I18N.getInstance().getString("menu.exititem"));
       closeItem.setActionCommand(TrayMenuLogic.ACTION_EXIT_APPLICATION);
       closeItem.addActionListener(trayMenuLogic);
       add(closeItem);
@@ -125,27 +124,27 @@ public class TrayMenu extends JPopupMenu {
 
    public void createCategoriesMenu() {
       categoriesMenu.removeAll();
-      for (JMenu m : getCategoryMenus()) {
+      for (Menu m : getCategoryMenus()) {
          categoriesMenu.add(m);
       }
       categoriesMenu.addSeparator();
       categoriesMenu.add(manageCategoriesItem);
    }
 
-   private List<JMenu> getCategoryMenus() {
-      List<JMenu> categoryMenus = new ArrayList<>();
+   private List<Menu> getCategoryMenus() {
+      List<Menu> categoryMenus = new ArrayList<>();
       for (Category cat : CategoryManager.getInstance().getCategories()) {
          categoryMenus.add(createCategoryActionsMenu(cat.getName(), cat));
       }
       return categoryMenus;
    }
 
-   private JMenu createCategoryActionsMenu(String title, Category c) {
-      JMenu menu = new JMenu(title);
+   private Menu createCategoryActionsMenu(String title, Category c) {
+      Menu menu = new Menu(title);
       CategoryMenuLogic catMenuLogic = new CategoryMenuLogic(c);
       int i = 0;
       for (CategoryAction action : CategoryAction.values()) {
-         JMenuItem menuItem = new JMenuItem(I18N.getInstance().getString(action.getI18nKey()));
+         MenuItem menuItem = new MenuItem(I18N.getInstance().getString(action.getI18nKey()));
          menuItem.setActionCommand(action.toString());
          menuItem.addActionListener(catMenuLogic);
          menu.add(menuItem);
@@ -157,11 +156,11 @@ public class TrayMenu extends JPopupMenu {
       return menu;
    }
 
-   private List<JMenuItem> getBasicMenuItems() {
+   private List<MenuItem> getBasicMenuItems() {
       GeneralMenuLogic basicMenuLogic = new GeneralMenuLogic();
-      List<JMenuItem> menuItems = new ArrayList<>();
+      List<MenuItem> menuItems = new ArrayList<>();
       for (GeneralAction action : GeneralAction.values()) {
-         JMenuItem menuItem = new JMenuItem(I18N.getInstance().getString(action.getI18nKey()));
+         MenuItem menuItem = new MenuItem(I18N.getInstance().getString(action.getI18nKey()));
          menuItem.setActionCommand(action.toString());
          menuItem.addActionListener(basicMenuLogic);
          menuItems.add(menuItem);

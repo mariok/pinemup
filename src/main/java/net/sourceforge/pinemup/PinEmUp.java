@@ -26,7 +26,6 @@ import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
-import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
@@ -57,13 +56,12 @@ public final class PinEmUp {
       I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
       // initialize IO
-      ResourceLoader resourceLoader = new ResourceLoader();
-      NotesFileReader notesFileReader = new NotesFileReader(resourceLoader);
+      NotesFileReader notesFileReader = new NotesFileReader();
       NotesFileWriter notesFileWriter = new NotesFileWriter();
       NotesSaveTrigger notesSaveTrigger = new NotesSaveTrigger(notesFileWriter);
 
       // initialize UI
-      SwingUI.initialize(notesFileReader, notesFileWriter, notesSaveTrigger, resourceLoader);
+      SwingUI.initialize(notesFileReader, notesFileWriter, notesSaveTrigger);
 
       // TODO: refactor this
       notesSaveTrigger.setUserInputRetriever(SwingUI.getUserInputRetriever());

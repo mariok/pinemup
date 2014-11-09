@@ -47,18 +47,18 @@ public class AboutDialog extends JFrame implements ActionListener {
 
    private final JButton okButton;
 
-   public AboutDialog(ResourceLoader resourceLoader) {
+   public AboutDialog() {
       super(I18N.getInstance().getString("aboutdialog.title"));
       setSize(new Dimension(DIALOG_WIDTH, DIALOG_HEIGHT));
 
       JPanel mainPanel = new JPanel(new BorderLayout());
 
       JTabbedPane tpane = new JTabbedPane();
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(resourceLoader),
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(),
             I18N.getInstance().getString("aboutdialog.abouttab"));
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(resourceLoader),
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(),
             I18N.getInstance().getString("aboutdialog.authorstab"));
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(resourceLoader),
+      tpane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(),
             I18N.getInstance().getString("aboutdialog.licensetab"));
       mainPanel.add(tpane, BorderLayout.CENTER);
 
@@ -78,20 +78,20 @@ public class AboutDialog extends JFrame implements ActionListener {
       setVisible(true);
    }
 
-   private JScrollPane makeAboutTab(ResourceLoader resourceLoader) {
-      String msg = resourceLoader.getAboutPage();
+   private JScrollPane makeAboutTab() {
+      String msg = ResourceLoader.getInstance().getAboutPage();
       return makeTextPanel(msg, "text/html");
    }
 
-   private JScrollPane makeAuthorsTab(ResourceLoader resourceLoader) {
-      String msg = resourceLoader.getAuthorsPage();
+   private JScrollPane makeAuthorsTab() {
+      String msg = ResourceLoader.getInstance().getAuthorsPage();
       return makeTextPanel(msg, "text/html");
    }
 
-   private JScrollPane makeLicenseTab(ResourceLoader resourceLoader) {
+   private JScrollPane makeLicenseTab() {
       String msg = "(C) 2007 - " + Calendar.getInstance().get(Calendar.YEAR) + " Mario Ködding\r\n\r\n";
       msg += "This program is licensed under the terms of the GNU GPL V3 or any later version.\r\n\r\n\r\n";
-      msg += resourceLoader.getLicense();
+      msg += ResourceLoader.getInstance().getLicense();
       return makeTextPanel(msg, "text/plain");
    }
 

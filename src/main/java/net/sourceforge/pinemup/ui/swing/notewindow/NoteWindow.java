@@ -78,7 +78,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
 
    private final BackgroundLabel bgLabel;
 
-   NoteWindow(Note pn, ResourceLoader resourceLoader) {
+   NoteWindow(Note pn) {
       super(new DummyFrame());
       parentNote = pn;
       textPanel = new JScrollPane();
@@ -129,7 +129,7 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       mainPanel.add(textPanel, BorderLayout.CENTER);
 
       // add area to show if note is scrollable
-      ImageIcon scrollImage = new ImageIcon(resourceLoader.getScrollImage());
+      ImageIcon scrollImage = new ImageIcon(ResourceLoader.getInstance().getScrollImage());
       scrollButton = new JButton(scrollImage);
       mainPanel.add(scrollButton, BorderLayout.SOUTH);
       scrollButton.setRolloverEnabled(false);
@@ -140,14 +140,14 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       scrollButton.setBorder(null);
       scrollButton.setBackground(COLOR_TRANSPARENT);
       scrollButton.setVisible(false);
-      scrollButton.setDisabledIcon(new ImageIcon(resourceLoader.getScrollImage()));
+      scrollButton.setDisabledIcon(new ImageIcon(ResourceLoader.getInstance().getScrollImage()));
 
       // adjust and add buttons to the topPanel
       topPanel.addMouseListener(this);
       topPanel.addMouseMotionListener(this);
       topPanel.setFocusable(true);
 
-      ImageIcon closeIcon = new ImageIcon(resourceLoader.getCloseIcon(UserSettings.getInstance().getCloseIcon()));
+      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(UserSettings.getInstance().getCloseIcon()));
       closeButton = new JButton(closeIcon);
       closeButton.setBackground(COLOR_TRANSPARENT);
       closeButton.setRolloverEnabled(false);

@@ -28,13 +28,6 @@ import java.util.List;
 public class NotesFileReader {
    private static final Logger LOG = LoggerFactory.getLogger(NotesFileReader.class);
 
-   private final ResourceLoader resourceLoader;
-
-   public NotesFileReader(ResourceLoader resourceLoader) {
-      super();
-      this.resourceLoader = resourceLoader;
-   }
-
    public List<Category> readCategoriesFromInputStream(InputStream inputStream) {
       List<Category> categories = new LinkedList<>();
 
@@ -187,7 +180,7 @@ public class NotesFileReader {
          if (version == null) {
             return false;
          }
-         URL schemaLocation = resourceLoader.getSchemaFile(version);
+         URL schemaLocation = ResourceLoader.getInstance().getSchemaFile(version);
          Schema schema;
          schema = factory.newSchema(schemaLocation);
 
