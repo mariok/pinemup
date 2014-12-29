@@ -1,9 +1,6 @@
 package net.sourceforge.pinemup.core.io.file;
 
-import net.sourceforge.pinemup.core.UserInputRetriever;
-import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
-import net.sourceforge.pinemup.core.io.utils.FileUtils;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.model.Note;
 import net.sourceforge.pinemup.core.model.NoteColor;
@@ -248,23 +245,5 @@ public class NotesFileReader {
          }
       }
       return version;
-   }
-
-   public String makeSureNotesFileIsValid(String notesFilePath, UserInputRetriever userInputRetriever) {
-      String validFilePath = notesFilePath;
-      File nfile = new File(validFilePath);
-      while (nfile.exists() && !fileIsValid(validFilePath)) {
-         if (!userInputRetriever.retrieveUserConfirmation(I18N.getInstance().getString("error.title"),
-               I18N.getInstance().getString("error.notesfilenotvalid"))) {
-            System.exit(0);
-         }
-
-         File selectedFile = userInputRetriever.retieveFileChoiceFromUser();
-         if (selectedFile != null) {
-            validFilePath = FileUtils.checkAndAddExtension(selectedFile.getAbsolutePath(), ".xml");
-            nfile = new File(validFilePath);
-         }
-      }
-      return validFilePath;
    }
 }

@@ -28,6 +28,7 @@ import net.sourceforge.pinemup.core.io.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
 import net.sourceforge.pinemup.core.settings.UserSettings;
+import net.sourceforge.pinemup.ui.PinEmUpUi;
 import net.sourceforge.pinemup.ui.swing.SwingUI;
 import net.sourceforge.pinemup.ui.swing.SwingUpdateCheckResultHandler;
 import org.slf4j.Logger;
@@ -61,15 +62,12 @@ public final class PinEmUp {
       NotesSaveTrigger notesSaveTrigger = new NotesSaveTrigger(notesFileWriter);
 
       // initialize UI
-      SwingUI.initialize(notesFileReader, notesFileWriter, notesSaveTrigger);
-
-      // TODO: refactor this
-      notesSaveTrigger.setUserInputRetriever(SwingUI.getUserInputRetriever());
+      PinEmUpUi pinEmUpUi = new SwingUI(notesFileReader, notesFileWriter, notesSaveTrigger);
+      pinEmUpUi.initialize();
 
       // make sure the currently saved notesfile is valid
       UserSettings.getInstance().setNotesFile(
-            notesFileReader.makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile(),
-                  SwingUI.getUserInputRetriever()));
+            pinEmUpUi.makeSureNotesFileIsValid(UserSettings.getInstance().getNotesFile()));
 
       // add NotesFileSaveTrigger as default listeners for notes / categories
       CategoryManager.getInstance().registerDefaultCategoryChangedEventListener(notesSaveTrigger);

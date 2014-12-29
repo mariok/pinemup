@@ -4,10 +4,8 @@ import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
-import net.sourceforge.pinemup.core.UserInputRetriever;
 
 public class DialogFactory {
-   private UserInputRetriever userInputRetriever;
    private UpdateCheckResultHandler updateCheckResultHandler;
 
    private SettingsDialog settingsDialogInstance;
@@ -16,10 +14,8 @@ public class DialogFactory {
    private final NotesFileWriter notesFileWriter;
    private final NotesSaveTrigger notesSaveTrigger;
 
-   public DialogFactory(UserInputRetriever userInputRetriever,
-         UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
+   public DialogFactory(UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
          NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
-      this.userInputRetriever = userInputRetriever;
       this.updateCheckResultHandler = updateCheckResultHandler;
       this.notesFileReader = notesFileReader;
       this.notesFileWriter = notesFileWriter;
@@ -28,7 +24,7 @@ public class DialogFactory {
 
    public void showSettingsDialog() {
       if (settingsDialogInstance == null || !settingsDialogInstance.isVisible()) {
-         settingsDialogInstance = new SettingsDialog(userInputRetriever, updateCheckResultHandler,
+         settingsDialogInstance = new SettingsDialog(updateCheckResultHandler,
                notesFileReader, notesFileWriter, notesSaveTrigger);
       }
    }

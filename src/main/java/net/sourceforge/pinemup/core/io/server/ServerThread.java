@@ -21,23 +21,19 @@
 
 package net.sourceforge.pinemup.core.io.server;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.net.ssl.SSLHandshakeException;
-import javax.xml.stream.XMLStreamException;
-
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.model.Category;
-import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.settings.UserSettings;
-import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
-import net.sourceforge.pinemup.core.UserInputRetriever;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.SSLHandshakeException;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.util.List;
 
 public class ServerThread extends Thread {
    public enum Direction {
@@ -48,19 +44,22 @@ public class ServerThread extends Thread {
    private static final Logger LOG = LoggerFactory.getLogger(ServerThread.class);
 
    private final Direction direction;
-   private final UserInputRetriever userInputRetriever;
    private final NotesFileReader notesFileReader;
    private final NotesFileWriter notesFileWriter;
    private final NotesSaveTrigger notesSaveTrigger;
+   private final String serverPassword;
 
-   public ServerThread(Direction direction, UserInputRetriever userInputRetriever,
-         NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
+   private final ServerCommunicationResultHandler serverCommunicationResultHandler;
+
+   public ServerThread(Direction direction, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger,
+         ServerCommunicationResultHandler serverCommunicationResultHandler, String serverPassword) {
       super("Server Up-/Download Thread");
       this.direction = direction;
-      this.userInputRetriever = userInputRetriever;
       this.notesFileReader = notesFileReader;
       this.notesFileWriter = notesFileWriter;
       this.notesSaveTrigger = notesSaveTrigger;
+      this.serverCommunicationResultHandler = serverCommunicationResultHandler;
+      this.serverPassword = serverPassword;
       this.start();
    }
 
@@ -69,36 +68,31 @@ public class ServerThread extends Thread {
          boolean uploadSuccessful;
          try {
             uploadSuccessful = ServerConnectionFactory.createServerConnection(
-                  UserSettings.getInstance().getServerType(), getServerPassword(), notesFileReader, notesFileWriter)
+                  UserSettings.getInstance().getServerType(), serverPassword, notesFileReader, notesFileWriter)
                   .exportNotesToServer(CategoryManager.getInstance().getCategories());
          } catch (SSLHandshakeException e) {
             LOG.error("SSL exception occured. Probably a self-signed certificate?", e);
-
-            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                  I18N.getInstance().getString("error.sslcertificateerror"));
+            serverCommunicationResultHandler.onSslError();
             uploadSuccessful = false;
          } catch (IOException | XMLStreamException e) {
             uploadSuccessful = false;
          }
 
          if (uploadSuccessful) {
-            userInputRetriever.showInfoMessageToUser(I18N.getInstance().getString("info.title"),
-                  I18N.getInstance().getString("info.notesfileuploaded"));
+            serverCommunicationResultHandler.onUploadSuccess();
          } else {
-            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                  I18N.getInstance().getString("error.notesfilenotuploaded"));
+            serverCommunicationResultHandler.onUploadFailure();
          }
       } else {
          List<Category> categoriesFromServer;
 
          try {
             categoriesFromServer = ServerConnectionFactory.createServerConnection(
-                  UserSettings.getInstance().getServerType(), getServerPassword(), notesFileReader, notesFileWriter)
+                  UserSettings.getInstance().getServerType(), serverPassword, notesFileReader, notesFileWriter)
                   .importCategoriesFromServer();
          } catch (SSLHandshakeException e) {
             // certificate error (self-signed?)
-            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                  I18N.getInstance().getString("error.sslcertificateerror"));
+            serverCommunicationResultHandler.onSslError();
             categoriesFromServer = null;
          } catch (IOException e) {
             categoriesFromServer = null;
@@ -108,32 +102,12 @@ public class ServerThread extends Thread {
             notesSaveTrigger.setDisabled(true);
             CategoryManager.getInstance().replaceWithNewCategories(categoriesFromServer);
             notesSaveTrigger.setDisabled(false);
-            try {
-               notesFileWriter.writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
-                     UserSettings.getInstance().getNotesFile());
-            } catch (IOException | XMLStreamException e) {
-               userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                     I18N.getInstance().getString("error.notesfilenotsaved"));
-            }
-            userInputRetriever.showInfoMessageToUser(I18N.getInstance().getString("info.title"),
-                  I18N.getInstance().getString("info.notesfiledownloaded"));
+            notesFileWriter.writeCategoriesToFile(CategoryManager.getInstance().getCategories(),
+                  UserSettings.getInstance().getNotesFile());
+            serverCommunicationResultHandler.onDownloadSuccess();
          } else {
-            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                  I18N.getInstance().getString("error.notesfilenotdownloaded"));
+            serverCommunicationResultHandler.onDownloadFailure();
          }
       }
    }
-
-   private String getServerPassword() {
-      String password = "";
-      if (UserSettings.getInstance().getStoreServerPass()) {
-         password = UserSettings.getInstance().getServerPasswd();
-      } else {
-         if (userInputRetriever != null) {
-            password = userInputRetriever.retrievePasswordFromUser();
-         }
-      }
-      return password;
-   }
-
 }

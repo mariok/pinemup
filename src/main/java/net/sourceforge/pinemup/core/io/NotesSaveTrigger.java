@@ -1,16 +1,11 @@
 package net.sourceforge.pinemup.core.io;
 
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.UserInputRetriever;
-import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.model.*;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 
 public final class NotesSaveTrigger implements CategoryChangedEventListener, NoteChangedEventListener, NoteAddedEventListener,
       NoteRemovedEventListener, CategoryAddedEventListener, CategoryRemovedEventListener {
@@ -20,8 +15,6 @@ public final class NotesSaveTrigger implements CategoryChangedEventListener, Not
 
    private FileSaveThread fileSaveThread;
    private boolean disabled;
-
-   private UserInputRetriever userInputRetriever;
 
    private final NotesFileWriter notesFileWriter;
 
@@ -68,7 +61,7 @@ public final class NotesSaveTrigger implements CategoryChangedEventListener, Not
 
    private synchronized void triggerSave() {
       if (!disabled && (fileSaveThread == null || !fileSaveThread.isAlive())) {
-         fileSaveThread = new FileSaveThread(userInputRetriever, notesFileWriter);
+         fileSaveThread = new FileSaveThread(notesFileWriter);
          fileSaveThread.start();
       }
    }
@@ -88,16 +81,10 @@ public final class NotesSaveTrigger implements CategoryChangedEventListener, Not
       this.disabled = disabled;
    }
 
-   public synchronized void setUserInputRetriever(UserInputRetriever userInputRetriever) {
-      this.userInputRetriever = userInputRetriever;
-   }
-
    private static class FileSaveThread extends Thread {
-      private final UserInputRetriever userInputRetriever;
       private final NotesFileWriter notesFileWriter;
 
-      public FileSaveThread(UserInputRetriever userInputRetriever, NotesFileWriter notesFileWriter) {
-         this.userInputRetriever = userInputRetriever;
+      public FileSaveThread(NotesFileWriter notesFileWriter) {
          this.notesFileWriter = notesFileWriter;
       }
 
@@ -109,9 +96,6 @@ public final class NotesSaveTrigger implements CategoryChangedEventListener, Not
                   UserSettings.getInstance().getNotesFile());
          } catch (InterruptedException e) {
             LOG.error("Error while waiting for notesfile save thread.", e);
-         } catch (IOException | XMLStreamException e) {
-            userInputRetriever.showErrorMessageToUser(I18N.getInstance().getString("error.title"),
-                  I18N.getInstance().getString("error.notesfilenotsaved"));
          }
       }
    }

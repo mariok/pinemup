@@ -21,25 +21,24 @@
 
 package net.sourceforge.pinemup.ui.swing.tray;
 
-import java.awt.Menu;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.util.ArrayList;
-import java.util.List;
-
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
-import net.sourceforge.pinemup.core.model.Category;
-import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
-import net.sourceforge.pinemup.core.UserInputRetriever;
+import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
 import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic;
 import net.sourceforge.pinemup.ui.swing.menus.logic.CategoryMenuLogic.CategoryAction;
 import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic;
 import net.sourceforge.pinemup.ui.swing.menus.logic.GeneralMenuLogic.GeneralAction;
+
+import java.awt.Menu;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrayMenu extends PopupMenu {
    private static final long serialVersionUID = 4859510599893727949L;
@@ -48,11 +47,10 @@ public class TrayMenu extends PopupMenu {
    private MenuItem manageCategoriesItem;
    private final TrayMenuLogic trayMenuLogic;
 
-   public TrayMenu(DialogFactory dialogFactory, UserInputRetriever userInputRetriever,
-         UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
+   public TrayMenu(DialogFactory dialogFactory,UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
          NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super("pin 'em up");
-      trayMenuLogic = new TrayMenuLogic(dialogFactory, userInputRetriever, updateCheckResultHandler,
+      trayMenuLogic = new TrayMenuLogic(dialogFactory, updateCheckResultHandler,
             notesFileReader, notesFileWriter, notesSaveTrigger);
       initWithNewLanguage();
    }

@@ -16,6 +16,16 @@ import java.util.List;
 public class NotesFileWriter {
    private static final Logger LOG = LoggerFactory.getLogger(NotesFileWriter.class);
 
+   private FileWriterResultHandler fileWriterResultHandler;
+
+   public NotesFileWriter() {
+      super();
+   }
+
+   public void setFileWriterResultHandler(FileWriterResultHandler fileWriterResultHandler) {
+      this.fileWriterResultHandler = fileWriterResultHandler;
+   }
+
    public boolean writeCategoriesToOutputStream(List<Category> categories, OutputStream out) throws XMLStreamException {
       boolean writtenSuccessfully = true;
 
@@ -78,13 +88,17 @@ public class NotesFileWriter {
       return writtenSuccessfully;
    }
 
-   public boolean writeCategoriesToFile(List<Category> categories, String filePath) throws IOException, XMLStreamException {
-      boolean writtenSuccessfully;
+   public boolean writeCategoriesToFile(List<Category> categories, String filePath) {
+      boolean writtenSuccessfully = false;
 
       LOG.debug("writing notes to file...");
 
       try (FileOutputStream f = new FileOutputStream(filePath)) {
          writtenSuccessfully = writeCategoriesToOutputStream(categories, f);
+         fileWriterResultHandler.onFileWrittenSuccessfully();
+      } catch (IOException | XMLStreamException e) {
+         LOG.error("Exception when trying to write the notes back to a file. File was NOT written.");
+         fileWriterResultHandler.onFileWriteError();
       }
 
       return writtenSuccessfully;
