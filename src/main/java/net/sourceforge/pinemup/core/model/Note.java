@@ -140,8 +140,10 @@ public class Note {
    }
 
    public void setColor(NoteColor color) {
-      this.color = color;
-      fireNoteChangedEvent();
+      if (color != this.color) {
+         this.color = color;
+         fireNoteChangedEvent();
+      }
    }
 
    public NoteColor getColor() {
