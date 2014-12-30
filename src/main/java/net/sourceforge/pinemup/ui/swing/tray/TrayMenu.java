@@ -23,9 +23,10 @@ package net.sourceforge.pinemup.ui.swing.tray;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
@@ -47,11 +48,11 @@ public class TrayMenu extends PopupMenu {
    private MenuItem manageCategoriesItem;
    private final TrayMenuLogic trayMenuLogic;
 
-   public TrayMenu(DialogFactory dialogFactory,UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
-         NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
+   public TrayMenu(DialogFactory dialogFactory,UpdateCheckResultHandler updateCheckResultHandler, NotesReader notesReader,
+         NotesWriter notesWriter, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super("pin 'em up");
       trayMenuLogic = new TrayMenuLogic(dialogFactory, updateCheckResultHandler,
-            notesFileReader, notesFileWriter, notesSaveTrigger);
+            notesReader, notesWriter, notesFileWriter, notesSaveTrigger);
       initWithNewLanguage();
    }
 

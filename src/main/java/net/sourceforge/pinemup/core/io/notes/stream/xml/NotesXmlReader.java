@@ -1,5 +1,6 @@
-package net.sourceforge.pinemup.core.io.file;
+package net.sourceforge.pinemup.core.io.notes.stream.xml;
 
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
 import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.model.Note;
@@ -22,16 +23,17 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NotesFileReader {
-   private static final Logger LOG = LoggerFactory.getLogger(NotesFileReader.class);
+public class NotesXmlReader implements NotesReader {
+   private static final Logger LOG = LoggerFactory.getLogger(NotesXmlReader.class);
 
+   @Override
    public List<Category> readCategoriesFromInputStream(InputStream inputStream) {
       List<Category> categories = new LinkedList<>();
 
       XMLStreamReader parser = null;
       try {
          XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         parser = myFactory.createXMLStreamReader(inputStream, NotesFileMetaData.NOTESFILE_ENCODING);
+         parser = myFactory.createXMLStreamReader(inputStream, NotesXmlMetaData.NOTESFILE_ENCODING);
 
          Category currentCategory = null;
          Note currentNote = null;
@@ -104,24 +106,6 @@ public class NotesFileReader {
       return categories;
    }
 
-   public List<Category> readCategoriesFromFile(String filePath) {
-      List<Category> categories = new LinkedList<>();
-
-      if (new File(filePath).exists()) {
-         try (InputStream in = new FileInputStream(filePath)) {
-            categories = readCategoriesFromInputStream(in);
-         } catch (IOException e) {
-            LOG.error("Error during attempt to read notes from file.", e);
-         }
-      } else {
-         // create default categories
-         categories.add(new Category("Home", true, NoteColor.YELLOW));
-         categories.add(new Category("Office", false, NoteColor.GREEN));
-      }
-
-      return categories;
-   }
-
    private Category handleCategory(XMLStreamReader parser) {
       String name = "";
       boolean isDefaultCategory = false;
@@ -169,22 +153,14 @@ public class NotesFileReader {
       return currentNote;
    }
 
-   public boolean fileIsValid(String filename) {
+   @Override
+   public boolean dataIsValid(InputStream inputStream) {
       try {
          SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-
-         String version = getNotesFileVersion(filename);
-         if (version == null) {
-            return false;
-         }
-         URL schemaLocation = ResourceLoader.getInstance().getSchemaFile(version);
-         Schema schema;
-         schema = factory.newSchema(schemaLocation);
-
+         URL schemaLocation = ResourceLoader.getInstance().getSchemaFile(NotesXmlMetaData.LATEST_NOTESFILE_VERSION);
+         Schema schema = factory.newSchema(schemaLocation);
          Validator validator = schema.newValidator();
-
-         Source source = new StreamSource(new FileInputStream(filename));
-
+         Source source = new StreamSource(inputStream);
          validator.validate(source);
 
          return true;
@@ -193,57 +169,5 @@ public class NotesFileReader {
       } catch (SAXException e) {
          return false;
       }
-   }
-
-   private String getNotesFileVersion(String filename) {
-      String version = null;
-
-      InputStream in = null;
-      XMLStreamReader parser = null;
-      try {
-         in = new FileInputStream(filename);
-         XMLInputFactory myFactory = XMLInputFactory.newInstance();
-         parser = myFactory.createXMLStreamReader(in, NotesFileMetaData.NOTESFILE_ENCODING);
-
-         int event;
-         while (parser.hasNext()) {
-            event = parser.next();
-            switch (event) {
-            case XMLStreamConstants.START_ELEMENT:
-               String ename = parser.getLocalName();
-               if (ename.equals("notesfile")) {
-                  for (int i = 0; i < parser.getAttributeCount(); i++) {
-                     if (parser.getAttributeLocalName(i).equals("version")) {
-                        version = parser.getAttributeValue(i);
-                     }
-                  }
-               }
-               break;
-            default:
-               // do nothing
-               break;
-            }
-         }
-      } catch (FileNotFoundException e) {
-         LOG.error("The file " + filename + " could not be found!", e);
-      } catch (XMLStreamException e) {
-         LOG.error("Error during attempt to retrieve notesfile version.", e);
-      } finally {
-         if (parser != null) {
-            try {
-               parser.close();
-            } catch (XMLStreamException e) {
-               LOG.error("Error during attempt to close stream.", e);
-            }
-         }
-         if (in != null) {
-            try {
-               in.close();
-            } catch (IOException e) {
-               LOG.error("Error during attempt to close stream.", e);
-            }
-         }
-      }
-      return version;
    }
 }

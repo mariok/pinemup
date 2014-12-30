@@ -19,12 +19,13 @@
  *
  */
 
-package net.sourceforge.pinemup.core.io.server;
+package net.sourceforge.pinemup.core.io.notes.server;
 
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 import org.slf4j.Logger;
@@ -44,18 +45,20 @@ public class ServerThread extends Thread {
    private static final Logger LOG = LoggerFactory.getLogger(ServerThread.class);
 
    private final Direction direction;
-   private final NotesFileReader notesFileReader;
+   private final NotesReader notesReader;
+   private final NotesWriter notesWriter;
    private final NotesFileWriter notesFileWriter;
    private final NotesSaveTrigger notesSaveTrigger;
    private final String serverPassword;
 
    private final ServerCommunicationResultHandler serverCommunicationResultHandler;
 
-   public ServerThread(Direction direction, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger,
+   public ServerThread(Direction direction, NotesReader notesReader, NotesWriter notesWriter, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger,
          ServerCommunicationResultHandler serverCommunicationResultHandler, String serverPassword) {
       super("Server Up-/Download Thread");
       this.direction = direction;
-      this.notesFileReader = notesFileReader;
+      this.notesReader = notesReader;
+      this.notesWriter = notesWriter;
       this.notesFileWriter = notesFileWriter;
       this.notesSaveTrigger = notesSaveTrigger;
       this.serverCommunicationResultHandler = serverCommunicationResultHandler;
@@ -68,7 +71,7 @@ public class ServerThread extends Thread {
          boolean uploadSuccessful;
          try {
             uploadSuccessful = ServerConnectionFactory.createServerConnection(
-                  UserSettings.getInstance().getServerType(), serverPassword, notesFileReader, notesFileWriter)
+                  UserSettings.getInstance().getServerType(), serverPassword, notesReader, notesWriter)
                   .exportNotesToServer(CategoryManager.getInstance().getCategories());
          } catch (SSLHandshakeException e) {
             LOG.error("SSL exception occured. Probably a self-signed certificate?", e);
@@ -88,7 +91,7 @@ public class ServerThread extends Thread {
 
          try {
             categoriesFromServer = ServerConnectionFactory.createServerConnection(
-                  UserSettings.getInstance().getServerType(), serverPassword, notesFileReader, notesFileWriter)
+                  UserSettings.getInstance().getServerType(), serverPassword, notesReader, notesWriter)
                   .importCategoriesFromServer();
          } catch (SSLHandshakeException e) {
             // certificate error (self-signed?)

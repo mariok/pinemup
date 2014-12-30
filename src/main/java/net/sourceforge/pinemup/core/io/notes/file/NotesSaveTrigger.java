@@ -1,7 +1,6 @@
-package net.sourceforge.pinemup.core.io;
+package net.sourceforge.pinemup.core.io.notes.file;
 
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.model.*;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 import org.slf4j.Logger;

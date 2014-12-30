@@ -24,9 +24,9 @@ package net.sourceforge.pinemup.ui.swing.dialogs;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.i18n.I18N.SupportedLocale;
-import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
@@ -296,7 +296,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       gbc.insets = new Insets(1, 1, 1, 1);
       gbc.anchor = GridBagConstraints.NORTHWEST;
 
-      // Add Panel for notes file settings
+      // Add Panel for notes xml settings
       JPanel notesFilePanel = makeNotesFilePanel();
       gbc.gridx = 0;
       gbc.gridy = 0;
@@ -985,7 +985,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
          // selected, update the UI field
          notesFileField.setText(UserSettings.getInstance().getNotesFile());
 
-         // load new notes from file
+         // load new notes from xml
          List<Category> cl = notesFileReader.readCategoriesFromFile(UserSettings.getInstance().getNotesFile());
 
          notesSaveTrigger.setDisabled(true);

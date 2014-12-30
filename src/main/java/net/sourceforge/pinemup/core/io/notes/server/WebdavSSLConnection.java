@@ -19,16 +19,16 @@
  *
  */
 
-package net.sourceforge.pinemup.core.io.server;
+package net.sourceforge.pinemup.core.io.notes.server;
 
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
 
 class WebdavSSLConnection extends WebdavConnection {
    private static final String PROTOCOL_HTTPS = "https";
 
-   protected WebdavSSLConnection(String serverPassword, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter) {
-      super(serverPassword, notesFileReader, notesFileWriter);
+   protected WebdavSSLConnection(String serverPassword, NotesReader notesReader, NotesWriter notesWriter) {
+      super(serverPassword, notesReader, notesWriter);
    }
 
    @Override

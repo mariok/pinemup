@@ -1,5 +1,6 @@
-package net.sourceforge.pinemup.core.io.file;
+package net.sourceforge.pinemup.core.io.notes.stream.xml;
 
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.model.Note;
 import org.slf4j.Logger;
@@ -8,35 +9,28 @@ import org.slf4j.LoggerFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-public class NotesFileWriter {
-   private static final Logger LOG = LoggerFactory.getLogger(NotesFileWriter.class);
+public class NotesXmlWriter implements NotesWriter {
+   private static final Logger LOG = LoggerFactory.getLogger(NotesXmlWriter.class);
 
-   private FileWriterResultHandler fileWriterResultHandler;
-
-   public NotesFileWriter() {
+   public NotesXmlWriter() {
       super();
    }
 
-   public void setFileWriterResultHandler(FileWriterResultHandler fileWriterResultHandler) {
-      this.fileWriterResultHandler = fileWriterResultHandler;
-   }
-
-   public boolean writeCategoriesToOutputStream(List<Category> categories, OutputStream out) throws XMLStreamException {
+   @Override
+   public boolean writeCategoriesToOutputStream(List<Category> categories, OutputStream out) {
       boolean writtenSuccessfully = true;
 
       XMLStreamWriter writer = null;
       try {
          XMLOutputFactory myFactory = XMLOutputFactory.newInstance();
-         writer = myFactory.createXMLStreamWriter(out, NotesFileMetaData.NOTESFILE_ENCODING);
+         writer = myFactory.createXMLStreamWriter(out, NotesXmlMetaData.NOTESFILE_ENCODING);
 
-         writer.writeStartDocument(NotesFileMetaData.NOTESFILE_ENCODING, "1.0");
+         writer.writeStartDocument(NotesXmlMetaData.NOTESFILE_ENCODING, "1.0");
          writer.writeStartElement("notesfile");
-         writer.writeAttribute("version", NotesFileMetaData.LATEST_NOTESFILE_VERSION);
+         writer.writeAttribute("version", NotesXmlMetaData.LATEST_NOTESFILE_VERSION);
 
          for (Category cat : categories) {
             writer.writeStartElement("category");
@@ -75,6 +69,8 @@ public class NotesFileWriter {
          }
          writer.writeEndElement();
          writer.writeEndDocument();
+      } catch (XMLStreamException e) {
+         writtenSuccessfully  = false;
       } finally {
          if (writer != null) {
             try {
@@ -83,22 +79,6 @@ public class NotesFileWriter {
                LOG.error("Error during attempt to close stream.", e);
             }
          }
-      }
-
-      return writtenSuccessfully;
-   }
-
-   public boolean writeCategoriesToFile(List<Category> categories, String filePath) {
-      boolean writtenSuccessfully = false;
-
-      LOG.debug("writing notes to file...");
-
-      try (FileOutputStream f = new FileOutputStream(filePath)) {
-         writtenSuccessfully = writeCategoriesToOutputStream(categories, f);
-         fileWriterResultHandler.onFileWrittenSuccessfully();
-      } catch (IOException | XMLStreamException e) {
-         LOG.error("Exception when trying to write the notes back to a file. File was NOT written.");
-         fileWriterResultHandler.onFileWriteError();
       }
 
       return writtenSuccessfully;

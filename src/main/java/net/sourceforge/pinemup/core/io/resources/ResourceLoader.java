@@ -21,6 +21,10 @@
 
 package net.sourceforge.pinemup.core.io.resources;
 
+import net.sourceforge.pinemup.core.settings.CommonConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
@@ -34,11 +38,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import net.sourceforge.pinemup.core.settings.CommonConfiguration;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class ResourceLoader {
    private static final String IMG_DIR = "img/";
@@ -173,7 +172,7 @@ public final class ResourceLoader {
          }
          br.close();
       } catch (IOException e) {
-         LOG.error("Error while loading file " + filename + ".", e);
+         LOG.error("Error while loading xml " + filename + ".", e);
       }
 
       return s.toString();

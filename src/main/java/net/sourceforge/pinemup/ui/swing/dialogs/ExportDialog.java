@@ -21,6 +21,18 @@
 
 package net.sourceforge.pinemup.ui.swing.dialogs;
 
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.stream.export.NotesTextExportWriter;
+import net.sourceforge.pinemup.core.io.utils.FileUtils;
+import net.sourceforge.pinemup.core.model.Category;
+import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -29,22 +41,9 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import net.sourceforge.pinemup.core.model.Category;
-import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.export.ExportFileManager;
-import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
-import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
-
 public class ExportDialog extends JDialog implements ActionListener {
+   private static final Logger LOG = LoggerFactory.getLogger(ExportDialog.class);
+
    private static final long serialVersionUID = 1L;
 
    private static final int DIALOG_WIDTH = 250;
@@ -122,7 +121,10 @@ public class ExportDialog extends JDialog implements ActionListener {
 
          if (FileDialogCreator.getExportFileDialogInstance().showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             String fileName = FileDialogCreator.getExportFileDialogInstance().getSelectedFile().getAbsolutePath();
-            ExportFileManager.getInstance().exportCategoriesToTextFile(catsToExport, fileName);
+            String checkedFileName = FileUtils.checkAndAddExtension(fileName, ".txt");
+
+            NotesFileWriter exportFileWriter = new NotesFileWriter(new NotesTextExportWriter());
+            exportFileWriter.writeCategoriesToFile(catsToExport, checkedFileName);
          }
          setVisible(false);
          dispose();

@@ -1,8 +1,8 @@
 package net.sourceforge.pinemup.ui.swing.dialogs;
 
-import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 
 public class DialogFactory {

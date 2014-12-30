@@ -2,10 +2,12 @@ package net.sourceforge.pinemup.ui.swing;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
-import net.sourceforge.pinemup.core.io.file.FileWriterResultHandler;
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriterResultHandler;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 import net.sourceforge.pinemup.ui.PinEmUpUi;
@@ -25,14 +27,20 @@ import java.awt.SystemTray;
 public final class SwingUI implements PinEmUpUi {
    private static final Logger LOG = LoggerFactory.getLogger(SwingUI.class);
 
+   private NotesReader notesReader;
+
+   private NotesWriter notesWriter;
+
    private NotesFileReader notesFileReader;
 
    private NotesFileWriter notesFileWriter;
 
    private NotesSaveTrigger notesSaveTrigger;
 
-   public SwingUI(NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
+   public SwingUI(NotesReader notesReader, NotesWriter notesWriter, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super();
+      this.notesReader = notesReader;
+      this.notesWriter = notesWriter;
       this.notesFileReader = notesFileReader;
       this.notesFileWriter = notesFileWriter;
       this.notesSaveTrigger = notesSaveTrigger;
@@ -50,7 +58,7 @@ public final class SwingUI implements PinEmUpUi {
 
             NoteWindowManager noteWindowManager = new NoteWindowManager();
 
-            notesFileWriter.setFileWriterResultHandler(new FileWriterResultHandler() {
+            notesFileWriter.setNotesFileWriterResultHandler(new NotesFileWriterResultHandler() {
                @Override
                public void onFileWrittenSuccessfully() {
                   // do nothing
@@ -64,7 +72,7 @@ public final class SwingUI implements PinEmUpUi {
             });
 
             TrayMenu trayMenu = new TrayMenu(dialogFactory, updateCheckResultHandler,
-                  notesFileReader, notesFileWriter, notesSaveTrigger);
+                  notesReader, notesWriter, notesFileWriter, notesSaveTrigger);
             tray.add(new PinEmUpTrayIcon(trayMenu, noteWindowManager));
 
             TrayMenuUpdater trayMenuUpdater = new TrayMenuUpdater(trayMenu);

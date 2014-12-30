@@ -1,4 +1,4 @@
-package net.sourceforge.pinemup.core.io.server;
+package net.sourceforge.pinemup.core.io.notes.server;
 
 public interface ServerCommunicationResultHandler {
    void onSslError();

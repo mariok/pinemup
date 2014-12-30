@@ -23,9 +23,13 @@ package net.sourceforge.pinemup;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
+import net.sourceforge.pinemup.core.io.notes.stream.xml.NotesXmlReader;
+import net.sourceforge.pinemup.core.io.notes.stream.xml.NotesXmlWriter;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 import net.sourceforge.pinemup.ui.PinEmUpUi;
@@ -57,12 +61,14 @@ public final class PinEmUp {
       I18N.getInstance().setLocale(UserSettings.getInstance().getLocale());
 
       // initialize IO
-      NotesFileReader notesFileReader = new NotesFileReader();
-      NotesFileWriter notesFileWriter = new NotesFileWriter();
+      NotesReader notesReader = new NotesXmlReader();
+      NotesWriter notesWriter = new NotesXmlWriter();
+      NotesFileReader notesFileReader = new NotesFileReader(notesReader);
+      NotesFileWriter notesFileWriter = new NotesFileWriter(notesWriter);
       NotesSaveTrigger notesSaveTrigger = new NotesSaveTrigger(notesFileWriter);
 
       // initialize UI
-      PinEmUpUi pinEmUpUi = new SwingUI(notesFileReader, notesFileWriter, notesSaveTrigger);
+      PinEmUpUi pinEmUpUi = new SwingUI(notesReader, notesWriter, notesFileReader, notesFileWriter, notesSaveTrigger);
       pinEmUpUi.initialize();
 
       // make sure the currently saved notesfile is valid
@@ -77,7 +83,7 @@ public final class PinEmUp {
       CategoryManager.getInstance().registerDefaultNoteAddedEventListener(notesSaveTrigger);
       CategoryManager.getInstance().registerDefaultNoteRemovedEventListener(notesSaveTrigger);
 
-      // load notes from file
+      // load notes from xml
       CategoryManager.getInstance().replaceWithNewCategories(
             notesFileReader.readCategoriesFromFile(UserSettings.getInstance().getNotesFile()));
 

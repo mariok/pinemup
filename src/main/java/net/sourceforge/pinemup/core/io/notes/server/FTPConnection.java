@@ -19,19 +19,19 @@
  *
  */
 
-package net.sourceforge.pinemup.core.io.server;
+package net.sourceforge.pinemup.core.io.notes.server;
+
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
+import net.sourceforge.pinemup.core.settings.UserSettings;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
-import net.sourceforge.pinemup.core.settings.UserSettings;
-
 class FTPConnection extends ServerConnection {
-   protected FTPConnection(String serverPassword, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter) {
-      super(serverPassword, notesFileReader, notesFileWriter);
+   protected FTPConnection(String serverPassword, NotesReader notesReader, NotesWriter notesWriter) {
+      super(serverPassword, notesReader, notesWriter);
    }
 
    @Override

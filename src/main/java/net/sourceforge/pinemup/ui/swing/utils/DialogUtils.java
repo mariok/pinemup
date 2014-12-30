@@ -1,7 +1,7 @@
 package net.sourceforge.pinemup.ui.swing.utils;
 
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.utils.FileUtils;
 import net.sourceforge.pinemup.ui.swing.dialogs.file.FileDialogCreator;
 
@@ -44,20 +44,25 @@ public final class DialogUtils {
    }
 
    public static String makeSureNotesFileIsValid(String notesFilePath, NotesFileReader notesFileReader) {
-      String validFilePath = notesFilePath;
-      File nfile = new File(validFilePath);
-      while (nfile.exists() && !notesFileReader.fileIsValid(validFilePath)) {
-         if (!retrieveUserConfirmation(I18N.getInstance().getString("error.title"),
-               I18N.getInstance().getString("error.notesfilenotvalid"))) {
-            System.exit(0);
-         }
+      String selectedFilePath = notesFilePath;
+      boolean selectedFileIsValid;
 
-         File selectedFile = retieveFileChoiceFromUser();
-         if (selectedFile != null) {
-            validFilePath = FileUtils.checkAndAddExtension(selectedFile.getAbsolutePath(), ".xml");
-            nfile = new File(validFilePath);
-         }
-      }
-      return validFilePath;
+      do {
+         selectedFileIsValid = notesFileReader.fileIsValid(selectedFilePath);
+
+            if (!selectedFileIsValid) {
+               if (!retrieveUserConfirmation(I18N.getInstance().getString("error.title"),
+                     I18N.getInstance().getString("error.notesfilenotvalid"))) {
+                  System.exit(0);
+               }
+
+               File userFileChoice = retieveFileChoiceFromUser();
+               if (userFileChoice != null) {
+                  selectedFilePath = FileUtils.checkAndAddExtension(userFileChoice.getAbsolutePath(), ".xml");
+               }
+            }
+       } while (!selectedFileIsValid);
+
+      return selectedFilePath;
    }
 }

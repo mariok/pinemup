@@ -19,10 +19,10 @@
  *
  */
 
-package net.sourceforge.pinemup.core.io.server;
+package net.sourceforge.pinemup.core.io.notes.server;
 
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
 import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.settings.UserSettings;
 import org.slf4j.Logger;
@@ -42,16 +42,16 @@ import java.util.List;
 public abstract class ServerConnection {
    private static final Logger LOG = LoggerFactory.getLogger(ServerConnection.class);
 
-   private final NotesFileReader notesFileReader;
-   private final NotesFileWriter notesFileWriter;
+   private final NotesReader notesReader;
+   private final NotesWriter notesWriter;
 
    private final String serverPassword;
 
-   protected ServerConnection(String serverPassword, NotesFileReader notesFileReader, NotesFileWriter notesFileWriter) {
+   protected ServerConnection(String serverPassword, NotesReader notesReader, NotesWriter notesWriter) {
       super();
       this.serverPassword = serverPassword;
-      this.notesFileReader = notesFileReader;
-      this.notesFileWriter = notesFileWriter;
+      this.notesReader = notesReader;
+      this.notesWriter = notesWriter;
    }
 
    public List<Category> importCategoriesFromServer() throws IOException {
@@ -64,7 +64,7 @@ public abstract class ServerConnection {
          URL url = new URL(getUrlString(f.getName()));
          URLConnection urlc = url.openConnection();
          is = urlc.getInputStream();
-         categoriesFromServer = notesFileReader.readCategoriesFromInputStream(is);
+         categoriesFromServer = notesReader.readCategoriesFromInputStream(is);
          if (!isConnectionStateOkAfterDownload(urlc)) {
             categoriesFromServer = null;
          }
@@ -93,7 +93,7 @@ public abstract class ServerConnection {
          URLConnection urlc = openURLConnection(url);
          urlc.setDoOutput(true);
          os = urlc.getOutputStream();
-         boolean writtenSuccessfully = notesFileWriter.writeCategoriesToOutputStream(categories, os);
+         boolean writtenSuccessfully = notesWriter.writeCategoriesToOutputStream(categories, os);
 
          if (!isConnectionStateOkAfterUpload(urlc) || !writtenSuccessfully) {
             uploaded = false;

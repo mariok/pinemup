@@ -2,11 +2,12 @@ package net.sourceforge.pinemup.ui.swing.tray;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.NotesSaveTrigger;
-import net.sourceforge.pinemup.core.io.file.NotesFileReader;
-import net.sourceforge.pinemup.core.io.file.NotesFileWriter;
-import net.sourceforge.pinemup.core.io.server.ServerCommunicationResultHandler;
-import net.sourceforge.pinemup.core.io.server.ServerThread;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
+import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.server.ServerCommunicationResultHandler;
+import net.sourceforge.pinemup.core.io.notes.server.ServerThread;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
+import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
 import net.sourceforge.pinemup.core.settings.UserSettings;
@@ -32,16 +33,18 @@ public class TrayMenuLogic implements ActionListener {
 
    private final DialogFactory dialogFactory;
    private final UpdateCheckResultHandler updateCheckResultHandler;
-   private final NotesFileReader notesFileReader;
+   private final NotesReader notesReader;
+   private final NotesWriter notesWriter;
    private final NotesFileWriter notesFileWriter;
    private final NotesSaveTrigger notesSaveTrigger;
 
-   public TrayMenuLogic(DialogFactory dialogFactory, UpdateCheckResultHandler updateCheckResultHandler, NotesFileReader notesFileReader,
-         NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
+   public TrayMenuLogic(DialogFactory dialogFactory, UpdateCheckResultHandler updateCheckResultHandler, NotesReader notesReader,
+         NotesWriter notesWriter, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super();
       this.dialogFactory = dialogFactory;
       this.updateCheckResultHandler = updateCheckResultHandler;
-      this.notesFileReader = notesFileReader;
+      this.notesReader = notesReader;
+      this.notesWriter = notesWriter;
       this.notesFileWriter = notesFileWriter;
       this.notesSaveTrigger = notesSaveTrigger;
    }
@@ -56,20 +59,20 @@ public class TrayMenuLogic implements ActionListener {
          dialogFactory.showSettingsDialog();
          break;
       case ACTION_EXIT_APPLICATION:
-         // save notes to file and exit
+         // save notes to xml and exit
          writeCategoriesToFile();
          System.exit(0);
       case ACTION_UPLOAD_TO_SERVER:
          if (!UserSettings.getInstance().getConfirmUpDownload()
                || JOptionPane.showConfirmDialog(null, I18N.getInstance().getString("confirm.replacefileonserver"), I18N.getInstance()
                .getString("confirm.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            // save notes to file
+            // save notes to xml
             writeCategoriesToFile();
 
             String serverPassword = getServerPassword();
 
-            // copy file to server
-            new ServerThread(ServerThread.Direction.UPLOAD, notesFileReader, notesFileWriter, notesSaveTrigger,
+            // copy xml to server
+            new ServerThread(ServerThread.Direction.UPLOAD, notesReader, notesWriter, notesFileWriter, notesSaveTrigger,
                   new SwingServerCommunicationResultHandler(), serverPassword);
          }
          break;
@@ -80,7 +83,7 @@ public class TrayMenuLogic implements ActionListener {
 
             String serverPassword = getServerPassword();
 
-            new ServerThread(ServerThread.Direction.DOWNLOAD, notesFileReader, notesFileWriter, notesSaveTrigger,
+            new ServerThread(ServerThread.Direction.DOWNLOAD, notesReader, notesWriter, notesFileWriter, notesSaveTrigger,
                   new SwingServerCommunicationResultHandler(), serverPassword);
          }
          break;
