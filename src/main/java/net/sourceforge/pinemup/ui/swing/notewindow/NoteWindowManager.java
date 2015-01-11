@@ -21,21 +21,13 @@
 
 package net.sourceforge.pinemup.ui.swing.notewindow;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.sourceforge.pinemup.core.model.Category;
 import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.model.Note;
-import net.sourceforge.pinemup.core.model.NoteAddedEvent;
-import net.sourceforge.pinemup.core.model.NoteAddedEventListener;
-import net.sourceforge.pinemup.core.model.NoteChangedEvent;
-import net.sourceforge.pinemup.core.model.NoteChangedEventListener;
-import net.sourceforge.pinemup.core.model.NoteRemovedEvent;
-import net.sourceforge.pinemup.core.model.NoteRemovedEventListener;
-
+import net.sourceforge.pinemup.core.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class NoteWindowManager implements NoteChangedEventListener, NoteAddedEventListener, NoteRemovedEventListener {
    private static final Logger LOG = LoggerFactory.getLogger(NoteWindowManager.class);
@@ -97,7 +89,7 @@ public final class NoteWindowManager implements NoteChangedEventListener, NoteAd
    }
 
    private NoteWindow createNoteWindowForNote(Note note) {
-      NoteWindow window = new NoteWindow(note);
+      NoteWindow window = new NoteWindow(new DummyFrame(), note);
       noteWindows.put(note, window);
       note.addNoteChangedEventListener(window);
       Category category = CategoryManager.getInstance().findCategoryForNote(note);

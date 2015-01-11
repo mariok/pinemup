@@ -21,13 +21,12 @@
 
 package net.sourceforge.pinemup.ui.swing.notewindow;
 
+import net.sourceforge.pinemup.core.model.NoteColor;
+
+import javax.swing.JLabel;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
-import javax.swing.JLabel;
-
-import net.sourceforge.pinemup.core.model.NoteColor;
 
 class BackgroundLabel extends JLabel {
    private static final long serialVersionUID = -8780099589968016013L;
@@ -51,10 +50,8 @@ class BackgroundLabel extends JLabel {
       g2.fillRect(0, 0, width, height);
    }
 
-   public BackgroundLabel(NoteColor color, int width, int height) {
+   public BackgroundLabel() {
       super();
-      myColor = color;
-      updateSize(width, height);
       setFocusable(false);
       setOpaque(false);
    }

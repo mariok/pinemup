@@ -34,8 +34,7 @@ import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.*;
 
-public class NoteWindow extends JWindow implements FocusListener, WindowListener, ActionListener, MouseListener, MouseMotionListener,
-      MouseWheelListener, KeyListener, NoteChangedEventListener, CategoryChangedEventListener {
+public class NoteWindow extends JWindow implements NoteChangedEventListener, CategoryChangedEventListener {
    private static final Logger LOG = LoggerFactory.getLogger(NoteWindow.class);
 
    private static final long serialVersionUID = -5228524832353948701L;
@@ -53,49 +52,75 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
    private static final Dimension CATBUTTON_SIZE = new Dimension(100, 15);
    private static final int TOPPANEL_HEIGHT = 26;
 
-   private final JScrollPane textPanel;
-
-   private final JPanel topPanel;
-
-   private final JTextArea textArea;
-
+   /** The note, which is represented by this NoteWindow. */
    private final Note parentNote;
 
-   private final JButton closeButton;
-   private JButton catButton;
+   /** Some component references are stored here, so that the components can be updated later. */
+   private final JPanel topPanel;
+   private final JButton catButton;
+   private final JScrollPane textPanel;
+   private final JTextArea textArea;
    private final JButton scrollButton;
-
-   private int draggingOffsetX, draggingOffsetY;
-
-   /** required to make window movable. */
-   private boolean dragging;
-
-   /** required to make window resizable. */
-   private boolean resizeCursor, resizing;
-
-   /** required for font size change via mousewheel. */
-   private boolean controlPressed;
-
    private final BackgroundLabel bgLabel;
 
-   NoteWindow(Note pn) {
-      super(new DummyFrame());
-      parentNote = pn;
-      textPanel = new JScrollPane();
-      textPanel.setBorder(null);
-      textPanel.setOpaque(false);
-      JPanel mainPanel = new JPanel(new BorderLayout());
-      mainPanel.setOpaque(false);
-      topPanel = new JPanel(new BorderLayout());
-      topPanel.setPreferredSize(new Dimension(UserSettings.getInstance().getDefaultWindowWidth(), TOPPANEL_HEIGHT));
-      topPanel.setBorder(null);
-      topPanel.setOpaque(false);
-      mainPanel.add(textPanel, BorderLayout.CENTER);
-      mainPanel.add(topPanel, BorderLayout.NORTH);
-      dragging = false;
-      catButton = null;
+   /** state-information required to make window movable. */
+   private boolean dragging;
+   private int draggingOffsetX;
+   private int draggingOffsetY;
 
-      // create category-label, if option is enabled
+   /** state-information required to make window resizable. */
+   private boolean resizeCursor;
+   private boolean resizing;
+
+   /** state-information required for font size change via mousewheel. */
+   private boolean controlPressed;
+
+   NoteWindow(Frame owner, Note parentNote) {
+      super(owner);
+      this.parentNote = parentNote;
+
+      //create components
+      catButton = createCatButtonIfNecessary();
+      topPanel = createTopPanel(catButton);
+      textArea = createTextArea();
+      textPanel = createTextPanel(textArea);
+      scrollButton = createScrollButton();
+
+      JButton closeButton = createCloseButton();
+      topPanel.add(closeButton, BorderLayout.EAST);
+
+      bgLabel = new BackgroundLabel();
+      getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
+
+      JPanel mainPanel = createMainPanel();
+      mainPanel.add(topPanel, BorderLayout.NORTH);
+      mainPanel.add(textPanel, BorderLayout.CENTER);
+      mainPanel.add(scrollButton, BorderLayout.SOUTH);
+      setContentPane(mainPanel);
+
+      // initialize component state with information from parent note
+      initWindowAndComponentsFromParentNoteProperties();
+
+      // now add behavior to components
+      setupDoubleClickLogic(topPanel, catButton);
+      setupRightClickMenu(topPanel, catButton);
+      setupNoteMoveLogic(topPanel, catButton);
+      setupTextAreaFocusLogic(topPanel, catButton, textArea);
+      setupResizeLogic(textArea);
+      setupCloseButtonLogic(closeButton);
+      setupKeyboardShortCutLogic(textArea, topPanel);
+      setupChangeFontSizeWithMouseWheelLogic(textArea, topPanel);
+      setupWindowCloseLogic();
+
+      // show the window
+      setVisible(true);
+      showScrollButtonIfNeeded();
+   }
+
+   private JButton createCatButtonIfNecessary() {
+      JButton catButton = null;
+
+      // create category-label, if the corresponding option is enabled
       if (UserSettings.getInstance().getShowCategory()) {
          catButton = new JButton();
          catButton.setRolloverEnabled(false);
@@ -104,34 +129,40 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
          catButton.setPreferredSize(CATBUTTON_SIZE);
          catButton.setMargin(new Insets(0, 0, 0, 0));
          catButton.setBackground(COLOR_TRANSPARENT);
-
-         JPanel catPanel = new JPanel(new FlowLayout());
-         catPanel.add(catButton);
-         catPanel.setOpaque(false);
-         catButton.addMouseListener(this);
-         catButton.addMouseMotionListener(this);
-         topPanel.add(catPanel, BorderLayout.CENTER);
       }
 
-      // create and adjust TextArea
-      textArea = new JTextArea(parentNote.getText(), 1, 1);
-      textArea.setEditable(true);
-      textArea.setOpaque(false);
-      textArea.addFocusListener(this);
-      textArea.setMargin(new Insets(0, 10, 3, 0));
-      textArea.setLineWrap(true);
-      textArea.setWrapStyleWord(true);
-      updateFontSize();
-      textPanel.setViewportView(textArea);
-      textPanel.getViewport().setOpaque(false);
-      textPanel.setBorder(null);
-      textPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-      mainPanel.add(textPanel, BorderLayout.CENTER);
+      return catButton;
+   }
 
-      // add area to show if note is scrollable
+   private JButton createCloseButton() {
+      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(UserSettings.getInstance().getCloseIcon()));
+
+      JButton closeButton = new JButton(closeIcon);
+      closeButton.setBackground(COLOR_TRANSPARENT);
+      closeButton.setRolloverEnabled(false);
+      closeButton.setToolTipText(I18N.getInstance().getString("notewindow.hidebuttontooltip"));
+      closeButton.setFocusable(false);
+      closeButton.setBorderPainted(false);
+      closeButton.setHorizontalAlignment(SwingConstants.CENTER);
+      closeButton.setPreferredSize(CLOSEBUTTON_SIZE);
+      closeButton.setMargin(new Insets(3, 0, 0, 3));
+
+      // add listener to fix problem with background-color after button has been pressed
+      closeButton.addMouseListener(new MouseAdapter() {
+         @Override
+         public void mouseReleased(MouseEvent e) {
+            // restore button background if not pressed
+            repaint();
+         }
+      });
+
+      return closeButton;
+   }
+
+   private JButton createScrollButton() {
       ImageIcon scrollImage = new ImageIcon(ResourceLoader.getInstance().getScrollImage());
-      scrollButton = new JButton(scrollImage);
-      mainPanel.add(scrollButton, BorderLayout.SOUTH);
+
+      JButton scrollButton = new JButton(scrollImage);
       scrollButton.setRolloverEnabled(false);
       scrollButton.setEnabled(false);
       scrollButton.setFocusable(false);
@@ -139,147 +170,66 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       scrollButton.setPreferredSize(SCROLLBUTTON_SIZE);
       scrollButton.setBorder(null);
       scrollButton.setBackground(COLOR_TRANSPARENT);
-      scrollButton.setVisible(false);
       scrollButton.setDisabledIcon(new ImageIcon(ResourceLoader.getInstance().getScrollImage()));
 
-      // adjust and add buttons to the topPanel
-      topPanel.addMouseListener(this);
-      topPanel.addMouseMotionListener(this);
-      topPanel.setFocusable(true);
+      // the scrollbutton will only be shown, if note is scrollable
+      scrollButton.setVisible(false);
 
-      ImageIcon closeIcon = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(UserSettings.getInstance().getCloseIcon()));
-      closeButton = new JButton(closeIcon);
-      closeButton.setBackground(COLOR_TRANSPARENT);
-      closeButton.setRolloverEnabled(false);
+      return scrollButton;
+   }
 
-      closeButton.setToolTipText(I18N.getInstance().getString("notewindow.hidebuttontooltip"));
-      closeButton.addActionListener(this);
-      closeButton.addMouseListener(this);
-      closeButton.setFocusable(false);
-      closeButton.setBorderPainted(false);
-      closeButton.setHorizontalAlignment(SwingConstants.CENTER);
-      closeButton.setPreferredSize(CLOSEBUTTON_SIZE);
-      closeButton.setMargin(new Insets(3, 0, 0, 3));
-      topPanel.add(closeButton, BorderLayout.EAST);
-
-      int width = parentNote.getXSize();
-      int height = parentNote.getYSize();
-      bgLabel = new BackgroundLabel(parentNote.getColor(), width, height);
-      getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
-
-      setSize(width, height);
-      setLocation(parentNote.getXPos(), parentNote.getYPos());
-
-      // menu and doubleclick
-      topPanel.addMouseListener(this);
-
-      // resize listener
-      resizing = false;
-      resizeCursor = false;
-      textArea.addMouseListener(this);
-      textArea.addMouseMotionListener(this);
-
-      // change text size via mousewheel
-      textArea.addMouseWheelListener(this);
-      topPanel.addMouseWheelListener(this);
-
-      setAlwaysOnTop(parentNote.isAlwaysOnTop());
-      setContentPane(mainPanel);
-      addWindowListener(this);
-      textArea.setFocusable(false);
-
+   private JScrollPane createTextPanel(JTextArea textArea) {
+      JScrollPane textPanel = new JScrollPane();
+      textPanel.setBorder(null);
+      textPanel.setOpaque(false);
+      textPanel.setViewportView(textArea);
+      textPanel.getViewport().setOpaque(false);
       textPanel.getVerticalScrollBar().setOpaque(false);
+      textPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-      // add keylisteners (for keyboard shortcuts)
-      topPanel.addKeyListener(this);
-      textArea.addKeyListener(this);
+      return textPanel;
+   }
 
-      loadCategoryNameFromParentNote();
-      setVisible(true);
-      showScrollButtonIfNeeded();
+   private JTextArea createTextArea() {
+      JTextArea textArea = new JTextArea(parentNote.getText(), 1, 1);
+      textArea.setEditable(true);
+      textArea.setOpaque(false);
+      textArea.setFocusable(false);
+      textArea.setMargin(new Insets(0, 10, 3, 0));
+      textArea.setLineWrap(true);
+      textArea.setWrapStyleWord(true);
+
+      return textArea;
+   }
+
+   private JPanel createMainPanel() {
+      JPanel mainPanel = new JPanel(new BorderLayout());
+      mainPanel.setOpaque(false);
+
+      return mainPanel;
+   }
+
+   private JPanel createTopPanel(JButton catButton) {
+      JPanel tp = new JPanel(new BorderLayout());
+      tp.setPreferredSize(new Dimension(UserSettings.getInstance().getDefaultWindowWidth(), TOPPANEL_HEIGHT));
+      tp.setBorder(null);
+      tp.setOpaque(false);
+      tp.setFocusable(true);
+
+      if (catButton != null) {
+         JPanel catPanel = new JPanel(new FlowLayout());
+         catPanel.add(catButton);
+         catPanel.setOpaque(false);
+         tp.add(catPanel, BorderLayout.CENTER);
+      }
+
+      return tp;
    }
 
    @Override
    public void setSize(int width, int height) {
       super.setSize(width, height);
       bgLabel.updateSize(width, height);
-   }
-
-   @Override
-   public void focusGained(FocusEvent e) {
-      if (e.getSource() == textArea) {
-         showScrollBarIfNeeded();
-      }
-   }
-
-   @Override
-   public void focusLost(FocusEvent e) {
-      if (e.getSource() == textArea) {
-         if (!resizing) {
-            // resizing would call showScrollBarIfNeeded() and thus revert the
-            // effect
-            showScrollButtonIfNeeded();
-         }
-         parentNote.setText(textArea.getText());
-         textArea.setFocusable(false);
-      }
-   }
-
-   @Override
-   public void windowActivated(WindowEvent arg0) {
-      // do nothing
-   }
-
-   @Override
-   public void windowClosed(WindowEvent arg0) {
-      getOwner().setVisible(false);
-   }
-
-   @Override
-   public void windowClosing(WindowEvent arg0) {
-      // do nothing
-   }
-
-   @Override
-   public void windowDeactivated(WindowEvent arg0) {
-      // do nothing
-   }
-
-   @Override
-   public void windowDeiconified(WindowEvent arg0) {
-      // do nothing
-   }
-
-   @Override
-   public void windowIconified(WindowEvent arg0) {
-      // do nothing
-   }
-
-   @Override
-   public void windowOpened(WindowEvent arg0) {
-      // do nothing
-   }
-
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      if (e.getSource() == closeButton) {
-         parentNote.setHidden(true);
-      }
-   }
-
-   @Override
-   public void mouseClicked(MouseEvent e) {
-      if (e.getSource() == topPanel || e.getSource() == catButton) {
-         if (e.getClickCount() == 2) {
-            // doubleclick on topPanel
-            autoSizeY();
-         } else {
-            textArea.setFocusable(false);
-         }
-      } else if (e.getSource() == textArea) {
-         textArea.setFocusable(true);
-         textArea.requestFocus();
-      }
    }
 
    private void autoSizeY() {
@@ -297,112 +247,10 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       scrollButton.setVisible(false);
    }
 
-   @Override
-   public void mouseEntered(MouseEvent e) {
-      // do nothing
-   }
-
-   @Override
-   public void mouseExited(MouseEvent e) {
-      // do nothing
-   }
-
-   @Override
-   public void mousePressed(MouseEvent e) {
-      Object src = e.getSource();
-      if (src == topPanel || src == catButton) {
-         checkPopupMenu(e);
-         textArea.setFocusable(false);
-         if (e.getButton() == MouseEvent.BUTTON1) {
-            // determine position on panel
-            draggingOffsetX = e.getXOnScreen() - getX();
-            draggingOffsetY = e.getYOnScreen() - getY();
-            dragging = true;
-         }
-      } else if (src == textArea) {
-         if (e.getButton() == MouseEvent.BUTTON1 && resizeCursor) {
-            draggingOffsetX = getX() + getWidth() - e.getXOnScreen();
-            draggingOffsetY = getY() + getHeight() - e.getYOnScreen();
-            resizing = true;
-            textArea.setFocusable(false);
-            showScrollBarIfNeeded();
-         } else {
-            textArea.setFocusable(true);
-            textArea.requestFocus();
-         }
-      }
-   }
-
-   @Override
-   public void mouseReleased(MouseEvent e) {
-      if (e.getSource() == topPanel || e.getSource() == catButton) {
-         checkPopupMenu(e);
-      }
-
-      if (dragging && e.getButton() == MouseEvent.BUTTON1) {
-         // stop moving and save position
-         dragging = false;
-         parentNote.setPosition((short)getX(), (short)getY());
-      } else if (resizing && e.getButton() == MouseEvent.BUTTON1) {
-         // stop resizing and save size
-         resizing = false;
-         parentNote.setSize((short)getWidth(), (short)getHeight());
-         showScrollButtonIfNeeded();
-      } else if (e.getSource() == closeButton) {
-         // restore button background if not pressed
-         repaint();
-      } else if (e.getSource() == textArea) {
-         textArea.setFocusable(true);
-         textArea.requestFocus();
-      }
-   }
-
    private void checkPopupMenu(MouseEvent event) {
       if (event.isPopupTrigger()) {
          RightClickMenu popup = new RightClickMenu(parentNote);
          popup.show(event.getComponent(), event.getX(), event.getY());
-      }
-   }
-
-   public Note getParentNote() {
-      return parentNote;
-   }
-
-   @Override
-   public void mouseDragged(MouseEvent e) {
-      if (dragging) {
-         setLocation(e.getXOnScreen() - draggingOffsetX, e.getYOnScreen() - draggingOffsetY);
-      } else if (resizing) {
-         int sx = e.getXOnScreen() - getX() + draggingOffsetX;
-         int sy = e.getYOnScreen() - getY() + draggingOffsetY;
-         if (sx < MIN_WINDOW_WIDTH) {
-            sx = MIN_WINDOW_WIDTH;
-         }
-         if (sy < MIN_WINDOW_HEIGHT) {
-            sy = MIN_WINDOW_HEIGHT;
-         }
-         setSize(sx, sy);
-      }
-   }
-
-   @Override
-   public void mouseMoved(MouseEvent e) {
-      if (!resizing) {
-         // if in lower right corner, start resizing or change cursor
-         if ((e.getSource() == textArea && (e.getX() >= textArea.getWidth() - RESIZE_AREA_SIZE && e.getY() >= textPanel.getHeight()
-               - RESIZE_AREA_SIZE))
-               || (e.getSource() == scrollButton && (e.getX() >= scrollButton.getWidth() - RESIZE_AREA_SIZE))) {
-            // height from panel because of vertical scrolling
-            if (!resizeCursor) {
-               resizeCursor = true;
-               textArea.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
-            }
-         } else {
-            if (resizeCursor) {
-               resizeCursor = false;
-               textArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
-            }
-         }
       }
    }
 
@@ -421,12 +269,13 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       }
    }
 
-   private void updateFontSize() {
-      textArea.setFont(new java.awt.Font("SANSSERIF", Font.BOLD, parentNote.getFontSize()));
+   private void setFontSize(short fontSize) {
+      textArea.setFont(new java.awt.Font("SANSSERIF", Font.BOLD, fontSize));
    }
 
-   private void updateAlwaysOnTopState() {
-      setAlwaysOnTop(parentNote.isAlwaysOnTop());
+   private void setBgColor(NoteColor c) {
+      bgLabel.setMyColor(c);
+      repaint();
    }
 
    public void jumpIntoTextArea() {
@@ -448,73 +297,304 @@ public class NoteWindow extends JWindow implements FocusListener, WindowListener
       textPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
    }
 
-   public void setBGColor(NoteColor c) {
-      bgLabel.setMyColor(c);
-      repaint();
+   private void initWindowAndComponentsFromParentNoteProperties() {
+      int width = parentNote.getXSize();
+      int height = parentNote.getYSize();
+      setSize(width, height);
+      setLocation(parentNote.getXPos(), parentNote.getYPos());
+      loadCategoryNameFromParentNote();
+      updateWindowAndComponentsFromParentNoteProperties();
    }
 
-   @Override
-   public void mouseWheelMoved(MouseWheelEvent e) {
-      if (controlPressed) {
-         int diff = -1 * e.getWheelRotation();
-         parentNote.setFontSize((short)(parentNote.getFontSize() + diff));
+   private void updateWindowAndComponentsFromParentNoteProperties() {
+      setFontSize(parentNote.getFontSize());
+      setBgColor(parentNote.getColor());
+      setAlwaysOnTop(parentNote.isAlwaysOnTop());
+   }
+
+   private void setupWindowCloseLogic() {
+      // for reacting on window-events
+      addWindowListener(new WindowAdapter() {
+         @Override
+         public void windowClosed(WindowEvent e) {
+            getOwner().setVisible(false);
+         }
+      });
+   }
+
+   private void setupChangeFontSizeWithMouseWheelLogic(Component... components) {
+      MouseWheelListener changeFontSizeViaMouseWheelListener = e -> {
+         if (controlPressed) {
+            int diff = -1 * e.getWheelRotation();
+            parentNote.setFontSize((short)(parentNote.getFontSize() + diff));
+         }
+      };
+
+      for(Component component : components) {
+         component.addMouseWheelListener(changeFontSizeViaMouseWheelListener);
       }
    }
 
-   @Override
-   public void keyPressed(KeyEvent e) {
-      if (e.isControlDown()) {
-         controlPressed = true;
+   private void setupKeyboardShortCutLogic(Component... components) {
+      // for keyboard shortcuts
+      KeyListener keyListener = new KeyAdapter() {
+         @Override
+         public void keyPressed(KeyEvent e) {
+            if (e.isControlDown()) {
+               controlPressed = true;
 
-         switch (e.getKeyCode()) {
-         case KeyEvent.VK_0:
-         case KeyEvent.VK_1:
-         case KeyEvent.VK_2:
-         case KeyEvent.VK_3:
-         case KeyEvent.VK_4:
-         case KeyEvent.VK_5:
-         case KeyEvent.VK_6:
-         case KeyEvent.VK_7:
-         case KeyEvent.VK_8:
-         case KeyEvent.VK_9:
-            int catNumber = e.getKeyCode() - KeyEvent.VK_0;
-            if (catNumber == 0) {
-               catNumber = 9;
-            } else {
-               catNumber--;
+               switch (e.getKeyCode()) {
+               case KeyEvent.VK_0:
+               case KeyEvent.VK_1:
+               case KeyEvent.VK_2:
+               case KeyEvent.VK_3:
+               case KeyEvent.VK_4:
+               case KeyEvent.VK_5:
+               case KeyEvent.VK_6:
+               case KeyEvent.VK_7:
+               case KeyEvent.VK_8:
+               case KeyEvent.VK_9:
+                  int catNumber = e.getKeyCode() - KeyEvent.VK_0;
+                  if (catNumber == 0) {
+                     catNumber = 9;
+                  } else {
+                     catNumber--;
+                  }
+                  CategoryManager.getInstance().moveNoteToCategory(parentNote, catNumber);
+                  break;
+               case KeyEvent.VK_MINUS:
+                  parentNote.setFontSize((short)(parentNote.getFontSize() - 1));
+                  break;
+               case KeyEvent.VK_PLUS:
+                  parentNote.setFontSize((short)(parentNote.getFontSize() + 1));
+                  break;
+               default:
+                  break;
+               }
             }
-            CategoryManager.getInstance().moveNoteToCategory(parentNote, catNumber);
-            break;
-         case KeyEvent.VK_MINUS:
-            parentNote.setFontSize((short)(parentNote.getFontSize() - 1));
-            break;
-         case KeyEvent.VK_PLUS:
-            parentNote.setFontSize((short)(parentNote.getFontSize() + 1));
-            break;
-         default:
-            break;
+         }
+
+         @Override
+         public void keyReleased(KeyEvent e) {
+            if (!e.isControlDown()) {
+               controlPressed = false;
+            }
+         }
+      };
+
+      for(Component component : components) {
+         component.addKeyListener(keyListener);
+      }
+   }
+
+   private void setupCloseButtonLogic(JButton closeButton) {
+      closeButton.addActionListener(e -> parentNote.setHidden(true));
+   }
+
+   private void setupResizeLogic(JTextArea textArea) {
+      textArea.addMouseListener(new MouseAdapter() {
+         @Override
+         public void mousePressed(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON1 && resizeCursor) {
+               draggingOffsetX = getX() + getWidth() - e.getXOnScreen();
+               draggingOffsetY = getY() + getHeight() - e.getYOnScreen();
+               resizing = true;
+               textArea.setFocusable(false);
+               showScrollBarIfNeeded();
+            }
+         }
+
+         @Override
+         public void mouseReleased(MouseEvent e) {
+            if (resizing && e.getButton() == MouseEvent.BUTTON1) {
+               // stop resizing and save size
+               resizing = false;
+               parentNote.setSize((short)getWidth(), (short)getHeight());
+               showScrollButtonIfNeeded();
+            }
+         }
+      });
+
+      textArea.addMouseMotionListener(new MouseMotionListener() {
+         @Override
+         public void mouseDragged(MouseEvent e) {
+            if (resizing) {
+               int sx = e.getXOnScreen() - getX() + draggingOffsetX;
+               int sy = e.getYOnScreen() - getY() + draggingOffsetY;
+               if (sx < MIN_WINDOW_WIDTH) {
+                  sx = MIN_WINDOW_WIDTH;
+               }
+               if (sy < MIN_WINDOW_HEIGHT) {
+                  sy = MIN_WINDOW_HEIGHT;
+               }
+               setSize(sx, sy);
+            }
+         }
+
+         @Override
+         public void mouseMoved(MouseEvent e) {
+            if (!resizing) {
+               // if in lower right corner, start resizing or change cursor
+               if (e.getX() >= textArea.getWidth() - RESIZE_AREA_SIZE && e.getY() >= textPanel.getHeight() - RESIZE_AREA_SIZE) {
+                  // height from panel because of vertical scrolling
+                  if (!resizeCursor) {
+                     resizeCursor = true;
+                     textArea.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+                  }
+               } else {
+                  if (resizeCursor) {
+                     resizeCursor = false;
+                     textArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
+                  }
+               }
+            }
+         }
+      });
+   }
+
+   private void setupTextAreaFocusLogic(JPanel topPanel, JButton catButton, JTextArea textArea) {
+      MouseListener releaseFocusFromTextAreaListener = new MouseAdapter() {
+         @Override
+         public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 1) {
+               textArea.setFocusable(false);
+            }
+         }
+
+         @Override
+         public void mousePressed(MouseEvent e) {
+            textArea.setFocusable(false);
+         }
+      };
+      topPanel.addMouseListener(releaseFocusFromTextAreaListener);
+      if (catButton != null) {
+         catButton.addMouseListener(releaseFocusFromTextAreaListener);
+      }
+
+      textArea.addMouseListener(new MouseAdapter() {
+         @Override
+         public void mouseClicked(MouseEvent e) {
+            textArea.setFocusable(true);
+            textArea.requestFocus();
+         }
+
+         @Override
+         public void mousePressed(MouseEvent e) {
+            if (!resizeCursor) {
+               textArea.setFocusable(true);
+               textArea.requestFocus();
+            }
+         }
+
+         @Override
+         public void mouseReleased(MouseEvent e) {
+            if (!resizing) {
+               textArea.setFocusable(true);
+               textArea.requestFocus();
+            }
+         }
+      });
+
+      textArea.addFocusListener(new FocusListener() {
+         @Override
+         public void focusGained(FocusEvent e) {
+            showScrollBarIfNeeded();
+         }
+
+         @Override
+         public void focusLost(FocusEvent e) {
+            if (!resizing) {
+               // resizing would call showScrollBarIfNeeded() and thus revert the
+               // effect
+               showScrollButtonIfNeeded();
+            }
+            parentNote.setText(textArea.getText());
+            textArea.setFocusable(false);
+         }
+      });
+   }
+
+   private void setupNoteMoveLogic(Component... components) {
+      for(Component component : components) {
+         if (component != null) {
+            component.addMouseListener(new MouseAdapter() {
+               @Override
+               public void mousePressed(MouseEvent e) {
+                  if (e.getButton() == MouseEvent.BUTTON1) {
+                     // determine position on panel
+                     draggingOffsetX = e.getXOnScreen() - getX();
+                     draggingOffsetY = e.getYOnScreen() - getY();
+                     dragging = true;
+                  }
+               }
+
+               @Override
+               public void mouseReleased(MouseEvent e) {
+                  if (dragging && e.getButton() == MouseEvent.BUTTON1) {
+                     // stop moving and save position
+                     dragging = false;
+                     parentNote.setPosition((short)getX(), (short)getY());
+                  }
+               }
+            });
+
+            component.addMouseMotionListener(new MouseMotionAdapter() {
+               @Override
+               public void mouseDragged(MouseEvent e) {
+                  if (dragging) {
+                     setLocation(e.getXOnScreen() - draggingOffsetX, e.getYOnScreen() - draggingOffsetY);
+                  }
+               }
+            });
+         }
+      }
+   }
+
+   private void setupDoubleClickLogic(Component... components) {
+      for(Component component : components) {
+         if (component != null) {
+            component.addMouseListener(new MouseAdapter() {
+               @Override
+               public void mouseClicked(MouseEvent e) {
+                  if (e.getClickCount() == 2) {
+                     // doubleclick on topPanel
+                     autoSizeY();
+                  } else {
+                     textArea.setFocusable(false);
+                  }
+               }
+
+               @Override
+               public void mousePressed(MouseEvent e) {
+                  textArea.setFocusable(false);
+               }
+            });
+         }
+      }
+   }
+
+   private void setupRightClickMenu(Component... components) {
+      for(Component component : components) {
+         if (component != null) {
+            component.addMouseListener(new MouseAdapter() {
+               @Override
+               public void mousePressed(MouseEvent e) {
+                  checkPopupMenu(e);
+               }
+
+               @Override
+               public void mouseReleased(MouseEvent e) {
+                  checkPopupMenu(e);
+               }
+            });
          }
       }
    }
 
    @Override
-   public void keyReleased(KeyEvent e) {
-      if (!e.isControlDown()) {
-         controlPressed = false;
-      }
-   }
-
-   @Override
-   public void keyTyped(KeyEvent e) {
-      // do nothing
-   }
-
-   @Override
    public void noteChanged(NoteChangedEvent event) {
       LOG.debug("Received NoteChangedEvent.");
-      setBGColor(parentNote.getColor());
-      updateFontSize();
-      updateAlwaysOnTopState();
+      updateWindowAndComponentsFromParentNoteProperties();
    }
 
    @Override
