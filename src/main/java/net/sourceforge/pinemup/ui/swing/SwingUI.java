@@ -15,6 +15,7 @@ import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
 import net.sourceforge.pinemup.ui.swing.notewindow.NoteWindowManager;
 import net.sourceforge.pinemup.ui.swing.tray.PinEmUpTrayIcon;
 import net.sourceforge.pinemup.ui.swing.tray.TrayMenu;
+import net.sourceforge.pinemup.ui.swing.tray.TrayMenuLogic;
 import net.sourceforge.pinemup.ui.swing.tray.TrayMenuUpdater;
 import net.sourceforge.pinemup.ui.swing.utils.DialogUtils;
 import org.slf4j.Logger;
@@ -71,8 +72,9 @@ public final class SwingUI implements PinEmUpUi {
                }
             });
 
-            TrayMenu trayMenu = new TrayMenu(dialogFactory, updateCheckResultHandler,
+            TrayMenuLogic trayMenuLogic = new TrayMenuLogic(dialogFactory, updateCheckResultHandler,
                   notesReader, notesWriter, notesFileWriter, notesSaveTrigger);
+            TrayMenu trayMenu = new TrayMenu(trayMenuLogic);
             tray.add(new PinEmUpTrayIcon(trayMenu, noteWindowManager));
 
             TrayMenuUpdater trayMenuUpdater = new TrayMenuUpdater(trayMenu);

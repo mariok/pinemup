@@ -21,60 +21,49 @@
 
 package net.sourceforge.pinemup.ui.swing.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Calendar;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-
 import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
-public class AboutDialog extends JFrame implements ActionListener {
+import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.Calendar;
+
+public class AboutDialog extends JFrame {
    private static final long serialVersionUID = -6786897911342420374L;
 
    private static final int DIALOG_WIDTH = 600;
    private static final int DIALOG_HEIGHT = 350;
 
-   private final JButton okButton;
-
    public AboutDialog() {
       super(I18N.getInstance().getString("aboutdialog.title"));
-      setSize(new Dimension(DIALOG_WIDTH, DIALOG_HEIGHT));
 
-      JPanel mainPanel = new JPanel(new BorderLayout());
-
-      JTabbedPane tpane = new JTabbedPane();
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(),
+      JTabbedPane tabbedPane = new JTabbedPane();
+      tabbedPane.addTab(I18N.getInstance().getString("aboutdialog.abouttab"), null, makeAboutTab(),
             I18N.getInstance().getString("aboutdialog.abouttab"));
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(),
+      tabbedPane.addTab(I18N.getInstance().getString("aboutdialog.authorstab"), null, makeAuthorsTab(),
             I18N.getInstance().getString("aboutdialog.authorstab"));
-      tpane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(),
+      tabbedPane.addTab(I18N.getInstance().getString("aboutdialog.licensetab"), null, makeLicenseTab(),
             I18N.getInstance().getString("aboutdialog.licensetab"));
-      mainPanel.add(tpane, BorderLayout.CENTER);
 
-      okButton = new JButton(I18N.getInstance().getString("closebutton"));
-      okButton.addActionListener(this);
+      JButton okButton = new JButton(I18N.getInstance().getString("closebutton"));
       okButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-      okButton.setEnabled(true);
+
       JPanel buttonPanel = new JPanel();
       buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
       buttonPanel.add(okButton);
-      mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
+      JPanel mainPanel = new JPanel(new BorderLayout());
+      mainPanel.add(tabbedPane, BorderLayout.CENTER);
+      mainPanel.add(buttonPanel, BorderLayout.SOUTH);
       setContentPane(mainPanel);
+
+      setupOkButtonLogic(okButton);
+
+      setSize(new Dimension(DIALOG_WIDTH, DIALOG_HEIGHT));
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
       SwingUtils.centerWindowOnScreen(this);
-
       setVisible(true);
    }
 
@@ -107,12 +96,10 @@ public class AboutDialog extends JFrame implements ActionListener {
       return myScrollPane;
    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      Object src = e.getSource();
-      if (src == okButton) {
+   private void setupOkButtonLogic(JButton okButton) {
+      okButton.addActionListener(e -> {
          setVisible(false);
          dispose();
-      }
+      });
    }
 }
