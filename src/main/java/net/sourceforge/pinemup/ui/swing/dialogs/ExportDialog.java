@@ -54,7 +54,7 @@ public class ExportDialog extends JDialog implements ActionListener {
    private final JCheckBox[] catBoxes;
    private final JCheckBox allCatsBox;
 
-   public ExportDialog() {
+   ExportDialog() {
       super();
       setTitle(I18N.getInstance().getString("exportdialog.title"));
       JScrollPane sp = new JScrollPane();

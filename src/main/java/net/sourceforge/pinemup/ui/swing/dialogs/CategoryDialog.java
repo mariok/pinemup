@@ -39,8 +39,6 @@ import java.awt.*;
 public final class CategoryDialog extends JDialog implements DocumentListener, ListSelectionListener {
    private static final long serialVersionUID = 1L;
 
-   private static CategoryDialog instance;
-
    /** Keep references to some controls in order to be able to update their status later. */
    private final JButton moveUpButton;
    private final JButton moveDownButton;
@@ -60,13 +58,7 @@ public final class CategoryDialog extends JDialog implements DocumentListener, L
    /** Used to temporarily disable the instant-updating of the category-attributes in the table. */
    private boolean trackCategoryChangesInTable;
 
-   public static void showInstance() {
-      if (CategoryDialog.instance == null || !CategoryDialog.instance.isVisible()) {
-         instance = new CategoryDialog();
-      }
-   }
-
-   private CategoryDialog() {
+   CategoryDialog() {
       super();
       setTitle(I18N.getInstance().getString("categorydialog.title"));
 

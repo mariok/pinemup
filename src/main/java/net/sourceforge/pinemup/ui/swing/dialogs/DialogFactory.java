@@ -8,7 +8,11 @@ import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 public class DialogFactory {
    private UpdateCheckResultHandler updateCheckResultHandler;
 
+   /** All of these dialogs must only exist once. */
    private SettingsDialog settingsDialogInstance;
+   private CategoryDialog categoryDialogInstance;
+   private AboutDialog aboutDialogInstance;
+   private ExportDialog exportDialogInstance;
 
    private final NotesFileReader notesFileReader;
    private final NotesFileWriter notesFileWriter;
@@ -26,6 +30,24 @@ public class DialogFactory {
       if (settingsDialogInstance == null || !settingsDialogInstance.isVisible()) {
          settingsDialogInstance = new SettingsDialog(updateCheckResultHandler,
                notesFileReader, notesFileWriter, notesSaveTrigger);
+      }
+   }
+
+   public void showCategoryDialog() {
+      if (categoryDialogInstance == null || !categoryDialogInstance.isVisible()) {
+         categoryDialogInstance = new CategoryDialog();
+      }
+   }
+
+   public void showAboutDialog() {
+      if (aboutDialogInstance == null || !aboutDialogInstance.isVisible()) {
+         aboutDialogInstance = new AboutDialog();
+      }
+   }
+
+   public void showExportDialog() {
+      if (exportDialogInstance == null || !exportDialogInstance.isVisible()) {
+         exportDialogInstance = new ExportDialog();
       }
    }
 }

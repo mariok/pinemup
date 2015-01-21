@@ -2,8 +2,8 @@ package net.sourceforge.pinemup.ui.swing.tray;
 
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.notes.server.ServerCommunicationResultHandler;
 import net.sourceforge.pinemup.core.io.notes.server.ServerThread;
 import net.sourceforge.pinemup.core.io.notes.stream.NotesReader;
@@ -11,10 +11,7 @@ import net.sourceforge.pinemup.core.io.notes.stream.NotesWriter;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
 import net.sourceforge.pinemup.core.settings.UserSettings;
-import net.sourceforge.pinemup.ui.swing.dialogs.AboutDialog;
-import net.sourceforge.pinemup.ui.swing.dialogs.CategoryDialog;
 import net.sourceforge.pinemup.ui.swing.dialogs.DialogFactory;
-import net.sourceforge.pinemup.ui.swing.dialogs.ExportDialog;
 import net.sourceforge.pinemup.ui.swing.utils.DialogUtils;
 
 import javax.swing.JOptionPane;
@@ -53,7 +50,7 @@ public class TrayMenuLogic implements ActionListener {
    public void actionPerformed(ActionEvent e) {
       switch (e.getActionCommand()) {
       case ACTION_SHOW_ABOUT_DIALOG:
-         new AboutDialog();
+         dialogFactory.showAboutDialog();
          break;
       case ACTION_SHOW_SETTINGS_DIALOG:
          dialogFactory.showSettingsDialog();
@@ -88,10 +85,10 @@ public class TrayMenuLogic implements ActionListener {
          }
          break;
       case ACTION_EXPORT:
-         new ExportDialog();
+         dialogFactory.showExportDialog();
          break;
       case ACTION_MANAGE_CATEGORIES:
-         CategoryDialog.showInstance();
+         dialogFactory.showCategoryDialog();
          break;
       case ACTION_CHECK_FOR_UPDATES:
          new UpdateCheckThread(updateCheckResultHandler);

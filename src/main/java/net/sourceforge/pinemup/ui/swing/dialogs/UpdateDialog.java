@@ -21,19 +21,13 @@
 
 package net.sourceforge.pinemup.ui.swing.dialogs;
 
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
+
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 public class UpdateDialog extends JFrame implements ActionListener {
    private static final long serialVersionUID = 1L;

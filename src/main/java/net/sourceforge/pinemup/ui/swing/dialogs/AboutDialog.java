@@ -36,7 +36,7 @@ public class AboutDialog extends JFrame {
    private static final int DIALOG_WIDTH = 600;
    private static final int DIALOG_HEIGHT = 350;
 
-   public AboutDialog() {
+   AboutDialog() {
       super(I18N.getInstance().getString("aboutdialog.title"));
 
       JTabbedPane tabbedPane = new JTabbedPane();

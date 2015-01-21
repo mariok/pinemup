@@ -91,7 +91,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
    private final NotesSaveTrigger notesSaveTrigger;
 
-   public SettingsDialog(UpdateCheckResultHandler updateCheckResultHandler,
+   SettingsDialog(UpdateCheckResultHandler updateCheckResultHandler,
          NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
       super();
       this.updateCheckResultHandler = updateCheckResultHandler;
