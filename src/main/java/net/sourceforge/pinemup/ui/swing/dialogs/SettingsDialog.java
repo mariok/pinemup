@@ -24,9 +24,9 @@ package net.sourceforge.pinemup.ui.swing.dialogs;
 import net.sourceforge.pinemup.core.CategoryManager;
 import net.sourceforge.pinemup.core.i18n.I18N;
 import net.sourceforge.pinemup.core.i18n.I18N.SupportedLocale;
-import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.notes.file.NotesFileReader;
 import net.sourceforge.pinemup.core.io.notes.file.NotesFileWriter;
+import net.sourceforge.pinemup.core.io.notes.file.NotesSaveTrigger;
 import net.sourceforge.pinemup.core.io.resources.ResourceLoader;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckResultHandler;
 import net.sourceforge.pinemup.core.io.updatecheck.UpdateCheckThread;
@@ -48,13 +48,12 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-public final class SettingsDialog extends JFrame implements ActionListener, DocumentListener, ChangeListener {
+public final class SettingsDialog extends JFrame implements DocumentListener, ChangeListener {
    private static final long serialVersionUID = 1L;
 
    private static final int DIALOG_WIDTH = 640;
@@ -99,12 +98,6 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       this.notesFileWriter = notesFileWriter;
       this.notesSaveTrigger = notesSaveTrigger;
 
-      setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
-
-      // PREPARE ALL PANELS
-      // ---------------------
-      JPanel mainPanel = new JPanel(new BorderLayout());
-
       // tabbed pane and tabs
       tpane = new JTabbedPane();
       JPanel generalTab = makeGeneralTab();
@@ -115,15 +108,11 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       tpane.addTab("", null, lookAndFeelTab, "");
       tpane.addTab("", null, defaultsTab, "");
       tpane.addTab("", null, loadSaveTab, "");
-      mainPanel.add(tpane, BorderLayout.CENTER);
 
-      // PANEL WITH BUTTONS
+      // button-panel
       okButton = new JButton();
-      okButton.addActionListener(this);
       cancelButton = new JButton();
-      cancelButton.addActionListener(this);
       applyButton = new JButton();
-      applyButton.addActionListener(this);
       okButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
       cancelButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
       applyButton.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
@@ -134,7 +123,11 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       buttonPanel.add(okButton);
       buttonPanel.add(cancelButton);
       buttonPanel.add(applyButton);
+
+      JPanel mainPanel = new JPanel(new BorderLayout());
+      mainPanel.add(tpane, BorderLayout.CENTER);
       mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+      setContentPane(mainPanel);
 
       // Load language-specific labels
       loadLocaleTexts();
@@ -143,11 +136,21 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       loadSettings();
       markSettingsChanged(false);
 
-      setContentPane(mainPanel);
+      okButton.addActionListener(e -> {
+         saveSettings();
+         closeDialog();
+      });
+      cancelButton.addActionListener(e -> closeDialog());
+      applyButton.addActionListener(e -> {
+         saveSettings();
+         markSettingsChanged(false);
+         loadLocaleTexts();
+      });
+      registerSettingsChangedListenerOnComponents();
+
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
+      setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
       SwingUtils.centerWindowOnScreen(this);
-
       setVisible(true);
    }
 
@@ -382,9 +385,8 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       updateCheckPanel.add(emptyLabel5, gbc);
       // Add fields
       updateCheckBox = new JCheckBox("");
-      updateCheckBox.addActionListener(this);
       updateCheckButton = new JButton();
-      updateCheckButton.addActionListener(this);
+      updateCheckButton.addActionListener(e -> new UpdateCheckThread(updateCheckResultHandler));
 
       // Set settings for all fields
       gbc.weightx = 0;
@@ -436,7 +438,6 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
       // Create fields
       languageBox = new JComboBox<>(SupportedLocale.values());
-      languageBox.addActionListener(this);
 
       // Set settings for all fields
       gbc.weightx = 0;
@@ -497,15 +498,12 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       ImageIcon closeIcon1 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(1));
       ImageIcon closeIcon2 = new ImageIcon(ResourceLoader.getInstance().getCloseIcon(2));
       closeIcon1Button = new JRadioButton();
-      closeIcon1Button.addActionListener(this);
       closeIcon2Button = new JRadioButton();
-      closeIcon2Button.addActionListener(this);
       closeIconGroup.add(closeIcon1Button);
       closeIconGroup.add(closeIcon2Button);
       JLabel closeIcon1Label = new JLabel(closeIcon1);
       JLabel closeIcon2Label = new JLabel(closeIcon2);
       showCatBox = new JCheckBox("");
-      showCatBox.addActionListener(this);
 
       // Set settings for all fields
       gbc.weightx = 0;
@@ -563,7 +561,6 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
       // Add fields
       confirmDeleteBox = new JCheckBox("");
-      confirmDeleteBox.addActionListener(this);
 
       // Set settings for all fields
       gbc.weightx = 0;
@@ -722,7 +719,6 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
       // Add fields
       alwaysOnTopBox = new JCheckBox("");
-      alwaysOnTopBox.addActionListener(this);
 
       // Set settings for all fields
       gbc.weightx = 100;
@@ -751,7 +747,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       notesFileField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       notesFileField.getDocument().addDocumentListener(this);
       browseButton = new JButton();
-      browseButton.addActionListener(this);
+      browseButton.addActionListener(e -> browseForNotesFile());
       // Set settings for all fields
       gbc.weightx = 0;
       gbc.weighty = 0;
@@ -809,7 +805,6 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
 
       // Create fields
       serverTypeBox = new JComboBox<>(ConnectionType.values());
-      serverTypeBox.addActionListener(this);
       serverAddressField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverAddressField.getDocument().addDocumentListener(this);
       serverUserField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
@@ -817,7 +812,7 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       serverPasswdField = new JPasswordField(DEFAULT_TEXTFIELD_SIZE);
       serverPasswdField.getDocument().addDocumentListener(this);
       storeServerPassBox = new JCheckBox();
-      storeServerPassBox.addActionListener(this);
+      storeServerPassBox.addActionListener(e -> serverPasswdField.setEnabled(storeServerPassBox.isSelected()));
       serverDirField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
       serverDirField.getDocument().addDocumentListener(this);
       confirmUpDownloadBox = new JCheckBox();
@@ -851,38 +846,33 @@ public final class SettingsDialog extends JFrame implements ActionListener, Docu
       return serverPanel;
    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      Object src = e.getSource();
+   private void closeDialog() {
+      setVisible(false);
+      dispose();
+   }
 
-      if (src == okButton) {
-         saveSettings();
-         setVisible(false);
-         dispose();
-      } else if (src == applyButton) {
-         saveSettings();
-         markSettingsChanged(false);
-         loadLocaleTexts();
-      } else if (src == cancelButton) {
-         setVisible(false);
-         dispose();
-      } else if (src == browseButton) {
-         File f = null;
-         if (FileDialogCreator.getFileDialogInstance().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            f = FileDialogCreator.getFileDialogInstance().getSelectedFile();
-         }
-         if (f != null) {
-            notesFileField.setText(FileUtils.checkAndAddExtension(f.getAbsolutePath(), ".xml"));
-         }
-      } else if (src == updateCheckButton) {
-         new UpdateCheckThread(updateCheckResultHandler);
-      } else if (src == updateCheckBox || src == closeIcon1Button || src == closeIcon2Button || src == alwaysOnTopBox || src == showCatBox
-            || src == confirmDeleteBox || src == serverTypeBox || src == languageBox) {
-         markSettingsChanged(true);
-      } else if (src == storeServerPassBox) {
-         serverPasswdField.setEnabled(storeServerPassBox.isSelected());
-         markSettingsChanged(true);
+   private void browseForNotesFile() {
+      File f = null;
+      if (FileDialogCreator.getFileDialogInstance().showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+         f = FileDialogCreator.getFileDialogInstance().getSelectedFile();
       }
+      if (f != null) {
+         notesFileField.setText(FileUtils.checkAndAddExtension(f.getAbsolutePath(), ".xml"));
+      }
+   }
+
+   private void registerSettingsChangedListenerOnComponents() {
+      ActionListener markSettingsChangedListener = e -> markSettingsChanged(true);
+
+      updateCheckBox.addActionListener(markSettingsChangedListener);
+      closeIcon1Button.addActionListener(markSettingsChangedListener);
+      closeIcon2Button.addActionListener(markSettingsChangedListener);
+      alwaysOnTopBox.addActionListener(markSettingsChangedListener);
+      showCatBox.addActionListener(markSettingsChangedListener);
+      confirmDeleteBox.addActionListener(markSettingsChangedListener);
+      serverTypeBox.addActionListener(markSettingsChangedListener);
+      languageBox.addActionListener(markSettingsChangedListener);
+      storeServerPassBox.addActionListener(markSettingsChangedListener);
    }
 
    private void loadSettings() {
