@@ -25,6 +25,11 @@ public class PinBoard {
 
    public void removeCategory(Category c) {
       categories.remove(c);
+
+      if (c.isDefaultCategory()) {
+         categories.get(0).setDefault(true);
+      }
+
       fireCategoryRemovedEvent(c);
    }
 

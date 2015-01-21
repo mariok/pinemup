@@ -21,63 +21,44 @@
 
 package net.sourceforge.pinemup.ui.swing.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import net.sourceforge.pinemup.core.CategoryManager;
+import net.sourceforge.pinemup.core.i18n.I18N;
+import net.sourceforge.pinemup.core.model.Category;
+import net.sourceforge.pinemup.core.model.NoteColor;
+import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
-import net.sourceforge.pinemup.core.model.Category;
-import net.sourceforge.pinemup.core.CategoryManager;
-import net.sourceforge.pinemup.core.i18n.I18N;
-import net.sourceforge.pinemup.core.model.NoteColor;
-import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
-
-public final class CategoryDialog extends JDialog implements ActionListener, DocumentListener, ListSelectionListener {
+public final class CategoryDialog extends JDialog implements DocumentListener, ListSelectionListener {
    private static final long serialVersionUID = 1L;
 
    private static CategoryDialog instance;
 
-   private final JButton closeButton;
+   /** Keep references to some controls in order to be able to update their status later. */
    private final JButton moveUpButton;
    private final JButton moveDownButton;
    private final JButton deleteButton;
-   private final JButton addButton;
-
    private final JTable catTable;
-   private DefaultTableModel catTableModel;
-   private JTextField catNameField;
-   private JCheckBox defaultBox;
-   private JComboBox<NoteColor> colorBox;
+   private final DefaultTableModel catTableModel;
+   private final JTextField catNameField;
+   private final JCheckBox defaultBox;
+   private final JComboBox<NoteColor> colorBox;
 
-   private int noOfCategories;
-   private int defCat;
-   private int selectedRow;
-   private Category selectedCat;
+   /** Used to remove the default-category-marker from the old default category row after a change. */
+   private int rowNumberOfCurrentDefaultCategory;
 
-   private boolean trackChanges;
+   /** References the currently selected category. */
+   private Category selectedCategory;
+
+   /** Used to temporarily disable the instant-updating of the category-attributes in the table. */
+   private boolean trackCategoryChangesInTable;
 
    public static void showInstance() {
       if (CategoryDialog.instance == null || !CategoryDialog.instance.isVisible()) {
@@ -88,102 +69,70 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
    private CategoryDialog() {
       super();
       setTitle(I18N.getInstance().getString("categorydialog.title"));
-      trackChanges = false;
-      noOfCategories = CategoryManager.getInstance().getNumberOfCategories();
-      Container main = getContentPane();
-      main.setLayout(new BorderLayout());
 
       JPanel buttonPanel = new JPanel();
-      closeButton = new JButton(I18N.getInstance().getString("closebutton"));
-      closeButton.addActionListener(this);
+      JButton closeButton = new JButton(I18N.getInstance().getString("closebutton"));
       buttonPanel.add(closeButton);
-      main.add(buttonPanel, BorderLayout.SOUTH);
 
+      JScrollPane scrollPane = new JScrollPane();
+      scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+      scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+      catTableModel = createTableModel();
+      catTable = makeCatTable(catTableModel);
+      scrollPane.setViewportView(catTable);
+      catNameField = new JTextField(15);
+      defaultBox = new JCheckBox(I18N.getInstance().getString("categorydialog.defaultcheckbox"));
+      colorBox = new JComboBox<>(NoteColor.values());
+      JPanel catEditPanel = makeCatEditPanel(catNameField, defaultBox, colorBox);
+
+      moveUpButton = new JButton("^");
+      moveUpButton.setEnabled(false);
+      JPanel moveUpPanel = new JPanel();
+      moveUpPanel.add(moveUpButton);
+
+      moveDownButton = new JButton("v");
+      moveDownButton.setEnabled(false);
+      JPanel moveDownPanel = new JPanel();
+      moveDownPanel.add(moveDownButton);
+
+      deleteButton = new JButton("X");
+      deleteButton.setEnabled(false);
+      JPanel deletePanel = new JPanel();
+      deletePanel.add(deleteButton);
+
+      JButton addCategoryButton = new JButton("+");
+      addCategoryButton.setEnabled(true);
+      JPanel addPanel = new JPanel();
+      addPanel.add(addCategoryButton);
+
+      JPanel emptyPanel = new JPanel();
+      JPanel emptyPanel2 = new JPanel();
+
+      // place items on center-panel
       GridBagLayout gbl = new GridBagLayout();
       JPanel centerPanel = new JPanel(gbl);
+      GridBagConstraints constraints = createGridBagConstraints();
+      placeOnPanelWithGridBagLayout(centerPanel, scrollPane, constraints, 0, 0, 1, 4, 100, 100);
+      placeOnPanelWithGridBagLayout(centerPanel, catEditPanel, constraints, 0, 4, 1, 2, 0, 0);
+      placeOnPanelWithGridBagLayout(centerPanel, moveUpPanel, constraints, 1, 0, 1, 1, 0, 0);
+      placeOnPanelWithGridBagLayout(centerPanel, moveDownPanel, constraints, 1, 1, 1, 1, 0, 0);
+      placeOnPanelWithGridBagLayout(centerPanel, deletePanel, constraints, 1, 2, 1, 1, 0, 0);
+      placeOnPanelWithGridBagLayout(centerPanel, emptyPanel, constraints, 1, 3, 1, 1, 0, 100);
+      placeOnPanelWithGridBagLayout(centerPanel, addPanel, constraints, 1, 4, 1, 1, 0, 0);
+      placeOnPanelWithGridBagLayout(centerPanel, emptyPanel2, constraints, 1, 5, 1, 1, 0, 0);
+
+      Container main = getContentPane();
+      main.setLayout(new BorderLayout());
+      main.add(buttonPanel, BorderLayout.SOUTH);
       main.add(centerPanel, BorderLayout.CENTER);
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(1, 1, 1, 1);
-      gbc.anchor = GridBagConstraints.NORTHWEST;
 
-      JScrollPane sp = new JScrollPane();
-      sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-      sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-      catTable = makeCatTable();
-      sp.setViewportView(catTable);
-      gbc.gridx = 0;
-      gbc.gridy = 0;
-      gbc.gridwidth = 1;
-      gbc.gridheight = 4;
-      gbc.weightx = 100;
-      gbc.weighty = 100;
-      gbc.fill = GridBagConstraints.BOTH;
-      gbl.setConstraints(sp, gbc);
-      centerPanel.add(sp);
-
-      // create items
-      JPanel catEditPanel = makeCatEditPanel();
-      JPanel moveUpPanel = new JPanel();
-      JPanel moveDownPanel = new JPanel();
-      JPanel deletePanel = new JPanel();
-      JPanel emptyPanel = new JPanel();
-      JPanel addPanel = new JPanel();
-      JPanel emptyPanel2 = new JPanel();
-      moveUpButton = new JButton("^");
-      moveUpButton.addActionListener(this);
-      moveUpButton.setEnabled(false);
-      moveDownButton = new JButton("v");
-      moveDownButton.addActionListener(this);
-      moveDownButton.setEnabled(false);
-      deleteButton = new JButton("X");
-      deleteButton.addActionListener(this);
-      deleteButton.setEnabled(false);
-      addButton = new JButton("+");
-      addButton.addActionListener(this);
-      addButton.setEnabled(true);
-      moveUpPanel.add(moveUpButton);
-      moveDownPanel.add(moveDownButton);
-      deletePanel.add(deleteButton);
-      addPanel.add(addButton);
-
-      // place items on panel
-      gbc.gridwidth = 1;
-      gbc.gridheight = 1;
-      gbc.fill = GridBagConstraints.BOTH;
-      gbc.weightx = 0;
-      gbc.weighty = 0;
-      gbc.gridx = 1;
-      gbc.gridy = 0;
-      gbl.setConstraints(moveUpPanel, gbc);
-      centerPanel.add(moveUpPanel);
-      gbc.gridx = 1;
-      gbc.gridy = 1;
-      gbl.setConstraints(moveDownPanel, gbc);
-      centerPanel.add(moveDownPanel);
-      gbc.gridx = 1;
-      gbc.gridy = 2;
-      gbl.setConstraints(deletePanel, gbc);
-      centerPanel.add(deletePanel);
-      gbc.gridx = 1;
-      gbc.gridy = 3;
-      gbc.weighty = 100;
-      gbl.setConstraints(emptyPanel, gbc);
-      centerPanel.add(emptyPanel);
-      gbc.gridx = 1;
-      gbc.gridy = 4;
-      gbc.weighty = 0;
-      gbl.setConstraints(addPanel, gbc);
-      centerPanel.add(addPanel);
-      gbc.gridx = 1;
-      gbc.gridy = 5;
-      gbc.gridheight = 1;
-      gbl.setConstraints(emptyPanel2, gbc);
-      centerPanel.add(emptyPanel2);
-      gbc.gridx = 0;
-      gbc.gridy = 4;
-      gbc.gridheight = 2;
-      gbl.setConstraints(catEditPanel, gbc);
-      centerPanel.add(catEditPanel);
+      // add behavior to controls
+      addCategoryButton.addActionListener(e -> addCategory());
+      moveUpButton.addActionListener(e -> moveSelectedCategory(true));
+      moveDownButton.addActionListener(e -> moveSelectedCategory(false));
+      deleteButton.addActionListener(e -> deleteSelectedCategory());
+      closeButton.addActionListener(e -> closeDialog());
 
       // automatically set window-size
       pack();
@@ -193,11 +142,8 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       setVisible(true);
    }
 
-   private JTable makeCatTable() {
-      catTableModel = new DefaultTableModel() {
-         /**
-          *
-          */
+   private DefaultTableModel createTableModel() {
+      return new DefaultTableModel() {
          private static final long serialVersionUID = 1L;
 
          // prevent all cells from being edited
@@ -206,16 +152,18 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
             return false;
          }
       };
+   }
 
+   private JTable makeCatTable(DefaultTableModel tableModel) {
       String[] columnNames = {I18N.getInstance().getString("categorydialog.defaultcolumn"),
             I18N.getInstance().getString("categorydialog.namecolumn"), I18N.getInstance().getString("categorydialog.colorcolumn")};
-      catTableModel.setColumnIdentifiers(columnNames);
+      tableModel.setColumnIdentifiers(columnNames);
       Object[][] rowData = makeDataArray();
       for (Object[] row : rowData) {
-         catTableModel.addRow(row);
+         tableModel.addRow(row);
       }
 
-      JTable jt = new JTable(catTableModel);
+      JTable jt = new JTable(tableModel);
       jt.setColumnSelectionAllowed(false);
       jt.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
       jt.getSelectionModel().addListSelectionListener(this);
@@ -228,30 +176,32 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
 
    private Object[][] makeDataArray() {
       int anz = CategoryManager.getInstance().getNumberOfCategories();
-      Object[][] data = new Object[anz][3];
+      Object[][] data = new Object[anz][];
       int index = 0;
       for (Category cat : CategoryManager.getInstance().getCategories()) {
          if (cat.isDefaultCategory()) {
-            data[index][0] = "!";
-            defCat = index;
-         } else {
-            data[index][0] = "";
+            rowNumberOfCurrentDefaultCategory = index;
          }
-         data[index][1] = cat.getName();
-         data[index][2] = String.valueOf(cat.getDefaultNoteColor().getCode());
+         data[index] = createRowForCategory(cat);
          index++;
       }
       return data;
    }
 
-   private JPanel makeCatEditPanel() {
+   private String[] createRowForCategory(Category category) {
+      String defaultMarker = category.isDefaultCategory() ? "!" : "";
+      return new String[] { defaultMarker, category.getName(), String.valueOf(category.getDefaultNoteColor().getCode()) };
+   }
+
+   private JPanel makeCatEditPanel(JTextField catNameField, JCheckBox defaultBox, JComboBox<NoteColor> colorBox) {
       JPanel p = new JPanel();
-      catNameField = new JTextField(15);
       catNameField.getDocument().addDocumentListener(this);
       catNameField.setEnabled(false);
       p.add(catNameField);
-      defaultBox = new JCheckBox(I18N.getInstance().getString("categorydialog.defaultcheckbox"));
-      defaultBox.addActionListener(this);
+      defaultBox.addActionListener(e -> {
+         makeSelectedCategoryDefault();
+         defaultBox.setEnabled(false);
+      });
       defaultBox.setEnabled(false);
       p.add(defaultBox);
 
@@ -267,9 +217,9 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
             return c;
          }
       };
-      colorBox = new JComboBox<>(NoteColor.values());
+
       colorBox.setRenderer(cr);
-      colorBox.addActionListener(this);
+      colorBox.addActionListener(e -> updateCatColor());
       colorBox.setEnabled(false);
 
       p.add(colorBox);
@@ -279,50 +229,45 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
       return p;
    }
 
-   @Override
-   public void actionPerformed(ActionEvent e) {
-      Object src = e.getSource();
+   private void placeOnPanelWithGridBagLayout(JPanel panel, Component component, GridBagConstraints constraints, int xPos, int yPos, int width, int height, int weightX, int weightY) {
+      constraints.gridx = xPos;
+      constraints.gridy = yPos;
+      constraints.gridwidth = width;
+      constraints.gridheight = height;
+      constraints.weightx = weightX;
+      constraints.weighty = weightY;
+      ((GridBagLayout)panel.getLayout()).setConstraints(component, constraints);
+      panel.add(component);
+   }
 
-      if (src == closeButton) {
-         setVisible(false);
-         dispose();
-      } else if (src == deleteButton) {
-         deleteSelectedCategory();
-      } else if (src == moveUpButton) {
-         moveSelectedCategory(true);
-      } else if (src == moveDownButton) {
-         moveSelectedCategory(false);
-      } else if (src == addButton) {
-         addCategory();
-      } else if (src == defaultBox) {
-         makeSelectedCategoryDefault();
-         defaultBox.setEnabled(false);
-      } else if (src == colorBox) {
-         updateCatColor();
-      }
+   private GridBagConstraints createGridBagConstraints() {
+      GridBagConstraints constraints = new GridBagConstraints();
+      constraints.insets = new Insets(1, 1, 1, 1);
+      constraints.anchor = GridBagConstraints.NORTHWEST;
+      constraints.fill = GridBagConstraints.BOTH;
+
+      return constraints;
    }
 
    private void deleteSelectedCategory() {
       boolean confirmed = true;
-      if (selectedCat.getNumberOfNotes() > 0) {
+      if (selectedCategory.getNumberOfNotes() > 0) {
          confirmed = JOptionPane.showConfirmDialog(null,
-               I18N.getInstance().getString("categorydialog.deletemessages", selectedCat.getNumberOfNotes()),
+               I18N.getInstance().getString("categorydialog.deletemessages", selectedCategory.getNumberOfNotes()),
                I18N.getInstance().getString("categorydialog.deletemessagestitle"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
       }
 
       if (confirmed) {
-         boolean isDef = selectedCat.isDefaultCategory();
-         selectedCat.hideAllNotes();
-         CategoryManager.getInstance().removeCategory(selectedCat);
-         catTableModel.removeRow(selectedRow);
-         if (isDef) {
-            // set first category as default
-            CategoryManager.getInstance().getCategories().get(0).setDefault(true);
+         boolean wasDefaultCategory = selectedCategory.isDefaultCategory();
+         selectedCategory.hideAllNotes();
+         CategoryManager.getInstance().removeCategory(selectedCategory);
+         catTableModel.removeRow(catTable.getSelectedRow());
+         if (wasDefaultCategory) {
+            // removing the default category automatically sets the first category as default
             catTableModel.setValueAt("!", 0, 0);
-            defCat = 0;
+            rowNumberOfCurrentDefaultCategory = 0;
          }
-         noOfCategories--;
-         selectedCat = null;
+         selectedCategory = null;
 
          // disable all Buttons and fields
          moveUpButton.setEnabled(false);
@@ -335,52 +280,51 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
    }
 
    private void moveSelectedCategory(boolean moveUp) {
-      if (moveUp) {
-         if (selectedCat.isDefaultCategory()) {
-            defCat--;
-         } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow - 1).isDefaultCategory()) {
-            defCat++;
-         }
-         CategoryManager.getInstance().moveCategoryUp(selectedCat);
-         catTableModel.moveRow(selectedRow, selectedRow, selectedRow - 1);
-         catTable.setRowSelectionInterval(selectedRow - 1, selectedRow - 1);
-      } else {
-         if (selectedCat.isDefaultCategory()) {
-            defCat++;
-         } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRow + 1).isDefaultCategory()) {
-            defCat--;
-         }
-         CategoryManager.getInstance().moveCategoryDown(selectedCat);
-         catTableModel.moveRow(selectedRow, selectedRow, selectedRow + 1);
-         catTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
+      int selectedRowIndex = catTable.getSelectedRow();
+      int indexToAdd = moveUp ? -1 : 1;
+
+      if (selectedCategory.isDefaultCategory()) {
+         rowNumberOfCurrentDefaultCategory += indexToAdd;
+      } else if (CategoryManager.getInstance().getCategoryByNumber(selectedRowIndex + indexToAdd).isDefaultCategory()) {
+         rowNumberOfCurrentDefaultCategory += (-1) * indexToAdd;
       }
+
+      if (moveUp) {
+         CategoryManager.getInstance().moveCategoryUp(selectedCategory);
+      } else {
+         CategoryManager.getInstance().moveCategoryDown(selectedCategory);
+      }
+
+      catTableModel.moveRow(selectedRowIndex, selectedRowIndex, selectedRowIndex + indexToAdd);
+      catTable.setRowSelectionInterval(selectedRowIndex + indexToAdd, selectedRowIndex + indexToAdd);
    }
 
    private void makeSelectedCategoryDefault() {
-      if (trackChanges) {
-         catTableModel.setValueAt("", defCat, 0);
-         defCat = selectedRow;
-         CategoryManager.getInstance().setDefaultCategory(selectedCat);
-         catTableModel.setValueAt("!", defCat, 0);
+      if (trackCategoryChangesInTable) {
+         catTableModel.setValueAt("", rowNumberOfCurrentDefaultCategory, 0);
+         rowNumberOfCurrentDefaultCategory = catTable.getSelectedRow();
+         CategoryManager.getInstance().setDefaultCategory(selectedCategory);
+         catTableModel.setValueAt("!", rowNumberOfCurrentDefaultCategory, 0);
       }
    }
 
+   private void closeDialog() {
+      setVisible(false);
+      dispose();
+   }
+
    private void addCategory() {
-      trackChanges = false;
       String catName = "<" + I18N.getInstance().getString("categorydialog.defaultcategoryname") + ">";
-      catNameField.setText(catName);
-      defaultBox.setSelected(false);
-      colorBox.setSelectedIndex(0);
       Category newCat = new Category(catName, false, NoteColor.DEFAULT_COLOR);
       CategoryManager.getInstance().addCategory(newCat);
-      Object[] rowData = {"", catName, "0"};
-      catTableModel.addRow(rowData);
-      noOfCategories++;
-      catTable.setRowSelectionInterval(noOfCategories - 1, noOfCategories - 1);
+
+      Object[] row = createRowForCategory(newCat);
+      catTableModel.addRow(row);
+      catTable.setRowSelectionInterval(catTableModel.getRowCount() - 1, catTableModel.getRowCount() - 1);
+
       catNameField.setSelectionStart(0);
       catNameField.setSelectionEnd(catNameField.getText().length());
       catNameField.requestFocus();
-      trackChanges = true;
    }
 
    @Override
@@ -399,69 +343,52 @@ public final class CategoryDialog extends JDialog implements ActionListener, Doc
    }
 
    private void updateCatName() {
-      if (trackChanges) {
+      if (trackCategoryChangesInTable) {
          String name = catNameField.getText();
-         catTable.getModel().setValueAt(name, selectedRow, 1);
-         selectedCat.setName(name);
+         catTable.getModel().setValueAt(name, catTable.getSelectedRow(), 1);
+         selectedCategory.setName(name);
       }
    }
 
    private void updateCatColor() {
-      if (trackChanges) {
+      if (trackCategoryChangesInTable) {
          NoteColor catColor = colorBox.getItemAt(colorBox.getSelectedIndex());
          int colorCode = colorBox.getSelectedIndex();
-         catTable.getModel().setValueAt(String.valueOf(colorCode), selectedRow, 2);
-         selectedCat.setDefaultNoteColor(catColor);
+         catTable.getModel().setValueAt(String.valueOf(colorCode), catTable.getSelectedRow(), 2);
+         selectedCategory.setDefaultNoteColor(catColor);
          colorBox.setBackground(catColor.getColor1());
       }
    }
 
    @Override
    public void valueChanged(ListSelectionEvent e) {
-      selectedRow = catTable.getSelectedRow();
+      int selectedRow = catTable.getSelectedRow();
       if (selectedRow != -1) {
-         selectedCat = CategoryManager.getInstance().getCategoryByNumber(selectedRow);
+         selectedCategory = CategoryManager.getInstance().getCategoryByNumber(selectedRow);
       } else {
-         selectedCat = null;
+         selectedCategory = null;
       }
 
-      // ENABLE OR DISABLE MOVEDOWN BUTTON
-      if (selectedRow == noOfCategories - 1) {
-         moveDownButton.setEnabled(false);
-      } else {
-         moveDownButton.setEnabled(true);
-      }
+      moveDownButton.setEnabled(selectedRow < catTableModel.getRowCount() - 1);
+      moveUpButton.setEnabled(selectedRow > 0);
+      deleteButton.setEnabled(catTableModel.getRowCount() > 1);
 
-      // ENABLE OR DISABLE MOVEUP BUTTON
-      if (selectedRow == 0) {
-         moveUpButton.setEnabled(false);
-      } else {
-         moveUpButton.setEnabled(true);
-      }
-
-      // ENABLE DELETE BUTTON?
-      if (noOfCategories > 1) {
-         deleteButton.setEnabled(true);
-      }
-
-      // ENABLE EDIT-FIELDS
       catNameField.setEnabled(true);
       defaultBox.setEnabled(true);
       colorBox.setEnabled(true);
 
-      // Insert values in fields
-      if (selectedCat != null) {
-         trackChanges = false;
-         catNameField.setText(selectedCat.getName());
-         defaultBox.setSelected(selectedCat.isDefaultCategory());
-         if (defaultBox.isSelected()) {
-            defaultBox.setEnabled(false);
-         } else {
-            defaultBox.setEnabled(true);
-         }
-         colorBox.setSelectedItem(selectedCat.getDefaultNoteColor());
-         colorBox.setBackground(selectedCat.getDefaultNoteColor().getColor1());
-         trackChanges = true;
+      updateFieldsWithValuesFromSelectedCategory();
+   }
+
+   private void updateFieldsWithValuesFromSelectedCategory() {
+      if (selectedCategory != null) {
+         trackCategoryChangesInTable = false;
+         catNameField.setText(selectedCategory.getName());
+         defaultBox.setSelected(selectedCategory.isDefaultCategory());
+         defaultBox.setEnabled(!defaultBox.isSelected());
+         colorBox.setSelectedItem(selectedCategory.getDefaultNoteColor());
+         colorBox.setBackground(selectedCategory.getDefaultNoteColor().getColor1());
+         trackCategoryChangesInTable = true;
       }
    }
 
