@@ -40,8 +40,6 @@ import net.sourceforge.pinemup.ui.swing.utils.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.BorderLayout;
@@ -53,42 +51,72 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
-public final class SettingsDialog extends JFrame implements DocumentListener, ChangeListener {
-   private static final long serialVersionUID = 1L;
-
+public final class SettingsDialog extends JFrame {
    private static final int DIALOG_WIDTH = 640;
    private static final int DIALOG_HEIGHT = 480;
 
    private static final int DEFAULT_TEXTFIELD_SIZE = 20;
 
-   private boolean settingsChanged;
-
-   private final JButton okButton;
-   private final JButton cancelButton;
-   private final JButton applyButton;
-   private JButton browseButton;
-   private JTextField defaultWidthField, defaultHeightField, defaultXPositionField, defaultYPositionField, serverAddressField,
-         serverUserField, serverDirField, notesFileField;
-   private JPasswordField serverPasswdField;
-   private JCheckBox alwaysOnTopBox, showCatBox, confirmDeleteBox, storeServerPassBox, updateCheckBox, confirmUpDownloadBox;
-   private JSpinner defaultFontSizeSpinner;
-   private JRadioButton closeIcon1Button, closeIcon2Button;
-   private JButton updateCheckButton;
-   private JComboBox<SupportedLocale> languageBox;
-   private JComboBox<ConnectionType> serverTypeBox;
-   private TitledBorder updateCheckBorder, languageBorder, titleBarBorder, behaviorBorder, sizeBorder, fontBorder, visibilityBorder,
-         notesFileBorder, serverBorder;
-   private JLabel updateCheckLabel, languageLabel, closeIconLabel, showCatLabel, confirmDeleteLabel, defaultWidthLabel, defaultHeightLabel,
-         defaultXPositionLabel, defaultYPositionLabel, defaultFontSizeLabel, alwaysOnTopLabel, serverTypeLabel, serverAddressLabel,
-         serverUserLabel, serverPasswdLabel, serverDirLabel;
-   private final JTabbedPane tpane;
-
    private final UpdateCheckResultHandler updateCheckResultHandler;
 
    private final NotesFileReader notesFileReader;
    private final NotesFileWriter notesFileWriter;
-
    private final NotesSaveTrigger notesSaveTrigger;
+
+   private boolean settingsChanged;
+
+   /** Store references to some components in order to be able to update them later. */
+   private final JButton okButton;
+   private final JButton cancelButton;
+   private final JButton applyButton;
+   private final JTabbedPane tpane;
+   private JButton browseButton;
+   private JTextField defaultWidthField;
+   private JTextField defaultHeightField;
+   private JTextField defaultXPositionField;
+   private JTextField defaultYPositionField;
+   private JTextField serverAddressField;
+   private JTextField serverUserField;
+   private JTextField serverDirField;
+   private JTextField notesFileField;
+   private JPasswordField serverPasswdField;
+   private JCheckBox alwaysOnTopBox;
+   private JCheckBox showCatBox;
+   private JCheckBox confirmDeleteBox;
+   private JCheckBox storeServerPassBox;
+   private JCheckBox updateCheckBox;
+   private JCheckBox confirmUpDownloadBox;
+   private JSpinner defaultFontSizeSpinner;
+   private JRadioButton closeIcon1Button;
+   private JRadioButton closeIcon2Button;
+   private JButton updateCheckButton;
+   private JComboBox<SupportedLocale> languageBox;
+   private JComboBox<ConnectionType> serverTypeBox;
+   private TitledBorder updateCheckBorder;
+   private TitledBorder languageBorder;
+   private TitledBorder titleBarBorder;
+   private TitledBorder behaviorBorder;
+   private TitledBorder sizeBorder;
+   private TitledBorder fontBorder;
+   private TitledBorder visibilityBorder;
+   private TitledBorder notesFileBorder;
+   private TitledBorder serverBorder;
+   private JLabel updateCheckLabel;
+   private JLabel languageLabel;
+   private JLabel closeIconLabel;
+   private JLabel showCatLabel;
+   private JLabel confirmDeleteLabel;
+   private JLabel defaultWidthLabel;
+   private JLabel defaultHeightLabel;
+   private JLabel defaultXPositionLabel;
+   private JLabel defaultYPositionLabel;
+   private JLabel defaultFontSizeLabel;
+   private JLabel alwaysOnTopLabel;
+   private JLabel serverTypeLabel;
+   private JLabel serverAddressLabel;
+   private JLabel serverUserLabel;
+   private JLabel serverPasswdLabel;
+   private JLabel serverDirLabel;
 
    SettingsDialog(UpdateCheckResultHandler updateCheckResultHandler,
          NotesFileReader notesFileReader, NotesFileWriter notesFileWriter, NotesSaveTrigger notesSaveTrigger) {
@@ -619,13 +647,9 @@ public final class SettingsDialog extends JFrame implements DocumentListener, Ch
 
       // Add textfields
       defaultWidthField = new JTextField(4);
-      defaultWidthField.getDocument().addDocumentListener(this);
       defaultHeightField = new JTextField(4);
-      defaultHeightField.getDocument().addDocumentListener(this);
       defaultXPositionField = new JTextField(4);
-      defaultXPositionField.getDocument().addDocumentListener(this);
       defaultYPositionField = new JTextField(4);
-      defaultYPositionField.getDocument().addDocumentListener(this);
       // Set settings for all textfields
       gbc.weightx = 100;
       gbc.weighty = 0;
@@ -678,7 +702,7 @@ public final class SettingsDialog extends JFrame implements DocumentListener, Ch
 
       // Add fields
       defaultFontSizeSpinner = new JSpinner(new SpinnerNumberModel(5, 5, 30, 1));
-      defaultFontSizeSpinner.addChangeListener(this);
+      defaultFontSizeSpinner.addChangeListener(e ->  markSettingsChanged(true));
 
       // Set settings for all fields
       gbc.weightx = 100;
@@ -745,7 +769,6 @@ public final class SettingsDialog extends JFrame implements DocumentListener, Ch
       notesFilePanel.setBorder(notesFileBorder);
       // Add fields
       notesFileField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
-      notesFileField.getDocument().addDocumentListener(this);
       browseButton = new JButton();
       browseButton.addActionListener(e -> browseForNotesFile());
       // Set settings for all fields
@@ -806,15 +829,11 @@ public final class SettingsDialog extends JFrame implements DocumentListener, Ch
       // Create fields
       serverTypeBox = new JComboBox<>(ConnectionType.values());
       serverAddressField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
-      serverAddressField.getDocument().addDocumentListener(this);
       serverUserField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
-      serverUserField.getDocument().addDocumentListener(this);
       serverPasswdField = new JPasswordField(DEFAULT_TEXTFIELD_SIZE);
-      serverPasswdField.getDocument().addDocumentListener(this);
       storeServerPassBox = new JCheckBox();
       storeServerPassBox.addActionListener(e -> serverPasswdField.setEnabled(storeServerPassBox.isSelected()));
       serverDirField = new JTextField(DEFAULT_TEXTFIELD_SIZE);
-      serverDirField.getDocument().addDocumentListener(this);
       confirmUpDownloadBox = new JCheckBox();
 
       // Set settings for all fields
@@ -873,6 +892,33 @@ public final class SettingsDialog extends JFrame implements DocumentListener, Ch
       serverTypeBox.addActionListener(markSettingsChangedListener);
       languageBox.addActionListener(markSettingsChangedListener);
       storeServerPassBox.addActionListener(markSettingsChangedListener);
+
+      DocumentListener documentListener = new DocumentListener() {
+         @Override
+         public void changedUpdate(DocumentEvent arg0) {
+            markSettingsChanged(true);
+         }
+
+         @Override
+         public void insertUpdate(DocumentEvent arg0) {
+            markSettingsChanged(true);
+         }
+
+         @Override
+         public void removeUpdate(DocumentEvent arg0) {
+            markSettingsChanged(true);
+         }
+      };
+
+      serverAddressField.getDocument().addDocumentListener(documentListener);
+      serverUserField.getDocument().addDocumentListener(documentListener);
+      serverPasswdField.getDocument().addDocumentListener(documentListener);
+      serverDirField.getDocument().addDocumentListener(documentListener);
+      notesFileField.getDocument().addDocumentListener(documentListener);
+      defaultWidthField.getDocument().addDocumentListener(documentListener);
+      defaultHeightField.getDocument().addDocumentListener(documentListener);
+      defaultXPositionField.getDocument().addDocumentListener(documentListener);
+      defaultYPositionField.getDocument().addDocumentListener(documentListener);
    }
 
    private void loadSettings() {
@@ -987,26 +1033,6 @@ public final class SettingsDialog extends JFrame implements DocumentListener, Ch
 
          UserSettings.getInstance().fireUserSettingsChangedEvent();
       }
-   }
-
-   @Override
-   public void changedUpdate(DocumentEvent arg0) {
-      markSettingsChanged(true);
-   }
-
-   @Override
-   public void insertUpdate(DocumentEvent arg0) {
-      markSettingsChanged(true);
-   }
-
-   @Override
-   public void removeUpdate(DocumentEvent arg0) {
-      markSettingsChanged(true);
-   }
-
-   @Override
-   public void stateChanged(ChangeEvent arg0) {
-      markSettingsChanged(true);
    }
 
    private void loadLocaleTexts() {

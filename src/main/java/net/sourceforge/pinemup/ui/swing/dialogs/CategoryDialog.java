@@ -31,12 +31,10 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public final class CategoryDialog extends JDialog implements DocumentListener, ListSelectionListener {
+public final class CategoryDialog extends JDialog {
    private static final long serialVersionUID = 1L;
 
    /** Keep references to some controls in order to be able to update their status later. */
@@ -158,12 +156,31 @@ public final class CategoryDialog extends JDialog implements DocumentListener, L
       JTable jt = new JTable(tableModel);
       jt.setColumnSelectionAllowed(false);
       jt.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-      jt.getSelectionModel().addListSelectionListener(this);
+      jt.getSelectionModel().addListSelectionListener(e -> onRowSelected());
       jt.setDefaultRenderer(Object.class, new ColoredTableCellRenderer());
       jt.getColumnModel().getColumn(0).setPreferredWidth(70);
       jt.getColumnModel().getColumn(1).setPreferredWidth(400);
       jt.getColumnModel().getColumn(2).setPreferredWidth(70);
       return jt;
+   }
+
+   private void onRowSelected() {
+      int selectedRow = catTable.getSelectedRow();
+      if (selectedRow != -1) {
+         selectedCategory = CategoryManager.getInstance().getCategoryByNumber(selectedRow);
+      } else {
+         selectedCategory = null;
+      }
+
+      moveDownButton.setEnabled(selectedRow < catTableModel.getRowCount() - 1);
+      moveUpButton.setEnabled(selectedRow > 0);
+      deleteButton.setEnabled(catTableModel.getRowCount() > 1);
+
+      catNameField.setEnabled(true);
+      defaultBox.setEnabled(true);
+      colorBox.setEnabled(true);
+
+      updateFieldsWithValuesFromSelectedCategory();
    }
 
    private Object[][] makeDataArray() {
@@ -187,7 +204,22 @@ public final class CategoryDialog extends JDialog implements DocumentListener, L
 
    private JPanel makeCatEditPanel(JTextField catNameField, JCheckBox defaultBox, JComboBox<NoteColor> colorBox) {
       JPanel p = new JPanel();
-      catNameField.getDocument().addDocumentListener(this);
+      catNameField.getDocument().addDocumentListener(new DocumentListener() {
+         @Override
+         public void changedUpdate(DocumentEvent arg0) {
+            updateCatName();
+         }
+
+         @Override
+         public void insertUpdate(DocumentEvent arg0) {
+            updateCatName();
+         }
+
+         @Override
+         public void removeUpdate(DocumentEvent arg0) {
+            updateCatName();
+         }
+      });
       catNameField.setEnabled(false);
       p.add(catNameField);
       defaultBox.addActionListener(e -> {
@@ -319,21 +351,6 @@ public final class CategoryDialog extends JDialog implements DocumentListener, L
       catNameField.requestFocus();
    }
 
-   @Override
-   public void changedUpdate(DocumentEvent arg0) {
-      updateCatName();
-   }
-
-   @Override
-   public void insertUpdate(DocumentEvent arg0) {
-      updateCatName();
-   }
-
-   @Override
-   public void removeUpdate(DocumentEvent arg0) {
-      updateCatName();
-   }
-
    private void updateCatName() {
       if (trackCategoryChangesInTable) {
          String name = catNameField.getText();
@@ -350,26 +367,6 @@ public final class CategoryDialog extends JDialog implements DocumentListener, L
          selectedCategory.setDefaultNoteColor(catColor);
          colorBox.setBackground(catColor.getColor1());
       }
-   }
-
-   @Override
-   public void valueChanged(ListSelectionEvent e) {
-      int selectedRow = catTable.getSelectedRow();
-      if (selectedRow != -1) {
-         selectedCategory = CategoryManager.getInstance().getCategoryByNumber(selectedRow);
-      } else {
-         selectedCategory = null;
-      }
-
-      moveDownButton.setEnabled(selectedRow < catTableModel.getRowCount() - 1);
-      moveUpButton.setEnabled(selectedRow > 0);
-      deleteButton.setEnabled(catTableModel.getRowCount() > 1);
-
-      catNameField.setEnabled(true);
-      defaultBox.setEnabled(true);
-      colorBox.setEnabled(true);
-
-      updateFieldsWithValuesFromSelectedCategory();
    }
 
    private void updateFieldsWithValuesFromSelectedCategory() {
